@@ -1,6 +1,6 @@
 const db = require("../newmodels");
 // const ROLES = db.ROLES;
-const AuthCollection = db.collection("users_auth")
+const AuthCollection = db.collection("users")
 
 checkDuplicateUsernameOrEmail = (req, res, next) => {
   // Username
@@ -13,7 +13,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     }
 
     AuthCollection.findOne({
-      email: req.body.email
+      mail: req.body.mail
     }).then(user => {
       if (user) {
         res.status(400).send({ message: "Failed! Email is already in use!" });
@@ -25,6 +25,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
   .catch(err => {
     res.status(500).send({ message: "Server Error", error: err });
   })
+//   next();
 };
 
 const verifySignUp = {

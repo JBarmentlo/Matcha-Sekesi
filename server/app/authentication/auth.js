@@ -2,22 +2,23 @@ const jwt = require("jsonwebtoken");
 
 
 verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
-  let secret = req.headers["x-access-signature"];
+    let token = req.headers["x-access-token"];
+    let secret = req.headers["x-access-signature"];
 
-  if (!token) {
-    return res.status(403).send({ message: "No token provided!" });
-  }
-
-
-  // Prints: true
-  jwt.verify(token, secret, (err, decoded) => {
-    if (err) {
-      return res.status(401).send({ message: "Unauthorized!" });
+    // console.log("verify token : %s , secret: %s", token, secret)
+    if (!token) {
+        return res.status(403).send({ message: "No token provided!" });
     }
-    req.userId = decoded.id;
-    next();
-  });
+
+
+    // Prints: true
+    jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+            return res.status(401).send({ message: "Unauthorized!" });
+        }
+        req.userId = decoded.id;
+        next();
+    });
 };
 
 // isAdmin = (req, res, next) => {
@@ -52,7 +53,7 @@ verifyToken = (req, res, next) => {
 // };
 
 const authJwt = {
-  verifyToken
+    verifyToken
 };
 
 module.exports = authJwt;

@@ -1,14 +1,15 @@
 const crypto = require('crypto');
 const db = require("../newmodels");
-const AuthCollection = db.collection("users_auth")
+const AuthCollection = db.collection("users")
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
+    console.log("signup")
     const user = {
         username: req.body.username,
-        email: req.body.email,
+        mail: req.body.mail,
         password: bcrypt.hashSync(req.body.password, 8)
     };
     AuthCollection.insertOne(user)
@@ -23,7 +24,7 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
-    AuthCollection.findOne({ email: req.body.email })
+    AuthCollection.findOne({ mail: req.body.mail })
         .then(user => {
             var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
             if (!passwordIsValid) {
@@ -45,16 +46,15 @@ exports.signin = (req, res) => {
 
 
             // sign username
-            var token = jwt.sign({ id: user.id }, signature, {
+            var token = jwt.sign({ id: user._id }, signature, {
                 expiresIn: 86400 // 24 hours
             });
 
-            var authorities = [];
 
             res.status(200).send({
                 id: user._id,
                 username: user.username,
-                email: user.email,
+                mail: user.mail,
                 accessToken: token, // access token
                 signature: signature // signature
             });

@@ -192,17 +192,17 @@ exports.get_blocks_of_and_by_user = (req, res) => {
 
 exports.like_user = (req, res) => {
 	// Validate request
-	// console.log("req: %s res:%s",req.body, res)
-	if (!req.body.liker_id || !req.body.liked_id) {
+	console.log("req: %s res:%s",req.body, res)
+	if (!req.userId || !req.body.liked_id) {
 		res.status(400).send({ message: "Id missing to like" });
 		return;
 	}
 
 	// Save User in the database
-	like_collection.findOne({ liked_id: req.body.liked_id, liker_id: req.body.liker_id })
+	like_collection.findOne({ liked_id: req.body.liked_id, liker_id: req.userId })
 		.then(data => {
 			if (data == null) {
-				like_collection.insertOne({ liked_id: req.body.liked_id, liker_id: req.body.liker_id })
+				like_collection.insertOne({ liked_id: req.body.liked_id, liker_id: req.userId })
 					.then(data => { res.send(data) })
 					.catch(err => res.status(500).send({ message: err.message || "Some error occurred while sending your like" }))
 			}

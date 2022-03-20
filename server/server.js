@@ -17,9 +17,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-require("./app/routes/user.routes")(app)
-require("./app/routes/auth.js")(app)
+const userRouter = require("./app/routes/user.routes")
+const authRouter = require("./app/routes/auth")
 
+app.use('/api/users',userRouter, function(req, res, next){
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+}) // user authorization
+app.use('/api/auth', authRouter, function(req, res, next){
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+}) // auth authentication
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
