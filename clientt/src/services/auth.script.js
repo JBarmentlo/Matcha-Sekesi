@@ -21,7 +21,7 @@ export const signup = async item => {
 
 export const login = async item => {
   let data = {
-    mail    : item.mail,
+    username: item.username,
     password: item.password
   };
   let request = {

@@ -1,20 +1,34 @@
 <template>
     <div class="vue-tempalte">
-        <form @submit="loginFormSubmit">
+        <form @submit="signupFormSubmit">
             <h3>Sign Up</h3>
             <div class="form-group">
                 <label>Username</label>
-                <input type="text" v-model="username" class="form-control form-control-lg"/>
+                <input type="username" v-model="username" class="form-control form-control-lg"/>
             </div>
+
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" v-model="firstName" class="form-control form-control-lg"/>
+            </div>
+
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" v-model="lastName" class="form-control form-control-lg"/>
+            </div>
+
             <div class="form-group">
                 <label>Email address</label>
                 <input type="email" v-model="mail" class="form-control form-control-lg" />
             </div>
+
             <div class="form-group pb-2">
                 <label>Password</label>
                 <input type="password" v-model="password" class="form-control form-control-lg" />
             </div>
+
             <button type="submit" class="btn btn-dark btn-lg btn-block">Sign Up</button>
+
             <p class="forgot-password text-right">
                 Already registered 
                 <router-link :to="{name: 'login'}">sign in?</router-link>
@@ -29,24 +43,26 @@ import router from '@/router'
     export default {
         data() {
             return {
-                username: 'jhonny',
-                mail    : 'jhonny@gmail.com',
-                password: 'qwertasd',
+                username    : 'jhonny',
+                mail        : 'jhonny@gmail.com',
+                password    : 'qwertasd',
+                firstName   : 'useless',
+                lastName    : 'useless'
             }
         },
         methods: {
-            loginFormSubmit(e) {
+            signupFormSubmit(e) {
                 e.preventDefault()
                 inputValidate.validateAllWithAlerts(this.username, this.mail, this.password)
                 signup({username: this.username, mail: this.mail, password: this.password})
                 .then(data => {
                     if (data.data.message == 'User was registered successfully!')
                     {
-                        console.log("fooddz")
+                        console.log("signed up")
                         router.push("/login")
                     }
                     else
-                        console.log("oiusdf")
+                        console.log("wtf signup")
                         console.log(data.data.message)
                 })
                 .catch(err => {

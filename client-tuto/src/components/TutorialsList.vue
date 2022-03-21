@@ -79,15 +79,18 @@ export default {
           console.log(e);
         });
     },
+	
     refreshList() {
       this.retrieveTutorials();
       this.currentTutorial = null;
       this.currentIndex = -1;
     },
+
     setActiveTutorial(tutorial, index) {
       this.currentTutorial = tutorial;
       this.currentIndex = index;
     },
+
     removeAllTutorials() {
       TutorialDataService.deleteAll()
         .then(response => {

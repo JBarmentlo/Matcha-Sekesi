@@ -1,12 +1,14 @@
 <template>
   <div class="vue-tempalte">
     <!-- Navigation -->
-    <NavBar/>
+    <NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in"/>
     <!-- Main -->
     <div class="App">
       <div class="vertical-center">
         <div class="inner-block">
-          <router-view />
+          <router-view 
+            @setLoggedIn="setLoggedIn"
+          />
         </div>
       </div>
     </div>
@@ -18,18 +20,26 @@ import NavBar from "./components/NavBar.vue"
 
 export default {
   name: 'App',
+  
   components: {
     NavBar
   },
+
   data() {
     return {
-      access_token: '',
-      signature   : ''
+      logged_in   : false
     }
   },
+
   methods: {
-    toggleAddTask() {
-      this.showAddTask = !this.showAddTask
+    async setLoggedIn(val) {
+      this.logged_in = val;
+      console.log("logged in set to: %s", val)
+    },
+
+    logIn(userID, token, signature) {
+      this.logged_in = val;
+      console.log("logged in set to: %s", val)
     },
   },
 }

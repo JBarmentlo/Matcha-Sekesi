@@ -24,8 +24,15 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
-    AuthCollection.findOne({ mail: req.body.mail })
+    console.log("signing in %o", req.body)
+    AuthCollection.findOne({ username: req.body.username })
         .then(user => {
+            if (user == null)
+            {
+                res.status(400).send({message: "User doesnt exist"})
+                console.log("signing in failed: no user match")
+                return
+            }
             var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
             if (!passwordIsValid) {
                 return res.status(401).send({
