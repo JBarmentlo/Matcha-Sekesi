@@ -24,19 +24,33 @@
 </template>
 <script>
 import inputValidate from '../services/formValidate'
-
+import {signup} from '../services/auth.script'
+import router from '@/router'
     export default {
         data() {
             return {
-                username: '',
-                mail    : '',
-                password: '',
+                username: 'jhonny',
+                mail    : 'jhonny@gmail.com',
+                password: 'qwertasd',
             }
         },
         methods: {
             loginFormSubmit(e) {
                 e.preventDefault()
                 inputValidate.validateAllWithAlerts(this.username, this.mail, this.password)
+                signup({username: this.username, mail: this.mail, password: this.password})
+                .then(data => {
+                    if (data.data.message == 'User was registered successfully!')
+                    {
+                        console.log("fooddz")
+                        router.push("/login")
+                    }
+                    else
+                        console.log(data.data.message)
+                })
+                .catch(err => {
+                    console.log("error %o", err)
+                })
             }
         }
     }

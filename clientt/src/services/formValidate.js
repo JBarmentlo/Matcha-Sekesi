@@ -1,7 +1,6 @@
 
 function validateUserName(name)
 {
-    console.log("Validate username")
     return (name.length > 5)
 }
 
@@ -43,6 +42,6 @@ const inputValidate = {
     validateMail,
     validatePassword,
     validateAllWithAlerts
-}
+};
 
 export default inputValidate
