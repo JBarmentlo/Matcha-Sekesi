@@ -32,7 +32,7 @@ function validateAllWithAlerts(name, mail, psw)
         alert('Please enter a valid password')
         ok = false
     }
-    console.log("full validate")
+    console.log("full validate %o", ok)
     return ok
 }
 

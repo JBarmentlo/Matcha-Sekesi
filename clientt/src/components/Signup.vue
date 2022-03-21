@@ -46,10 +46,12 @@ import router from '@/router'
                         router.push("/login")
                     }
                     else
+                        console.log("oiusdf")
                         console.log(data.data.message)
                 })
                 .catch(err => {
-                    console.log("error %o", err)
+                    console.log("error at signup %o", err.response.data)
+                    alert(err.response.data.message)
                 })
             }
         }
