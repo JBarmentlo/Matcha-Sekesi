@@ -1,19 +1,3 @@
-// const { verify_user_email } = require("../authentication");
-// const express = require("express")
-// const router = express.Router()
-// const auth = require("../controllers/auth.controller");
-
-// router.post("/signin", auth.signin);
-
-// router.post("/signup", 
-//   [
-//       verify_user_email.checkDuplicateUsernameOrEmail,
-//       verify_user_email.checkRolesExisted
-//   ],
-//   auth.signup
-// )
-
-
 const { verify_user_email } = require("../authentication");
 const express = require("express")
 const router = express.Router()

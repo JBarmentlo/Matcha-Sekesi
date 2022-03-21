@@ -8,6 +8,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     username: req.body.username
   }).then(user => {
     if (user) {
+      console.log("username taken")
       res.status(400).send({ message: "Failed! Username is already in use!" });
       return;
     }
