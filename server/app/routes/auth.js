@@ -5,7 +5,7 @@ const auth = require("../controllers/auth.controller");
 
 router.post("/signin", auth.signin);
 
-router.post("/verify", auth.verifyMail);
+router.get("/verify/:idHash", auth.verifyMail);
 
 
 router.post("/signup", 
