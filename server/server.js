@@ -26,7 +26,8 @@ app.use('/api/users',userRouter, function(req, res, next){
     "x-access-token, Origin, Content-Type, Accept"
   );
   next();
-}) // user authorization
+})
+
 app.use('/api/auth', authRouter, function(req, res, next){
   res.header(
     "Access-Control-Allow-Headers",
@@ -34,7 +35,8 @@ app.use('/api/auth', authRouter, function(req, res, next){
   );
   next();
 }) // auth authentication
-// set port, listen for requests
+
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
