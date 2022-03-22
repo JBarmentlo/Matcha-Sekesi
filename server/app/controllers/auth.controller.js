@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const db = require("../newmodels");
+const path = require('path');
 const sendMail = require('../authentication/mailgun');
 const AuthCollection = db.collection("users")
 const verifyCollection = db.collection("verify")
@@ -25,8 +26,7 @@ exports.signup = (req, res) => {
             }
             verifyCollection.insertOne(verifier)
             .then(insertRes => {
-                sendMail(user.mail, "http://localhost:8080/api/auth/verify/" + verifier.idHash)
-                console.log(encodeURIComponent(verifier.idHash))
+                sendMail(user.mail, "http://localhost:8080/api/auth/verify/" + encodeURIComponent(verifier.idHash))
                 res.send({ message: "User was registered successfully!" })
             })
             .catch(err => {
@@ -89,17 +89,29 @@ exports.signin = (req, res) => {
 
 exports.verifyMail = (req, res) => {
     console.log("verifying mail with %o", req.params)
-    verifyCollection.findOne({idHash: req.params.idHash})
+    verifyCollection.findOneAndDelete({idHash: req.params.idHash})
         .then(id => {
-            if (id == null)
+            if (id.lastErrorObject.n == 0)
+            {
+                res.status(400).send({message: "invalid hash code"})
                 return
-
-            filter = {_id: id.userId};
-            update = {$set: {mailVerified: true,},};
-            AuthCollection.updateOne(filter, update)
+            }
+            console.log("found id match %o", id)
+            filter = {_id: id.value.userId};
+            update = {$set: {mailVerified: true,},}
+            AuthCollection.findOneAndUpdate(filter, update)
             .then(user => {
-                if (user == null || user.matchedCount == 0)
+                if (user == null)
                     console.log("didnt find user matching confirm, WIERD AS FUCK %o", id)
+                console.log("found user match %o", user)
+    
+                res.send({
+                    username : user.username,
+                    mail     : user.mail,
+                })
             })
+        })
+        .catch(err => {
+            res.status(500).send({error: err})
         })
 };
