@@ -1,22 +1,14 @@
 <template>
 	<div class="vue-tempalte">
-		<form @submit="submitResetForm">
+		<form v-if="!sent" @submit="submitResetForm">
 			<h3>Reset Password</h3>
 			<div class="form-group">
 				<label>New Password</label>
-				<input
-					type="password"
-					v-model="password"
-					class="form-control form-control-lg"
-				/>
+				<input type="password" v-model="password" class="form-control form-control-lg" />
 			</div>
 			<div class="form-group pb-3">
 				<label>Repeat Password</label>
-				<input
-					type="password"
-					v-model="passwordRep"
-					class="form-control form-control-lg"
-				/>
+				<input type="password" v-model="passwordRep" class="form-control form-control-lg"/>
 			</div>
 			<button type="submit" class="btn btn-dark btn-lg btn-block">
 				Sign In
@@ -25,6 +17,12 @@
 				<router-link to="/forgot-password">Forgot password ?</router-link>
 			</p>
 		</form>
+		<p v-if="success">
+			Your password has been reset, try logging in again and find your soulmate !
+		</p>
+		<p v-if="!success && sent">
+			There was an error resetting your password, please request a reset again !
+		</p>
 	</div>
 </template>
 <script>
