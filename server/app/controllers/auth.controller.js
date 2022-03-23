@@ -4,10 +4,11 @@ const path = require('path');
 const sendMail = require('../authentication/mailgun');
 const AuthCollection = db.collection("users")
 const verifyCollection = db.collection("verify")
-
+const resetCollection = db.collection("reset")
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+const { createDeflate } = require('zlib');
 
 exports.signup = (req, res) => {
     console.log("signup")
@@ -100,6 +101,70 @@ exports.verifyMail = (req, res) => {
             console.log("found id match %o", id)
             filter = {_id: id.value.userId};
             update = {$set: {mailVerified: true,},}
+            AuthCollection.findOneAndUpdate(filter, update)
+            .then(user => {
+                if (user == null || user.lastErrorObject.n == 0)
+                    console.log("didnt find user matching confirm, WIERD AS FUCK %o", id)
+                console.log("found user match %o", user)
+    
+                res.send({
+                    username : user.value.username,
+                    mail     : user.value.mail,
+                })
+                console.log("sent %o", {
+                    username : user.value.username,
+                    mail     : user.value.mail,
+                })
+            })
+        })
+        .catch(err => {
+            res.status(500).send({error: err})
+        })
+};
+
+
+
+exports.requestresetPass = (req, res) => {
+    console.log("requesting reset psw for mail %s", req.body.mail)
+    console.log("requesting reset psw for mail %s", req.body)
+    
+
+    AuthCollection.findOne({mail: req.body.mail})
+    .then(user => {
+        if (user == null || user.verifyMail == false)
+        {
+            res.send()
+            return
+        }
+        resetter = {
+            userId  : user._id,
+            idHash  : bcrypt.hashSync(user._id.toString(), 8),
+            createdAt: new Date()
+        }
+        resetCollection.insertOne(resetter)
+        sendMail(user.mail, "http://localhost:8081/resetpas/" + encodeURIComponent(resetter.idHash))
+        console.log("http://localhost:8081/api/auth/resetpas/" + encodeURIComponent(resetter.idHash))
+        res.send()
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500).send({error: err})
+    })
+};
+
+
+exports.resetPass = (req, res) => {
+    console.log("resetting psw for mail %s with pass %s", req.body.idHash, req.body.newPass)
+    resetCollection.findOneAndDelete({idHash: req.params.idHash})
+        .then(id => {
+            if (id.lastErrorObject.n == 0)
+            {
+                res.status(400).send({message: "invalid hash code"})
+                return
+            }
+            console.log("found id match %o", id)
+            filter = {_id: id.value.userId};
+            update = {$set: {password: bcrypt.hashSync(req.body.password, 8),},}
             AuthCollection.findOneAndUpdate(filter, update)
             .then(user => {
                 if (user == null || user.lastErrorObject.n == 0)
