@@ -4,7 +4,7 @@
             <h3>Sign Up</h3>
             <div class="form-group">
                 <label>Username</label>
-                <input type="username" v-model="username" class="form-control form-control-lg"/>
+                <input  autocomplete="username" type="username" v-model="username" class="form-control form-control-lg"/>
             </div>
 
             <div class="form-group">
@@ -24,7 +24,7 @@
 
             <div class="form-group pb-2">
                 <label>Password</label>
-                <input type="password" v-model="password" class="form-control form-control-lg" />
+                <input autocomplete="current-password" type="password" v-model="password" class="form-control form-control-lg" />
             </div>
 
             <button type="submit" class="btn btn-dark btn-lg btn-block">Sign Up</button>

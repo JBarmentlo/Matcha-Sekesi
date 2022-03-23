@@ -1,13 +1,25 @@
 <template>
     <div class="vue-tempalte">
-        <form @submit="onSubmit">
-            <h3>Forgot Password</h3>
-            <div class="form-group pb-3">
-                <label>Email address</label>
-                <input type="email" v-model="mail" class="form-control form-control-lg" />
+        <div v-if="!requestSent">
+            <form @submit="onSubmit">
+                <h3>Forgot Password</h3>
+                <div class="form-group pb-3">
+                    <label>Email address</label>
+                    <input type="email" v-model="mail" class="form-control form-control-lg" />
+                </div>
+                <button type="submit" class="btn btn-dark btn-lg btn-block">Reset password</button>
+            </form>
+        </div>
+        <div v-else>
+            <div v-if="error">
+                There was an error handling your request,
+                please try again shortly.
             </div>
-            <button type="submit" class="btn btn-dark btn-lg btn-block">Reset password</button>
-        </form>
+            <div v-else>
+                An email was sent to {{mail}}. <br>
+                Check your inbox to reset your password.
+            </div>
+        </div>
     </div>
 </template>
 <script>
