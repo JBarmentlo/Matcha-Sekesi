@@ -142,8 +142,8 @@ exports.requestresetPass = (req, res) => {
             createdAt: new Date()
         }
         resetCollection.insertOne(resetter)
-        sendMail(user.mail, "http://localhost:8081/resetpas/" + encodeURIComponent(resetter.idHash))
-        console.log("http://localhost:8081/api/auth/resetpas/" + encodeURIComponent(resetter.idHash))
+        sendMail(user.mail, "http://localhost:8081/reset/" + encodeURIComponent(resetter.idHash))
+        console.log("http://localhost:8081/reset/" + encodeURIComponent(resetter.idHash))
         res.send()
     })
     .catch(err => {
@@ -154,12 +154,17 @@ exports.requestresetPass = (req, res) => {
 
 
 exports.resetPass = (req, res) => {
-    console.log("resetting psw for mail %s with pass %s", req.body.idHash, req.body.newPass)
-    resetCollection.findOneAndDelete({idHash: req.params.idHash})
+    console.log("resetting psw for mail %s with pass %s", req.body.idHash, req.body.password)
+    resetCollection.findOneAndDelete({idHash: req.body.idHash})
         .then(id => {
             if (id.lastErrorObject.n == 0)
             {
                 res.status(400).send({message: "invalid hash code"})
+                return
+            }
+            if (new Date() - id.value.createdAt > 15 * 60 * 1000)
+            {
+                res.status(400).send({message: "Code expired"})
                 return
             }
             console.log("found id match %o", id)

@@ -20,8 +20,11 @@
 		<p v-if="success">
 			Your password has been reset, try logging in again and find your soulmate !
 		</p>
-		<p v-if="!success && sent">
+		<p v-if="!success && sent && !expired">
 			There was an error resetting your password, please request a reset again !
+		</p>
+		<p v-if="!success && sent && expired">
+			The link has expired, please request a password reset again.
 		</p>
 	</div>
 </template>
@@ -37,8 +40,8 @@ export default {
 			password	: "",
 			passwordRep	: "",
 			success		: false,
-			sent		: false
-
+			sent		: false,
+			expired		: false
 		};
 	},
 	methods: {
@@ -67,6 +70,8 @@ export default {
 					console.log("error at reset %o", err.response.data);
 					this.success = false
 					this.sent    = true
+					if (err.response.data.message = "Code expired")
+						this.expired = true
 				});
 		},
 	},

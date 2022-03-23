@@ -17,7 +17,7 @@
             </div>
             <div v-else>
                 An email was sent to {{mail}}. <br>
-                Check your inbox to reset your password.
+                Check your inbox to reset your password, the link is only valid for 15 minutes.
             </div>
         </div>
     </div>

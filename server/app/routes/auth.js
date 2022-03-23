@@ -9,7 +9,7 @@ router.get("/verify/:idHash", auth.verifyMail);
 
 router.post("/requestreset", auth.requestresetPass);
 
-router.get("/resetpas/:idHash", auth.resetPass);
+router.post("/resetpas", auth.resetPass);
 
 
 router.post("/signup", 
