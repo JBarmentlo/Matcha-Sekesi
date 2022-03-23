@@ -36,3 +36,18 @@ export const login = async item => {
   const response = await axios(request);
   return response;
 };
+
+export const verify = async hashId => {
+  console.log("verifying url %s", "http://localhost:8080/api/auth/verify/" + encodeURIComponent(hashId))
+  let request = {
+    url: "http://localhost:8080/api/auth/verify/" + encodeURIComponent(hashId), // should be replaced after going to production with domain url
+    method: "get",
+    headers: {
+      "Content-type": "application/json"
+    },
+    data: JSON.stringify({})
+  };
+
+  const response = await axios(request);
+  return response;
+};

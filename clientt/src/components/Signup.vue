@@ -37,14 +37,15 @@
     </div>
 </template>
 <script>
-import inputValidate from '../services/formValidate'
-import {signup} from '../services/auth.script'
-import router from '@/router'
+import inputValidate    from '../services/formValidate'
+import {signup}         from '../services/auth.script'
+import router           from '@/router'
+
     export default {
         data() {
             return {
                 username    : 'jhonny',
-                mail        : 'jhonny@gmail.com',
+                mail        : 'joepbarmentlo@gmail.com',
                 password    : 'qwertasd',
                 firstName   : 'useless',
                 lastName    : 'useless'

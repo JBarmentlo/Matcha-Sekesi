@@ -28,10 +28,10 @@
   </div>
 </template>
 <script>
-import inputValidate from "../services/formValidate";
-import { login } from "../services/auth.script";
-import router from "@/router";
-import Vue from "vue";
+import inputValidate  from "../services/formValidate";
+import { login }      from "../services/auth.script";
+import router         from "@/router";
+import Vue            from "vue";
 
 export default {
   data() {

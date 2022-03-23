@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../../client-tuto"
+		},
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../vue-crash-2021"
+		}
+	],
+	"settings": {}
+}

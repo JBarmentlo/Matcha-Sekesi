@@ -16,6 +16,11 @@ Vue.use(VueRouter)
     path: '/forgot-password',
     name: 'forgot-password',
     component: () => import('../components/ForgotPassword.vue')
+  },
+  {
+    path: '/verify/:hashId',
+    name: 'verify-mail',
+    component: () => import('../components/Verify.vue')
   }
 ]
 const router = new VueRouter({
