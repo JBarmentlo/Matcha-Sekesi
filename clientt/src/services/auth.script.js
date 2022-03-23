@@ -51,3 +51,18 @@ export const verify = async hashId => {
   const response = await axios(request);
   return response;
 };
+
+export const requestReset = async mail => {
+  console.log("requesting pass reset for %s", mail)
+  let request = {
+    url: "http://localhost:8080/api/auth/requestreset", // should be replaced after going to production with domain url
+    method: "post",
+    headers: {
+      "Content-type": "application/json"
+    },
+    data: JSON.stringify({mail: mail})
+  };
+
+  const response = await axios(request);
+  return response;
+};
