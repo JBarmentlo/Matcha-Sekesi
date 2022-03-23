@@ -36,8 +36,11 @@ export default {
 
     methods : {
         logout() {
+            if (this.$cookies.isKey("user"))
+                this.$cookies.remove("user")
             this.$emit("setLoggedIn", false)
-            router.push("/login")
+            if (this.$route.path != "/login")
+                router.push("/login")
         }
     }
 }

@@ -2,7 +2,7 @@
     <div class="vue-tempalte">
         <form>
             <h3>Forgot Password</h3>
-            <div class="form-group">
+            <div class="form-group pb-3">
                 <label>Email address</label>
                 <input type="email" class="form-control form-control-lg" />
             </div>
