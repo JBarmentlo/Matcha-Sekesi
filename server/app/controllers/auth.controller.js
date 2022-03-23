@@ -26,7 +26,8 @@ exports.signup = (req, res) => {
             }
             verifyCollection.insertOne(verifier)
             .then(insertRes => {
-                sendMail(user.mail, "http://localhost:8080/api/auth/verify/" + encodeURIComponent(verifier.idHash))
+                sendMail(user.mail, "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+                console.log("http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
                 res.send({ message: "User was registered successfully!" })
             })
             .catch(err => {
@@ -101,13 +102,17 @@ exports.verifyMail = (req, res) => {
             update = {$set: {mailVerified: true,},}
             AuthCollection.findOneAndUpdate(filter, update)
             .then(user => {
-                if (user == null)
+                if (user == null || user.lastErrorObject.n == 0)
                     console.log("didnt find user matching confirm, WIERD AS FUCK %o", id)
                 console.log("found user match %o", user)
     
                 res.send({
-                    username : user.username,
-                    mail     : user.mail,
+                    username : user.value.username,
+                    mail     : user.value.mail,
+                })
+                console.log("sent %o", {
+                    username : user.value.username,
+                    mail     : user.value.mail,
                 })
             })
         })
