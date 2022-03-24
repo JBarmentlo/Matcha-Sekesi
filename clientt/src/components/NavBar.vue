@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row fixed-top">
+    <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row static-top">
         <div class="container">
             <a class="navbar-brand float-left" href="https://www.positronx.io" target="_blank">
                 Sekesi.io
@@ -46,12 +46,7 @@ export default {
 }
 </script>
 
-<style scoped>
-/* .navbar-nav > li{
-  padding-left:5px;
-  padding-right:5px;
-} */
-</style>
+
 
 <style scoped>
 </style>

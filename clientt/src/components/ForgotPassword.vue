@@ -1,88 +1,89 @@
 <template>
-    <div class="vue-tempalte">
-        <div v-if="!requestSent">
-            <form @submit="onSubmit">
-                <h3>Forgot Password</h3>
-                <div class="form-group pb-3">
-                    <label>Email address</label>
-                    <input type="email" v-model="mail" class="form-control form-control-lg" />
-                </div>
-                <button type="submit" class="btn btn-dark btn-lg btn-block">Reset password</button>
-            </form>
-        </div>
-        <div v-else>
-            <div v-if="error">
-                There was an error handling your request,
-                please try again shortly.
-            </div>
-            <div v-else>
-                An email was sent to {{mail}}. <br>
-                Check your inbox to reset your password, the link is only valid for 15 minutes.
-            </div>
-        </div>
-    </div>
+	<div class="center">
+		<div class="inner-block">
+			<div class="vue-tempalte">
+				<div v-if="!requestSent">
+					<form @submit="onSubmit">
+						<h3>Forgot Password</h3>
+						<div class="form-group pb-3">
+							<label>Email address</label>
+							<input
+								type="email"
+								v-model="mail"
+								class="form-control form-control-lg"
+							/>
+						</div>
+						<button type="submit" class="btn btn-dark btn-lg btn-block">
+							Reset password
+						</button>
+					</form>
+				</div>
+				<div v-else>
+					<div v-if="error">
+						There was an error handling your request, please try again shortly.
+					</div>
+					<div v-else>
+						An email was sent to {{ mail }}. <br />
+						Check your inbox to reset your password, the link is only valid for
+						15 minutes.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
+
 <script>
-import {requestReset} 		from '../services/auth.script'
-import inputValidate  from "../services/formValidate";
+import { requestReset } from "../services/auth.script";
+import inputValidate from "../services/formValidate";
 
-    export default {
-        data()  {
-            return {
-                requestSent : false,
-                error       : false,
-                mail        : "joepbarmentlo@gmail.com"
-            }
-        },
+export default {
+	data() {
+		return {
+			requestSent: false,
+			error: false,
+			mail: "joepbarmentlo@gmail.com",
+		};
+	},
 
-        props   : {
+	props: {},
 
-        },
-        
-        methods : {
-            onSubmit(e) {
-                console.log("requestin reset")
-                e.preventDefault();
-                if (!inputValidate.validateMail(this.mail))
-                {
-                    alert("enter a valid email pls")
-                    return
-                }
-                requestReset(this.mail)
-                .then(res => {
-                    this.requestSent = true
-                })
-                .catch(ett => {
-                    this.error = true
-                })
-            }
-        }
-    }
+	methods: {
+		onSubmit(e) {
+			console.log("requestin reset");
+			e.preventDefault();
+			if (!inputValidate.validateMail(this.mail)) {
+				alert("enter a valid email pls");
+				return;
+			}
+			requestReset(this.mail)
+				.then((res) => {
+					this.requestSent = true;
+				})
+				.catch((ett) => {
+					this.error = true;
+				});
+		},
+	},
+};
 </script>
 
 <style scoped>
-
-
-
-
-.vertical-center h3 {
-  text-align: center;
-  margin: 0;
-  line-height: 1;
-  padding-bottom: 20px;
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border: 3px solid green;
 }
-label {
-  font-weight: 500;
+
+.inner-block {
+  background: #ffffff;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  padding: 40px 55px 45px 55px;
+  border-radius: 15px;
+  transition: all .3s;
 }
-.forgot-password,
-.forgot-password a {
-  text-align: right;
-  font-size: 13px;
-  padding-top: 10px;
-  color: #7a7a7a;
-  margin: 0;
-}
-.forgot-password a {
-  color: #2554FF;
-}
+
 </style>

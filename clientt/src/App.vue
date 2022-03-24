@@ -1,16 +1,12 @@
 <template>
-  <div class="vue-tempalte">
-    <!-- Navigation -->
-    <NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in"/>
-    <!-- Main -->
+  <div class="main-container">
+    <div>
+      <NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in"/>
+    </div>
     <div class="App">
-      <div class="vertical-center">
-        <div class="inner-block">
-          <router-view 
-            @setLoggedIn="setLoggedIn"
-          />
-        </div>
-      </div>
+      <router-view 
+        @setLoggedIn="setLoggedIn"
+      />
     </div>
   </div>
 </template>
@@ -46,46 +42,31 @@ export default {
 </script>
 
 
-<style scoped>
-* {
-  box-sizing: border-box;
-}
-body {
-  background: #2554FF !important;
-  min-height: 100vh;
-  display: flex;
-  font-weight: 400;
-}
-body,
-html,
+<style >
+
 .App,
-.vue-tempalte,
-.vertical-center {
+.main-container {
   width: 100%;
   height: 100%;
 }
 
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	border: 3px solid green;
+}
+
 .inner-block {
-  width: 450px;
-  margin: auto;
-  background: #ffffff;
-  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-  padding: 40px 55px 45px 55px;
-  border-radius: 15px;
-  transition: all .3s;
-}
-.vertical-center .form-control:focus {
-  border-color: #2554FF;
-  box-shadow: none;
-}
-.vertical-center h3 {
-  text-align: center;
-  margin: 0;
-  line-height: 1;
-  padding-bottom: 20px;
-}
-label {
-  font-weight: 500;
+	background: #ffffff;
+	box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+	padding: 40px 55px 45px 55px;
+	border-radius: 15px;
+	transition: all 0.3s;
+  max-width: 80%;
+  max-height: 80%;
 }
 
 </style>
