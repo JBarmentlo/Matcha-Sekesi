@@ -1,4 +1,5 @@
 <template>
+    <div class="lolol">
   <div class="vue-tempalte">
     <form @submit="submitLoginForm">
       <h3>Sign In</h3>
@@ -26,7 +27,9 @@
       </p>
     </form>
   </div>
+  </div>
 </template>
+
 <script>
 import inputValidate  from "../services/formValidate";
 import { login }      from "../services/auth.script";
@@ -77,4 +80,3 @@ export default {
   },
 };
 </script>
-

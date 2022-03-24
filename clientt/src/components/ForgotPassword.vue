@@ -59,3 +59,30 @@ import inputValidate  from "../services/formValidate";
         }
     }
 </script>
+
+<style scoped>
+
+
+
+
+.vertical-center h3 {
+  text-align: center;
+  margin: 0;
+  line-height: 1;
+  padding-bottom: 20px;
+}
+label {
+  font-weight: 500;
+}
+.forgot-password,
+.forgot-password a {
+  text-align: right;
+  font-size: 13px;
+  padding-top: 10px;
+  color: #7a7a7a;
+  margin: 0;
+}
+.forgot-password a {
+  color: #2554FF;
+}
+</style>

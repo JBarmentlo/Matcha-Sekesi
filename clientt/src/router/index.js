@@ -8,6 +8,11 @@ Vue.use(VueRouter)
     component: () => import('../components/Signup.vue')
   },
   {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('../components/Profile.vue')
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('../components/Login.vue')
