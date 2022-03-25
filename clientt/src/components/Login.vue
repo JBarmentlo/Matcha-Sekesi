@@ -59,7 +59,7 @@ export default {
 					this.$cookies.set("user", data);
 					this.$emit("setLoggedIn", true);
 
-					//   router.push("/login");
+					  router.push("/profile");
 				})
 				.catch((err) => {
 					console.log("error at signin %o", err.response.data);
@@ -75,7 +75,6 @@ export default {
 		) {
 			console.log("already logged in by cookie");
 			this.$emit("setLoggedIn", true);
-			// router.push("/profile");
 		}
 	},
 };

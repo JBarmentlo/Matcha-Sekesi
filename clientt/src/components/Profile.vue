@@ -99,26 +99,7 @@
 							/>
 						</div>
 					</div>
-					<div class="row mt-3">
-						<div class="col-md-6">
-							<label class="labels">Country</label
-							><input
-								type="text"
-								class="form-control"
-								placeholder="country"
-								value=""
-							/>
-						</div>
-						<div class="col-md-6">
-							<label class="labels">State/Region</label
-							><input
-								type="text"
-								class="form-control"
-								value=""
-								placeholder="state"
-							/>
-						</div>
-					</div>
+
 				</div>
 			</div>
 			<div class="col-md-4">

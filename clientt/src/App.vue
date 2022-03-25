@@ -32,12 +32,17 @@ export default {
       this.logged_in = val;
       console.log("logged in set to: %s", val)
     },
-
-  //   logIn(userID, token, signature) {
-  //     this.logged_in = val;
-  //     console.log("logged in set to: %s", val)
-  //   },
   },
+  	mounted() {
+      console.log("Created");
+      if (
+        this.$cookies.isKey("user") &&
+        this.$cookies.get("user").data.id != null
+      ) {
+        console.log("already logged in by cookie");
+        this.setLoggedIn(true)
+      }
+	},
 }
 </script>
 
