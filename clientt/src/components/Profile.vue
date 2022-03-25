@@ -6,7 +6,7 @@
 					<img
 						class="rounded-circle mt-5"
 						width="150px"
-						src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+						v-bind:src="profilePic"
 					/><span class="font-weight-bold">{{ username }}</span
 					><span class="text-black-50">{{ bio }}</span
 					><span> </span>
@@ -146,6 +146,22 @@
 							</b-dropdown>
 						</div>
 					</div>
+                    <div class="file">
+                        <form @submit.prevent="onSubmit" enctype="multipart/form-data">
+                            <div class="fields">
+                                <label> Upload File </label><br/>
+                                <input type="file" ref="file" @change="onSelect"/>
+                            </div>
+                            <div class="fields">
+                                <button>Submit</button>
+                            </div>
+                            <div class="message">
+                                {{message}}
+                            </div>
+
+                        </form>
+
+                    </div>
 				</div>
 			</div>
 			<div class="mt-3 text-center center pb-4 border-0">
@@ -164,6 +180,7 @@
 <script>
 import { getMyUserDetails, updateUserProfile } from "../services/user.script";
 import formValidate from "../services/formValidate"
+import axios from 'axios';
 
 export default {
 	data() {
@@ -177,6 +194,9 @@ export default {
 			sekesualOri: "Not Specified",
 			mail: "Not Specified",
 			gender: "Not Specified",
+            message: '',
+            file: '',
+            profilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
 		};
 	},
 
@@ -215,19 +235,36 @@ export default {
 		},
 		updateProfile() {
             const updato = {
-                firstName   : this.firstName == "Not Specified" ? null : this.firstName,
-                lastName    : this.lastName == "Not Specified" ? null : this.lastName,
-                bio         : this.bio == "Not Specified" ? null : this.bio,
-                zipCode     : this.zipCode == "Not Specified" ? null : this.zipCode,
-                sekesualOri : this.sekesualOri == "Not Specified" ? null : this.sekesualOri,
-                mail        : this.mail == "Not Specified" ? null : this.mail,
-                gender      : this.gender == "Not Specified" ? null : this.gender,
+                firstName   : this.firstName    == "Not Specified" ? null : this.firstName,
+                lastName    : this.lastName     == "Not Specified" ? null : this.lastName,
+                bio         : this.bio          == "Not Specified" ? null : this.bio,
+                zipCode     : this.zipCode      == "Not Specified" ? null : this.zipCode,
+                sekesualOri : this.sekesualOri  == "Not Specified" ? null : this.sekesualOri,
+                mail        : this.mail         == "Not Specified" ? null : this.mail,
+                gender      : this.gender       == "Not Specified" ? null : this.gender,
             }
             if (formValidate.validateUpdate(updato))
             {
                 updateUserProfile(this.$cookies.get("user"), updato)
             }
         },
+        onSelect() {
+            const file = this.$refs.file.files[0]
+            this.file = file
+        },
+        async onSubmit() {
+            const formData = new FormData()
+            formData.append('file', this.file)
+            try {
+                console.log(formData)
+                axios.post("http://localhost:8080/api/upload", formData).then(res => this.profilePic = "http://localhost:8080/static/" + res.data.file.filename)
+                this.message = "Uploaded"
+            }
+            catch(err) {
+                console.log(err)
+                this.message = "Something Went wrong"
+            }
+        }
 	},
 };
 </script>
