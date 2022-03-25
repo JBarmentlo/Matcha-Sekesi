@@ -5,6 +5,12 @@ const db 			    = require("./app/models");
 const db2 			  = require("./app/newmodels");
 
 
+const multer 			= require("multer");
+
+const upload = multer({
+  dest: "./uploads"
+})
+
 const app = express();
 var corsOptions = {
   origin: "http://localhost:8081"
@@ -36,16 +42,14 @@ app.use('/api/auth', authRouter, function(req, res, next){
   next();
 }) // auth authentication
 
+app.use('/static', express.static('./uploads'))
 
-const multer 			= require("multer");
-
-const upload = multer({
-  dest: "./uploads"
-})
 
 app.post("/api/upload", upload.single('file'), (req, res) => {
   res.send({file: req.file})
 })
+
+
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
