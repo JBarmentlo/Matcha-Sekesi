@@ -37,6 +37,16 @@ app.use('/api/auth', authRouter, function(req, res, next){
 }) // auth authentication
 
 
+const multer 			= require("multer");
+
+const upload = multer({
+  dest: "./uploads"
+})
+
+app.post("/api/upload", upload.single('file'), (req, res) => {
+  res.send({file: req.file})
+})
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
