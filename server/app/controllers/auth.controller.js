@@ -11,12 +11,21 @@ var bcrypt = require("bcryptjs");
 const { createDeflate } = require('zlib');
 
 exports.signup = (req, res) => {
-    console.log("signup")
+    // console.log("signup")
+    // console.log(req.ip)
     const user = {
-        username: req.body.username,
-        mail: req.body.mail,
-        password: bcrypt.hashSync(req.body.password, 8),
-        mailVerified: false
+        username        : req.body.username,
+        firstName       : '',
+        lastName        : '',
+        bio             : '',
+        mail            : req.body.mail,
+        password        : bcrypt.hashSync(req.body.password, 8),
+        mailVerified    : false,
+        gender          : null,
+        sekesualOri     : 'bi',
+        popScore        : 0,
+        zipCode         : null,
+        completeProfile : false,
     };
     AuthCollection.insertOne(user)
         .then(insertOneResult => {
@@ -167,14 +176,14 @@ exports.resetPass = (req, res) => {
                 res.status(400).send({message: "Code expired"})
                 return
             }
-            console.log("found id match %o", id)
+            console.log("found id match %o", id.value)
             filter = {_id: id.value.userId};
             update = {$set: {password: bcrypt.hashSync(req.body.password, 8),},}
             AuthCollection.findOneAndUpdate(filter, update)
             .then(user => {
                 if (user == null || user.lastErrorObject.n == 0)
                     console.log("didnt find user matching confirm, WIERD AS FUCK %o", id)
-                console.log("found user match %o", user)
+                console.log("found user match %o", user.value)
     
                 res.send({
                     username : user.value.username,

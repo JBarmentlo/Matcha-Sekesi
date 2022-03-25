@@ -1,6 +1,11 @@
 const { calculateObjectSize } = require("bson");
 const db = require("../newmodels");
 const utils = require("../utils/UserSanitation");
+const ObjectId = require('mongodb').ObjectId
+var bcrypt = require("bcryptjs");
+const sendMail = require('../authentication/mailgun');
+
+
 // console.log(db)
 // console.log("SDF")
 const user_collection = db.collection("users");
@@ -8,39 +13,164 @@ const like_collection = db.collection("likes");
 const block_collection = db.collection("blocks");
 const consult_collection = db.collection("consult");
 const tag_collection = db.collection("tags");
+const verifyCollection = db.collection("verify")
 
 
-// Create and Save a new User
-// exports.create = (req, res) => {
-// 	// Validate request
-// 	// console.log("req: %s res:%s",req.body, res)
-// 	if (!req.body.name || !req.body.mail || !req.body.username || !req.body.firstname || !req.body.password || !req.body.profile_pic) {
-// 		res.status(400).send({ message: "Content can not be empty!" });
-// 		return;
-// 	}
 
-// 	// Create a User
-// 	const user = {
-// 		username	:	req.body.username,
-// 		mail		:	req.body.mail,
-// 		name		:	req.body.name,
-// 		firstname	:	req.body.firstname,
-// 		password	:	req.body.password,
-// 		profile_pic	:	req.body.profile_pic,
-// 	};
+const userProjection = {
+    "_id": "623b31a19b2caf381d333cfb",
+    "username": "jhonny",
+    "mail": "joepbarmentlo@gmail.com",
+    "password": "$2a$08$yObMlN/HYglguF4ta3S0NO6giu9/ARd.c/g9jDIqSH4u7y9/6yEzG",
+    "mailVerified": true,
+    "gender": null,
+    "sekesualOri": "bi",
+    "popScore": 0,
+    "zipCode": null,
+    "completeProfile": false
+}
 
-// 	// Save User in the database
-// 	user_collection.insertOne(user)
-// 		.then(data => {
-// 			res.send(data);
-// 		})
-// 		.catch(err => {
-// 			res.status(500).send({
-// 				message:
-// 					err.message || "Some error occurred while creating the User."
-// 			});
-// 		});
-// };
+function isUserProfileComplete(user)
+{
+	return true;
+}
+
+async function changeMail(user, mail)
+{
+	if (user.mail == mail)
+		return
+
+	console.log("updating mail address %s %s", user.mail, mail)
+	verifier = {
+		userId  : user._id,
+		idHash  : bcrypt.hashSync(user._id.toString(), 8)
+	}
+	verifyCollection.insertOne(verifier)
+	.then(insertRes => {
+		sendMail(user.mail, "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+		console.log("http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+	})
+	.catch(err => {
+		AuthCollection.deleteOne({_id : user._id.toString()})
+		})
+
+
+	sendMail(user.mail, "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+	user_collection.updateOne({_id: user._id}, {$set : {mail: mail, mailVerified: false}})
+	.catch(err => {
+		console.log("there was an error upfating mail adress: %o", err)
+	})
+}
+
+exports.get_my_user = (req, res) => {
+	// Validate request
+	console.log("getting user %s", req.userId)
+	if (!req.userId) {
+		res.status(400).send({ message: "Id missing you need to login" });
+	return;
+	}
+
+	// Save User in the database
+	filter = {_id: ObjectId(req.userId)}
+	// filter = {username: "jhonny"}
+	user_collection.findOne(filter)
+	.then(user => {
+		if (user == null)
+		{
+			console.log("No user found for ID in token %s", req.userId)
+			return res.status(400).send({message: "no user found"})
+		}
+		res.send(user)
+	})
+	.catch(err => {
+		res.status(500).send({
+			message:
+				err.message || "Some error occurred fetching user data"
+		});
+	});
+};
+
+exports.update_user = (req, res) => {
+	// Validate request
+	console.log("updating user %s", req.userId)
+	console.log("with %s", req.body.update)
+	if (!req.userId) {
+		res.status(400).send({ message: "Id missing you need to login" });
+	return;
+	}
+
+	filter = {_id: ObjectId(req.userId)}
+	completed = isUserProfileComplete(req.body.update)
+	update = {
+		$set : {
+			lastName		: req.body.update.lastName,
+			firstName		: req.body.update.firstName,
+			mail			: req.body.update.mail,
+			bio				: req.body.update.bio,
+			gender			: req.body.update.gender,
+			sekesualOri		: req.body.update.sekesualOri,
+			zipCode			: req.body.update.zipCode,
+			completeProfile	: completed,
+		}
+	}
+	user_collection.findOne(filter)
+	.then(user => {
+		console.log("found user to update %o", user)
+		if (user == null)
+		{
+			console.log("No user found for ID in token %s", req.userId)
+			return res.status(400).send({message: "no user found"})
+		}
+		changeMail(user, req.body.update.mail)
+		.catch(er => {console.log(err)})
+		user_collection.updateOne(filter, update)
+		.then(res.send(user))
+		.catch(err => {
+			console.log("error in update")
+			res.status(500).send({
+				message:
+					err.message || "Some error occurred updating user data"
+			});
+		})
+	})
+	.catch(err => {
+		res.status(500).send({
+			message:
+				err.message || "Some error occurred fetching user data"
+		});
+		console.log("error in find one to update" + err.message)
+	});
+};
+
+exports.get_user_by_id = (req, res) => {
+	// Validate request
+	console.log("getting user %s", req.body.userId)
+	if (!req.body.userId) {
+		res.status(400).send({ message: "Id missing" });
+	return;
+	}
+
+	// Save User in the database
+	filter = {_id: ObjectId(req.body.userId)}
+	// filter = {username: "jhonny"}
+	user_collection.findOne(filter)
+	.then(user => {
+		if (user == null)
+		{
+			res.status(400).send({message: "no user found"})
+			return
+		}
+		delete user.password
+		delete user.mail
+		res.send(user)
+	})
+	.catch(err => {
+		res.status(500).send({
+			message:
+				err.message || "Some error occurred fetching user data"
+		});
+	});
+};
 
 
 exports.get_likes_of_user = (req, res) => {
