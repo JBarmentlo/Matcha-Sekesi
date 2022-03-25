@@ -60,7 +60,7 @@ export default {
 				.then((res) => {
 					this.requestSent = true;
 				})
-				.catch((ett) => {
+				.catch((err) => {
 					this.error = true;
 				});
 		},

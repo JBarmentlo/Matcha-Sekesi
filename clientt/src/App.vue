@@ -33,10 +33,10 @@ export default {
       console.log("logged in set to: %s", val)
     },
 
-    logIn(userID, token, signature) {
-      this.logged_in = val;
-      console.log("logged in set to: %s", val)
-    },
+  //   logIn(userID, token, signature) {
+  //     this.logged_in = val;
+  //     console.log("logged in set to: %s", val)
+  //   },
   },
 }
 </script>

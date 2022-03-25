@@ -14,6 +14,11 @@ function validatePassword(psw)
     return (psw.length > 5)
 }
 
+function validateUpdate(item)
+{
+    return (true)
+}
+
 function validateAllWithAlerts(name, mail, psw)
 {
     let ok = true
@@ -41,7 +46,8 @@ const inputValidate = {
     validateUserName,
     validateMail,
     validatePassword,
-    validateAllWithAlerts
+    validateAllWithAlerts,
+    validateUpdate
 };
 
 export default inputValidate

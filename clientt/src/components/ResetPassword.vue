@@ -47,8 +47,8 @@
 <script>
 import inputValidate from "../services/formValidate";
 import { resetPassword } from "../services/auth.script";
-import router from "@/router";
-import Vue from "vue";
+// import router from "@/router";
+// import Vue from "vue";
 
 export default {
 	data() {
@@ -85,7 +85,8 @@ export default {
 					console.log("error at reset %o", err.response.data);
 					this.success = false;
 					this.sent = true;
-					if ((err.response.data.message = "Code expired")) this.expired = true;
+					if (err.response.data.message == "Code expired")
+						this.expired = true;
 				});
 		},
 	},
