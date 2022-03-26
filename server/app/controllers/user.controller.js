@@ -17,23 +17,11 @@ const verifyCollection = db.collection("verify")
 
 
 
-const userProjection = {
-    "_id": "623b31a19b2caf381d333cfb",
-    "username": "jhonny",
-    "mail": "joepbarmentlo@gmail.com",
-    "password": "$2a$08$yObMlN/HYglguF4ta3S0NO6giu9/ARd.c/g9jDIqSH4u7y9/6yEzG",
-    "mailVerified": true,
-    "gender": null,
-    "sekesualOri": "bi",
-    "popScore": 0,
-    "zipCode": null,
-    "completeProfile": false
-}
-
 function isUserProfileComplete(user)
 {
 	return true;
 }
+
 
 async function changeMail(user, mail)
 {
@@ -110,6 +98,8 @@ exports.update_user = (req, res) => {
 			gender			: req.body.update.gender,
 			sekesualOri		: req.body.update.sekesualOri,
 			zipCode			: req.body.update.zipCode,
+			pictures        : req.body.update.pictures,
+			profilePic      : req.body.update.profilePic,
 			completeProfile	: completed,
 		}
 	}

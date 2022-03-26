@@ -1,15 +1,7 @@
 const express 		= require("express");
 const bodyParser 	= require("body-parser");
 const cors 			  = require("cors");
-const db 			    = require("./app/models");
-const db2 			  = require("./app/newmodels");
 
-
-const multer 			= require("multer");
-
-const upload = multer({
-  dest: "./uploads"
-})
 
 const app = express();
 var corsOptions = {
@@ -22,6 +14,7 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+require("./app/routes/image.route")(app)
 
 const userRouter = require("./app/routes/user.routes")
 const authRouter = require("./app/routes/auth")
@@ -42,12 +35,6 @@ app.use('/api/auth', authRouter, function(req, res, next){
   next();
 }) // auth authentication
 
-app.use('/static', express.static('./uploads'))
-
-
-app.post("/api/upload", upload.single('file'), (req, res) => {
-  res.send({file: req.file})
-})
 
 
 
