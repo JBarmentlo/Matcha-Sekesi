@@ -15,7 +15,7 @@
 			<div class="col-md-5 border-right">
 				<div class="p-3 py-5">
 					<div class="d-flex justify-content-between align-items-center mb-3">
-						<h4 class="text-right">Profile Settings</h4>
+						<h4 class="text-right">Profile</h4>
 					</div>
 					<div class="row mt-2">
 						<div class="col-md-6">
@@ -28,6 +28,7 @@
 								value=""
 							/>
 						</div>
+						
 						<div class="col-md-6">
 							<label class="labels">Surname</label
 							><input
@@ -41,13 +42,8 @@
 					</div>
 					<div class="row mt-3">
 						<div class="col-md-12 pb-2">
-							<label class="labels">Interests</label
-							><input
-								type="text"
-								class="form-control"
-								placeholder="enter phone number"
-								value=""
-							/>
+							<label class="labels">Interests</label>
+							<input type="text" class="form-control" placeholder="enter interests" value=""/>
 						</div>
 						<div class="col-md-12 pb-2">
 							<label class="labels">Bio</label
@@ -136,14 +132,14 @@
 								</b-dropdown>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="file">
+						<div class="col-md-6 pt-4">
+							<div class="file" v-if="pictures.length <= 4">
 								<form @submit.prevent="onSubmit" enctype="multipart/form-data">
 									<div class="fields">
-										<label> Upload File </label><br />
+										<label> Upload Pictures </label><br />
 										<input type="file" ref="file" @change="onSelect" />
 									</div>
-									<div class="fields">
+									<div v-if="file != null" class="fields">
 										<button class="btn btn-primary profile-button">Upload</button>
 									</div>
 									<div class="message">
@@ -158,13 +154,12 @@
 			<div class="col-md-4">
 				<b-container fluid class="p-4 bg-light">
 					<b-col>
-						<b-col v-for="url in pictures" :key="url">
-							<b-img
-								thumbnail
-								fluid
-								:src=url
-								alt="Image 1"
-							>						{{url}}</b-img>
+						<b-col v-for="(url, index) in pictures" :key="url">
+							<b-img thumbnail fluid :src=url alt="Image 1"></b-img>
+							<b-row>
+								<b-col lg="4" class="pb-2"><b-button @click="deletePic(index)" size="sm">Delete</b-button></b-col>
+								<b-col lg="8" class="pb-2"><b-button @click="profilePic = pictures[index]" size="sm">Make Profile</b-button></b-col>
+							</b-row>
 						</b-col>
 					</b-col>
 				</b-container>
@@ -202,6 +197,7 @@ export default {
 			message: null,
 			file: null,
 			profilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
+			defaultProfilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
 			pictures: [],
 		};
 	},
@@ -238,14 +234,13 @@ export default {
 		},
 		updateProfile() {
 			const updato = {
-				firstName: this.firstName == "Not Specified" ? null : this.firstName,
-				lastName: this.lastName == "Not Specified" ? null : this.lastName,
-				bio: this.bio == "Not Specified" ? null : this.bio,
-				zipCode: this.zipCode == "Not Specified" ? null : this.zipCode,
-				sekesualOri:
-					this.sekesualOri == "Not Specified" ? null : this.sekesualOri,
-				mail: this.mail == "Not Specified" ? null : this.mail,
-				gender: this.gender == "Not Specified" ? null : this.gender,
+				firstName: this.firstName,
+				lastName: this.lastName,
+				bio: this.bio,
+				zipCode: this.zipCode,
+				sekesualOri: this.sekesualOri,
+				mail: this.mail,
+				gender: this.gender,
 				pictures: this.pictures,
 				profilePic: this.profilePic,
 			};
@@ -275,6 +270,12 @@ export default {
 			}
 			this.file = null
 		},
+		deletePic(index)
+		{
+			if (this.profilePic == this.pictures[index])
+				this.profilePic = this.defaultProfilePic
+			this.pictures.splice(index, 1)
+		}
 	},
 };
 </script>

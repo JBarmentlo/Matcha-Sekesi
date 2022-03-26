@@ -31,6 +31,11 @@ Vue.use(VueRouter)
     path: '/reset/:hashId',
     name: 'reset-password',
     component: () => import('../components/ResetPassword.vue')
+  },
+  {
+    path: '/search',
+    name: 'search-user',
+    component: () => import('../components/ProfileSearch.vue')
   }
 ]
 const router = new VueRouter({
