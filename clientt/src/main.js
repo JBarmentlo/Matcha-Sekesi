@@ -7,6 +7,9 @@ import App from './App.vue'
 import router from './router'
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/assets/css/main.css'
+import VoerroTagsInput from '@voerro/vue-tagsinput';
+
+Vue.component('tags-input', VoerroTagsInput);
 
 Vue.use(require('vue-cookies'))
 Vue.use(BootstrapVueIcons)

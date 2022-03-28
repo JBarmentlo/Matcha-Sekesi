@@ -138,6 +138,22 @@
 	
 </template>
 
+
+<script>
+export default {
+    data() {
+        return {
+
+        }
+    },
+    props: {
+        users: []
+    }
+}
+</script>
+
+
+
 <style scoped>
 body{
     background:#FCFCFC;    

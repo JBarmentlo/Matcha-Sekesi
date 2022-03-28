@@ -35,3 +35,20 @@ export const updateUserProfile = async (userCooki, newProfile) => {
 	return response;
 };
 
+
+export const getTags = async (userCooki) => {
+	console.log("getting tags %o", userCooki)
+	let request = {
+		url: "http://localhost:8080/api/users/gettags",  // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type": "application/json",
+			"x-access-token" : userCooki.data.accessToken,
+			"x-access-signature" : userCooki.data.signature,
+		},
+		data: JSON.stringify({})
+	};
+	const response = await axios(request);
+	return response;
+};
+

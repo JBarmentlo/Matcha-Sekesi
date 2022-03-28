@@ -35,7 +35,7 @@ Vue.use(VueRouter)
   {
     path: '/search',
     name: 'search-user',
-    component: () => import('../components/ProfileSearch.vue')
+    component: () => import('../components/Search.vue')
   }
 ]
 const router = new VueRouter({

@@ -43,6 +43,10 @@
 					<div class="row mt-3">
 						<div class="col-md-12 pb-2">
 							<label class="labels">Interests</label>
+							<tags-input element-id="tags"
+							v-model="selectedTags"
+							:existing-tags="existingTags"
+							:typeahead="true"></tags-input>
 							<input type="text" class="form-control" placeholder="enter interests" value=""/>
 						</div>
 						<div class="col-md-12 pb-2">
@@ -178,7 +182,7 @@
 </template>
 
 <script>
-import { getMyUserDetails, updateUserProfile } from "../services/user.script";
+import { getMyUserDetails, updateUserProfile, getTags} from "../services/user.script";
 import formValidate from "../services/formValidate";
 import axios from "axios";
 
@@ -199,6 +203,8 @@ export default {
 			profilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
 			defaultProfilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
 			pictures: [],
+			selectedTags: [],
+			existingTags: []
 		};
 	},
 
@@ -216,11 +222,18 @@ export default {
 					(this.gender = user.data.gender);
 					(this.pictures = user.data.pictures);
 					(this.profilePic = user.data.profilePic);
+					(this.selectedTags = user.data.tags);
 
 			})
 			.catch((err) => {
 				console.log(err);
 			});
+
+		getTags(this.$cookies.get("user"))
+		.then(tags => {
+			this.existingTags = tags.data
+			console.log("tagis found: ",  this.existingTags)
+		})
 	},
 
 	methods: {
@@ -243,6 +256,7 @@ export default {
 				gender: this.gender,
 				pictures: this.pictures,
 				profilePic: this.profilePic,
+				selectedTags : this.selectedTags
 			};
 			if (formValidate.validateUpdate(updato)) {
 				updateUserProfile(this.$cookies.get("user"), updato);
