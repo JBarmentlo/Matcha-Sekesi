@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const db = require("../newmodels");
 const path = require('path');
 const sendMail = require('../authentication/mailgun');
-const AuthCollection = db.collection("users")
+const user_collection = db.collection("users")
 const verifyCollection = db.collection("verify")
 const resetCollection = db.collection("reset")
 
@@ -31,9 +31,11 @@ exports.signup = (req, res) => {
         completeProfile : false,
         pictures        : [default_profile_pic],
         profilePic      : default_profile_pic,
-        tags            : null
+        tags            : null,
+        longitude       : null,
+        latitude        : null
     };
-    AuthCollection.insertOne(user)
+    user_collection.insertOne(user)
         .then(insertOneResult => {
             console.log(insertOneResult.insertedId)
             verifier = {
@@ -47,7 +49,7 @@ exports.signup = (req, res) => {
                 res.send({ message: "User was registered successfully!" })
             })
             .catch(err => {
-                AuthCollection.deleteOne({_id : insertOneResult.insertedId.toString()})
+                user_collection.deleteOne({_id : insertOneResult.insertedId.toString()})
             })
         })
         .catch(err => {
@@ -60,7 +62,7 @@ exports.signup = (req, res) => {
 
 exports.signin = (req, res) => {
     console.log("signing in %o", req.body)
-    AuthCollection.findOne({ username: req.body.username })
+    user_collection.findOne({ username: req.body.username })
         .then(user => {
             if (user == null)
             {
@@ -116,7 +118,7 @@ exports.verifyMail = (req, res) => {
             console.log("found id match %o", id)
             filter = {_id: id.value.userId};
             update = {$set: {mailVerified: true,},}
-            AuthCollection.findOneAndUpdate(filter, update)
+            user_collection.findOneAndUpdate(filter, update)
             .then(user => {
                 if (user == null || user.lastErrorObject.n == 0)
                     console.log("didnt find user matching confirm, WIERD AS FUCK %o", id)
@@ -144,7 +146,7 @@ exports.requestresetPass = (req, res) => {
     console.log("requesting reset psw for mail %s", req.body)
     
 
-    AuthCollection.findOne({mail: req.body.mail})
+    user_collection.findOne({mail: req.body.mail})
     .then(user => {
         if (user == null || user.verifyMail == false)
         {
@@ -185,7 +187,7 @@ exports.resetPass = (req, res) => {
             console.log("found id match %o", id.value)
             filter = {_id: id.value.userId};
             update = {$set: {password: bcrypt.hashSync(req.body.password, 8),},}
-            AuthCollection.findOneAndUpdate(filter, update)
+            user_collection.findOneAndUpdate(filter, update)
             .then(user => {
                 if (user == null || user.lastErrorObject.n == 0)
                     console.log("didnt find user matching confirm, WIERD AS FUCK %o", id)

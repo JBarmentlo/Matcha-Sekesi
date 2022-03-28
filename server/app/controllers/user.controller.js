@@ -81,6 +81,42 @@ function completeAndUploadTag(tag)
 	return tag
 }
 
+
+
+exports.create_user = (req, res) => {
+    // console.log("signup")
+    // console.log(req.ip)
+    const user = {
+        username        : req.body.username,
+        firstName       : req.body.firstName,
+        lastName        : req.body.lastName,
+        bio             : req.body.bio,
+        mail            : req.body.mail,
+        password        : bcrypt.hashSync(req.body.password, 8),
+        mailVerified    : true,
+        gender          : req.body.gender,
+        sekesualOri     : req.body.sekesualOri,
+        popScore        : req.body.popScore,
+        zipCode         : req.body.zipCode,
+        completeProfile : true,
+        pictures        : req.body.pictures,
+        profilePic      : req.body.profilePic,
+        tags            : req.body.tags,
+        longitude       : req.body.longitude,
+        latitude        : req.body.latitude
+    };
+    user_collection.insertOne(user)
+        .then(insertOneResult => {
+            console.log(insertOneResult.insertedId)
+                res.send({ message: "User was registered successfully!" })
+            })
+            .catch(err => {
+                user_collection.deleteOne({_id : insertOneResult.insertedId.toString()})
+            })
+};
+
+
+
 exports.get_tags = (req, res) => {
 	const cursor = tag_collection.find({})
 	const tags = cursor.toArray()
