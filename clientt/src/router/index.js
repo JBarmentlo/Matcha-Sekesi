@@ -36,6 +36,11 @@ Vue.use(VueRouter)
     path: '/search',
     name: 'search-user',
     component: () => import('../components/Search.vue')
+  },
+  {
+    path: '/populate',
+    name: 'populate-db',
+    component: () => import('../components/PopulateDb.vue')
   }
 ]
 const router = new VueRouter({
