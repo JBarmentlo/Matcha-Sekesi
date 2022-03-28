@@ -33,7 +33,8 @@ exports.signup = (req, res) => {
         profilePic      : default_profile_pic,
         tags            : null,
         longitude       : null,
-        latitude        : null
+        latitude        : null,
+        city	        : null
     };
     user_collection.insertOne(user)
         .then(insertOneResult => {

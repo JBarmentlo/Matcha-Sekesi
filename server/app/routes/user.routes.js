@@ -24,6 +24,8 @@ router.get("/gettags", 		auth.auth_jwt_token.verifyToken,		userController.get_ta
 
 router.post("/createuser", 											userController.create_user);
 
+router.get("/getallusers", 	auth.auth_jwt_token.verifyToken,		userController.get_all_users);
+
 
 
 

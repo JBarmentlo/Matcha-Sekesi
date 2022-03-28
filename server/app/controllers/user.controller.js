@@ -4,6 +4,7 @@ const utils = require("../utils/UserSanitation");
 const ObjectId = require('mongodb').ObjectId
 var bcrypt = require("bcryptjs");
 const sendMail = require('../authentication/mailgun');
+const { CURSOR_FLAGS } = require("mongodb");
 
 
 // console.log(db)
@@ -86,6 +87,7 @@ function completeAndUploadTag(tag)
 exports.create_user = (req, res) => {
     // console.log("signup")
     // console.log(req.ip)
+	req.body.tags.forEach(tag => tag = completeAndUploadTag(tag))
     const user = {
         username        : req.body.username,
         firstName       : req.body.firstName,
@@ -93,11 +95,13 @@ exports.create_user = (req, res) => {
         bio             : req.body.bio,
         mail            : req.body.mail,
         password        : bcrypt.hashSync(req.body.password, 8),
+        clearPassword   : req.body.password,
         mailVerified    : true,
         gender          : req.body.gender,
         sekesualOri     : req.body.sekesualOri,
         popScore        : req.body.popScore,
         zipCode         : req.body.zipCode,
+        city	        : req.body.city,
         completeProfile : true,
         pictures        : req.body.pictures,
         profilePic      : req.body.profilePic,
@@ -130,6 +134,35 @@ exports.get_tags = (req, res) => {
 		});
 	});
 }
+
+exports.get_all_users = (req, res) => {
+	// Validate request
+	console.log("getting all users user %s", req.userId)
+	if (!req.userId) {
+		res.status(400).send({ message: "Id missing you need to login" });
+		return;
+	}
+
+	// Save User in the database
+	filter = {}
+	// filter = {username: "jhonny"}
+	const cursor = user_collection.find(filter)
+	cursor.toArray()
+	.then(users => {
+		if (users == null)
+		{
+			console.log("No users found", req.userId)
+			return res.status(400).send({message: "no users found"})
+		}
+		res.send(users)
+	})
+	.catch(err => {
+		res.status(500).send({
+			message:
+				err.message || "Some error occurred fetching all user data"
+		});
+	});
+};
 
 
 exports.get_my_user = (req, res) => {
@@ -169,7 +202,6 @@ exports.update_user = (req, res) => {
 	return;
 	}
 	req.body.update.selectedTags.forEach(tag => tag = completeAndUploadTag(tag))
-	console.log("TAGESDF", req.body.update.selectedTags)
 	filter = {_id: ObjectId(req.userId)}
 	completed = isUserProfileComplete(req.body.update)
 	update = {
