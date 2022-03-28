@@ -36,6 +36,11 @@ export const updateUserProfile = async (userCooki, newProfile) => {
 };
 
 
+function makeTag(name)
+{
+	return({key: '', value: name})
+}
+
 export const createRandomUser = async () => {
 	console.log("Creating user", Math.random() * 10)
 
@@ -57,11 +62,12 @@ export const createRandomUser = async () => {
         gender          : results[0].gender == "male" ? "Male" : "Female",
         sekesualOri     : sekesualOri[Math.floor(Math.random() * sekesualOri.length)],
         popScore        : Math.random() * 10,
-        zipCode         : null,
+        zipCode         : results[0].location.postcode,
+        city         	: results[0].location.city,
         completeProfile : true,
         pictures        : [results[0].picture.medium],
         profilePic      : results[0].picture.medium,
-        tags            : [tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * sekesualOri.length)]],
+        tags            : [makeTag(tags[Math.floor(Math.random() * tags.length)]), makeTag(tags[Math.floor(Math.random() * sekesualOri.length)])],
         longitude       : results[0].location.coordinates.longitude,
         latitude        : results[0].location.coordinates.latitude
     };
@@ -101,7 +107,23 @@ export const getTags = async (userCooki) => {
 	console.log("getting tags %o", userCooki)
 	let request = {
 		url: "http://localhost:8080/api/users/gettags",  // should be replaced after going to production with domain url
-		method: "post",
+		method: "get",
+		headers: {
+			"Content-type": "application/json",
+			"x-access-token" : userCooki.data.accessToken,
+			"x-access-signature" : userCooki.data.signature,
+		}
+	};
+	const response = await axios(request);
+	return response;
+};
+
+
+export const getAllUsers = async (userCooki) => {
+	console.log("getting users with usercooki %o", userCooki)
+	let request = {
+		url: "http://localhost:8080/api/users/getallusers",  // should be replaced after going to production with domain url
+		method: "get",
 		headers: {
 			"Content-type": "application/json",
 			"x-access-token" : userCooki.data.accessToken,
