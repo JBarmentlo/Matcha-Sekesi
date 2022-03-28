@@ -20,6 +20,9 @@ router.get("/getmyuser", 	auth.auth_jwt_token.verifyToken,		userController.get_m
 
 router.post("/updateuser", 	auth.auth_jwt_token.verifyToken,		userController.update_user);
 
+router.post("/gettags", 	auth.auth_jwt_token.verifyToken,		userController.get_tags);
+
+
 
 // router.get("/getconsults", 	auth.auth_jwt_token.verifyToken,		userController.get_consults_of_user);
 

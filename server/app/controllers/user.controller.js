@@ -22,7 +22,6 @@ function isUserProfileComplete(user)
 	return true;
 }
 
-
 async function changeMail(user, mail)
 {
 	if (user.mail == mail)
@@ -49,6 +48,53 @@ async function changeMail(user, mail)
 		console.log("there was an error upfating mail adress: %o", err)
 	})
 }
+
+function addTag(tagName)
+{
+	tag_collection.findOne({name: tagName})
+	.then(tagRes => {
+		if (tagRes == null)
+		{
+			tag_collection.insertOne({key: tagName, value: tagName})
+		}
+	})
+	.catch(err => {
+		console.log("error adding tag %s, error: %o", tagName, err)
+	})
+}
+
+function completeAndUploadTag(tag)
+{
+	console.log("tag %o", tag)
+	try {
+		if(tag.key == "")
+		{
+			tag.key = tag.value
+			console.log("adding tag %s", tag.value)
+			addTag(tag.value)
+		}
+	}
+	catch(err)
+	{
+		console.log("error with tag add err: %o, tag: %o", err, tag)
+	}
+	return tag
+}
+
+exports.get_tags = (req, res) => {
+	const cursor = tag_collection.find({})
+	const tags = cursor.toArray()
+	.then(data => {
+		res.send(data)
+	})
+	.catch(err => {
+		res.status(500).send({
+			message:
+				err.message || "Some error occurred while checking tags"
+		});
+	});
+}
+
 
 exports.get_my_user = (req, res) => {
 	// Validate request
@@ -86,7 +132,8 @@ exports.update_user = (req, res) => {
 		res.status(400).send({ message: "Id missing you need to login" });
 	return;
 	}
-
+	req.body.update.selectedTags.forEach(tag => tag = completeAndUploadTag(tag))
+	console.log("TAGESDF", req.body.update.selectedTags)
 	filter = {_id: ObjectId(req.userId)}
 	completed = isUserProfileComplete(req.body.update)
 	update = {
@@ -100,6 +147,7 @@ exports.update_user = (req, res) => {
 			zipCode			: req.body.update.zipCode,
 			pictures        : req.body.update.pictures,
 			profilePic      : req.body.update.profilePic,
+			tags			: req.body.update.selectedTags,
 			completeProfile	: completed,
 		}
 	}
@@ -161,6 +209,7 @@ exports.get_user_by_id = (req, res) => {
 		});
 	});
 };
+
 
 
 exports.get_likes_of_user = (req, res) => {
@@ -233,6 +282,7 @@ exports.get_blocks_of_and_by_user = (req, res) => {
 			});
 		});
 };
+
 
 
 exports.like_user = (req, res) => {

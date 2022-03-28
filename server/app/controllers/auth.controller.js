@@ -31,6 +31,7 @@ exports.signup = (req, res) => {
         completeProfile : false,
         pictures        : [default_profile_pic],
         profilePic      : default_profile_pic,
+        tags            : null
     };
     AuthCollection.insertOne(user)
         .then(insertOneResult => {
