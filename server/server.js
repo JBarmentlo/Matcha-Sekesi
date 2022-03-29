@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 require("./app/routes/image.route")(app)
 
 const userRouter = require("./app/routes/user.routes")
-const authRouter = require("./app/routes/auth")
+const authRouter = require("./app/routes/auth.routes")
 
 app.use('/api/users',userRouter, function(req, res, next){
   res.header(

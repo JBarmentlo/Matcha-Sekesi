@@ -302,6 +302,29 @@ exports.get_likes_of_user = (req, res) => {
 		});
 };
 
+exports.get_likes_by_user = (req, res) => {
+	// Validate request
+	// console.log("req: %s res:%s",req.body, res)
+	if (!req.userId) {
+		res.status(400).send({ message: "Id missing to look for likes" });
+		return;
+	}
+
+	// Save User in the database
+	const cursor = like_collection.find({ liker_id: req.userId })
+	const likers = cursor.toArray()
+		.then(data => {
+			res.status(200).send(data)
+		})
+		.catch(err => {
+			res.status(500).send({
+				message:
+					err.message || "Some error occurred while checking your likes"
+			});
+		});
+};
+
+
 exports.get_consults_of_user = (req, res) => {
 	// Validate request
 	// console.log("req: %s res:%s",req.body, res)
@@ -350,6 +373,52 @@ exports.get_blocks_of_and_by_user = (req, res) => {
 			});
 		});
 };
+
+
+exports.get_blocks_by_user = (req, res) => {
+	// Validate request
+	// console.log("req: %s res:%s",req.body, res)
+	if (!req.userId) {
+		res.status(400).send({ message: "Id missing to look for blocks" });
+		return;
+	}
+
+	// Save User in the database
+	const cursor = like_collection.find({ blocker_id: req.userId })
+	const likers = cursor.toArray()
+		.then(data => {
+			res.status(200).send(data)
+		})
+		.catch(err => {
+			res.status(500).send({
+				message:
+					err.message || "Some error occurred while checking your blocks"
+			});
+		});
+};
+
+exports.get_blocks_of_user = (req, res) => {
+	// Validate request
+	// console.log("req: %s res:%s",req.body, res)
+	if (!req.userId) {
+		res.status(400).send({ message: "Id missing to look for blocks" });
+		return;
+	}
+
+	// Save User in the database
+	const cursor = like_collection.find({ blocked_id: req.userId })
+	const likers = cursor.toArray()
+		.then(data => {
+			res.status(200).send(data)
+		})
+		.catch(err => {
+			res.status(500).send({
+				message:
+					err.message || "Some error occurred while checking your blocks"
+			});
+		});
+};
+
 
 
 

@@ -53,7 +53,7 @@
 
 
 <script>
-import { likeUser} from "../services/user.script";
+import { likeUser} from "../services/like.script";
 
 export default {
     data() {

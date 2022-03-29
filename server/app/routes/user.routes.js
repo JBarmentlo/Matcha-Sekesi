@@ -7,14 +7,19 @@ var router = require("express").Router();
 // router.get("/checkusername", 	userController.check_username_free);
 // router.get("/checkmail", 		userController.check_mail_free);
 router.post("/like", 		auth.auth_jwt_token.verifyToken,		userController.like_user)
-router.get("/getlikes", 	auth.auth_jwt_token.verifyToken,	 	userController.get_likes_of_user);
+router.get("/likesbyme", 	auth.auth_jwt_token.verifyToken,	 	userController.get_likes_of_user);
+router.get("/likesofme", 	auth.auth_jwt_token.verifyToken,	 	userController.get_likes_by_user);
 
 router.post("/block",  		auth.auth_jwt_token.verifyToken,		userController.block_user);
-router.get("/getblocks", 	auth.auth_jwt_token.verifyToken,		userController.get_blocks_of_and_by_user);
+router.get("/getallblocks", auth.auth_jwt_token.verifyToken,		userController.get_blocks_of_and_by_user);
+router.get("/blocksbyme", 	auth.auth_jwt_token.verifyToken,		userController.get_blocks_by_user);
+router.get("/blocksofme", 	auth.auth_jwt_token.verifyToken,		userController.get_blocks_of_user);
 
 router.post("/consult", 	auth.auth_jwt_token.verifyToken,		userController.consult_user);
+router.get("/consultsofme", auth.auth_jwt_token.verifyToken,		userController.get_consults_of_user);
 
-router.get("/getuser/:userId", 	auth.auth_jwt_token.verifyToken,		userController.get_user_by_id);
+
+router.get("/getuser/:userId", 	auth.auth_jwt_token.verifyToken,	userController.get_user_by_id);
 
 router.get("/getmyuser", 	auth.auth_jwt_token.verifyToken,		userController.get_my_user);
 
