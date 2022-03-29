@@ -250,14 +250,14 @@ exports.update_user = (req, res) => {
 
 exports.get_user_by_id = (req, res) => {
 	// Validate request
-	console.log("getting user %s", req.body.userId)
-	if (!req.body.userId) {
+	console.log("getting user %s", req.params.userId)
+	if (!req.params.userId) {
 		res.status(400).send({ message: "Id missing" });
-	return;
+		return;
 	}
 
 	// Save User in the database
-	filter = {_id: ObjectId(req.body.userId)}
+	filter = {_id: ObjectId(req.params.userId)}
 	// filter = {username: "jhonny"}
 	user_collection.findOne(filter)
 	.then(user => {

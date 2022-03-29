@@ -14,7 +14,7 @@ router.get("/getblocks", 	auth.auth_jwt_token.verifyToken,		userController.get_b
 
 router.post("/consult", 	auth.auth_jwt_token.verifyToken,		userController.consult_user);
 
-router.get("/getuser", 		auth.auth_jwt_token.verifyToken,		userController.get_user_by_id);
+router.get("/getuser/:userId", 	auth.auth_jwt_token.verifyToken,		userController.get_user_by_id);
 
 router.get("/getmyuser", 	auth.auth_jwt_token.verifyToken,		userController.get_my_user);
 
