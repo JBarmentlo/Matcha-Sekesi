@@ -5,6 +5,7 @@ const ObjectId = require('mongodb').ObjectId
 var bcrypt = require("bcryptjs");
 const sendMail = require('../authentication/mailgun');
 const { CURSOR_FLAGS } = require("mongodb");
+const { send } = require("express/lib/response");
 
 
 // console.log(db)
@@ -280,6 +281,36 @@ exports.get_user_by_id = (req, res) => {
 
 
 
+exports.is_liked_by_user = (req, res) => {
+	// Validate request
+	console.log("getting is liked %s", req.params.userId)
+	if (!req.params.userId || !req.userId) {
+		res.status(400).send({ message: "Id missing" });
+		return;
+	}
+
+	// Save User in the database
+	filter = {liker_id: req.userId, liked_id: req.params.userId}
+	// filter = {username: "jhonny"}
+	like_collection.findOne(filter)
+	.then(like => {
+		if (like == null)
+		{
+			res.send(false)
+			return
+		}
+		res.send(true)
+	})
+	.catch(err => {
+		res.status(500).send({
+			message:
+				err.message || "Some error occurred fetching like data"
+		});
+	});
+};
+
+
+
 exports.get_likes_of_user = (req, res) => {
 	// Validate request
 	// console.log("req: %s res:%s",req.body, res)
@@ -424,7 +455,7 @@ exports.get_blocks_of_user = (req, res) => {
 
 exports.like_user = (req, res) => {
 	// Validate request
-	console.log("req: %s res:%s",req.body, res)
+	console.log("liking user")
 	if (!req.userId || !req.body.liked_id) {
 		res.status(400).send({ message: "Id missing to like" });
 		return;
@@ -435,8 +466,12 @@ exports.like_user = (req, res) => {
 		.then(data => {
 			if (data == null) {
 				like_collection.insertOne({ liked_id: req.body.liked_id, liker_id: req.userId })
-					.then(data => { res.send(data) })
+					.then(data => { res.send(data); return})
 					.catch(err => res.status(500).send({ message: err.message || "Some error occurred while sending your like" }))
+			}
+			else
+			{
+				res.status(400).send(data)
 			}
 		})
 		.catch(err => {
@@ -445,6 +480,25 @@ exports.like_user = (req, res) => {
 					err.message || "Some error occurred while checking your like redundancy"
 			});
 		});
+};
+
+exports.unlike_user = (req, res) => {
+	// Validate request
+	console.log("unliking: %s %s",req.userId, req.body.liked_id)
+	if (!req.userId || !req.body.liked_id) {
+		res.status(400).send({ message: "Id missing to like" });
+		return;
+	}
+
+	// Save like in the database
+	like_collection.findOneAndDelete({ liked_id: req.body.liked_id, liker_id: req.userId })
+	.then(deleted => {
+		res.send(deleted)
+	})
+	.catch(err => {
+		console.log(err)
+		send.status(500).send("there was an error unliking " || err)
+	})
 };
 
 exports.block_user = (req, res) => {
