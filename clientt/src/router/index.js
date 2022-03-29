@@ -13,6 +13,11 @@ Vue.use(VueRouter)
     component: () => import('../components/Profile.vue')
   },
   {
+    path: '/hisprofile',
+    name: 'profile',
+    component: () => import('../components/OtherProfile.vue')
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('../components/Login.vue')

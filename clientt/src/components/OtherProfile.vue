@@ -20,7 +20,7 @@
 					<div class="row mt-2">
 						<div class="col-md-6">
 							<label class="labels">Name</label
-							><input
+							><text
 								type="text"
 								v-model="firstName"
 								class="form-control"
@@ -66,16 +66,6 @@
 								v-model="mail"
 								class="form-control"
 								placeholder="Email"
-								value=""
-							/>
-						</div>
-						<div class="col-md-12 pb-2">
-							<label class="labels">Password</label
-							><input
-								type="password"
-								v-model="password"
-								class="form-control"
-								placeholder="Password"
 								value=""
 							/>
 						</div>
@@ -136,160 +126,76 @@
 								</b-dropdown>
 							</div>
 						</div>
-						<div class="col-md-6 pt-4">
-							<div class="file" v-if="pictures.length <= 4">
-								<form @submit.prevent="onSubmit" enctype="multipart/form-data">
-									<div class="fields">
-										<label> Upload Pictures </label><br />
-										<input type="file" ref="file" @change="onSelect" />
-									</div>
-									<div v-if="file != null" class="fields">
-										<button class="btn btn-primary profile-button">Upload</button>
-									</div>
-									<div class="message">
-										{{ message }}
-									</div>
-								</form>
-							</div>
-						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<b-container fluid class="p-4 bg-light">
 					<b-col>
-						<b-col v-for="(url, index) in pictures" :key="url">
+						<b-col v-for="url in pictures" :key="url">
 							<b-img thumbnail fluid :src=url alt="Image 1"></b-img>
-							<b-row>
-								<b-col lg="4" class="pb-2"><b-button @click="deletePic(index)" size="sm">Delete</b-button></b-col>
-								<b-col lg="8" class="pb-2"><b-button @click="profilePic = pictures[index]" size="sm">Make Profile</b-button></b-col>
-							</b-row>
 						</b-col>
 					</b-col>
 				</b-container>
-			</div>
-			<div class="mt-3 text-center center pb-4 border-0">
-				<button
-					@click="updateProfile"
-					class="btn btn-primary profile-button"
-					type="button"
-				>
-					Save Profile
-				</button>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { getMyUserDetails, updateUserProfile, getTags} from "../services/user.script";
+import { getUserDetails, updateUserProfile, getTags} from "../services/user.script";
 import formValidate from "../services/formValidate";
 import axios from "axios";
 
 export default {
 	data() {
 		return {
-			username: "Not Specified",
-			firstName: "Not Specified",
-			lastName: "Not Specified",
-			password: "",
-			bio: "Not Specified",
-			zipCode: "Not Specified",
-			sekesualOri: "Not Specified",
-			mail: "Not Specified",
-			gender: "Not Specified",
-			message: null,
-			file: null,
-			profilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
+			id				: null,
+			username 		: null,
+			firstName		: null,
+			lastName		: null,
+			bio				: null,
+			zipCode			: null,
+			sekesualOri		: null,
+			mail			: null,
+			gender			: null,
+			message			: null,
+			file			: null,
+			profilePic		: null ,
+			pictures		: [],
 			defaultProfilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
-			pictures: [],
 			selectedTags: [],
 			existingTags: []
 		};
 	},
+	props: {
+		userId: "6241c9163ddadaf6dec0654c",
+	},
 
-	mounted() {
+	created() {
 		console.log("mounterd");
-		getMyUserDetails(this.$cookies.get("user"))
+		console.log("userID: ", this.userId)
+		getUserDetails(this.$cookies.get("user"), "6241c9163ddadaf6dec0654c")
 			.then((user) => {
+				(this.id = user.data._id),
 				(this.firstName = user.data.firstName),
-					(this.username = user.data.username),
-					(this.lastName = user.data.lastName),
-					(this.bio = user.data.bio),
-					(this.zipCode = user.data.zipCode),
-					(this.sekesualOri = user.data.sekesualOri),
-					(this.mail = user.data.mail),
-					(this.gender = user.data.gender);
-					(this.pictures = user.data.pictures);
-					(this.profilePic = user.data.profilePic);
-					(this.selectedTags = user.data.tags);
-
+				(this.username = user.data.username),
+				(this.lastName = user.data.lastName),
+				(this.bio = user.data.bio),
+				(this.zipCode = user.data.zipCode),
+				(this.sekesualOri = user.data.sekesualOri),
+				(this.mail = user.data.mail),
+				(this.gender = user.data.gender);
+				(this.pictures = user.data.pictures);
+				(this.profilePic = user.data.profilePic);
+				(this.selectedTags = user.data.tags);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-
-		getTags(this.$cookies.get("user"))
-		.then(tags => {
-			this.existingTags = tags.data
-			console.log("tagis found: ",  this.existingTags)
-		})
 	},
 
 	methods: {
-		setGender(val) {
-			this.gender = val;
-			console.log("gender %s", this.gender);
-		},
-		setSekesual(val) {
-			this.sekesualOri = val;
-			console.log("sekesualOri %s", this.sekesualOri);
-		},
-		updateProfile() {
-			const updato = {
-				firstName: this.firstName,
-				lastName: this.lastName,
-				bio: this.bio,
-				zipCode: this.zipCode,
-				sekesualOri: this.sekesualOri,
-				mail: this.mail,
-				gender: this.gender,
-				pictures: this.pictures,
-				profilePic: this.profilePic,
-				selectedTags : this.selectedTags
-			};
-			if (formValidate.validateUpdate(updato)) {
-				updateUserProfile(this.$cookies.get("user"), updato);
-			}
-		},
-		onSelect() {
-			const file = this.$refs.file.files[0];
-			this.file = file;
-		},
-		async onSubmit() {
-			const formData = new FormData();
-			if (this.file == null)
-				return
-			formData.append("file", this.file);
-			try {
-				console.log(formData);
-				axios.post("http://localhost:8080/api/upload", formData)
-				.then( (res) => {
-					this.pictures.push("http://localhost:8080/static/" + res.data.file.filename)
-				})
-				this.message = "Uploaded";
-			} catch (err) {
-				console.log(err);
-				this.message = "Something Went wrong";
-			}
-			this.file = null
-		},
-		deletePic(index)
-		{
-			if (this.profilePic == this.pictures[index])
-				this.profilePic = this.defaultProfilePic
-			this.pictures.splice(index, 1)
-		}
 	},
 };
 </script>

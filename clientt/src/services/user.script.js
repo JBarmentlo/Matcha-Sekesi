@@ -19,6 +19,25 @@ export const getMyUserDetails = async (userCooki) => {
 };
 
 
+export const getUserDetails = async (userCooki, userId) => {
+	console.log("getting user details for %s", userId)
+	let request = {
+		url: "http://localhost:8080/api/users/getuser/" + encodeURIComponent(userId),  // should be replaced after going to production with domain url
+		method: "get",
+		headers: {
+			"Content-type": "application/json",
+			"x-access-token" : userCooki.data.accessToken,
+			"x-access-signature" : userCooki.data.signature,
+		},
+		data: JSON.stringify({userId: userId})
+	};
+	console.log(request)
+	const response = await axios(request);
+	return response;
+};
+
+
+
 export const updateUserProfile = async (userCooki, newProfile) => {
 	console.log("updAting user details %o", userCooki)
 	let request = {
