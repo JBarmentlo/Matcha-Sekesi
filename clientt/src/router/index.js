@@ -9,12 +9,13 @@ Vue.use(VueRouter)
   },
   {
     path: '/profile',
-    name: 'profile',
+    name: 'my-profile',
     component: () => import('../components/Profile.vue')
   },
   {
-    path: '/hisprofile',
+    path: '/hisprofile/:userId',
     name: 'profile',
+    props: true,
     component: () => import('../components/OtherProfile.vue')
   },
   {

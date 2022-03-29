@@ -27,7 +27,7 @@
 
             </div>
             <div class="card-hover-show">
-                <a class="btn btn-xs fs-10 btn-bold btn-info" href="#">View Profile</a>
+                <router-link :to="{ name: 'profile', params: { userId: user._id } }" class="btn btn-xs fs-10 btn-bold btn-info" href="#">View Profile</router-link>
                 <a class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal" data-target="#modal-contact">Like</a>
                 <a class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Block</a>
             </div>
@@ -53,6 +53,8 @@
 
 
 <script>
+import { likeUser} from "../services/user.script";
+
 export default {
     data() {
         return {
@@ -61,6 +63,15 @@ export default {
     },
     props: {
         users: []
+    },
+    methods: {
+        likeUserButton(id, index) {
+            likeUser(this.$cookies.get('user'), id)
+            .then(res => {
+                console.log("liked user")
+                this.users.splice(index, 1)
+            })
+        }
     },
     created() {
         console.log("user list: ",this.users)

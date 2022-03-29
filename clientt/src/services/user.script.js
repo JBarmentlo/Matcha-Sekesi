@@ -55,7 +55,7 @@ export const updateUserProfile = async (userCooki, newProfile) => {
 };
 
 
-function makeTag(name)
+function 	makeTag(name)
 {
 	return({key: '', value: name})
 }
@@ -149,6 +149,23 @@ export const getAllUsers = async (userCooki) => {
 			"x-access-signature" : userCooki.data.signature,
 		},
 		data: JSON.stringify({})
+	};
+	const response = await axios(request);
+	return response;
+};
+
+
+export const likeUser = async (userCooki, userId) => {
+	console.log("liking user %s with usercooki %o", userId, userCooki)
+	let request = {
+		url: "http://localhost:8080/api/users/like",  // should be replaced after going to production with domain url
+		method: "get",
+		headers: {
+			"Content-type": "application/json",
+			"x-access-token" : userCooki.data.accessToken,
+			"x-access-signature" : userCooki.data.signature,
+		},
+		data: JSON.stringify({liked_id: userId})
 	};
 	const response = await axios(request);
 	return response;

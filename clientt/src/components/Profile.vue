@@ -47,7 +47,6 @@
 							v-model="selectedTags"
 							:existing-tags="existingTags"
 							:typeahead="true"></tags-input>
-							<input type="text" class="form-control" placeholder="enter interests" value=""/>
 						</div>
 						<div class="col-md-12 pb-2">
 							<label class="labels">Bio</label
@@ -159,7 +158,7 @@
 				<b-container fluid class="p-4 bg-light">
 					<b-col>
 						<b-col v-for="(url, index) in pictures" :key="url">
-							<b-img thumbnail fluid :src=url alt="Image 1"></b-img>
+							<b-img thumbnail fluid-grow :src=url alt="Image 1"></b-img>
 							<b-row>
 								<b-col lg="4" class="pb-2"><b-button @click="deletePic(index)" size="sm">Delete</b-button></b-col>
 								<b-col lg="8" class="pb-2"><b-button @click="profilePic = pictures[index]" size="sm">Make Profile</b-button></b-col>

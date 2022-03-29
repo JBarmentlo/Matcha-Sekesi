@@ -19,13 +19,14 @@
 					</div>
 					<div class="row mt-2">
 						<div class="col-md-6">
-							<label class="labels">Name</label
-							><text
+							<label class="labels">First Name</label>
+							<input
 								type="text"
 								v-model="firstName"
 								class="form-control"
-								placeholder="first name"
 								value=""
+								placeholder="surname"
+								:disabled="true"
 							/>
 						</div>
 						
@@ -37,6 +38,7 @@
 								class="form-control"
 								value=""
 								placeholder="surname"
+								:disabled="true"
 							/>
 						</div>
 					</div>
@@ -46,27 +48,18 @@
 							<tags-input element-id="tags"
 							v-model="selectedTags"
 							:existing-tags="existingTags"
-							:typeahead="true"></tags-input>
-							<input type="text" class="form-control" placeholder="enter interests" value=""/>
+							:typeahead="true"
+							:disabled="true"></tags-input>
 						</div>
 						<div class="col-md-12 pb-2">
-							<label class="labels">Bio</label
+							<label class="labels">City</label
 							><input
 								type="text"
-								v-model="bio"
+								v-model="city"
 								class="form-control"
-								placeholder="enter address line 1"
+								placeholder=""
 								value=""
-							/>
-						</div>
-						<div class="col-md-12 pb-2">
-							<label class="labels">Mail</label
-							><input
-								type="text"
-								v-model="mail"
-								class="form-control"
-								placeholder="Email"
-								value=""
+								:disabled="true"
 							/>
 						</div>
 						<div class="col-md-12 pb-2">
@@ -77,15 +70,7 @@
 								class="form-control"
 								placeholder="zip"
 								value=""
-							/>
-						</div>
-						<div class="col-md-12 pb-2">
-							<label class="labels">Pictures</label
-							><input
-								type="text"
-								class="form-control"
-								placeholder="enter email id"
-								value=""
+								:disabled="true"
 							/>
 						</div>
 					</div>
@@ -97,6 +82,8 @@
 									id="dropdown-1"
 									v-bind:text="sekesualOri"
 									class="m-md-2"
+									no-caret
+									disabled
 								>
 									<b-dropdown-item @click="setSekesual('Hetero')">
 										Hetero
@@ -113,7 +100,7 @@
 						<div class="col-md-6">
 							<label class="labels"> Gender </label>
 							<div>
-								<b-dropdown id="dropdown-1" v-bind:text="gender" class="m-md-2">
+								<b-dropdown id="dropdown-1" v-bind:text="gender" class="m-md-2" no-caret disabled>
 									<b-dropdown-item @click="setGender('Male')">
 										Male
 									</b-dropdown-item>
@@ -133,7 +120,7 @@
 				<b-container fluid class="p-4 bg-light">
 					<b-col>
 						<b-col v-for="url in pictures" :key="url">
-							<b-img thumbnail fluid :src=url alt="Image 1"></b-img>
+							<b-img thumbnail fluid-grow :src=url alt="Image 1"></b-img>
 						</b-col>
 					</b-col>
 				</b-container>
@@ -155,12 +142,11 @@ export default {
 			firstName		: null,
 			lastName		: null,
 			bio				: null,
+			city			: null,
 			zipCode			: null,
 			sekesualOri		: null,
 			mail			: null,
 			gender			: null,
-			message			: null,
-			file			: null,
 			profilePic		: null ,
 			pictures		: [],
 			defaultProfilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
@@ -169,19 +155,20 @@ export default {
 		};
 	},
 	props: {
-		userId: "6241c9163ddadaf6dec0654c",
+		userId: String,
 	},
 
 	created() {
 		console.log("mounterd");
 		console.log("userID: ", this.userId)
-		getUserDetails(this.$cookies.get("user"), "6241c9163ddadaf6dec0654c")
+		getUserDetails(this.$cookies.get("user"), this.userId)
 			.then((user) => {
 				(this.id = user.data._id),
 				(this.firstName = user.data.firstName),
 				(this.username = user.data.username),
 				(this.lastName = user.data.lastName),
 				(this.bio = user.data.bio),
+				(this.city = user.data.city),
 				(this.zipCode = user.data.zipCode),
 				(this.sekesualOri = user.data.sekesualOri),
 				(this.mail = user.data.mail),

@@ -361,7 +361,7 @@ exports.like_user = (req, res) => {
 		return;
 	}
 
-	// Save User in the database
+	// Save like in the database
 	like_collection.findOne({ liked_id: req.body.liked_id, liker_id: req.userId })
 		.then(data => {
 			if (data == null) {
