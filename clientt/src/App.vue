@@ -13,6 +13,9 @@
 
 <script>
 import NavBar from "./components/NavBar.vue"
+import { likesOfMe, likesByMe } from "./services/like.script"
+import { blocksOfMe, blocksByMe } from "./services/block.script"
+import { getMyUserDetails } from "./services/user.script"
 
 export default {
   name: 'App',
@@ -23,7 +26,17 @@ export default {
 
   data() {
     return {
-      logged_in   : false
+      logged_in   : false,
+      currentUser : Object,
+      likesOfMe   : Array,
+      likesByMe   : [],
+      blocksByMe  : Array,
+    }
+  },
+
+  computed: {
+    likes: function() {
+      return(this.likesOfMe.concat(this.likesByMe))
     }
   },
 
@@ -32,16 +45,34 @@ export default {
       this.logged_in = val;
       console.log("logged in set to: %s", val)
     },
+    async updateLikes() {
+      this.likesByMe = await likesByMe(this.$cookies.get('user'))
+      this.likesOfMe = await likesOfMe(this.$cookies.get('user'))
+    },
+    async updateBlocks() {
+      this.blocksByMe = await blocksByMe(this.$cookies.get('user'))
+    },
+    async getCurrentUser() {
+      this.currentUser = await getMyUserDetails(this.$cookies.get('user'))
+    }
   },
-  	mounted() {
-      console.log("Created");
-      if (
-        this.$cookies.isKey("user") &&
-        this.$cookies.get("user").data.id != null
-      ) {
-        console.log("already logged in by cookie");
-        this.setLoggedIn(true)
-      }
+
+  created() {
+    console.log("Created");
+    console.log(this.likesOfMe);
+    if (
+      this.$cookies.isKey("user") &&
+      this.$cookies.get("user").data.id != null
+    ) {
+      console.log("already logged in by cookie");
+      this.setLoggedIn(true)
+    }
+    if (this.$cookies.isKey('user'))
+    {
+      this.updateLikes()
+      this.updateBlocks()
+      this.getCurrentUser()
+    }
 	},
 }
 </script>

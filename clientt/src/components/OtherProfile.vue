@@ -125,12 +125,20 @@
 					</b-col>
 				</b-container>
 			</div>
+			<div class="mt-3 text-center center pb-4 border-0">
+				<button @click="like()" v-if="!isLiked" class="btn btn-primary profile-button" type="button"> Like </button>
+				<button @click="unlike()" v-if="isLiked" class="btn btn-primary profile-button" type="button"> UnLike </button>
+				<button @click="block()" class="btn btn-primary profile-button" type="button"> Block </button>
+				<button class="btn btn-primary profile-button" type="button"> Report </button>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { getUserDetails, updateUserProfile, getTags} from "../services/user.script";
+import { getUserDetails} from "../services/user.script";
+import { isLikedByMe, likeUser, unlikeUser} from "../services/like.script";
+import { blockUser } from "../services/block.script";
 import formValidate from "../services/formValidate";
 import axios from "axios";
 
@@ -151,7 +159,8 @@ export default {
 			pictures		: [],
 			defaultProfilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
 			selectedTags: [],
-			existingTags: []
+			existingTags: [],
+			isLiked			: false
 		};
 	},
 	props: {
@@ -180,9 +189,26 @@ export default {
 			.catch((err) => {
 				console.log(err);
 			});
+		isLikedByMe(this.$cookies.get("user"), this.userId)
+		.then(likery => {
+			this.isLiked = likery.data
+			console.log("is liked", likery.data)
+		})
 	},
 
 	methods: {
+		like() {
+			this.isLiked = true
+			likeUser(this.$cookies.get("user"), this.userId)
+			.catch(err => {console.log("err wjile liking %o", err)})
+		},
+		unlike() {
+			unlikeUser(this.$cookies.get("user"), this.userId)
+			this.isLiked = false		
+		},
+		block() {
+			blockUser(this.$cookies.get("user"), this.userId)
+		}
 	},
 };
 </script>
