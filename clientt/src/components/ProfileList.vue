@@ -62,7 +62,7 @@ export default {
         }
     },
     props: {
-        users: []
+        users: Array
     },
     methods: {
         likeUserButton(id, index) {

@@ -17,6 +17,12 @@
             <div v-if="logged_in">
                 <ul class="nav navbar-nav flex-row float-right">
                     <li class="nav-item px-1">
+                        <router-link class="btn btn-outline-primary" to="/profile">My Profile</router-link>
+                    </li>
+                    <li class="nav-item px-1">
+                        <router-link class="btn btn-outline-primary" to="/search">Search</router-link>
+                    </li>
+                    <li class="nav-item px-1">
                         <button class="btn btn-outline-primary" @click="logout" >Log out</button>
                     </li>
                 </ul>
