@@ -22,10 +22,11 @@
 					<div v-if="error">
 						There was an error handling your request, please try again shortly.
 					</div>
-					<div v-else>
-						An email was sent to {{ mail }}. <br />
+					<div v-else class="text-center">
+						An email was sent to <b>{{ mail }}</b>. <br /><br/>
 						Check your inbox to reset your password, the link is only valid for
-						15 minutes.
+						15 minutes. <br/>
+						If you haven't received anything, you may have enterred an incorrect email, or it is not associated with any account.
 					</div>
 				</div>
 			</div>

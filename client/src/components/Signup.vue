@@ -112,17 +112,17 @@ export default {
 				mail: this.mail,
 				password: this.password,
 			})
-				.then((data) => {
-					if (data.data.message == "User was registered successfully!") {
-						console.log("signed up");
-						router.push("/login");
-					} else console.log("wtf signup");
-					console.log(data.data.message);
-				})
-				.catch((err) => {
-					console.log("error at signup %o", err.response.data);
-					alert(err.response.data.message);
-				});
+			.then((data) => {
+				if (data.data.message == "User was registered successfully!") {
+					console.log("signed up");
+					router.push("/login");
+				} else console.log("wtf signup");
+				console.log(data.data.message);
+			})
+			.catch((err) => {
+				console.log("error at signup %o", err.response.data);
+				alert(err.response.data.message);
+			});
 		},
 
 		locate() {

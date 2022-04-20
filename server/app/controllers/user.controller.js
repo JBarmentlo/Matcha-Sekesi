@@ -36,7 +36,7 @@ async function changeMail(user, mail)
 	}
 	verifyCollection.insertOne(verifier)
 	.then(insertRes => {
-		sendMail(user.mail, "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+		sendMail(user.mail, "Please verify your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
 		console.log("http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
 	})
 	.catch(err => {
@@ -44,7 +44,7 @@ async function changeMail(user, mail)
 		})
 
 
-	sendMail(user.mail, "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+	sendMail(user.mail, "Please verify your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
 	user_collection.updateOne({_id: user._id}, {$set : {mail: mail, mailVerified: false}})
 	.catch(err => {
 		console.log("there was an error upfating mail adress: %o", err)

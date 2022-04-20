@@ -45,7 +45,7 @@ exports.signup = (req, res) => {
             }
             verifyCollection.insertOne(verifier)
             .then(insertRes => {
-                sendMail(user.mail, "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+                sendMail(user.mail, "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
                 console.log("http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
                 res.send({ message: "User was registered successfully!" })
             })
@@ -160,7 +160,7 @@ exports.requestresetPass = (req, res) => {
             createdAt: new Date()
         }
         resetCollection.insertOne(resetter)
-        sendMail(user.mail, "http://localhost:8081/reset/" + encodeURIComponent(resetter.idHash))
+        sendMail(user.mail, "Click here to reset password: " + "http://localhost:8081/reset/" + encodeURIComponent(resetter.idHash))
         console.log("http://localhost:8081/reset/" + encodeURIComponent(resetter.idHash))
         res.send()
     })
