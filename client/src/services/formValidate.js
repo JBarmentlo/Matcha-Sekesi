@@ -6,7 +6,20 @@ function validateUserName(name)
 
 function validateMail(mail)
 {
-    return (mail.length > 5)
+	let arobase = false;
+	let dot = false;
+	for (let i = 0; i < mail.length; i++) {
+		if (mail[i] == '@') {
+			if (i == 0) {
+				return false;
+			}
+			arobase = true;
+		}
+		if (mail[i] == '.' && arobase == true) {
+			dot = true;
+		}
+	}
+    return (dot)
 }
 
 function validatePassword(psw)

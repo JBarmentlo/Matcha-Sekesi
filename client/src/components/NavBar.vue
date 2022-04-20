@@ -1,9 +1,7 @@
 <template>
     <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row static-top">
         <div class="container">
-            <a class="navbar-brand float-left" href="https://www.positronx.io" target="_blank">
-                Sekesi.io
-            </a>
+			<router-link class = "navbar-brand float-left" to="/">Sekesi.io</router-link>
             <div v-if="!logged_in">
                 <ul class="nav navbar-nav flex-row float-right">
                     <li class="nav-item px-1">

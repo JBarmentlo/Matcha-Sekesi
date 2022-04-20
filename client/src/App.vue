@@ -80,11 +80,11 @@ export default {
 
 <style >
 
-.App,
+/* .App,
 .main-container {
   width: 100%;
   height: 100%;
-}
+} */
 
 .center {
 	display: flex;
@@ -92,7 +92,7 @@ export default {
 	align-items: center;
 	height: 100%;
 	width: 100%;
-	border: 3px solid green;
+	/* border: 3px solid green; */
 }
 
 .inner-block {
@@ -102,7 +102,8 @@ export default {
 	border-radius: 15px;
 	transition: all 0.3s;
   max-width: 80%;
-  max-height: 80%;
+  /* max-height: 100%; */
+  margin-top: 5%;
 }
 
 </style>

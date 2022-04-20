@@ -1,7 +1,7 @@
 <template>
 	<div class="center">
 		<div class="inner-block">
-			<div class="vue-tempalte">
+			<!-- <div class="vue-template"> -->
 				<form @submit="signupFormSubmit">
 					<h3>Sign Up</h3>
 					<div class="form-group">
@@ -11,7 +11,9 @@
 							type="username"
 							v-model="username"
 							class="form-control form-control-lg"
+							@keyup="validate_user_name"
 						/>
+						<div v-if="!is_valid_username" class="login_error">Error: 5 characters minimum are required</div>
 					</div>
 
 					<div class="form-group">
@@ -38,7 +40,9 @@
 							type="email"
 							v-model="mail"
 							class="form-control form-control-lg"
+							@keyup="validate_email"
 						/>
+						<div v-if="!is_valid_email" class="login_error">Error: An email should contain a "@" and "."</div>
 					</div>
 
 					<div class="form-group pb-2">
@@ -48,7 +52,9 @@
 							type="password"
 							v-model="password"
 							class="form-control form-control-lg"
+							@keyup="validate_password"
 						/>
+						<div v-if="!is_valid_password" class="login_error">Error: 5 characters minimum are required</div>
 					</div>
 
 					<button type="submit" class="btn btn-dark btn-lg btn-block">
@@ -60,7 +66,7 @@
 						<router-link :to="{ name: 'login' }">sign in?</router-link>
 					</p>
 				</form>
-			</div>
+			<!-- </div> -->
 		</div>
 	</div>
 </template>
@@ -78,19 +84,29 @@ export default {
 			firstName: "useless",
 			lastName: "useless",
 			ip: null,
+			is_valid_username: true,
+			is_valid_email: true,
+			is_valid_password: true,
 		};
 	},
 	methods: {
+		validate_user_name(e) {
+			this.is_valid_username = inputValidate.validateUserName(this.username)
+		},
+		validate_email(e) {
+			this.is_valid_email = inputValidate.validateMail(this.mail)
+		},
+		validate_password(e) {
+			this.is_valid_password = inputValidate.validatePassword(this.password)
+		},
 		signupFormSubmit(e) {
 			// console.log("lol")
 			// console.log(this.locate())
 			// console.log("lol")
 			e.preventDefault();
-			inputValidate.validateAllWithAlerts(
-				this.username,
-				this.mail,
-				this.password
-			);
+			if (this.is_valid_username == false || this.is_valid_email == false || this.is_valid_password == false) {
+				return false;
+			}
 			signup({
 				username: this.username,
 				mail: this.mail,
@@ -157,5 +173,12 @@ export default {
 
 
 <style scoped>
+.login_error {
+	color : red;
+	font-size: 80%;
+	margin-left: 5px;
+}
+
+
 
 </style>

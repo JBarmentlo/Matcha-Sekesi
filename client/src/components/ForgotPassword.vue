@@ -75,7 +75,7 @@ export default {
   align-items: center;
   height: 100%;
   width: 100%;
-  border: 3px solid green;
+  /* border: 3px solid green; */
 }
 
 .inner-block {
