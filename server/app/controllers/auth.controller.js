@@ -218,8 +218,14 @@ exports.search = (req, res) => {
 	}).toArray()
 	.then(users => {
 		res.status(200).send({
+
+			message: "Profil research was succesful",
+			// "users": users,
 			users
 		});	
+	})
+	.catch(err => {
+		res.status(500).send({error: err})
 	})
 	
 };

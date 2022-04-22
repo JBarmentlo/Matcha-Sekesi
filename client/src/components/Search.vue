@@ -95,42 +95,25 @@ export default {
 				min_km: this.min_km,
 			})
 			.then((data) => {
+
 			if (data.data.message == "Profil research was succesful") {
 				console.log("search done");
-				router.push("/search");
+				console.log("PRINTING ZE MSG:")
+				console.log(data.data.users);
+				this.users = data.data.users;
 			} else console.log("wtf search");
-			console.log(data.data.message);
-		})
-		.catch((err) => {
-			console.log("error at search %o", err.response.data);
-			alert(err.response.data.message);
-		});
+			
+			})
+			.catch((err) => {
+				console.log("error at search %o", err.response.data);
+				alert(err.response.data.message);
+			});
 		}
-		// change_min_age(e) {
-		// 	this.min_age = e;
-		// 	this.get_search();
-		// 	console.log("changing age to: " + this.min_age)
-		// },
-		// change_max_age(e) {
-		// 	this.max_age = e;
-		// 	this.get_search();
-		// },
-		// change_tags(e) {
-		// 	this.interest_tags = e;
-		// 	this.get_search();
-		// },
-		// change_rating(e) {
-		// 	this.min_rating = e;
-		// 	this.get_search();
-		// },
-		// change_km(e) {
-		// 	this.min_km = e;
-		// 	this.get_search();
-		// },
 		
 	},
 	created() {
-		getAllUsers(this.$cookies.get("user")).then(users => {this.users = users.data}).catch(err => {console.log("error fetchin all users %o", err)})
+		console.log("hey");
+		// getAllUsers(this.$cookies.get("user")).then(users => {this.users = users.data}).catch(err => {console.log("error fetchin all users %o", err)})
 	},
 
 }

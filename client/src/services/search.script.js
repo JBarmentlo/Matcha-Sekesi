@@ -17,11 +17,5 @@ export const search = async item => {
     data: JSON.stringify(data),
   };
   const response = await axios(request);
-  console.log("response: ");
-//   response["data"]["users"].forEach(element => {
-// 	  console.log(element)
-//   });
-  console.log(response);
-  console.log("-****end")
   return response;
 };
