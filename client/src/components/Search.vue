@@ -86,7 +86,8 @@ export default {
 	},
 	methods: {
 		save_changes(e) {
-			console.log("saving changes")
+			console.log("saving changes");
+			e.preventDefault();
 			search({
 				min_age : this.min_age,
 				max_age: this.max_age,

@@ -1,7 +1,14 @@
 <template>
     <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row static-top">
         <div class="container">
-			<router-link class = "navbar-brand float-left" to="/">Sekesi.io</router-link>
+			<!-- <router-link class = "navbar-brand float-left" to="/">Sekesi.io</router-link> -->
+			<!-- Image and text -->
+			<nav class="navbar navbar-light bg-light">
+			<a class="navbar-brand" href="#">
+				<img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+				Sekesi.io
+			</a>
+			</nav>
             <div v-if="!logged_in">
                 <ul class="nav navbar-nav flex-row float-right">
                     <li class="nav-item px-1">
@@ -15,13 +22,19 @@
             <div v-if="logged_in">
                 <ul class="nav navbar-nav flex-row float-right">
 					<li class="nav-item px-1">
-                        <router-link class="navbar-brand" to="/search"><img src = "../assets/search_logo.png" height = "36"/></router-link>
+                        <router-link class = "pr-3" to="/search"><img src = "../assets/search.png" height = "32"/></router-link>
                     </li>
                     <li class="nav-item px-1">
-                        <router-link class="btn btn-outline-primary" to="/profile">My Profile</router-link>
+                        <router-link class = "pr-3" to="/profile"><img src = "../assets/profile.png" height = "32"/></router-link>
                     </li>
-                    <li class="nav-item px-1">
-                        <button class="btn btn-outline-primary" @click="logout" >Log out</button>
+					<li class="nav-item px-1">
+                        <router-link class = "pr-3" to="/"><img src = "../assets/message.png" height = "32"/></router-link>
+                    </li>
+					<li class="nav-item px-1">
+                        <router-link class = "pr-3" to="/"><img src = "../assets/notification.png" height = "32"/></router-link>
+                    </li>
+                    <li @click="logout" class="nav-item px-1">
+                        <img  src = "../assets/logout.png" height = "32"/>
                     </li>
                 </ul>
             </div>
