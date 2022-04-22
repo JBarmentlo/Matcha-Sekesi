@@ -17,6 +17,9 @@ router.post("/signup",
         verify_user_email.checkDuplicateUsernameOrEmail
     ],
     auth.signup
-)
+);
+
+router.post("/search", auth.search);
+
 
 module.exports = router

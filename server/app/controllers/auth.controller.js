@@ -208,3 +208,18 @@ exports.resetPass = (req, res) => {
             res.status(500).send({error: err})
         })
 };
+
+
+exports.search = (req, res) => {
+	const data = req.body;
+    console.log("searching for %o", req.body)
+	const users = user_collection.find({
+		popScore : { $gt : data.min_rating}
+	});
+
+	console.log(`test =`);
+	console.log(users);
+	res.status(200).send({
+		users
+	});
+};

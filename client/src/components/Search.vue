@@ -1,37 +1,67 @@
 <template>
 	<div>
-		<form class = "search_filter">
-			<div class = "age">
-				<b-row>
-					<b-col md="6" class="mb-2">
-					<label for="sb-disabled">min age</label>
-					<b-form-spinbutton id="sb-disabled" v-model="min_age" disabled></b-form-spinbutton>
-					</b-col>
-					<b-col md="6" class="mb-2">
-					<label for="sb-readonly" class="">max age</label>
-					<b-form-spinbutton id="sb-readonly" v-model="max_age" readonly></b-form-spinbutton>
-					</b-col>
-				</b-row>
+		<div class="center">
+			<div class = "inner-block">
+				<form class = "search_filter"  @submit="save_changes">
+					<div class = "age pb-5">
+						<b-row>
+							<b-col md="6" class="mb-2">
+							<label for="sb-disabled">Min age:</label>
+							<b-form-spinbutton
+								v-model="min_age"
+								min="18"
+								max="100"
+							></b-form-spinbutton>
+							</b-col>
+							<b-col md="6" class="mb-2">
+							<label for="sb-readonly" class="">Max age:</label>
+							<b-form-spinbutton
+								v-model="max_age"
+								min="18"
+								max="100"
+							></b-form-spinbutton>
+							</b-col>
+						</b-row>
+					</div>
+					<div class = "rating pb-5">
+						<label for="sb-inline">Minimum rating:</label>
+						<b-form-rating
+							v-model="min_rating"
+						></b-form-rating>
+					</div>
+					<div class = "tags pb-5">
+						<label for="sb-inline">Tags:</label>
+						<b-form-tags
+							input-id="tags-pills"
+							v-model="interest_tags"
+							tag-variant="primary"
+							tag-pills
+							size="lg"
+							separator=" "
+							placeholder="Add Tag..."
+						></b-form-tags>
+					</div>
+					<div class = "distance">
+						<label for="sb-input">Minimum distance:</label>
+						<b-row>
+							<b-col md="6" class="mb-2">	
+								<b-form-spinbutton
+									id="sb-input"
+									v-model="min_km"
+									min="0"
+									max="160"
+								></b-form-spinbutton>
+							</b-col>
+						</b-row>
+					</div>
+					<div class = "submit">
+						<button type="submit" class="btn btn-dark btn-lg btn-block">
+							Save Changes
+						</button>
+					</div>
+				</form>
 			</div>
-			<div class = "tags">
-				<b-form-tags
-					input-id="tags-pills"
-					v-model="interest_tags"
-					tag-variant="primary"
-					tag-pills
-					size="lg"
-					separator=" "
-					placeholder="Enter new tags separated by space"
-				></b-form-tags>
 			</div>
-			<div class = "rating">
-				<b-form-rating v-model="min_rating"></b-form-rating>
-			</div>
-			<div class = "distance">
-				<label for="sb-inline">Minimum distance</label>
-    			<b-form-spinbutton id="sb-inline" v-model="min_km" inline></b-form-spinbutton>
-			</div>
-		</form>
 		<profile-list :users="users"></profile-list>
 	</div>
 </template>
@@ -39,6 +69,7 @@
 <script>
 import ProfileList from './ProfileList.vue'
 import { getAllUsers} from "../services/user.script";
+import { search } from "../services/search.script";
 
 
 export default {
@@ -53,12 +84,59 @@ export default {
 			min_km: 10,
 		}
 	},
+	methods: {
+		save_changes(e) {
+			console.log("saving changes")
+			search({
+				min_age : this.min_age,
+				max_age: this.max_age,
+				interest_tags: this.interest_tags,
+				min_rating: this.min_rating,
+				min_km: this.min_km,
+			})
+			.then((data) => {
+			if (data.data.message == "Profil research was succesful") {
+				console.log("search done");
+				router.push("/search");
+			} else console.log("wtf search");
+			console.log(data.data.message);
+		})
+		.catch((err) => {
+			console.log("error at search %o", err.response.data);
+			alert(err.response.data.message);
+		});
+		}
+		// change_min_age(e) {
+		// 	this.min_age = e;
+		// 	this.get_search();
+		// 	console.log("changing age to: " + this.min_age)
+		// },
+		// change_max_age(e) {
+		// 	this.max_age = e;
+		// 	this.get_search();
+		// },
+		// change_tags(e) {
+		// 	this.interest_tags = e;
+		// 	this.get_search();
+		// },
+		// change_rating(e) {
+		// 	this.min_rating = e;
+		// 	this.get_search();
+		// },
+		// change_km(e) {
+		// 	this.min_km = e;
+		// 	this.get_search();
+		// },
+		
+	},
 	created() {
 		getAllUsers(this.$cookies.get("user")).then(users => {this.users = users.data}).catch(err => {console.log("error fetchin all users %o", err)})
-	}
+	},
+
 }
 </script>
 
 <style scoped>
+
 
 </style>
