@@ -140,7 +140,7 @@
 								<form @submit.prevent="onSubmit" enctype="multipart/form-data">
 									<div class="fields">
 										<label> Upload Pictures </label><br />
-											<input id="file-input" type="file" ref="file" @change="onSelect">
+											<input id="file-input" type="file" ref="file" @change="onSelect" accept = ".png,.jpg,.jpeg">
 											<div class="row">
 												<div class="column" v-for="(url, index) in pictures" :key="url">
 													<label v-if="pictures_to_upload == index" for="file-input" class = "next">
@@ -315,7 +315,11 @@ export default {
 				console.log(formData);
 				axios.post("http://localhost:8080/api/upload", formData)
 				.then( (res) => {
-					this.pictures.push("http://localhost:8080/static/" + res.data.file.filename)
+					this.pictures[this.pictures_to_upload] = "http://localhost:8080/static/" + res.data.file.filename;
+					this.pictures_to_upload += 1;
+					if (this.pictures_to_upload < 5) {
+						this.pictures[this.pictures_to_upload] = plus_photo;
+					}
 				})
 				this.message = "Uploaded";
 			} catch (err) {
