@@ -54,7 +54,7 @@
 								type="text"
 								v-model="bio"
 								class="form-control"
-								placeholder="enter address line 1"
+								placeholder="Tell us a few words about you"
 								value=""
 							/>
 						</div>
@@ -135,12 +135,22 @@
 								</b-dropdown>
 							</div>
 						</div>
-						<div class="col-md-6 pt-4">
-							<div class="file" v-if="pictures.length <= 4">
+						<div class="col-md-12 pt-4">
+							<div class="file" v-if="pictures.length <= 5">
 								<form @submit.prevent="onSubmit" enctype="multipart/form-data">
 									<div class="fields">
 										<label> Upload Pictures </label><br />
-										<input type="file" ref="file" @change="onSelect" />
+											<input id="file-input" type="file" ref="file" @change="onSelect">
+											<div class="row">
+												<div class="column" v-for="(url, index) in pictures" :key="url">
+													<label v-if="pictures_to_upload == index" for="file-input" class = "next">
+														<img :src=pictures[index]>
+													</label>
+													<label v-if="pictures_to_upload != index" class = "empty">
+														<img :src=pictures[index]>
+													</label>
+												</div>
+											</div>
 									</div>
 									<div v-if="file != null" class="fields">
 										<button class="btn btn-primary profile-button">Upload</button>
@@ -155,17 +165,19 @@
 				</div>
 			</div>
 			<div class="col-md-4">
-				<b-container fluid class="p-4 bg-light">
-					<b-col>
+				
+				<!-- <b-container fluid class="p-4 bg-light">  -->
+					<!-- v-if='pictures[0] != ""' -->
+					<!-- <b-col>
 						<b-col v-for="(url, index) in pictures" :key="url">
-							<b-img thumbnail fluid-grow :src=url alt="Image 1"></b-img>
+							<b-img v-if='url != ""' thumbnail fluid-grow :src=url alt="Image 1"></b-img>
 							<b-row>
 								<b-col lg="4" class="pb-2"><b-button @click="deletePic(index)" size="sm">Delete</b-button></b-col>
 								<b-col lg="8" class="pb-2"><b-button @click="profilePic = pictures[index]" size="sm">Make Profile</b-button></b-col>
 							</b-row>
 						</b-col>
-					</b-col>
-				</b-container>
+					</b-col> -->
+				<!-- </b-container> -->
 			</div>
 			<div class="mt-3 text-center center pb-4 border-0">
 				<button
@@ -184,6 +196,9 @@
 import { getMyUserDetails, updateUserProfile, getTags} from "../services/user.script";
 import formValidate from "../services/formValidate";
 import axios from "axios";
+import empty_profile from "../assets/empty_profile.png";
+import empty_photo from "../assets/empty2.png";
+import plus_photo from "../assets/plus.png";
 
 export default {
 	data() {
@@ -199,9 +214,10 @@ export default {
 			gender: "Not Specified",
 			message: null,
 			file: null,
-			profilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
-			defaultProfilePic: "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg",
+			profilePic: "",
+			defaultProfilePic: "",
 			pictures: [],
+			pictures_to_upload: 0,
 			selectedTags: [],
 			existingTags: []
 		};
@@ -219,8 +235,33 @@ export default {
 					(this.sekesualOri = user.data.sekesualOri),
 					(this.mail = user.data.mail),
 					(this.gender = user.data.gender);
-					(this.pictures = user.data.pictures);
-					(this.profilePic = user.data.profilePic);
+					console.log("DATA PICTURE::::::");
+					console.log(user.data.pictures);
+					(this.pictures_to_upload = user.data.pictures.length - 1);
+					(this.pictures = new Array(5));
+					for (let i = 0; i < 5; i++) {
+						if (i < user.data.pictures.length) {
+							if (user.data.pictures[i] != "") {
+								this.pictures[i] = user.data.pictures[i];
+							}
+							else if (i == user.data.pictures.length - 1) {
+								this.pictures[i] = plus_photo;
+							}
+						}
+						else {
+							this.pictures[i] = empty_photo;
+						}
+						console.log("i = " + i)
+					}
+					console.log("DATA PICTURE::::::");
+					console.log(this.pictures);
+					if (user.data.profilePic == "") {
+						console.log("EMPTY PROFILE");
+						(this.profilePic = empty_profile);
+					}
+					else {
+						(this.profilePic = user.data.profilePic);
+					}
 					(this.selectedTags = user.data.tags);
 
 			})
@@ -294,4 +335,51 @@ export default {
 </script>
 
 <style scoped>
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  max-width: 50%;
+  padding: 0 4px;
+}
+
+.column > label > img {
+  margin-top: 8px;
+  vertical-align: middle;
+  background-color: rgb(229, 225, 225);
+  width: 100%;
+}
+
+.next > img:hover {
+	background-color: rgb(240, 236, 236);
+	cursor: pointer;
+}
+
+input[type = "file"] {
+	display: none
+}
+
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+  .column {
+    flex: 50%;
+    max-width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    flex: 100%;
+    max-width: 100%;
+  }
+}
+
 </style>
