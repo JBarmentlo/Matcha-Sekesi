@@ -214,15 +214,13 @@ exports.resetPass = (req, res) => {
 
 exports.search = (req, res) => {
 	const data = req.body;
-    console.log("searching for %o", req.body)
+    // console.log("searching for %o", req.body)
 	user_collection.find({
 		popScore : { $gt : data.min_rating}
 	}).toArray()
 	.then(users => {
 		res.status(200).send({
-
 			message: "Profil research was succesful",
-			// "users": users,
 			users
 		});	
 	})
