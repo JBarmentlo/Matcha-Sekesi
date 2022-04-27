@@ -143,10 +143,17 @@
 											<input id="file-input" type="file" ref="file" @change="onSelect" accept = ".png,.jpg,.jpeg">
 											<div class="row">
 												<div class="column" v-for="(url, index) in pictures" :key="index">
+													<label v-if="index < pictures_to_upload" class = "full">
+														<img :src=pictures[index]>
+														<b-col lg="4"><button class = "btn px-3" @click="deletePic(index)" size="sm" ><i class="fa fa-trash"></i></button></b-col>
+														<!-- <button type="button" class="btn btn-pink"><i class="fas fa-plane pr-2" aria-hidden="true"></i>Plane</button> -->
+														<b-col lg="12"><button type="button" class="btn btn-outline-default waves-effect" @click="profilePic = pictures[index]"><i class="fa fa-star pr-2" aria-hidden="true"></i>Make Profile</button></b-col>
+														<!-- <b-col lg="8" class="pb-2"><button class = "btn btn-outline-default waves-effect" @click="profilePic = pictures[index]" size="sm">Make Profile</button></b-col> -->
+													</label>
 													<label v-if="index == pictures_to_upload" for="file-input" class = "next">
 														<img :src=pictures[index]>
 													</label>
-													<label v-if="index != pictures_to_upload" class = "empty">
+													<label v-if="index > pictures_to_upload" class = "empty">
 														<img :src=pictures[index]>
 													</label>
 												</div>
@@ -349,7 +356,14 @@ export default {
 		{
 			if (this.profilePic == this.pictures[index])
 				this.profilePic = this.defaultProfilePic
-			this.pictures.splice(index, 1)
+			this.pictures[index] = empty_photo;
+			this.pictures[this.pictures_to_upload] = empty_photo;
+			this.pictures[this.pictures_to_upload - 1] = plus_photo;
+			console.log("deleting picture for index: " + index);
+			console.log(this.pictures)
+			console.log("pictures_to_upload: " + this.pictures_to_upload)
+			this.pictures_to_upload -= 1;
+			// this.pictures.splice(index, 1)
 		}
 	},
 };
@@ -385,15 +399,6 @@ export default {
 input[type = "file"] {
 	display: none
 }
-
-label > button {
-	/* background-image: "../assets/plus.png"; */
-	margin-top: 8px;
-	vertical-align: middle;
-	background-color: rgb(229, 225, 225);
-	width: 100%;
-}
-
 
 
 /* Responsive layout - makes a two column-layout instead of four columns */
