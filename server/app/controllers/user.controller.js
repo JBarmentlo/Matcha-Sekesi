@@ -101,6 +101,8 @@ exports.create_user = (req, res) => {
         gender          : req.body.gender,
         sekesualOri     : req.body.sekesualOri,
         popScore        : req.body.popScore,
+		likes			: req.body.likes,
+		views			: req.body.views,
         zipCode         : req.body.zipCode,
         city	        : req.body.city,
         completeProfile : true,
@@ -108,7 +110,8 @@ exports.create_user = (req, res) => {
         profilePic      : req.body.profilePic,
         tags            : req.body.tags,
         longitude       : req.body.longitude,
-        latitude        : req.body.latitude
+        latitude        : req.body.latitude,
+		
     };
     user_collection.insertOne(user)
         .then(insertOneResult => {

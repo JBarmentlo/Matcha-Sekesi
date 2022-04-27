@@ -168,7 +168,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-4 border-right">
+				<b-col class="d-flex align-items-center p-3 py-5">
+					<h5><i class="fa fa-eye pr-2"></i>Views:</h5>
+				</b-col>
 				
 				<!-- <b-container fluid class="p-4 bg-light">  -->
 					<!-- v-if='pictures[0] != ""' -->
@@ -241,7 +244,7 @@ export default {
 					(this.gender = user.data.gender);
 					console.log("DATA PICTURE::::::");
 					console.log(user.data.pictures);
-					(this.pictures_to_upload = user.data.pictures.length - 1);
+					(this.pictures_to_upload = user.data.pictures.length > 0 ? user.data.pictures.length - 1 : 0);
 					(this.pictures = new Array(5));
 					for (let i = 0; i < 5; i++) {
 						if (i < user.data.pictures.length) {
@@ -254,6 +257,9 @@ export default {
 						}
 						else {
 							this.pictures[i] = empty_photo;
+							if (user.data.pictures.length == 0 && i == 0) {
+								this.pictures[i] = plus_photo;
+							}
 						}
 						console.log("i = " + i)
 					}
