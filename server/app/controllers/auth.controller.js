@@ -11,7 +11,7 @@ var bcrypt = require("bcryptjs");
 const { createDeflate } = require('zlib');
 
 
-const default_profile_pic = "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+// const default_profile_pic = "../assets/empty_profile.png"
 
 exports.signup = (req, res) => {
     // console.log("signup")
@@ -29,8 +29,8 @@ exports.signup = (req, res) => {
         popScore        : 0,
         zipCode         : null,
         completeProfile : false,
-        pictures        : [default_profile_pic],
-        profilePic      : default_profile_pic,
+        pictures        : [],
+        profilePic      : "",
         tags            : null,
         longitude       : null,
         latitude        : null,

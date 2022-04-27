@@ -142,18 +142,15 @@
 										<label> Upload Pictures </label><br />
 											<input id="file-input" type="file" ref="file" @change="onSelect" accept = ".png,.jpg,.jpeg">
 											<div class="row">
-												<div class="column" v-for="(url, index) in pictures" :key="url">
-													<label v-if="pictures_to_upload == index" for="file-input" class = "next">
+												<div class="column" v-for="(url, index) in pictures" :key="index">
+													<label v-if="index == pictures_to_upload" for="file-input" class = "next">
 														<img :src=pictures[index]>
 													</label>
-													<label v-if="pictures_to_upload != index" class = "empty">
+													<label v-if="index != pictures_to_upload" class = "empty">
 														<img :src=pictures[index]>
 													</label>
 												</div>
 											</div>
-									</div>
-									<div v-if="file != null" class="fields">
-										<button class="btn btn-primary profile-button">Upload</button>
 									</div>
 									<div class="message">
 										{{ message }}
@@ -244,7 +241,7 @@ export default {
 							if (user.data.pictures[i] != "") {
 								this.pictures[i] = user.data.pictures[i];
 							}
-							else if (i == user.data.pictures.length - 1) {
+							else if (user.data.pictures[i] == "" && i == user.data.pictures.length - 1) {
 								this.pictures[i] = plus_photo;
 							}
 						}
@@ -285,7 +282,25 @@ export default {
 			this.sekesualOri = val;
 			console.log("sekesualOri %s", this.sekesualOri);
 		},
+		actual_pictures() {
+			var actual_pic = []
+			for (let i = 0; i < this.pictures.length; i++) {
+				const picture = this.pictures[i];
+				if (picture.localeCompare(empty_photo) == 0 || picture.localeCompare(plus_photo) == 0) {
+					actual_pic.push("");
+					return actual_pic;
+				}
+				else {
+					actual_pic.push(picture);
+				}
+			}
+			console.log("PICTURES AFTER");
+			console.log(actual_pic);
+			return actual_pic;
+		},
 		updateProfile() {
+			console.log("updating profile with these pictures:");
+			console.log(this.pictures);
 			const updato = {
 				firstName: this.firstName,
 				lastName: this.lastName,
@@ -294,7 +309,7 @@ export default {
 				sekesualOri: this.sekesualOri,
 				mail: this.mail,
 				gender: this.gender,
-				pictures: this.pictures,
+				pictures: this.actual_pictures(),
 				profilePic: this.profilePic,
 				selectedTags : this.selectedTags
 			};
@@ -305,6 +320,7 @@ export default {
 		onSelect() {
 			const file = this.$refs.file.files[0];
 			this.file = file;
+			this.onSubmit();
 		},
 		async onSubmit() {
 			const formData = new FormData();
@@ -313,6 +329,7 @@ export default {
 			formData.append("file", this.file);
 			try {
 				console.log(formData);
+				console.log("Sending form data:...")
 				axios.post("http://localhost:8080/api/upload", formData)
 				.then( (res) => {
 					this.pictures[this.pictures_to_upload] = "http://localhost:8080/static/" + res.data.file.filename;
@@ -368,6 +385,15 @@ export default {
 input[type = "file"] {
 	display: none
 }
+
+label > button {
+	/* background-image: "../assets/plus.png"; */
+	margin-top: 8px;
+	vertical-align: middle;
+	background-color: rgb(229, 225, 225);
+	width: 100%;
+}
+
 
 
 /* Responsive layout - makes a two column-layout instead of four columns */

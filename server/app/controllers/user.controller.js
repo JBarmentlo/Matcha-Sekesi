@@ -202,7 +202,9 @@ exports.update_user = (req, res) => {
 		res.status(400).send({ message: "Id missing you need to login" });
 	return;
 	}
-	req.body.update.selectedTags.forEach(tag => tag = completeAndUploadTag(tag))
+	if (req.body.update.selectedTags != null) {
+		req.body.update.selectedTags.forEach(tag => tag = completeAndUploadTag(tag))
+	}
 	filter = {_id: ObjectId(req.userId)}
 	completed = isUserProfileComplete(req.body.update)
 	update = {
