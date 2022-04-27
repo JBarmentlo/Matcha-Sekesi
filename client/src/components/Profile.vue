@@ -168,23 +168,23 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4 border-right">
-				<b-col class="d-flex align-items-center p-3 py-5">
-					<h5><i class="fa fa-eye pr-2"></i>Views:</h5>
-				</b-col>
-				
-				<!-- <b-container fluid class="p-4 bg-light">  -->
-					<!-- v-if='pictures[0] != ""' -->
-					<!-- <b-col>
-						<b-col v-for="(url, index) in pictures" :key="url">
-							<b-img v-if='url != ""' thumbnail fluid-grow :src=url alt="Image 1"></b-img>
-							<b-row>
-								<b-col lg="4" class="pb-2"><b-button @click="deletePic(index)" size="sm">Delete</b-button></b-col>
-								<b-col lg="8" class="pb-2"><b-button @click="profilePic = pictures[index]" size="sm">Make Profile</b-button></b-col>
-							</b-row>
-						</b-col>
-					</b-col> -->
-				<!-- </b-container> -->
+			<div class="col-md-4">
+				<div class = "views">
+					<div class="d-flex flex-column align-items-center text-center p-2">
+						<div><i class="fa fa-eye fa-lg"></i>
+							<h5>200</h5> <span></span>
+							<p>Views</p>
+						</div>
+					</div>
+				</div>
+				<div class = "likes">
+					<div class="d-flex flex-column align-items-center text-center p-2">
+						<div><i class="fa fa-thumbs-up fa-lg"></i>
+							<h5>25</h5> <span></span>
+							<p>likes</p>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="mt-3 text-center center pb-4 border-0">
 				<button
@@ -226,7 +226,9 @@ export default {
 			pictures: [],
 			pictures_to_upload: 0,
 			selectedTags: [],
-			existingTags: []
+			existingTags: [],
+			likes: 0,
+			views: 0,
 		};
 	},
 
@@ -273,6 +275,8 @@ export default {
 						(this.profilePic = user.data.profilePic);
 					}
 					(this.selectedTags = user.data.tags);
+					(this.likes = user.data.likes);
+					(this.views = user.data.views);
 
 			})
 			.catch((err) => {
@@ -422,5 +426,12 @@ input[type = "file"] {
     max-width: 100%;
   }
 }
+
+.views, .likes {
+	background-color: rgba(255, 166, 0, 0.311);
+	color: rgb(56, 56, 56);
+	margin: 30%;
+}
+
 
 </style>
