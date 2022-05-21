@@ -12,6 +12,18 @@ body {
   /* display: flex; */
 }
 
+.btn-primary {
+	background-color: cornflowerblue;
+	border-color:  cornflowerblue;
+}
+
+.btn-secondary {
+	background-color: rgba(128, 128, 128, 0.835);
+	border-color:  rgba(128, 128, 128, 0.835);
+}
+
+
+
 /* body,
 html {
   width: 100%;

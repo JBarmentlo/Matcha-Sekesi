@@ -112,7 +112,7 @@
 					<label class="labels">Sekesual Orientation</label>
 					<div>
 						<b-dropdown
-							id="dropdown-1"
+							class="dropdown-1"
 							v-bind:text="sekesualOri"
 						>
 							<b-dropdown-item @click="setSekesual('Hetero')">
@@ -130,7 +130,7 @@
 				<div class="col">
 					<label class="labels"> Gender </label>
 					<div>
-						<b-dropdown id="dropdown-1" v-bind:text="gender">
+						<b-dropdown class="dropdown-2" v-bind:text="gender">
 							<b-dropdown-item @click="setGender('Male')">
 								Male
 							</b-dropdown-item>
@@ -166,9 +166,9 @@
 									<div class="row">
 										<div class="column" v-for="(url, index) in pictures" :key="index">
 											<label v-if="index < pictures_to_upload" class = "full">
-												<img :src=pictures[index]>
-												<b-col lg="4"><button class = "btn px-3" @click="deletePic(index)" size="sm" ><i class="fa fa-trash"></i></button></b-col>
-												<b-col lg="12"><button type="button" class="btn btn-outline-default waves-effect" @click="profilePic = pictures[index]"><i class="fa fa-star pr-2" aria-hidden="true"></i>Make Profile</button></b-col>
+												<img :src=pictures[index] @mouseover="show_delete = true" @mouseleave="show_delete = false">
+												<b-col lg="4"><button class = "img-overlay btn btn-warning px-3" @click="deletePic(index)" size="sm" ><i class="fa fa-trash"></i></button></b-col>
+												<b-col lg="12"><button type="button" class="img-overlay btn btn-outline-default waves-effect" @click="profilePic = pictures[index]"><i class="fa fa-star pr-2" aria-hidden="true"></i>Make Profile</button></b-col>
 											</label>
 											<label v-if="index == pictures_to_upload" for="file-input" class = "next">
 												<img :src=pictures[index]>
@@ -189,8 +189,8 @@
 			<div class="row gutters">
 				<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 					<div class="text-right">
-						<button type="button" id="submit" name="submit" class="btn btn-secondary m-2">Cancel</button>
-						<button type="button" id="submit" name="submit" class="btn btn-primary m-2" @click="updateProfile">Update</button>
+						<button type="button" id="submit" name="submit" class="btn btn-secondary btn-rounded m-2">Cancel</button>
+						<button type="button" id="submit" name="submit" class="btn btn-primary btn-rounded m-2" @click="updateProfile">Update</button>
 					</div>
 				</div>
 			</div>
@@ -231,6 +231,7 @@ export default {
 			existingTags: [],
 			likes: 0,
 			views: 0,
+			show_delete: false,
 		};
 	},
 
@@ -409,6 +410,15 @@ export default {
 
 input[type = "file"] {
 	display: none
+}
+
+.img-overlay {
+  position: absolute;
+  top: 7%;
+  bottom: 0;
+  left: 12%;
+  right: 0;
+  text-align: center;
 }
 
 
