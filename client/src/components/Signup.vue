@@ -101,7 +101,7 @@ export default {
 		},
 		signupFormSubmit(e) {
 			// console.log("lol")
-			// console.log(this.locate())
+			console.log(this.locate())
 			// console.log("lol")
 			e.preventDefault();
 			if (this.is_valid_username == false || this.is_valid_email == false || this.is_valid_password == false) {
