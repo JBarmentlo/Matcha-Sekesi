@@ -236,7 +236,7 @@ export default {
 	},
 
 	mounted() {
-		console.log("mounterd");
+		console.log("mounted my profile");
 		getMyUserDetails(this.$cookies.get("user"))
 			.then((user) => {
 				(this.firstName = user.data.firstName),

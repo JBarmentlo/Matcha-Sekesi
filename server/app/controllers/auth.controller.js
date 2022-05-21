@@ -26,7 +26,7 @@ exports.signup = (req, res) => {
         mailVerified    : false,
         gender          : null,
         sekesualOri     : 'bi',
-        popScore        : 0,
+        popScore        : 1,
 		likes			: 0,
 		views			: 0,
         zipCode         : null,
