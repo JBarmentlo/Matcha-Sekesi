@@ -8,9 +8,10 @@
 - sekesi suggestions based on partial match
 - Age
 - Blockage
-- Chat
-- Notificationes
-
+- consultation and like visibility
+- Signup should not be first page
+  
+  
 # To Fix
 
 - Photo button kaput
@@ -22,9 +23,11 @@
 
 ## Dede
 
-- Remove signup when logged in
 
 
 ## Joep
 
-- consultation and like visibility
+- Notificationes
+- Chat
+- Complete Profile
+

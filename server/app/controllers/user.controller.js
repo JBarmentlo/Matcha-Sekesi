@@ -169,6 +169,7 @@ exports.get_all_users = (req, res) => {
 };
 
 
+
 exports.get_my_user = (req, res) => {
 	// Validate request
 	console.log("getting user %s", req.userId)
@@ -532,12 +533,13 @@ exports.block_user = (req, res) => {
 };
 
 exports.consult_user = (req, res) => {
-	// Validate request
+	console.log("Consulting user " + req.body.consulted_id)
 	// console.log("req: %s res:%s",req.body, res)
 	if (!req.userId || !req.body.consulted_id) {
 		res.status(400).send({ message: "Id missing to consult" });
 		return;
 	}
+	console.log("Consulting user " + req.body.consulted_id)
 
 	// Save User in the database
 	consult_collection.findOne({ consulted_id: req.body.consulted_id, consulter_id: req.userId })

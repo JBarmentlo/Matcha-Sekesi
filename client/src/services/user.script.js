@@ -153,3 +153,19 @@ export const getAllUsers = async (userCooki) => {
 	const response = await axios(request);
 	return response;
 };
+
+export const consultUser = async (userCooki, user_to_consult) => {
+	console.log("Consulting users %o", user_to_consult)
+	let request = {
+		url: "http://localhost:8080/api/users/consult",  // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type": "application/json",
+			"x-access-token" : userCooki.data.accessToken,
+			"x-access-signature" : userCooki.data.signature,
+		},
+		data: JSON.stringify({'consulted_id' : user_to_consult})
+	};
+	const response = await axios(request);
+	return response;
+};

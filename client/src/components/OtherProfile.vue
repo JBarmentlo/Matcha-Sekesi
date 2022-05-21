@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { getUserDetails} from "../services/user.script";
+import { getUserDetails, consultUser} from "../services/user.script";
 import { isLikedByMe, likeUser, unlikeUser} from "../services/like.script";
 import { blockUser } from "../services/block.script";
 import formValidate from "../services/formValidate";
@@ -170,6 +170,7 @@ export default {
 	created() {
 		console.log("mounterd");
 		console.log("userID: ", this.userId)
+		consultUser(this.$cookies.get("user"), this.userId)
 		getUserDetails(this.$cookies.get("user"), this.userId)
 			.then((user) => {
 				(this.id = user.data._id),

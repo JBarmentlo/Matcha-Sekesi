@@ -99,7 +99,6 @@ export default {
 
 			if (data.data.message == "Profil research was succesful") {
 				console.log("search done");
-				console.log("PRINTING ZE MSG:")
 				console.log(data.data.users);
 				this.users = data.data.users;
 			} else console.log("wtf search");
@@ -114,7 +113,7 @@ export default {
 	},
 	created() {
 		console.log("hey");
-		// getAllUsers(this.$cookies.get("user")).then(users => {this.users = users.data}).catch(err => {console.log("error fetchin all users %o", err)})
+		getAllUsers(this.$cookies.get("user")).then(users => {this.users = users.data}).catch(err => {console.log("error fetchin all users %o", err)})
 	},
 
 }
