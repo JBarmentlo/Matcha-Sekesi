@@ -44,11 +44,20 @@
 
 <script>
 import router from '@/router'
+import { getMyNotifs, setNotifViewed } from "../services/notifications.script";
+
+
 export default {
     name    : "NavBar",
 
     props   : {
         logged_in: Boolean
+    },
+
+    data() {
+        return {
+            notifs: []
+        }
     },
 
     methods : {
@@ -59,6 +68,13 @@ export default {
             if (this.$route.path != "/login")
                 router.push("/login")
         }
+    },
+
+    mounted() {
+        getMyNotifs(this.$cookies.get("user"))
+        .then(notifRes => {
+            this.notifs = notifRes.data
+        })
     }
 }
 </script>
