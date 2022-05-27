@@ -1,21 +1,21 @@
-const { calculateObjectSize } = require("bson");
-const db = require("../newmodels");
-const utils = require("../utils/UserSanitation");
-const ObjectId = require('mongodb').ObjectId
-var bcrypt = require("bcryptjs");
-const sendMail = require('../authentication/mailgun');
-const { CURSOR_FLAGS } = require("mongodb");
-const { send } = require("express/lib/response");
-
+// const { calculateObjectSize } 	= require("bson");
+const db 						= require("../newmodels");
+const utils 					= require("../utils/UserSanitation");
+const ObjectId 					= require('mongodb').ObjectId
+const bcrypt 					= require("bcryptjs");
+const sendMail 					= require('../authentication/mailgun');
+const { CURSOR_FLAGS }			= require("mongodb");
+const { send } 					= require("express/lib/response");
+const notif_controller			= require("./notification.controller")
 
 // console.log(db)
 // console.log("SDF")
-const user_collection = db.collection("users");
-const like_collection = db.collection("likes");
-const block_collection = db.collection("blocks");
-const consult_collection = db.collection("consult");
-const tag_collection = db.collection("tags");
-const verifyCollection = db.collection("verify")
+const user_collection 		= db.collection("users");
+const like_collection		= db.collection("likes");
+const block_collection		= db.collection("blocks");
+const consult_collection	= db.collection("consult");
+const tag_collection		= db.collection("tags");
+const verifyCollection		= db.collection("verify")
 
 
 
@@ -468,7 +468,18 @@ exports.like_user = (req, res) => {
 		res.status(400).send({ message: "Id missing to like" });
 		return;
 	}
-
+	console.log("Adding like Notif")
+	like_collection.findOne({ liked_id: req.userId , liker_id: req.body.liked_id })
+		.then(data => {
+			if (data == null) {
+				console.log("first like")
+				notif_controller.add_notif('like', req.userId, req.body.liked_id)
+			}
+			else {
+				console.log("return like")
+				notif_controller.add_notif('return_like', req.userId, req.body.liked_id)
+			}
+		})
 	// Save like in the database
 	like_collection.findOne({ liked_id: req.body.liked_id, liker_id: req.userId })
 		.then(data => {
@@ -497,16 +508,35 @@ exports.unlike_user = (req, res) => {
 		res.status(400).send({ message: "Id missing to like" });
 		return;
 	}
-
+	console.log("Checking for unlike Notif")
+	like_collection.findOne({liker_id: req.userId, liked_id: req.body.liked_id })
+		.then(data => {
+			if (data != null) {
+				console.log("Unnecerary double Checking for match")
+				like_collection.findOne({ liker_id: req.body.liked_id , liked_id: req.userId})
+				.then(data => {
+					if (data != null) {
+						console.log("Match confirmed")
+						notif_controller.add_notif('unlike_afer_match', req.userId, req.body.consulted_id)
+					}
+					else {
+						console.log("Match NOT confirmed")
+					}
+				})
+			}
+		})
+		.then(
+			like_collection.findOneAndDelete({ liker_id: req.userId, liked_id: req.body.liked_id })
+			.then(deleted => {
+				res.send(deleted)
+			})
+			.catch(err => {
+				console.log(err)
+				send.status(500).send("there was an error unliking " || err)
+			})
+		)
 	// Save like in the database
-	like_collection.findOneAndDelete({ liked_id: req.body.liked_id, liker_id: req.userId })
-	.then(deleted => {
-		res.send(deleted)
-	})
-	.catch(err => {
-		console.log(err)
-		send.status(500).send("there was an error unliking " || err)
-	})
+
 };
 
 exports.block_user = (req, res) => {
@@ -541,7 +571,8 @@ exports.consult_user = (req, res) => {
 		res.status(400).send({ message: "Id missing to consult" });
 		return;
 	}
-	console.log("Consulting user " + req.body.consulted_id)
+	console.log("Adding consult Notif")
+	notif_controller.add_notif('consult', req.userId, req.body.consulted_id)
 
 	// Save User in the database
 	consult_collection.findOne({ consulted_id: req.body.consulted_id, consulter_id: req.userId })
