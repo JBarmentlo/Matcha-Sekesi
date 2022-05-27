@@ -68,7 +68,7 @@ export default {
         likeUserButton(id, index) {
             likeUser(this.$cookies.get('user'), id)
             .then(res => {
-                console.log("liked user")
+                console.log("liked user CHECK WHY SPLICEEEEE")
                 this.users.splice(index, 1)
             })
         }

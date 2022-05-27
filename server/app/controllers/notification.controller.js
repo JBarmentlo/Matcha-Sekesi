@@ -38,20 +38,24 @@ exports.get_notifs	= (req, res) => {
 
 
 exports.set_viewed_notif	= (req, res) => {
-	console.log("Notif view")
+	console.log("Notif settingx viewed")
 	if (!req.userId || !req.body.notif_id) {
+		console.log("looolm ", req.userId, req.body.notif_id)
 		res.status(400).send({ message: "Id missing to set notif as viewed" });
 		return;
 	}
 	filter = {_id : req.body.notif_id, him_id : req.userId}
-	updateOne = {
+	update = {
 		$set: {
 			viewed : true
 		}
 	}
 	notif_collection.updateOne(filter, update)
-	.then(res => {console.log(res)})
+	.then(upadato => {
+		res.send(upadato)
+	})
 	.catch(err => {
 		console.log("error in notif view: ", err)
 	})
+	console.log("done set viewed")
 }

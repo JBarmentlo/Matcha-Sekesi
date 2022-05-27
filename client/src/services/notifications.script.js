@@ -18,17 +18,17 @@ export const getMyNotifs = async (userCooki) => {
 };
 
 
-export const setNotifViewed = async (userCooki, notif_id) => {
+export const setNotifViewed = async (userCooki, notif_idd) => {
 	console.log("getting my user details")
 	let request = {
 		url: "http://localhost:8080/api/users/notifsetviewed",  // should be replaced after going to production with domain url
-		method: "get",
+		method: "post",
 		headers: {
 			"Content-type": "application/json",
 			"x-access-token" : userCooki.data.accessToken,
 			"x-access-signature" : userCooki.data.signature,
 		},
-		data: JSON.stringify({notif_id : notif_id})
+		data: JSON.stringify({notif_id : notif_idd})
 	};
 	const response = await axios(request);
 	return response;

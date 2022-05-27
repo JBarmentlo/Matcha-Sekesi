@@ -30,7 +30,7 @@ router.get("/getallusers", 			auth.auth_jwt_token.verifyToken,		userController.g
 router.get("/getalltags", 			auth.auth_jwt_token.verifyToken,		userController.get_tags);
 
 router.get("/notifsforme", 			auth.auth_jwt_token.verifyToken,	 	notifController.get_notifs);
-router.get("/notifsetviewed", 		auth.auth_jwt_token.verifyToken,	 	notifController.set_viewed_notif);
+router.post("/notifsetviewed", 		auth.auth_jwt_token.verifyToken,	 	notifController.set_viewed_notif);
 
 
 

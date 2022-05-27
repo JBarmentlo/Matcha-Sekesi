@@ -31,7 +31,20 @@
                         <router-link class = "pr-3" to="/"><img src = "../assets/message.png" height = "32"/></router-link>
                     </li>
 					<li class="nav-item px-1">
-                        <router-link class = "pr-3" to="/"><img src = "../assets/notification.png" height = "32"/></router-link>
+                        <!-- <router-link class = "pr-3" to="/"><img src = "../assets/notification.png" height = "32"/></router-link> -->
+                        <div>
+                            <b-dropdown
+                                class="dropdown-1"
+                                text="Nootifs"
+                            >
+
+                                <div v-for="(notif, index) in notifs" :key="notif.id" @click='setNotifViewedWrap(index, notif._id)'>
+                                    <b-dropdown-item>
+                                        {{notif.type}} {{notif.viewed}}
+                                    </b-dropdown-item>
+                                </div>
+                            </b-dropdown>
+                        </div>
                     </li>
                     <li @click="logout" class="nav-item px-1">
                         <img  src = "../assets/logout.png" height = "32"/>
@@ -44,6 +57,7 @@
 
 <script>
 import router from '@/router'
+import Vue from 'vue'
 import { getMyNotifs, setNotifViewed } from "../services/notifications.script";
 
 
@@ -67,6 +81,13 @@ export default {
             this.$emit("setLoggedIn", false)
             if (this.$route.path != "/login")
                 router.push("/login")
+        },
+
+        setNotifViewedWrap(index, id) {
+            console.log("setnotif: ", index, id)
+            this.notifs[index].viewed = false
+            Vue.set(this.notifs, index, {...this.notifs[index], viewed : true})
+            setNotifViewed(this.$cookies.get("user"), id)
         }
     },
 
