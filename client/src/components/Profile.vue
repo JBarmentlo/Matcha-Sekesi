@@ -242,16 +242,16 @@ export default {
 		console.log("mounted my profile");
 		getMyUserDetails(this.$cookies.get("user"))
 			.then((user) => {
-				(this.firstName = user.data.firstName),
-					(this.username = user.data.username),
-					(this.lastName = user.data.lastName),
-					(this.bio = user.data.bio),
-					(this.zipCode = user.data.zipCode),
-					(this.sekesualOri = user.data.sekesualOri),
-					(this.mail = user.data.mail),
-					(this.gender = user.data.gender);
-					// console.log("DATA PICTURE::::::");
-					// console.log(user.data.pictures);
+				(this.firstName 		= user.data.firstName),
+					(this.username 		= user.data.username),
+					(this.lastName 		= user.data.lastName),
+					(this.bio 			= user.data.bio),
+					(this.zipCode 		= user.data.zipCode),
+					(this.sekesualOri 	= user.data.sekesualOri),
+					(this.mail 			= user.data.mail),
+					(this.gender 		= user.data.gender);
+					(this.selectedTags	= user.data.tags);
+
 					(this.pictures_to_upload = user.data.pictures.length > 0 ? user.data.pictures.length - 1 : 0);
 					(this.pictures = new Array(5));
 					for (let i = 0; i < 5; i++) {
@@ -271,16 +271,14 @@ export default {
 						}
 						console.log("i = " + i)
 					}
-					// console.log("DATA PICTURE::::::");
-					// console.log(this.pictures);
+
 					if (user.data.profilePic == "") {
-						// console.log("EMPTY PROFILE");
+						console.log("EMPTY PROFILE");
 						(this.profilePic = empty_profile);
 					}
 					else {
 						(this.profilePic = user.profilePic);
 					}
-					(this.selectedTags = user.tags);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -301,7 +299,7 @@ export default {
 		getTags(this.$cookies.get("user"))
 		.then(tags => {
 			this.existingTags = tags.data
-			console.log("tagis found: ",  this.existingTags)
+			console.log("tags found: ",  this.existingTags)
 		})
 	},
 
