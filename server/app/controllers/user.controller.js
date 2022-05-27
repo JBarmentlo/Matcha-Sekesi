@@ -126,8 +126,9 @@ exports.create_user = (req, res) => {
 
 
 exports.get_tags = (req, res) => {
-	const cursor = tag_collection.find({})
-	const tags = cursor.toArray()
+	const cursor	= tag_collection.find({})
+	const tags		= cursor.toArray()
+
 	.then(data => {
 		res.send(data)
 	})
@@ -171,7 +172,6 @@ exports.get_all_users = (req, res) => {
 
 
 exports.get_my_user = (req, res) => {
-	// Validate request
 	console.log("getting my user %s", req.userId)
 	if (!req.userId) {
 		res.status(400).send({ message: "Id missing you need to login" });
@@ -180,9 +180,7 @@ exports.get_my_user = (req, res) => {
 	}
 
 	
-	// Save User in the database
 	filter = {_id: ObjectId(req.userId)}
-	// filter = {username: "jhonny"}
 	user_collection.findOne(filter)
 	.then(user => {
 		if (user == null)
@@ -191,6 +189,7 @@ exports.get_my_user = (req, res) => {
 			return res.status(400).send({message: "no user found"})
 		}
 		console.log("got user %s", user.username)
+		console.log(user)
 		res.send(user)
 	})
 	.catch(err => {
@@ -321,8 +320,7 @@ exports.is_liked_by_user = (req, res) => {
 
 
 exports.get_likes_of_user = (req, res) => {
-	// Validate request
-	// console.log("req: %s res:%s",req.body, res)
+	console.log("Getting likes of user")
 	if (!req.userId) {
 		res.status(400).send({ message: "Id missing to look for likes" });
 		return;
@@ -332,6 +330,7 @@ exports.get_likes_of_user = (req, res) => {
 	const cursor = like_collection.find({ liked_id: req.userId })
 	const likers = cursor.toArray()
 		.then(data => {
+			console.log("found %d likes", data.length)
 			res.status(200).send(data)
 		})
 		.catch(err => {
@@ -366,17 +365,17 @@ exports.get_likes_by_user = (req, res) => {
 
 
 exports.get_consults_of_user = (req, res) => {
-	// Validate request
-	// console.log("req: %s res:%s",req.body, res)
+	console.log("Getting consults of user. req: ", req.userId)
 	if (!req.userId) {
 		res.status(400).send({ message: "Id missing to look for consults" });
 		return;
 	}
 
 	// Save User in the database
-	const cursor = like_collection.find({ consulted_id: req.userId })
+	const cursor =consult_collection.find({ consulted_id: req.userId })
 	const likers = cursor.toArray()
 		.then(data => {
+			console.log("found %d consults", data.length)
 			res.status(200).send(data)
 		})
 		.catch(err => {
