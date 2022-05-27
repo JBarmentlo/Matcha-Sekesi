@@ -125,7 +125,7 @@ export const createUser = async (newProfile) => {
 export const getTags = async (userCooki) => {
 	console.log("getting tags %o", userCooki)
 	let request = {
-		url: "http://localhost:8080/api/users/gettags",  // should be replaced after going to production with domain url
+		url: "http://localhost:8080/api/users/getalltags",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",

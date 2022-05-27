@@ -230,9 +230,9 @@ export default {
 			pictures_to_upload: 0,
 			selectedTags: [],
 			existingTags: [],
-			likes: 0,
+			likes: -1,
 			likes_of_me: [],
-			views: 0,
+			views: -1,
 			views_of_me: [],
 			show_delete: false,
 		};
@@ -278,9 +278,9 @@ export default {
 						(this.profilePic = empty_profile);
 					}
 					else {
-						(this.profilePic = user.data.profilePic);
+						(this.profilePic = user.profilePic);
 					}
-					(this.selectedTags = user.data.tags);
+					(this.selectedTags = user.tags);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -289,9 +289,9 @@ export default {
 
 		likesOfMe(this.$cookies.get("user"))
 			.then((likes_of_me) => {
-				console.log("Getting likes of me: " + likesOfMe)
-				this.data.likes_of_me = likes_of_me
-				this.data.likes = likes_of_me.length
+				console.log("Getting likes of me: " + likes_of_me.data)
+				this.likes_of_me = likes_of_me.data
+				this.likes = likes_of_me.data.length
 			})
 			.catch((err) => {
 				console.log(err);
