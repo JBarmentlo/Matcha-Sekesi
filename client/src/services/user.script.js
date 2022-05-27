@@ -105,6 +105,7 @@ export const createRandomUser = async () => {
 	return response;
 };
 
+
 export const createUser = async (newProfile) => {
 	console.log("Creating user %o", userCooki)
 	let request = {
@@ -165,6 +166,23 @@ export const consultUser = async (userCooki, user_to_consult) => {
 			"x-access-signature" : userCooki.data.signature,
 		},
 		data: JSON.stringify({'consulted_id' : user_to_consult})
+	};
+	const response = await axios(request);
+	return response;
+};
+
+
+export const getConsultsOfMe = async (userCooki) => {
+	console.log("Getting consults of me")
+	let request = {
+		url: "http://localhost:8080/api/users/consultsofme",  // should be replaced after going to production with domain url
+		method: "get",
+		headers: {
+			"Content-type"			: "application/json",
+			"x-access-token" 		: userCooki.data.accessToken,
+			"x-access-signature" 	: userCooki.data.signature,
+		},
+		data: JSON.stringify()
 	};
 	const response = await axios(request);
 	return response;

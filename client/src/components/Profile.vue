@@ -15,7 +15,7 @@
 				<div class = "popularity">
 					<div class = "d-flex justify-content-center align-items-center text-center">
 						<div class = "views p-3">
-							<i class="fa fa-eye fa-lm"></i>  {{ views }}
+							<i class="fa fa-eye fa-lm"></i>  {{ consults }}
 						</div>
 						<div class = "likes p-3">
 							<i class="fa fa-thumbs-up fa-lm"></i>  {{ likes }}
@@ -202,7 +202,7 @@
 </template>
 
 <script>
-import { getMyUserDetails, updateUserProfile, getTags} from "../services/user.script";
+import { getMyUserDetails, updateUserProfile, getTags, getConsultsOfMe} from "../services/user.script";
 import { likesOfMe } from "../services/like.script";
 import formValidate from "../services/formValidate";
 import axios from "axios";
@@ -232,8 +232,8 @@ export default {
 			existingTags: [],
 			likes: -1,
 			likes_of_me: [],
-			views: -1,
-			views_of_me: [],
+			consults: -1,
+			consults_of_me: [],
 			show_delete: false,
 		};
 	},
@@ -290,6 +290,17 @@ export default {
 				console.log("Getting likes of me: " + likes_of_me.data)
 				this.likes_of_me = likes_of_me.data
 				this.likes = likes_of_me.data.length
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+
+
+		getConsultsOfMe(this.$cookies.get("user"))
+			.then((consults_of_me) => {
+				console.log("Getting consults of me: " + consults_of_me.data)
+				this.consults_of_me = consults_of_me.data
+				this.consults = consults_of_me.data.length
 			})
 			.catch((err) => {
 				console.log(err);
