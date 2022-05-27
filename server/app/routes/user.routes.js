@@ -1,5 +1,6 @@
 
 const userController	= require("../controllers/user.controller.js");
+const notifController	= require("../controllers/notification.controller.js");
 const auth				= require("../authentication");
 var router				= require("express").Router();
 
@@ -27,6 +28,9 @@ router.post("/createuser", 													userController.create_user);
 router.get("/getallusers", 			auth.auth_jwt_token.verifyToken,		userController.get_all_users);
 
 router.get("/getalltags", 			auth.auth_jwt_token.verifyToken,		userController.get_tags);
+
+router.get("/notifsforme", 			auth.auth_jwt_token.verifyToken,	 	notifController.get_notifs);
+router.get("/notifsetviewed", 		auth.auth_jwt_token.verifyToken,	 	notifController.set_viewed_notif);
 
 
 

@@ -20,9 +20,9 @@ exports.add_notif	= (type, me_id, him_id) => {
 	console.log("New notif inserted: %o", notif)
 }
 
-exports.get_notifs	= (my_id) => {
 
-	const cursor = notif_collection.find({ him_id: my_id })
+exports.get_notifs	= (req, res) => {
+	const cursor = notif_collection.find({ him_id: req.userId })
 	const notifrs = cursor.toArray()
 		.then(data => {
 			console.log("found %d notifs", data.length)
@@ -37,9 +37,13 @@ exports.get_notifs	= (my_id) => {
 }
 
 
-exports.set_viewed_notif	= (notif_id) => {
+exports.set_viewed_notif	= (req, res) => {
 	console.log("Notif view")
-	filter = {_id : notif_id}
+	if (!req.userId || !req.body.notif_id) {
+		res.status(400).send({ message: "Id missing to set notif as viewed" });
+		return;
+	}
+	filter = {_id : req.body.notif_id, him_id : req.userId}
 	updateOne = {
 		$set: {
 			viewed : true

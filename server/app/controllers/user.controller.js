@@ -13,9 +13,10 @@ const notif_controller			= require("./notification.controller")
 const user_collection 		= db.collection("users");
 const like_collection		= db.collection("likes");
 const block_collection		= db.collection("blocks");
-const consult_collection	= db.collection("consult");
+const consult_collection	= db.collection("consults");
 const tag_collection		= db.collection("tags");
 const verifyCollection		= db.collection("verify")
+const matchCollection		= db.collection("matches")
 
 
 
@@ -83,6 +84,31 @@ function completeAndUploadTag(tag)
 	return tag
 }
 
+
+function addMatch(one, other) {
+	console.log("Adding match")
+	matchCollection.insertOne({one : one, other : other})
+}
+
+async function findMatch(one, other) {
+	console.log("Finding match")
+	return await matchCollection.findOne({
+		$or: [
+			{
+				$and: [
+					{one	: one},
+					{other	: other}
+				]
+			},
+			{
+				$and: [
+					{one	: other},
+					{other	: one}
+				]
+			}
+		]
+	})
+}
 
 
 exports.create_user = (req, res) => {
@@ -469,7 +495,7 @@ exports.like_user = (req, res) => {
 		return;
 	}
 	console.log("Adding like Notif")
-	like_collection.findOne({ liked_id: req.userId , liker_id: req.body.liked_id })
+	like_collection.findOne({ liker_id: req.body.liked_id, liked_id: req.userId })
 		.then(data => {
 			if (data == null) {
 				console.log("first like")
@@ -481,10 +507,10 @@ exports.like_user = (req, res) => {
 			}
 		})
 	// Save like in the database
-	like_collection.findOne({ liked_id: req.body.liked_id, liker_id: req.userId })
+	like_collection.findOne({ liker_id: req.userId, liked_id: req.body.liked_id })
 		.then(data => {
 			if (data == null) {
-				like_collection.insertOne({ liked_id: req.body.liked_id, liker_id: req.userId })
+				like_collection.insertOne({ liker_id: req.userId, liked_id: req.body.liked_id })
 					.then(data => { res.send(data); return})
 					.catch(err => res.status(500).send({ message: err.message || "Some error occurred while sending your like" }))
 			}
@@ -536,7 +562,6 @@ exports.unlike_user = (req, res) => {
 			})
 		)
 	// Save like in the database
-
 };
 
 exports.block_user = (req, res) => {
@@ -590,3 +615,4 @@ exports.consult_user = (req, res) => {
 			});
 		});
 };
+
