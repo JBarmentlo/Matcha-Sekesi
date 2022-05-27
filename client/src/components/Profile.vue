@@ -203,6 +203,7 @@
 
 <script>
 import { getMyUserDetails, updateUserProfile, getTags} from "../services/user.script";
+import { likesOfMe } from "../services/like.script";
 import formValidate from "../services/formValidate";
 import axios from "axios";
 import empty_profile from "../assets/empty_profile.png";
@@ -230,7 +231,9 @@ export default {
 			selectedTags: [],
 			existingTags: [],
 			likes: 0,
+			likes_of_me: [],
 			views: 0,
+			views_of_me: [],
 			show_delete: false,
 		};
 	},
@@ -247,8 +250,8 @@ export default {
 					(this.sekesualOri = user.data.sekesualOri),
 					(this.mail = user.data.mail),
 					(this.gender = user.data.gender);
-					console.log("DATA PICTURE::::::");
-					console.log(user.data.pictures);
+					// console.log("DATA PICTURE::::::");
+					// console.log(user.data.pictures);
 					(this.pictures_to_upload = user.data.pictures.length > 0 ? user.data.pictures.length - 1 : 0);
 					(this.pictures = new Array(5));
 					for (let i = 0; i < 5; i++) {
@@ -268,23 +271,32 @@ export default {
 						}
 						console.log("i = " + i)
 					}
-					console.log("DATA PICTURE::::::");
-					console.log(this.pictures);
+					// console.log("DATA PICTURE::::::");
+					// console.log(this.pictures);
 					if (user.data.profilePic == "") {
-						console.log("EMPTY PROFILE");
+						// console.log("EMPTY PROFILE");
 						(this.profilePic = empty_profile);
 					}
 					else {
 						(this.profilePic = user.data.profilePic);
 					}
 					(this.selectedTags = user.data.tags);
-					(this.likes = user.data.likes);
-					(this.views = user.data.views);
-
 			})
 			.catch((err) => {
 				console.log(err);
 			});
+
+
+		likesOfMe(this.$cookies.get("user"))
+			.then((likes_of_me) => {
+				console.log("Getting likes of me: " + likesOfMe)
+				this.data.likes_of_me = likes_of_me
+				this.data.likes = likes_of_me.length
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+
 
 		getTags(this.$cookies.get("user"))
 		.then(tags => {

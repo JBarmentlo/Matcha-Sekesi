@@ -27,8 +27,6 @@ exports.signup = (req, res) => {
         gender          : null,
         sekesualOri     : 'bi',
         popScore        : 1,
-		likes			: 0,
-		views			: 0,
         zipCode         : null,
         completeProfile : false,
         pictures        : [],

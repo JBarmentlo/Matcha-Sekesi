@@ -172,12 +172,14 @@ exports.get_all_users = (req, res) => {
 
 exports.get_my_user = (req, res) => {
 	// Validate request
-	console.log("getting user %s", req.userId)
+	console.log("getting my user %s", req.userId)
 	if (!req.userId) {
 		res.status(400).send({ message: "Id missing you need to login" });
+	console.log("getting my user %s", req.userId)
 	return;
 	}
 
+	
 	// Save User in the database
 	filter = {_id: ObjectId(req.userId)}
 	// filter = {username: "jhonny"}
@@ -188,6 +190,7 @@ exports.get_my_user = (req, res) => {
 			console.log("No user found for ID in token %s", req.userId)
 			return res.status(400).send({message: "no user found"})
 		}
+		console.log("got user %s", user.username)
 		res.send(user)
 	})
 	.catch(err => {

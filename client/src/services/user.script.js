@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 export const getMyUserDetails = async (userCooki) => {
-	console.log("getting user details")
+	console.log("getting my user details")
 	let request = {
 		url: "http://localhost:8080/api/users/getmyuser",  // should be replaced after going to production with domain url
 		method: "get",
