@@ -16,6 +16,12 @@ import NavBar from "./components/NavBar.vue"
 import { likesOfMe, likesByMe } from "./services/like.script"
 import { blocksOfMe, blocksByMe } from "./services/block.script"
 import { getMyUserDetails } from "./services/user.script"
+import { CometChat } from "@cometchat-pro/chat";
+// require('dotenv').config();
+
+// process.env.USER_ID; // "239482"
+// process.env.USER_KEY; // "foobar"
+// process.env.NODE_ENV; // "development"
 
 export default {
   name: 'App',
@@ -73,6 +79,24 @@ export default {
       this.updateBlocks()
       this.getCurrentUser()
     }
+    const appID = process.env.VUE_APP_ID;
+    const region = process.env.VUE_APP_REGION;
+    console.log("APPPSDFSDFSDFF: ", appID, region)
+    const appSetting = new CometChat.AppSettingsBuilder()
+      .subscribePresenceForAllUsers()
+      .setRegion(region)
+      .build();
+
+    CometChat.init(appID, appSetting).then(
+      () => {
+        console.log('Initialization completed successfully');
+        // You can now call login function.
+      },
+      (error) => {
+        console.log('Initialization failed with error:', error);
+        // Check the reason for error and take appropriate action.
+      }
+    );
 	},
 }
 </script>

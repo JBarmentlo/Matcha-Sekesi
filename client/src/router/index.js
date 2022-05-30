@@ -47,6 +47,11 @@ Vue.use(VueRouter)
     path: '/populate',
     name: 'populate-db',
     component: () => import('../components/PopulateDb.vue')
+  },
+  {
+    path: '/gato',
+    name: 'gato',
+    component: () => import('../components/Cometo.vue')
   }
 ]
 const router = new VueRouter({
