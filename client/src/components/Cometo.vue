@@ -5,11 +5,11 @@
 </template>
 
 <script>
-  import { CometChatUI } from '../cometchat-pro-vue-ui-kit/CometChatWorkspace/src';
+  // import { CometChatUI } from '../cometchat-pro-vue-ui-kit/CometChatWorkspace/src';
   export default {
     name: 'Cometo',
-    components: {
-      CometChatUI,
-    },
+    // components: {
+    //   CometChatUI,
+    // },
   };
 </script>
