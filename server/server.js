@@ -1,7 +1,7 @@
 const express 		= require("express");
 const bodyParser 	= require("body-parser");
 const cors 			  = require("cors");
-
+require('dotenv').config()
 
 const app = express();
 var corsOptions = {
@@ -37,6 +37,31 @@ app.use('/api/auth', authRouter, function(req, res, next){
 
 
 
+// console.log(process.env.COMET_APP_KEY)
+// console.log(process.env.COMET_APP_ID)
+// console.log(process.env.COMET_APP_REGION)
+// console.log(process.env.COMET_API_KEY)
+
+// const sdk = require('api')('@cometchat/v3#10yo3ct1l3cvd14i');
+
+// sdk.server(`https://${process.env.COMET_APP_ID}.api-${process.env.COMET_APP_REGION}.cometchat.io/v3/users`);
+
+
+// sdk['creates-user']({
+//   metadata: {
+//     '@private': {
+//       email: 'user@email.com',
+//       contactNumber: '0123456789'
+//     }
+//   },
+//   uid: 'asdawsfsdfffsd',
+//   name: 'asdassssssds',
+//   withAuthToken: true
+// }, {
+//   apiKey: process.env.COMET_API_KEY
+// })
+//   .then(res => console.log(res))
+//   .catch(err => console.error(err));
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

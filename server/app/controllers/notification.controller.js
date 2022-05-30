@@ -2,19 +2,19 @@ const db 					= require("../newmodels");
 const notif_collection 		= db.collection("notifications");
 
 // Type: ['like', 'return_like', 'unlike_afer_match', 'consult']
-function create_notif(type, me_id, him_id) {
+function create_notif(type, source_id, target_id) {
 	return {
-		type	: type,
-		me_id	: me_id,
-		him_id	: him_id,
-		viewed	: false
+		type		: type,
+		source_id	: source_id,
+		target_id	: target_id,
+		viewed		: false
 	}
 }
 
-exports.add_notif	= (type, me_id, him_id) => {
+exports.add_notif	= (type, source_id, target_id) => {
 	console.log("Creatin notif of type: ", type)
 
-	notif = create_notif(type, me_id, him_id)
+	notif = create_notif(type, source_id, target_id)
 	notif_collection.insertOne(notif)
 	.catch(err => console.log("ERROR INSERTING NOTIF"))
 	console.log("New notif inserted: %o", notif)
@@ -22,7 +22,8 @@ exports.add_notif	= (type, me_id, him_id) => {
 
 
 exports.get_notifs	= (req, res) => {
-	const cursor = notif_collection.find({ him_id: req.userId })
+	console.log("Getting Notifications ")
+	const cursor = notif_collection.find({ target_id: req.userId })
 	const notifrs = cursor.toArray()
 		.then(data => {
 			console.log("found %d notifs", data.length)
@@ -44,7 +45,7 @@ exports.set_viewed_notif	= (req, res) => {
 		res.status(400).send({ message: "Id missing to set notif as viewed" });
 		return;
 	}
-	filter = {_id : req.body.notif_id, him_id : req.userId}
+	filter = {_id : req.body.notif_id, target_id : req.userId}
 	update = {
 		$set: {
 			viewed : true
