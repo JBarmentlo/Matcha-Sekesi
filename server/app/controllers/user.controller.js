@@ -7,6 +7,7 @@ const sendMail 					= require('../authentication/mailgun');
 const { CURSOR_FLAGS }			= require("mongodb");
 const { send } 					= require("express/lib/response");
 const notif_controller			= require("./notification.controller")
+const comet_controller			= require('./comet.controller')
 
 // console.log(db)
 // console.log("SDF")
@@ -84,7 +85,6 @@ function completeAndUploadTag(tag)
 	return tag
 }
 
-
 function addMatch(one, other) {
 	console.log("Adding match")
 	matchCollection.insertOne({one : one, other : other})
@@ -141,7 +141,8 @@ exports.create_user = (req, res) => {
     };
     user_collection.insertOne(user)
         .then(insertOneResult => {
-            console.log(insertOneResult.insertedId)
+            console.log("Inserted ID for user: ", insertOneResult.insertedId)
+				comet_controller.create_user(insertOneResult.insertedId)
                 res.send({ message: "User was registered successfully!" })
             })
             .catch(err => {
@@ -265,7 +266,17 @@ exports.update_user = (req, res) => {
 		changeMail(user, req.body.update.mail)
 		.catch(er => {console.log(err)})
 		user_collection.updateOne(filter, update)
-		.then(res.send(user))
+		.then((updadato) => {
+			comet_controller.update_user(req.userId ,req.body.update.firstName)
+			.then(lol => {
+				console.log("updated cometchat user")
+				res.send(user)
+			})
+			.catch(lol => {
+				console.log("updated cometchat use ERRRROOR")
+				res.send(user)
+			})
+		})
 		.catch(err => {
 			console.log("error in update")
 			res.status(500).send({

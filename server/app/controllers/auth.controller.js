@@ -1,10 +1,11 @@
-const crypto = require('crypto');
-const db = require("../newmodels");
-const path = require('path');
-const sendMail = require('../authentication/mailgun');
-const user_collection = db.collection("users")
-const verifyCollection = db.collection("verify")
-const resetCollection = db.collection("reset")
+const crypto            = require('crypto');
+const db                = require("../newmodels");
+const path              = require('path');
+const sendMail          = require('../authentication/mailgun');
+const user_collection   = db.collection("users")
+const verifyCollection  = db.collection("verify")
+const resetCollection   = db.collection("reset")
+const comet_controller  = require('./comet.controller')
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
@@ -38,19 +39,35 @@ exports.signup = (req, res) => {
     };
     user_collection.insertOne(user)
         .then(insertOneResult => {
-            console.log(insertOneResult.insertedId)
+            console.log("Created user with ID: ", insertOneResult.insertedId)
             verifier = {
                 userId  : insertOneResult.insertedId,
                 idHash  : bcrypt.hashSync(insertOneResult.insertedId.toString(), 8)
             }
-            verifyCollection.insertOne(verifier)
-            .then(insertRes => {
-                sendMail(user.mail, "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
-                console.log("http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
-                res.send({ message: "User was registered successfully!" })
+            comet_controller.create_user(insertOneResult.insertedId ,user.username)
+            .then( (response) => {
+                console.log("Created comet user with response: ", response)
+                verifyCollection.insertOne(verifier)
+                .then(insertRes => {
+                    sendMail(user.mail, "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+                    console.log("http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+                    res.send({ message: "User was registered successfully!" })
+                })
+                .catch(err => {
+                    user_collection.deleteOne({_id : insertOneResult.insertedId.toString()})
+                })
             })
-            .catch(err => {
-                user_collection.deleteOne({_id : insertOneResult.insertedId.toString()})
+            .catch( (err) => {
+                console.log("Created comet user with err: ", responese)
+                verifyCollection.insertOne(verifier)
+                .then(insertRes => {
+                    sendMail(user.mail, "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+                    console.log("http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
+                    res.send({ message: "User was registered successfully!" })
+                })
+                .catch(err => {
+                    user_collection.deleteOne({_id : insertOneResult.insertedId.toString()})
+                })
             })
         })
         .catch(err => {
