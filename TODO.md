@@ -22,7 +22,7 @@
 
 
 ## Dede
-
+- check if profile complete
 
 
 ## Joep

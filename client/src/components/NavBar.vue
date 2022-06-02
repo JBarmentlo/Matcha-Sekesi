@@ -31,16 +31,17 @@
                         <router-link class = "pr-3" to="/"><img src = "../assets/message.png" height = "32"/></router-link>
                     </li>
 					<li class="nav-item px-1">
-                        <!-- <router-link class = "pr-3" to="/"><img src = "../assets/notification.png" height = "32"/></router-link> -->
                         <div>
                             <b-dropdown
                                 class="dropdown-1"
                                 text="Nootifs"
                             >
-
                                 <div v-for="(notif, index) in notifs" :key="notif.id" @click='setNotifViewedWrap(index, notif._id)'>
-                                    <b-dropdown-item>
-                                        {{notif.type}} {{notif.viewed}}
+								    <b-dropdown-item v-if="notif.viewed === true" class = "viewed" href = "/profile">
+                                        {{notif.msg}}
+                                    </b-dropdown-item>
+									<b-dropdown-item v-else-if="notif.viewed === false" href = "/profile" class = "unviewed">
+                                        {{notif.type}}
                                     </b-dropdown-item>
                                 </div>
                             </b-dropdown>
@@ -84,10 +85,18 @@ export default {
         },
 
         setNotifViewedWrap(index, id) {
-            console.log("setnotif: ", index, id)
+            console.log("\nsetnotif: ", index, id)
             this.notifs[index].viewed = false
+			this.notifs[index].msg = "heyyyy"
+			if (this.notifs[index].type == "consult") {
+				this.notifs[index].msg = "Someone has seen your profile"
+			}
+			else if (this.notifs[index].type == "like") {
+				this.notifs[index].msg = "Someone has liked your profile"
+			}
             Vue.set(this.notifs, index, {...this.notifs[index], viewed : true})
             setNotifViewed(this.$cookies.get("user"), id)
+			
         }
     },
 
@@ -103,5 +112,19 @@ export default {
 
 
 <style scoped>
+
+.viewed:hover {
+	background: #75a4fa;
+}
+
+.unviewed {
+	background-color: #FFACB7;
+	color: #fff
+}
+
+.unviewed:hover {
+	background-color: green;
+	color: #fff
+}
 
 </style>

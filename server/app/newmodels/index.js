@@ -6,7 +6,8 @@ const password = encodeURIComponent(process.env.MONGO_KEY);
 
 // Replace the uri string with your MongoDB deployment's connection string.
 // const uri = "mongodb://localhost:27017"
-const uri = `mongodb+srv://${username}:${password}@cluster0.ft4j5.mongodb.net/?retryWrites=true&w=majority`
+// const uri = `mongodb+srv://${username}:${password}@cluster0.ft4j5.mongodb.net/?retryWrites=true&w=majority`
+const uri = `mongodb+srv://${username}:${password}@cluster0.1c5m12g.mongodb.net/?retryWrites=true&w=majority`
 const client = new MongoClient(uri);
 
 async function connect() {

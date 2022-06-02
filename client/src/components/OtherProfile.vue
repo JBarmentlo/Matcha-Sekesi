@@ -1,138 +1,66 @@
 <template>
 	<div class="container rounded bg-white mt-5 mb-5">
-		<div class="row">
-			<div class="col-md-3 border-right">
-				<div class="d-flex flex-column align-items-center text-center p-3 py-5">
-					<img
-						class="rounded-circle mt-5"
-						width="150px"
-						v-bind:src="profilePic"
-					/><span class="font-weight-bold">{{ username }}</span
-					><span class="text-black-50">{{ bio }}</span
-					><span> </span>
-				</div>
-			</div>
-			<div class="col-md-5 border-right">
-				<div class="p-3 py-5">
-					<div class="d-flex justify-content-between align-items-center mb-3">
-						<h4 class="text-right">Profile</h4>
-					</div>
-					<div class="row mt-2">
-						<div class="col-md-6">
-							<label class="labels">First Name</label>
-							<input
-								type="text"
-								v-model="firstName"
-								class="form-control"
-								value=""
-								placeholder="surname"
-								:disabled="true"
-							/>
-						</div>
-						
-						<div class="col-md-6">
-							<label class="labels">Surname</label
-							><input
-								type="text"
-								v-model="lastName"
-								class="form-control"
-								value=""
-								placeholder="surname"
-								:disabled="true"
-							/>
-						</div>
-					</div>
-					<div class="row mt-3">
-						<div class="col-md-12 pb-2">
-							<label class="labels">Interests</label>
-							<tags-input element-id="tags"
-							v-model="selectedTags"
-							:existing-tags="existingTags"
-							:typeahead="true"
-							:disabled="true"></tags-input>
-						</div>
-						<div class="col-md-12 pb-2">
-							<label class="labels">City</label
-							><input
-								type="text"
-								v-model="city"
-								class="form-control"
-								placeholder=""
-								value=""
-								:disabled="true"
-							/>
-						</div>
-						<div class="col-md-12 pb-2">
-							<label class="labels">ZIP Code</label
-							><input
-								type="text"
-								v-model="zipCode"
-								class="form-control"
-								placeholder="zip"
-								value=""
-								:disabled="true"
-							/>
-						</div>
-					</div>
-					<div class="row mt-2">
-						<div class="col-md-6">
-							<label class="labels">Sekesual Orientation</label>
-							<div>
-								<b-dropdown
-									id="dropdown-1"
-									v-bind:text="sekesualOri"
-									class="m-md-2"
-									no-caret
-									disabled
-								>
-									<b-dropdown-item @click="setSekesual('Hetero')">
-										Hetero
-									</b-dropdown-item>
-									<b-dropdown-item @click="setSekesual('Gay')">
-										Gay
-									</b-dropdown-item>
-									<b-dropdown-item @click="setSekesual('Bi')">
-										Bi
-									</b-dropdown-item>
-								</b-dropdown>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<label class="labels"> Gender </label>
-							<div>
-								<b-dropdown id="dropdown-1" v-bind:text="gender" class="m-md-2" no-caret disabled>
-									<b-dropdown-item @click="setGender('Male')">
-										Male
-									</b-dropdown-item>
-									<b-dropdown-item @click="setGender('Female')">
-										Female
-									</b-dropdown-item>
-									<b-dropdown-item @click="setGender('NonBinary')">
-										NonBinary
-									</b-dropdown-item>
-								</b-dropdown>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<b-container fluid class="p-4 bg-light">
-					<b-col>
-						<b-col v-for="url in pictures" :key="url">
-							<b-img thumbnail fluid-grow :src=url alt="Image 1"></b-img>
-						</b-col>
-					</b-col>
-				</b-container>
-			</div>
-			<div class="mt-3 text-center center pb-4 border-0">
-				<button @click="like()" v-if="!isLiked" class="btn btn-primary profile-button" type="button"> Like </button>
-				<button @click="unlike()" v-if="isLiked" class="btn btn-primary profile-button" type="button"> UnLike </button>
-				<button @click="block()" class="btn btn-primary profile-button" type="button"> Block </button>
-				<button class="btn btn-primary profile-button" type="button"> Report </button>
-			</div>
+		<div class="center p-5">
+			<span class="font-weight-bold">{{ username }}</span>
+		</div>
+    <b-carousel 
+      id="carousel-1"
+      v-model="slide"
+      :interval="0"
+      controls
+      indicators
+      background="#ababab"
+      img-width="1024"
+      img-height="480"
+      style="text-shadow: 1px 1px 2px #333;"
+      @sliding-start="onSlideStart"
+      @sliding-end="onSlideEnd"
+    >
+		<!-- <b-carousel-slide v-for="url in pictures" :key="url" v-bind:img-src="url"> -->
+		<b-carousel-slide v-for="url in pictures" :key="url">
+		<template v-slot:img>
+			<img
+			class="d-block class-name"
+			height="480"
+			:src="url"
+			alt="image slot">
+		</template>
+		</b-carousel-slide>
+
+    </b-carousel>
+
+	<div class="center p-5">
+			<span class="font-weight-bold">{{ firstName }} {{ lastName }}</span>
+	</div>
+
+		<div class="center">
+			<span class="font-italic">"{{ bio }}"</span>
+	</div>
+	<div class = "row m-5">
+		<div class="col ml-5">
+				<span >I come from {{ zipCode }}</span>
+		</div>
+		<div class="col ml-5">
+				<span >I identify as a {{ gender }}</span>
 		</div>
 	</div>
+	<div class="col-md-12 pb-2">
+		<label class="labels">My Interests</label>
+		<tags-input element-id="tags"
+		v-model="selectedTags"
+		:existing-tags="existingTags"
+		:typeahead="true"
+		:disabled="true"></tags-input>
+		</div>
+
+	<div class="mt-3 text-center center pb-4 border-0">
+	<b-icon @click="like()" v-if="!isLiked" icon="heart-fill" font-scale="2" class="m-2" type="button" data-toggle="tooltip" data-placement="top" title="Unlike"></b-icon>
+	<b-icon @click="unlike()" v-if="isLiked" icon="heart" font-scale="2" class="m-2" type="button" data-toggle="tooltip" data-placement="top" title="Like"></b-icon>
+	<!-- <button @click="unlike()" v-if="isLiked" class="btn btn-primary profile-button m-2" type="button"> UnLike </button> -->
+	<b-icon @click="block()" icon="exclamation-circle" font-scale="2" class="m-2" type="button" data-toggle="tooltip" data-placement="top" title="Block"></b-icon>
+	<b-icon icon="bell-fill" font-scale="2" class="m-2" type="button" data-toggle="tooltip" data-placement="top" title="Report"></b-icon>
+	</div>
+  </div>
 </template>
 
 <script>
@@ -160,7 +88,10 @@ export default {
 			defaultProfilePic: "",
 			selectedTags: [],
 			existingTags: [],
-			isLiked			: false
+			isLiked			: false,
+			 slide: 0,
+        	sliding: null,
+			interval: 0
 		};
 	},
 	props: {
@@ -209,7 +140,13 @@ export default {
 		},
 		block() {
 			blockUser(this.$cookies.get("user"), this.userId)
-		}
+		},
+		onSlideStart(slide) {
+        this.sliding = true
+      },
+      onSlideEnd(slide) {
+        this.sliding = false
+      }
 	},
 };
 </script>
