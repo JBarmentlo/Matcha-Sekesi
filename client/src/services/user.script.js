@@ -18,6 +18,22 @@ export const getMyUserDetails = async (userCooki) => {
 	return response;
 };
 
+export const getCometToken = async (userCooki) => {
+	console.log("getting my user comet token")
+	let request = {
+		url: "http://localhost:8080/api/users/getuserauthtoken",  // should be replaced after going to production with domain url
+		method: "get",
+		headers: {
+			"Content-type": "application/json",
+			"x-access-token" : userCooki.data.accessToken,
+			"x-access-signature" : userCooki.data.signature,
+		}
+	};
+	const response = await axios(request);
+	return response;
+};
+
+
 
 export const getUserDetails = async (userCooki, userId) => {
 	console.log("getting user details for %s", userId)

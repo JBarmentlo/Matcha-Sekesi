@@ -2,6 +2,10 @@ import axios from "axios";
 
 
 export const getMyNotifs = async (userCooki) => {
+	if (userCooki == null) {
+		console.log("No user cookie, no notifs")
+		return [""]
+	}
 	console.log("getting my user details")
 	let request = {
 		url: "http://localhost:8080/api/users/notifsforme",  // should be replaced after going to production with domain url

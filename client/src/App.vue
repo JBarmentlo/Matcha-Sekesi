@@ -15,9 +15,8 @@
 import NavBar from "./components/NavBar.vue"
 import { likesOfMe, likesByMe } from "./services/like.script"
 import { blocksOfMe, blocksByMe } from "./services/block.script"
-import { getMyUserDetails } from "./services/user.script"
-// import { CometChat } from "@cometchat-pro/chat";
-// require('dotenv').config();
+import { getMyUserDetails, getCometToken} from "./services/user.script"
+import { CometChat } from "@cometchat-pro/chat";
 
 // process.env.USER_ID; // "239482"
 // process.env.USER_KEY; // "foobar"
@@ -32,11 +31,13 @@ export default {
 
   data() {
     return {
-      logged_in   : false,
-      currentUser : Object,
-      likesOfMe   : Array,
-      likesByMe   : [],
-      blocksByMe  : Array,
+      logged_in       : false,
+      comet_logged_in : false,
+      comet_init      : false,
+      currentUser     : Object,
+      likesOfMe       : Array,
+      likesByMe       : [],
+      blocksByMe      : Array,
     }
   },
 
@@ -47,20 +48,66 @@ export default {
   },
 
   methods: {
+    async CometInit() {
+      const appID = process.env.VUE_APP_COMET_ID;
+      const region = process.env.VUE_APP_COMET_REGION;
+      console.log("APID REGION: ", appID, region)
+      const appSetting = new CometChat.AppSettingsBuilder()
+        .subscribePresenceForAllUsers()
+        .setRegion(region)
+        .build();
+      await CometChat.init(appID, appSetting)
+    },
+
+    async cometToken() {
+      console.log("Getting Comet token")
+      var cometo = await getCometToken(this.$cookies.get('user'))
+      this.$cookies.set('comet', cometo.data)
+      console.log("Got Comet token")
+    },
+
+    async cometLogIn() {
+        await CometChat.login(this.$cookies.get('comet').authToken)
+        .then( user => {
+          console.log("COMET Login Successful:", { user });    
+        })
+        .catch(error => {
+          console.log("COMET  Login failed with exception:", { error });    
+        })
+    },
+
+    async CometFullShebang() {
+      try {
+        await this.CometInit()
+        this.comet_init = true
+        await this.cometToken()
+        await this.cometLogIn()
+        this.comet_logged_in = true
+      }
+      catch {
+        console.log("COMETO IS KAPUUUUT")
+      }
+    },
+
     async setLoggedIn(val) {
       this.logged_in = val;
       console.log("logged in set to: %s", val)
+      this.CometFullShebang()
     },
+
     async updateLikes() {
       this.likesByMe = await likesByMe(this.$cookies.get('user'))
       this.likesOfMe = await likesOfMe(this.$cookies.get('user'))
     },
+
     async updateBlocks() {
       this.blocksByMe = await blocksByMe(this.$cookies.get('user'))
     },
+
     async getCurrentUser() {
       this.currentUser = await getMyUserDetails(this.$cookies.get('user'))
     }
+
   },
 
   created() {
@@ -72,6 +119,7 @@ export default {
     ) {
       console.log("already logged in by cookie");
       this.setLoggedIn(true)
+
     }
     if (this.$cookies.isKey('user'))
     {
@@ -79,24 +127,6 @@ export default {
       this.updateBlocks()
       this.getCurrentUser()
     }
-    // const appID = process.env.VUE_APP_ID;
-    // const region = process.env.VUE_APP_REGION;
-    // console.log("APPPSDFSDFSDFF: ", appID, region)
-    // const appSetting = new CometChat.AppSettingsBuilder()
-    //   .subscribePresenceForAllUsers()
-    //   .setRegion(region)
-    //   .build();
-
-    // CometChat.init(appID, appSetting).then(
-    //   () => {
-    //     console.log('Initialization completed successfully');
-    //     // You can now call login function.
-    //   },
-    //   (error) => {
-    //     console.log('Initialization failed with error:', error);
-    //     // Check the reason for error and take appropriate action.
-    //   }
-    // );
 	},
 }
 </script>
