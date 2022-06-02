@@ -627,3 +627,23 @@ exports.consult_user = (req, res) => {
 		});
 };
 
+exports.get_my_user_auth_token = (req, res) => {
+	console.log("getting my user comet token %s", req.userId)
+	if (!req.userId) {
+		res.status(400).send({ message: "Id missing you need to get token" });
+	return;
+	}
+
+	comet_controller.create_auth_token(req.userId)
+	.then(comet_response => {
+		console.log("got token %o", comet_response.data)
+		res.send(comet_response.data)
+	})
+	.catch(err => {
+		console.log("NO COMETO %o", err)
+		res.status(500).send({
+			message:
+				err.message || "Some error occurred fetching user token"
+		});
+	});
+};

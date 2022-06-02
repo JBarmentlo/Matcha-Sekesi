@@ -45,7 +45,7 @@ exports.signup = (req, res) => {
                 idHash  : bcrypt.hashSync(insertOneResult.insertedId.toString(), 8)
             }
             comet_controller.create_user(insertOneResult.insertedId ,user.username)
-            .then( (response) => {
+            .then(response => {
                 console.log("Created comet user with response: ", response)
                 verifyCollection.insertOne(verifier)
                 .then(insertRes => {
@@ -53,21 +53,9 @@ exports.signup = (req, res) => {
                     console.log("http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
                     res.send({ message: "User was registered successfully!" })
                 })
-                .catch(err => {
-                    user_collection.deleteOne({_id : insertOneResult.insertedId.toString()})
-                })
             })
-            .catch( (err) => {
-                console.log("Created comet user with err: ", responese)
-                verifyCollection.insertOne(verifier)
-                .then(insertRes => {
-                    sendMail(user.mail, "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
-                    console.log("http://localhost:8081/verify/" + encodeURIComponent(verifier.idHash))
-                    res.send({ message: "User was registered successfully!" })
-                })
-                .catch(err => {
-                    user_collection.deleteOne({_id : insertOneResult.insertedId.toString()})
-                })
+            .catch(err => {
+                user_collection.deleteOne({_id : insertOneResult.insertedId.toString()})
             })
         })
         .catch(err => {

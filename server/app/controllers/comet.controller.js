@@ -1,11 +1,3 @@
-// console.log(process.env.COMET_APP_KEY)
-// console.log(process.env.COMET_APP_ID)
-// console.log(process.env.COMET_APP_REGION)
-// console.log(process.env.COMET_API_KEY)
-
-
-
-
 const sdk = require('api')('@cometchat/v3#10yo3ct1l3cvd14i');
 
 sdk.server(`https://${process.env.COMET_APP_ID}.api-${process.env.COMET_APP_REGION}.cometchat.io/v3/users`);
@@ -27,6 +19,9 @@ exports.create_user = (user_id, name) => {
 	  })
 };
 
+exports.create_auth_token = (user_id) => {
+	return sdk['create-authtoken']({force: false}, {uid: user_id, apiKey: process.env.COMET_API_KEY})
+};
 
 exports.update_user = (user_id, name) => {
 	return sdk['update-user']({

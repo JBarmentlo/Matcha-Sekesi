@@ -32,8 +32,7 @@ router.get("/getalltags", 			auth.auth_jwt_token.verifyToken,		userController.ge
 router.get("/notifsforme", 			auth.auth_jwt_token.verifyToken,	 	notifController.get_notifs);
 router.post("/notifsetviewed", 		auth.auth_jwt_token.verifyToken,	 	notifController.set_viewed_notif);
 
-
-
+router.get("/getuserauthtoken", 	auth.auth_jwt_token.verifyToken,	 	userController.get_my_user_auth_token);
 
 
 module.exports = router
