@@ -3,31 +3,35 @@
 		<div class="center p-5">
 			<span class="font-weight-bold">{{ username }}</span>
 		</div>
+	<div class="troicent-px-wide">
     <b-carousel 
       id="carousel-1"
       v-model="slide"
       :interval="0"
       controls
       indicators
-      background="#ababab"
-      img-width="1024"
-      img-height="480"
-      style="text-shadow: 1px 1px 2px #333;"
+      background="blue"
+      img-width="auto"
+      img-height="360"
+      style="text-shadow: 1px 1px 2px #333; margin-left: 10%; margin-right: 10%"
       @sliding-start="onSlideStart"
       @sliding-end="onSlideEnd"
     >
 		<!-- <b-carousel-slide v-for="url in pictures" :key="url" v-bind:img-src="url"> -->
-		<b-carousel-slide v-for="url in pictures" :key="url">
+		<b-carousel-slide v-for="url in pictures" v-if="url != ''" :key="url">
 		<template v-slot:img>
 			<img
-			class="d-block class-name center-block"
-			height="480"
+			class="d-block class-name center-block mx-auto carousel_img"
+			width="100%"
+			height="360"
 			:src="url"
 			alt="image slot">
 		</template>
 		</b-carousel-slide>
 
     </b-carousel>
+	</div>
+
 
 	<div class="center p-5">
 			<span class="font-weight-bold">{{ firstName }} {{ lastName }}</span>
@@ -152,4 +156,15 @@ export default {
 </script>
 
 <style scoped>
+
+.troicent-px-wide {
+    width: 500px;
+	margin: auto
+}
+
+.carousel_img {
+	object-fit: cover
+}
+
+
 </style>

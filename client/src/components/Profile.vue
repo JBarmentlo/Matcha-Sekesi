@@ -274,8 +274,7 @@ export default {
 						console.log("i = " + i)
 					}
 
-					if (user.data.profilePic == "") {
-						console.log("EMPTY PROFILE");
+					if (user.data.profilePic == undefined) {
 						(this.profilePic = empty_profile);
 					}
 					else {
@@ -563,5 +562,6 @@ body {
 .card {
 	background: none;
 }
+
 
 </style>
