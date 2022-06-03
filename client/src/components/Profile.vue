@@ -166,7 +166,7 @@
 									<div class="row">
 										<div class="column" v-for="(url, index) in pictures" :key="index">
 											<label v-if="index < pictures_to_upload" class = "full">
-												<img :src=url>
+												<img :src=url width="260" height='220'>
 												<b-icon @click="deletePic(index)" icon="trash" font-scale="1" class="m-2" type="button" data-toggle="tooltip" data-placement="top" title="Delete picture"></b-icon>
 												<b-icon v-if="profilePic == url" icon="star-fill" font-scale="1" class="m-2" ></b-icon>
 												<b-icon @click="profilePic = pictures[index]" v-if="profilePic != url" icon="star" font-scale="1" class="m-2" type="button" data-toggle="tooltip" data-placement="top" title="Make Profile"></b-icon>
@@ -428,6 +428,7 @@ export default {
   vertical-align: middle;
   background-color: rgb(229, 225, 225);
   width: 100%;
+  object-fit: cover;
 }
 
 .next > img:hover {
