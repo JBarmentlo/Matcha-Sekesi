@@ -20,7 +20,7 @@
 		<b-carousel-slide v-for="url in pictures" :key="url">
 		<template v-slot:img>
 			<img
-			class="d-block class-name"
+			class="d-block class-name center-block"
 			height="480"
 			:src="url"
 			alt="image slot">

@@ -166,9 +166,10 @@
 									<div class="row">
 										<div class="column" v-for="(url, index) in pictures" :key="index">
 											<label v-if="index < pictures_to_upload" class = "full">
-												<img :src=pictures[index] @mouseover="show_delete = true" @mouseleave="show_delete = false">
-												<b-col lg="4"><button class = "img-overlay btn btn-warning px-3" @click="deletePic(index)" size="sm" ><i class="fa fa-trash"></i></button></b-col>
-												<b-col lg="12"><button type="button" class="img-overlay btn btn-outline-default waves-effect" @click="profilePic = pictures[index]"><i class="fa fa-star pr-2" aria-hidden="true"></i>Make Profile</button></b-col>
+												<img :src=url>
+												<b-icon @click="deletePic(index)" icon="trash" font-scale="1" class="m-2" type="button" data-toggle="tooltip" data-placement="top" title="Delete picture"></b-icon>
+												<b-icon v-if="profilePic == url" icon="star-fill" font-scale="1" class="m-2" ></b-icon>
+												<b-icon @click="profilePic = pictures[index]" v-if="profilePic != url" icon="star" font-scale="1" class="m-2" type="button" data-toggle="tooltip" data-placement="top" title="Make Profile"></b-icon>
 											</label>
 											<label v-if="index == pictures_to_upload" for="file-input" class = "next">
 												<img :src=pictures[index]>
@@ -178,9 +179,6 @@
 											</label>
 										</div>
 									</div>
-							</div>
-							<div class="message">
-								{{ message }}
 							</div>
 						</form>
 					</div>
@@ -224,8 +222,8 @@ export default {
 			gender: "Not Specified",
 			message: null,
 			file: null,
-			profilePic: "",
-			defaultProfilePic: "",
+			profilePic: empty_profile,
+			defaultProfilePic: empty_profile,
 			pictures: [],
 			pictures_to_upload: 0,
 			selectedTags: [],
@@ -252,7 +250,9 @@ export default {
 					(this.gender 		= user.data.gender);
 					(this.selectedTags	= user.data.tags);
 
-					(this.pictures_to_upload = user.data.pictures.length > 0 ? user.data.pictures.length - 1 : 0);
+					(this.pictures_to_upload = user.data.pictures.length > 0 ? user.data.pictures.length : 0);
+					(console.log("PICTURAS:"));
+					(console.log(this.pictures_to_upload));
 					(this.pictures = new Array(5));
 					for (let i = 0; i < 5; i++) {
 						if (i < user.data.pictures.length) {
@@ -351,7 +351,7 @@ export default {
 				mail: this.mail,
 				gender: this.gender,
 				pictures: this.actual_pictures(),
-				profilePic: this.profilePic,
+				// profilePic: this.profilePic,
 				selectedTags : this.selectedTags
 			};
 			if (formValidate.validateUpdate(updato)) {
@@ -390,13 +390,19 @@ export default {
 		{
 			if (this.profilePic == this.pictures[index])
 				this.profilePic = this.defaultProfilePic
-			this.pictures[index] = empty_photo;
-			this.pictures[this.pictures_to_upload] = empty_photo;
-			this.pictures[this.pictures_to_upload - 1] = plus_photo;
-			console.log("deleting picture for index: " + index);
-			console.log(this.pictures)
-			console.log("pictures_to_upload: " + this.pictures_to_upload)
 			this.pictures_to_upload -= 1;
+			for (let i = index; i < 5; i++) {
+				if (i < this.pictures_to_upload) {
+					this.pictures[i] = this.pictures[i + 1];
+				}
+				else if (i == this.pictures_to_upload) {
+					this.pictures[i] = plus_photo
+				}
+				else if (i > this.pictures_to_upload) {
+					this.pictures[i] = empty_photo
+				}
+			}
+			
 		}
 	},
 };
