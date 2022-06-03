@@ -160,8 +160,8 @@
 				<div class="col">
 					<div class="file" v-if="pictures.length <= 5">
 						<form @submit.prevent="onSubmit" enctype="multipart/form-data">
-							<div class="fields">
-								<label> Upload Pictures </label><br />
+							<div class="fields mt-4">
+								<label > Pictures </label><br />
 									<input id="file-input" type="file" ref="file" @change="onSelect" accept = ".png,.jpg,.jpeg">
 									<div class="row">
 										<div class="column" v-for="(url, index) in pictures" :key="index">
@@ -438,6 +438,7 @@ export default {
   background-color: rgb(229, 225, 225);
   width: 100%;
   object-fit: cover;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .next > img:hover {
@@ -497,11 +498,12 @@ body {
     margin: 0 0 1rem 0;
 }
 .account-settings .user-profile .user-avatar img {
-    width: 90px;
-    height: 90px;
+    width: 160px;
+    height: 160px;
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
     border-radius: 100px;
+	  object-fit: cover;
 }
 .account-settings .user-profile h5.user-name {
     margin: 0 0 0.5rem 0;
@@ -552,5 +554,14 @@ body {
 	margin-left: 5px;
 }
 
+.card-body {
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+	border-radius: 10px;
+}
+
+.card {
+	background: none;
+}
 
 </style>
