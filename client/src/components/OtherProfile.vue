@@ -37,15 +37,17 @@
 			<span class="font-weight-bold">{{ firstName }} {{ lastName }}</span>
 	</div>
 
-		<div class="center">
+		<div class="center pl-5 pr-5">
 			<span class="font-italic">"{{ bio }}"</span>
 	</div>
 	<div class = "row m-5">
 		<div class="col ml-5">
-				<span >I come from {{ zipCode }}</span>
+			<b-icon icon="map"></b-icon>
+			<span > I come from {{ zipCode }}</span>
 		</div>
 		<div class="col ml-5">
-				<span >I identify as a {{ gender }}</span>
+			<b-icon icon="sun"></b-icon>
+				<span >   I identify as a {{ gender }}</span>
 		</div>
 	</div>
 	<div class="col-md-12 pb-2">
@@ -158,12 +160,16 @@ export default {
 <style scoped>
 
 .troicent-px-wide {
-    width: 500px;
+    width: 600px;
 	margin: auto
 }
 
 .carousel_img {
 	object-fit: cover
+}
+
+.container {
+	width: 50%;
 }
 
 
