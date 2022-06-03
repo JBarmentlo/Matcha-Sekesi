@@ -48,6 +48,7 @@
 							placeholder="Enter first name"
 							value=""
 						/>
+						<div v-if="firstName == '' && validation == false" class="validation_error">Please Enter a Name</div>
 					</div>
 				</div>
 				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -60,6 +61,7 @@
 							value=""
 							placeholder="Enter last name"
 						/>
+						<div v-if="lastName == '' && validation == false" class="validation_error">Please Enter a Last Name</div>
 					</div>
 				</div>
 				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -72,18 +74,13 @@
 							placeholder="Enter email adress"
 							value=""
 						/>
+						<div v-if="mail == '' && validation == false" class="validation_error">Please Enter an email</div>
 					</div>
 				</div>
 				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
 					<div class="form-group">
-						<label class="labels">Password</label>
-						<input
-							type="password"
-							v-model="password"
-							class="form-control"
-							placeholder="Password"
-							value=""
-						/>
+						<router-link class = "btn btn-dark btn-md btn-block" to="/forgot-password">Reset my password
+						</router-link>
 					</div>
 				</div>
 				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -95,6 +92,7 @@
 						placeholder="zip"
 						value=""
 					/>
+					<div v-if="zipCode == null && validation == false" class="validation_error">Please Enter a ZipCode</div>
 				</div>
 			</div>
 			<div class="row gutters pt-5">
@@ -141,6 +139,8 @@
 								NonBinary
 							</b-dropdown-item>
 						</b-dropdown>
+						<div v-if="gender == null && validation == false" class="validation_error">Please select a gender</div>
+
 					</div>
 				</div>
 				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
@@ -233,6 +233,8 @@ export default {
 			consults: -1,
 			consults_of_me: [],
 			show_delete: false,
+			profile_completed : false,
+			validation : true
 		};
 	},
 
@@ -251,8 +253,8 @@ export default {
 					(this.selectedTags	= user.data.tags);
 
 					(this.pictures_to_upload = user.data.pictures.length > 0 ? user.data.pictures.length : 0);
-					(console.log("PICTURAS:"));
-					(console.log(this.pictures_to_upload));
+					(console.log("ZIP CODO:"));
+					(console.log(this.zipCode));
 					(this.pictures = new Array(5));
 					for (let i = 0; i < 5; i++) {
 						if (i < user.data.pictures.length) {
@@ -357,6 +359,9 @@ export default {
 			if (formValidate.validateUpdate(updato)) {
 				updateUserProfile(this.$cookies.get("user"), updato);
 			}
+			if (!this.profile_completed) {
+				this.validation = false
+			}
 		},
 		onSelect() {
 			const file = this.$refs.file.files[0];
@@ -385,6 +390,10 @@ export default {
 				this.message = "Something Went wrong";
 			}
 			this.file = null
+			console.log("HEYYYYYYYYY")
+			if (this.profile_completed= false) {
+				this.validation = false
+			}
 		},
 		deletePic(index)
 		{
@@ -535,6 +544,12 @@ body {
 
 .container {
 	margin-top: 5%;
+}
+
+.validation_error {
+	color : red;
+	font-size: 80%;
+	margin-left: 5px;
 }
 
 
