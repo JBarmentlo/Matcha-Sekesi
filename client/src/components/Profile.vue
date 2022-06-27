@@ -1,4 +1,5 @@
 <template>
+
 	<div class="container">
 	<div class="row gutters">
 	<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
@@ -26,6 +27,7 @@
 					<h5>About</h5>
 					<p>{{ bio }}</p>
 				</div>
+				
 			</div>
 			
 		</div>
@@ -106,7 +108,31 @@
 					:existing-tags="existingTags"
 					:typeahead="true"></tags-input>
 				</div>
-				<div class="col">
+				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+					<label class="labels">Age</label>
+					<input
+						type="text"
+						v-model="Age"
+						class="form-control"
+						placeholder="Age"
+						value=""
+					/>
+				</div>
+				
+				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+					<label class="labels">Bio</label>
+					<textarea
+						type="text"
+						v-model="bio"
+						class="form-control"
+						placeholder="Tell us a few words about you"
+						value=""
+						maxlength="255"
+						rows="6"
+					/>
+				</div>
+
+				<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
 					<label class="labels">Sekesual Orientation</label>
 					<div>
 						<b-dropdown
@@ -125,7 +151,7 @@
 						</b-dropdown>
 					</div>
 				</div>
-				<div class="col">
+				<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
 					<label class="labels"> Gender </label>
 					<div>
 						<b-dropdown class="dropdown-2" v-bind:text="gender">
@@ -143,20 +169,7 @@
 
 					</div>
 				</div>
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
-					<label class="labels">Bio</label>
-					<textarea
-						type="text"
-						v-model="bio"
-						class="form-control"
-						placeholder="Tell us a few words about you"
-						value=""
-						maxlength="255"
-						rows="6"
-					/>
-				</div>
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-				</div>
+				
 				<div class="col">
 					<div class="file" v-if="pictures.length <= 5">
 						<form @submit.prevent="onSubmit" enctype="multipart/form-data">
@@ -280,6 +293,8 @@ export default {
 					else {
 						(this.profilePic = user.profilePic);
 					}
+					(this.profile_completed	= user.data.profile_completed);
+
 			})
 			.catch((err) => {
 				console.log(err);
@@ -353,11 +368,12 @@ export default {
 				gender: this.gender,
 				pictures: this.actual_pictures(),
 				// profilePic: this.profilePic,
-				selectedTags : this.selectedTags
+				selectedTags : this.selectedTags,
 			};
 			if (formValidate.validateUpdate(updato)) {
 				updateUserProfile(this.$cookies.get("user"), updato);
 			}
+			this.check_for_complete()
 			if (!this.profile_completed) {
 				this.validation = false
 			}
@@ -389,7 +405,6 @@ export default {
 				this.message = "Something Went wrong";
 			}
 			this.file = null
-			console.log("HEYYYYYYYYY")
 			if (this.profile_completed= false) {
 				this.validation = false
 			}
@@ -411,6 +426,14 @@ export default {
 				}
 			}
 			
+		},
+		check_for_complete() {
+			if (this.firstName != undefined &&
+				this.lastName != undefined &&
+				this.zipCode != undefined &&
+				this.sekesualOri != undefined) {
+					this.profile_completed = true
+				}
 		}
 	},
 };
