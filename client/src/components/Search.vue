@@ -10,15 +10,73 @@
 			</div>
 		</div>
 		<div v-if="complete === true" class="center">
-			<div class = "inner-block">
-				<b-dropdown text="Min Age">
+				<b-dropdown text="Min Age" class = "m-3">
 					<div class = "dropdown_menu" >
 					<div v-for="index in 100 - 18" :key="index">
-						<b-dropdown-item >{{index + 17}}</b-dropdown-item>
+						<b-dropdown-item v-if="min_age === index + 17"
+							class = "dropdown-item active"
+							v-model="min_age"
+							>
+							{{index + 17}}
+						</b-dropdown-item>
+						<b-dropdown-item v-if="min_age !== index + 17"
+							class = "dropdown-item"
+							@click="setminage(index + 17)"
+							>
+							{{index + 17}}
+						</b-dropdown-item>
+						
 					</div>
 					</div>
 				</b-dropdown>
-			</div>
+				<b-dropdown text="Max Age" class = "m-3">
+					<div class = "dropdown_menu" >
+					<div v-for="index in 100 - 18" :key="index">
+						<b-dropdown-item v-if="min_age === index + 17"
+							class = "dropdown-item active"
+							v-model="min_age"
+							>
+							{{index + 17}}
+						</b-dropdown-item>
+						<b-dropdown-item v-if="min_age !== index + 17"
+							class = "dropdown-item"
+							@click="setminage(index + 17)"
+							>
+							{{index + 17}}
+						</b-dropdown-item>
+						
+					</div>
+					</div>
+				</b-dropdown>
+				<b-dropdown text="Popularity score" class = "m-3">
+					<b-form-rating
+						v-model="min_rating"
+					></b-form-rating>
+				</b-dropdown>
+				<b-dropdown text="Tags" class = "m-3">
+						<b-form-tags
+							input-id="tags-pills"
+							v-model="interest_tags"
+							tag-variant="primary"
+							tag-pills
+							size="lg"
+							separator=" "
+							placeholder="Add Tag..."
+						></b-form-tags>
+				</b-dropdown>
+				<b-dropdown text="Minimum distance" class = "m-3">
+					<b-row>
+							<b-col
+							>	
+								<b-form-spinbutton
+									id="sb-input"
+									v-model="min_km"
+									min="0"
+									max="160"
+								></b-form-spinbutton>
+							</b-col>
+						</b-row>
+				</b-dropdown>
 		</div>
 		<profile-list v-if="complete === true" :users="users"></profile-list>
 	</div>
@@ -46,7 +104,9 @@ export default {
 		}
 	},
 	methods: {
-	
+		setminage(val) {
+			this.min_age = val;
+		},
 		save_changes(e) {
 			console.log("saving changes");
 			e.preventDefault();
