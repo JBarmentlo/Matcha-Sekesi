@@ -1,9 +1,7 @@
 <template>
     <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row static-top">
         <div class="container">
-			<!-- <router-link class = "navbar-brand float-left" to="/">Sekesi.io</router-link> -->
-			<!-- Image and text -->
-			<nav class="navbar navbar-light bg-light">
+			<nav class="navbar navbar-light bg-light ">
 			<a class="navbar-brand" href="#">
 				<img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
 				Sekesi.io
