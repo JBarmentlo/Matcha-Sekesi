@@ -25,6 +25,7 @@
     "twemoji": "^13.1.0",
     "vue": "^2.6.14",
     "vue-cookies": "^1.7.4",
+    "vue-material-design-icons": "^5.0.0",
     "vue-router": "^3.5.1"
   },
   "devDependencies": {

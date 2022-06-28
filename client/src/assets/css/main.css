@@ -1,15 +1,15 @@
- * {
+/* 
+
+* {
   box-sizing: border-box;
 }
 
 html,
 body {
-  /* background: #2554FF !important; */
   width: 100%;
   height: 100%;
   background: cornflowerblue;
 
-  /* display: flex; */
 }
 
 .btn-primary {
@@ -21,7 +21,7 @@ body {
 	background-color: rgba(128, 128, 128, 0.835);
 	border-color:  rgba(128, 128, 128, 0.835);
 }
-
+*/
 
 
 /* body,

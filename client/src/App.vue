@@ -8,6 +8,7 @@
         @setLoggedIn="setLoggedIn"
       />
     </div>
+    <SideBar />
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import { likesOfMe, likesByMe } from "./services/like.script"
 import { blocksOfMe, blocksByMe } from "./services/block.script"
 import { getMyUserDetails, getCometToken} from "./services/user.script"
 import { CometChat } from "@cometchat-pro/chat";
+import SideBar from "./components/SideBar";
 
 // process.env.USER_ID; // "239482"
 // process.env.USER_KEY; // "foobar"
@@ -26,7 +28,8 @@ export default {
   name: 'App',
   
   components: {
-    NavBar
+    NavBar,
+    SideBar
   },
 
   data() {
