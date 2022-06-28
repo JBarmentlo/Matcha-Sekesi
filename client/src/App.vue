@@ -70,7 +70,8 @@ export default {
     },
 
     async cometLogIn() {
-        await CometChat.login(this.$cookies.get('comet').authToken)
+        // await CometChat.login(this.$cookies.get('comet').authToken)
+        await CometChat.login(this.$cookies.get('user').data.id, process.env.VUE_APP_COMET_REGION)
         .then( user => {
           console.log("COMET Login Successful:", { user });    
         })

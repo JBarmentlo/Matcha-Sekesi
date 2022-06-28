@@ -76,15 +76,7 @@ export default {
     };
   },
   created() {
-    likesOfMe(this.$cookies.get('user'))
-    .then(res => this.likesOfMe = res.data)
-    .catch(err => console.log(err))
-
-    likesByMe(this.$cookies.get('user'))
-    .then(res => this.likesByMe= res.data)
-    .catch(err => console.log(err))
-
-    this.getUser()
+    this.getMatches()
   //   auth.onAuthStateChanged((user) => {
   //     if (user) {
   //       this.avatar = user.photoURL;
@@ -94,27 +86,40 @@ export default {
   //   });
   },
   methods: {
+    async getMatches() {
+  
+        let ofme = await likesOfMe(this.$cookies.get('user'))
+        ofme = ofme.data.map(o => {return o.liker_id})
+        let byme = await likesByMe(this.$cookies.get('user'))
+        byme = byme.data.map(o => {return o.liked_id})
+        console.log("RARA", ofme, byme)
+        this.matched = ofme.filter(u => byme.includes(u));
+
+    },
     getUser() {
       // const uid = auth.currentUser.uid;
       const uid = this.$cookies.get('user').data.id
-      CometChat.getUser(uid)
-        .then((user) => {
-          const favorites = user.metadata?.favorites || [];
-          const requests = user.metadata?.requests || [];
+      // this.favorites = users.filter((u) => this.likesOfMe.includes(u.uid));
+      // console.log("PLUK: ", this.likesByMe)
+      this.matched = this.likesOfMe.filter((u) => console.log(u));
+      // CometChat.getUser(uid)
+      //   .then((user) => {
+      //     const favorites = user.metadata?.favorites || [];
+      //     const requests = user.metadata?.requests || [];
 
-          let usersRequest = new CometChat.UsersRequestBuilder()
-            .setLimit(30)
-            .build();
-          usersRequest
-            .fetchNext()
-            .then((users) => {
-              console.log("oosere: ", users)
-              this.favorites = users.filter((u) => this.likesOfMe.includes(u.uid));
-              this.matched = users.filter((u) => this.likesByMe.includes(u.uid));
-            })
-            .catch((error) => console.log(error));
-        })
-        .catch((error) => console.log(error));
+      //     let usersRequest = new CometChat.UsersRequestBuilder()
+      //       .setLimit(30)
+      //       .build();
+      //     usersRequest
+      //       .fetchNext()
+      //       .then((users) => {
+      //         console.log("oosere: ", users)
+      //         this.favorites = users.filter((u) => this.likesOfMe.includes(u.uid));
+      //         this.matched = users.filter((u) => this.likesByMe.includes(u.uid));
+      //       })
+      //       .catch((error) => console.log(error));
+      //   })
+      //   .catch((error) => console.log(error));
     },
     logOut() {
       // auth
