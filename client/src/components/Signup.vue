@@ -100,8 +100,8 @@ export default {
 			this.is_valid_password = inputValidate.validatePassword(this.password)
 		},
 		signupFormSubmit(e) {
-			// console.log("lol")
-			console.log(this.locate())
+			console.log("lilolilo")
+			console.log("LOCALISATION:", this.locate())
 			// console.log("lol")
 			e.preventDefault();
 			if (this.is_valid_username == false || this.is_valid_email == false || this.is_valid_password == false) {
@@ -109,6 +109,8 @@ export default {
 			}
 			signup({
 				username: this.username,
+				firstName: this.firstName,
+				lastName: this.lastName,
 				mail: this.mail,
 				password: this.password,
 			})
