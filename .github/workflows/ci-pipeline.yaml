@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      # - uses: actions/checkout@v2
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     node-version: '16.13.2'
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.13.2'
       # - uses: mirromutth/mysql-action@v1.1
       #   with:
       #     host port: 8080 # Optional, default value is 3306. The port of host
@@ -32,6 +32,7 @@ jobs:
           mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
           mysql -e "CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password';" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
           mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"  -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} ${{ env.DB_DATABASE }} < SQL_Server/sql_scripts/define_db.sql
       - name: Install dependencies
         run: |
           cd SQL_Server
