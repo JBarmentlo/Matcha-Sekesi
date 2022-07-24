@@ -4,9 +4,6 @@ on:
   push:
 
 
-env:
-
-
 jobs:
   run_unittests:
     runs-on: ubuntu-latest
