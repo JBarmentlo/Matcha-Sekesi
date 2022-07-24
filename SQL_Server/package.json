@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha ./src/tests/*.spec.js"
+    "test": "mocha  --exit ./src/tests/*.spec.js"
   },
   "author": "joepi",
   "license": "ISC",
