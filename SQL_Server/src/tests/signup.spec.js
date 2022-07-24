@@ -20,10 +20,15 @@ const mockRequest = (body) => {
 };
 
 const jhonnyBody = {
-	username: 'jhonny',
-	mail: 'joepbarmentlo@gmail.com',
-	lastName: 'last name',
-	firstName: 'first name',
+	username	: 'jhonny',
+	mail		: 'joepbarmentlo@gmail.com',
+	lastName	: 'last name',
+	firstName	: 'first name',
+	password	: 'password',
+	zipCode		: 'zipocodo',
+	city		: 'city',
+	latitude	: 0.0,
+	longitude	: 0.0,
 }
 
 

@@ -8,17 +8,12 @@ exports.signup = async (req, res) => {
 	let firstName       = req.body.firstName;
 	let lastName        = req.body.lastName;
 	let mail            = req.body.mail;
-	// let password        = bcrypt.hashSync(req.body.password, 8);
-	let password        = 'LOL';
-	let zipCode         = "";
-	let city       		= "Paris";
-	let latitude        = 0.0;
-	let longitude       = 0.0;
-	// let [rows, fields] = await db.execute(
-	// 	'INSERT INTO USERS (?, ?, ?, ?, ?, ?, ?, ?, ?) VALUES (username, mail, firstName, lastName, crypt_pass, zipCode, longitude, latitude, city)'
-	// 	[username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
-	// 	)
-	// console.log([username, mail, firstName, lastName, password, zipCode, longitude, latitude, city])
+	let password        = bcrypt.hashSync(req.body.password, 8);
+	// let password        = req.body.password;
+	let zipCode        	= req.body.zipCode;
+	let city       		= req.body.city;
+	let latitude        = req.body.latitude;
+	let longitude       = req.body.longitude;
 
 	try {
 		let [rows, fields] = await db.query(
@@ -29,6 +24,9 @@ exports.signup = async (req, res) => {
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
 			res.status(200).send({message: e.sqlMessage})
+		}
+		else {
+			console.log("signup error:\n", e, "\nend signup error")
 		}
 	}
 		
