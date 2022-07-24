@@ -3,6 +3,11 @@ name: SQL backend unit tests
 on:
   push:
 
+env:
+  DB_DATABASE: test_db
+  DB_USER: root
+  DB_PASSWORD: root
+
 jobs:
   run_unittests:
     runs-on: ubuntu-latest
@@ -28,8 +33,9 @@ jobs:
       - name: Set up MySQL
         run: |
           sudo /etc/init.d/mysql start
-          mysql -e "CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password';"
-          mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"
+          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+          # mysql -e "CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password';"
+          # mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"
       - name: Run all unittests
         run: |
           cd SQL_Server
