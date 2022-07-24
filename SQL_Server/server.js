@@ -14,10 +14,10 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// require("./app/routes/image.route")(app)
+// require("./src/routes/image.route")(app)
 
-// const userRouter = require("./app/routes/user.routes")
-const authRouter = require("./app/routes/auth.routes")
+// const userRouter = require("./src/routes/user.routes")
+const authRouter = require("./src/routes/auth.routes")
 
 // app.use('/api/users',userRouter, function(req, res, next){
 //   res.header(

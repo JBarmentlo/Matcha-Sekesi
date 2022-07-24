@@ -20,5 +20,22 @@ const pool = mysql.createPool({
 	connectionLimit: 10,
 	queueLimit: 0
   });
+
+async function query(sql, params) {
+	const connection = await mysql.createConnection({
+		host: 'localhost',
+		user: 'sammy',
+		database: 'sekesidb',
+		password: 'password'
+	  })
+const [results, ] = await connection.execute(sql, params);
+
+return results;
+}
 // connection = connect()
-module.exports = pool
+// module.exports = pool
+// module.exports = connect()
+module.exports = {
+	query,
+	conn: connect()
+  }

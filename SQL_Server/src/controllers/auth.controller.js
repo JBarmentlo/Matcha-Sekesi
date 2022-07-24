@@ -1,5 +1,7 @@
-const db_conn 	= require("../db/sql.conn");
+const db	 	= require("../db/sql.conn");
 var bcrypt 		= require("bcryptjs");
+
+
 
 exports.signup = async (req, res) => {
 	let username        = req.body.username;
@@ -12,16 +14,22 @@ exports.signup = async (req, res) => {
 	let city       		= "Paris";
 	let latitude        = 0.0;
 	let longitude       = 0.0;
-	db = await db_conn
 	// let [rows, fields] = await db.execute(
 	// 	'INSERT INTO USERS (?, ?, ?, ?, ?, ?, ?, ?, ?) VALUES (username, mail, firstName, lastName, crypt_pass, zipCode, longitude, latitude, city)'
 	// 	[username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
 	// 	)
-	console.log([username, mail, firstName, lastName, password, zipCode, longitude, latitude, city])
-	let [rows, fields] = await db.execute(
-		'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-		[username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
-		)
-	console.log(rows)
-	console.log("rows")
+	// console.log([username, mail, firstName, lastName, password, zipCode, longitude, latitude, city])
+
+	try {
+		let [rows, fields] = await db.query(
+			'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+			[username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
+			)
+	}
+	catch (e) {
+		if (e.code == 'ER_DUP_ENTRY') {
+			res.status(200).send({message: e.sqlMessage})
+		}
+	}
+		
 };
