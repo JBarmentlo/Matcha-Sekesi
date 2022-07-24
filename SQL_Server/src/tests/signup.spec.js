@@ -21,8 +21,8 @@ const mockRequest = (body) => {
 };
 
 const jhonnyBody = {
-	username	: 'jhonnyy',
-	mail		: 'joepbarmentlo@gmaill.com',
+	username	: 'jhonny',
+	mail		: 'joni@gmaill.com',
 	lastName	: 'last name',
 	firstName	: 'first name',
 	password	: 'password',
@@ -41,6 +41,8 @@ describe('Test signup', () => {
 			await AuthController.signup(req, res)
 			assert.isTrue(res.status.calledWith(200))
 		})
+	})
+	describe('Create Jhonny user duplicate', () => {
 		it('should say username taken', async () => {
 			let req = mockRequest(jhonnyBody)
 			let res = mockResponse()

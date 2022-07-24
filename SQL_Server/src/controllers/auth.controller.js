@@ -17,11 +17,11 @@ exports.signup = async (req, res) => {
 	// con = await db.conn
 	// console.log("database", con.connection.config.database)
 	try {
-		let quer = await db.query(
+		let query_result = await db.query(
 			'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			[username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
 			)
-		console.log("KER: ", quer)
+		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
