@@ -21,10 +21,12 @@ exports.signup = async (req, res) => {
 			'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			[username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
 			)
+		console.log("queri: ", query_result)
 		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
+			console.log("DUP ENTRY:\n", e, "\nend signup error")
 			res.status(200).send({message: e.sqlMessage, code: e.code})
 		}
 		else {
