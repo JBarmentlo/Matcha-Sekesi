@@ -4,9 +4,12 @@ on:
   push:
 
 env:
-  DB_DATABASE: sekesidb
+  DB_DATABASE: sekesitest
   DB_USER: root
   DB_PASSWORD: root
+  MATCHA_DB: sekesidb
+  MATCHA_TEST_DB: sekesitest
+  TEST: 'true'
 
 jobs:
   run_unittests:
