@@ -2,8 +2,9 @@ const { assert } = require('chai');
 const chai		= require('chai');
 const expect	= chai.expect;
 const sinon		= require('sinon');
+var lol  = require('./hooks')
 
-AuthController	= require('../controllers/auth.controller')
+const AuthController	= require('../controllers/auth.controller')
 
 const mockResponse = () => {
 	const res = {};
@@ -20,8 +21,8 @@ const mockRequest = (body) => {
 };
 
 const jhonnyBody = {
-	username	: 'jhonny',
-	mail		: 'joepbarmentlo@gmail.com',
+	username	: 'jhonnyy',
+	mail		: 'joepbarmentlo@gmaill.com',
 	lastName	: 'last name',
 	firstName	: 'first name',
 	password	: 'password',
@@ -33,7 +34,7 @@ const jhonnyBody = {
 
 
 describe('Test signup', () => {
-	describe('Create existing user', () => {
+	describe('Create Jhonny user', () => {
 		it('should status 200', async () => {
 			let req = mockRequest(jhonnyBody)
 			let res = mockResponse()
@@ -44,7 +45,8 @@ describe('Test signup', () => {
 			let req = mockRequest(jhonnyBody)
 			let res = mockResponse()
 			await AuthController.signup(req, res)
-			assert.isTrue(res.send.calledWith({message: "Duplicate entry 'jhonny' for key 'USERS_username_uindex'"}))
+			arg = res.send.getCall(0).firstArg
+			assert.isTrue(arg.code == "ER_DUP_ENTRY")
 		})
 	})
 })
