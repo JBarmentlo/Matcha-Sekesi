@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  DB_DATABASE: test_db
+  DB_DATABASE: sekesidb
   DB_USER: root
   DB_PASSWORD: root
 
@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16.13.2'
+      # - uses: actions/checkout@v2
+      # - uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '16.13.2'
       # - uses: mirromutth/mysql-action@v1.1
       #   with:
       #     host port: 8080 # Optional, default value is 3306. The port of host
@@ -26,16 +26,16 @@ jobs:
       #     mysql database: 'sekesidb' # Optional, default value is "test". The specified database which will be create
       #     mysql user: 'sammy' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
       #     mysql password: ${{ secrets.DatabasePassword }} # Required if "mysql user" exists. The password for the "mysql user"
-      - name: Install dependencies
-        run: |
-          cd SQL_Server
-          npm ci
       - name: Set up MySQL
         run: |
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
-          # mysql -e "CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password';"
-          # mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"
+          mysql -e "CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password';" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+          mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"  -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+      - name: Install dependencies
+        run: |
+          cd SQL_Server
+          npm ci
       - name: Run all unittests
         run: |
           cd SQL_Server
