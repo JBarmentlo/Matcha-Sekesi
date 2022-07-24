@@ -1,10 +1,8 @@
 const { assert } = require('chai');
-const chai		= require('chai');
-const expect	= chai.expect;
 const sinon		= require('sinon');
-var lol  = require('./hooks')
 
 const AuthController	= require('../controllers/auth.controller')
+const db = require('../db/sql.conn')
 
 const mockResponse = () => {
 	const res = {};
@@ -46,6 +44,8 @@ describe('Test signup', () => {
 		it('should say username taken', async () => {
 			let req = mockRequest(jhonnyBody)
 			let res = mockResponse()
+			// resp = await db.query('select * from USERS;')
+			// console.log("REST: ", resp)
 			await AuthController.signup(req, res)
 			arg = res.send.getCall(0).firstArg
 			assert.isTrue(arg.code == "ER_DUP_ENTRY")

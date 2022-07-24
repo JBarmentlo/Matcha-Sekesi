@@ -1,7 +1,6 @@
 const mysql = require('mysql2/promise')
 
 async function connect() {
-
 	const connection = await mysql.createConnection({
 		host: 'localhost',
 		user: 'sammy',
@@ -56,7 +55,10 @@ async function query(sql, params) {
 	else {
 		used_connection = connection
 	}
+	// console.log("daba: ",used_connection.config.database)
+	// console.log("KERI:\n", sql, "\n\n, params: ", params)
 	const [results, ] = await used_connection.query(sql, params);
+	// console.log("results:\n", results)
 
 	return results;
 }
@@ -83,6 +85,7 @@ async function drop_all() {
 	else {
 		used_connection = connection
 	}
+	console.log("DROP ALL FROM TABLE")
 	used_connection.execute('DELETE FROM BLOCKS;')
 	used_connection.execute('DELETE FROM CONSULTS;')
 	used_connection.execute('DELETE FROM LIKES;')

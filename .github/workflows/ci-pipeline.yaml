@@ -2,8 +2,7 @@ name: SQL backend unit tests
 
 on:
   push:
-    branches:
-      - master
+
 
 env:
   DB_USER: root
@@ -41,7 +40,8 @@ jobs:
 
           sudo mysql -e "CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password';" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
           sudo mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"  -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
-
+          echo "LOLOL"
+          mysql --version
       - name: Install dependencies
         run: |
           cd SQL_Server
@@ -50,3 +50,7 @@ jobs:
         run: |
           cd SQL_Server
           npm test
+      - name: SQL users table
+        run: |
+          sudo mysql -e 'use sekesitest; select * from USERS;' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+
