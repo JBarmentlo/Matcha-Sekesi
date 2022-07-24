@@ -2,6 +2,8 @@ name: SQL backend unit tests
 
 on:
   push:
+    branches:
+      - master
 
 
 env:
