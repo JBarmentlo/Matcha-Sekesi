@@ -44,6 +44,7 @@ jobs:
           sudo mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"  -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
           echo "LOLOL"
           mysql --version
+          sudo systemctl status mysql.service
       - name: Install dependencies
         run: |
           cd SQL_Server
