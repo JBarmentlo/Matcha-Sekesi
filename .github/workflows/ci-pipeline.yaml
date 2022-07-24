@@ -1,0 +1,23 @@
+name: SQL backend unit tests
+
+on:
+  push:
+
+
+env:
+
+
+jobs:
+  run_unittests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          cd SQL_Server
+          npm i
+      - name: Run all unittests
+        run: |
+          cd SQL_Server
+          npm test
