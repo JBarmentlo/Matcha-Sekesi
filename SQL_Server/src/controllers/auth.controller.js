@@ -15,6 +15,8 @@ exports.signup = async (req, res) => {
 	let latitude        = req.body.latitude;
 	let longitude       = req.body.longitude;
 
+	conn = await db.conn
+	console.log("CONN: ", conn)
 	try {
 		let [rows, fields] = await db.query(
 			'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
