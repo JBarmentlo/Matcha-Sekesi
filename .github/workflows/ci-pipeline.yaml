@@ -10,10 +10,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
+        with:
+        node-version: '12.x'
       - name: Install dependencies
         run: |
           cd SQL_Server
-          npm i
+          npm ci
       - name: Run all unittests
         run: |
           cd SQL_Server
