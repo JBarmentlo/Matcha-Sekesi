@@ -30,6 +30,10 @@ exports.like_user = async (req, res) => {
 		else if (e.code == 'ER_DUP_ENTRY') {
 			res.status(200).send({message: "Already Liked", code: e.code})
 		}
+		else if (e.code == 'ER_PARSE_ERROR') {
+			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			throw (e)
+		}
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in like user ", error: e})

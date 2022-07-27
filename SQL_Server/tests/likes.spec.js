@@ -64,7 +64,7 @@ describe('Test likes', () => {
 		describe("duplicate like", () => {
 			it('Code ER_DUP_ENTRY', async () => {
 				await LikeController.like_user(mockRequest({liker_id: mark_id, liked_id: jhonny_id}), res)
-				assert(res.send.lastCall.firstArg.code == "ER_DUP_ENTRY")
+				assert.equal(res.send.lastCall.firstArg.code, "ER_DUP_ENTRY")
 			})
 		})
 		describe("Missing liked", () => {

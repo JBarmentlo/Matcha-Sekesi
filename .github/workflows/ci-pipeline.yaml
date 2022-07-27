@@ -34,6 +34,10 @@ jobs:
       - name: Set up MySQL
         run: |
           sudo /etc/init.d/mysql start
+          echo "LOLOL"
+          mysql --version
+          sudo systemctl status mysql.service
+
           sudo mysql -e 'CREATE DATABASE ${{ env.MATCHA_DB }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
           sudo mysql -e 'CREATE DATABASE ${{ env.MATCHA_TEST_DB }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
@@ -42,9 +46,7 @@ jobs:
 
           sudo mysql -e "CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password';" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
           sudo mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"  -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
-          echo "LOLOL"
-          mysql --version
-          sudo systemctl status mysql.service
+
       - name: Install dependencies
         run: |
           cd SQL_Server

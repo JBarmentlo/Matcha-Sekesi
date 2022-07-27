@@ -2,6 +2,10 @@ const db	 	= require("../db/sql.conn");
 var bcrypt 		= require("bcryptjs");
 
 
+// function check_create_user_input(req) {
+// 	if (typeof())
+// }
+
 exports.create_user = async (req, res) => {
 	let username  = req.body.username;
 	let firstName = req.body.firstName;
@@ -62,19 +66,24 @@ exports.create_user_test = async (req, res) => {
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude]
 			)
-		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId})
+		res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS', id: query_result.insertId})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
 			res.status(200).send({message: e.sqlMessage, code: e.code})
 		}
+		else if (e.code == 'ER_PARSE_ERROR') {
+			res.status(400).send({message: 'There was an error parsing your request', code: e.code})
+			// throw(e)
+		}
 		else {
 			console.log("signup error:\n", e, "\nend signup error")
-			res.status(500).send({message: 'error in create test user', error: e})
+			res.status(500).send({message: 'error in create test user', error: e, code: 'SUCCESS'})
 			throw(e)
 		}
 	}	
 };
+
 
 exports.get_user_by_id = async (req, res) => {
 	try {
@@ -87,6 +96,7 @@ exports.get_user_by_id = async (req, res) => {
 		throw(e)
 	}	
 }
+
 
 exports.get_user_by_username = async (req, res) => {
 	try {
