@@ -30,6 +30,7 @@ exports.signup = async (req, res) => {
 		}
 		else {
 			console.log("signup error:\n", e, "\nend signup error")
+			res.status(200).send({message: "uncaught signup error", error: e, code: "DANGER"})
 			throw(e)
 		}
 	}	

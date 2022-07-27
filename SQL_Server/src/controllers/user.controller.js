@@ -82,14 +82,9 @@ exports.get_user_by_id = async (req, res) => {
 		res.status(200).send({message: 'Successfully queried user for id.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
-		if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: e.sqlMessage, code: e.code})
-		}
-		else {
-			console.log("get user by id error:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
-		}
+		console.log("get user by id error:\n", e, "\nend error")
+		res.status(500).send({message: 'error in get user by id', error: e})
+		throw(e)
 	}	
 }
 
@@ -99,13 +94,8 @@ exports.get_user_by_username = async (req, res) => {
 		res.status(200).send({message: 'Successfully queried user for username.', data: rows})
 	}
 	catch (e) {
-		if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: e.sqlMessage, code: e.code})
-		}
-		else {
-			console.log("get user by name error:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get user by username', error: e})
-			throw(e)
-		}
+		console.log("get user by name error:\n", e, "\nend error")
+		res.status(500).send({message: 'error in get user by username', error: e})
+		throw(e)
 	}	
 }
