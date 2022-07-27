@@ -3,7 +3,7 @@ const chai		= require('chai');
 const expect	= chai.expect;
 const sinon		= require('sinon');
 
-const db		= require('../db/sql.conn')
+const db		= require('../src/db/sql.conn')
 
 describe("Test db connection exists.", () => {
 	describe('db.connection._eventsCount test', () => {

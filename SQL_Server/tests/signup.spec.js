@@ -1,8 +1,8 @@
 const { assert } = require('chai');
 const sinon		= require('sinon');
 
-const AuthController	= require('../controllers/auth.controller')
-const db = require('../db/sql.conn')
+const AuthController	= require('../src/controllers/auth.controller')
+const db = require('../src/db/sql.conn')
 
 const mockResponse = () => {
 	const res = {};

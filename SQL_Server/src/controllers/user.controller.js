@@ -13,17 +13,6 @@ exports.create_user = async (req, res) => {
 	let latitude  = req.body.latitude;
 	let longitude = req.body.longitude;
 
-	// console.log("create user ", {
-	// 	username  : req.body.username,
-	// 	firstName : req.body.firstName,
-	// 	lastName  : req.body.lastName,
-	// 	mail      : req.body.mail,
-	// 	password  : bcrypt.hashSync(req.body.password, 8),
-	// 	zipCode   : req.body.zipCode,
-	// 	city      : req.body.city,
-	// 	latitude  : req.body.latitude,
-	// 	longitude : req.body.longitude
-	// })
 	try {
 		let query_result = await db.query(
 			'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -95,7 +84,23 @@ exports.get_user_by_id = async (req, res) => {
 			res.status(200).send({message: e.sqlMessage, code: e.code})
 		}
 		else {
-			console.log("signup error:\n", e, "\nend signup error")
+			console.log("get user by id error:\n", e, "\nend error")
+			res.status(500).send({message: e})
+		}
+	}	
+}
+
+exports.get_user_by_username = async (req, res) => {
+	try {
+		let [rows, fields] = await db.query('select * from USERS WHERE username=? LIMIT 1' , req.body.username)
+		res.status(200).send({message: 'Successfully queried user for username.', data: rows})
+	}
+	catch (e) {
+		if (e.code == 'ER_DUP_ENTRY') {
+			res.status(200).send({message: e.sqlMessage, code: e.code})
+		}
+		else {
+			console.log("get user by name error:\n", e, "\nend error")
 			res.status(500).send({message: e})
 		}
 	}	
