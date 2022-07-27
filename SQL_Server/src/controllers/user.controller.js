@@ -18,7 +18,7 @@ exports.create_user = async (req, res) => {
 			'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			[username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
 			)
-		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId})
+		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS"})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
@@ -26,6 +26,7 @@ exports.create_user = async (req, res) => {
 		}
 		else {
 			console.log("signup error:\n", e, "\nend signup error")
+			res.status(500).send({message: 'error in create user', error: e})
 			throw(e)
 		}
 	}	
@@ -69,7 +70,8 @@ exports.create_user_test = async (req, res) => {
 		}
 		else {
 			console.log("signup error:\n", e, "\nend signup error")
-			res.status(500).send({message: e})
+			res.status(500).send({message: 'error in create test user', error: e})
+			throw(e)
 		}
 	}	
 };
@@ -77,7 +79,7 @@ exports.create_user_test = async (req, res) => {
 exports.get_user_by_id = async (req, res) => {
 	try {
 		let [rows, fields] = await db.query('select * from USERS where id=?', req.body.id,)
-		res.status(200).send({message: 'Successfully queried user for id.', data: rows})
+		res.status(200).send({message: 'Successfully queried user for id.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
@@ -85,7 +87,8 @@ exports.get_user_by_id = async (req, res) => {
 		}
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
-			res.status(500).send({message: e})
+			res.status(500).send({message: 'error in get user by id', error: e})
+			throw(e)
 		}
 	}	
 }
@@ -101,7 +104,8 @@ exports.get_user_by_username = async (req, res) => {
 		}
 		else {
 			console.log("get user by name error:\n", e, "\nend error")
-			res.status(500).send({message: e})
+			res.status(500).send({message: 'error in get user by username', error: e})
+			throw(e)
 		}
 	}	
 }
