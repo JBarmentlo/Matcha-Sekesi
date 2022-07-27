@@ -39,25 +39,21 @@ const userJoni = {
 
 
 describe('Test create user', () => {
-	let insterted_id
+	let res = mockResponse()
+
 	describe('Create Jhonny user Test', () => {
 		it('should just work', async () => {
 			let req = mockRequest(userJoni)
-			let res = mockResponse()
 			await UserController.create_user_test(req, res)
-			arg = res.send.getCall(0).firstArg
 			assert.isTrue(res.status.calledWith(200))
-			insterted_id = arg.id
 		})
 	})
 	describe('Get user by id', () => {
 		it('should get him', async () => {
-			let req = mockRequest({id: insterted_id})
-			let res = mockResponse()
+			let inserted_id = res.send.lastCall.lastArg.id
+			let req = mockRequest({id: inserted_id})
 			await UserController.get_user_by_id(req, res)
-			arg = res.send.getCall(0).lastArg
 			assert.isTrue(res.status.calledWith(200))
-			insterted_id = arg.id
 		})
 	})
 })
