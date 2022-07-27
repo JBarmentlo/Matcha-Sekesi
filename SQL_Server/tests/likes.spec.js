@@ -29,8 +29,25 @@ describe('Test likes', () => {
 		})
 	})
 	describe("Create Lonely Mark", () => {
-		it('Mark like Jhonny', async () => {
+		it('Code Success', async () => {
 			await LikeController.like_user(mockRequest({liker_id: mark_id, liked_id: jhonny_id}), res)
+			assert(res.send.lastCall.firstArg.code == "SUCCESS")
+		})
+		it('Code Success', async () => {
+			await LikeController.like_user(mockRequest({liker_id: mark_id, liked_id: bella_id}), res)
+			assert(res.send.lastCall.firstArg.code == "SUCCESS")
+		})
+		it('Code Success', async () => {
+			await LikeController.like_user(mockRequest({liker_id: bella_id, liked_id: jhonny_id}), res)
+			assert(res.send.lastCall.firstArg.code == "SUCCESS")
+		})
+		it('Code Success', async () => {
+			await LikeController.like_user(mockRequest({liker_id: jhonny_id, liked_id: bella_id}), res)
+			assert(res.send.lastCall.firstArg.code == "SUCCESS")
+		})
+		it('Code DUPLICATE', async () => {
+			await LikeController.like_user(mockRequest({liker_id: mark_id, liked_id: jhonny_id}), res)
+			assert(res.send.lastCall.firstArg.code == "ER_DUP_ENTRY")
 		})
 	})
 })

@@ -8,19 +8,35 @@ exports.like_user = async (req, res) => {
 
 	let [liked_query, ] = await db.query('select * from USERS where id=?', liked_id)
 	let [liker_query, ] = await db.query('select * from USERS where id=?', liker_id)
-	if (typeof liked_query !== 'undefined' && liked_query !== null && typeof liker_query !== 'undefined' && liker_query !== null){
-		let like_query_result = await db.query(
-			'INSERT INTO LIKES \
-			(liker, liked) \
-			VALUES (?, ?)',
-			[liked_query.username, liked_query]
-			)
-		res.status(200).send({message: 'Succesfully liked user'})
+	try {
+		if (typeof liked_query !== 'undefined' && liked_query !== null && typeof liker_query !== 'undefined' && liker_query !== null){
+			let like_query_result = await db.query(
+				'INSERT INTO LIKES \
+				(liker, liked) \
+				VALUES (?, ?)',
+				[liked_query.username, liker_query.username]
+				)
+			res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
+			// console.log(like_query_result)
+		}
+		else {
+			console.log("MISSING: ",liked_query, liker_query)
+			res.status(200).send({message: "One of the users does not exist", code:"LIKE_MISS"})
+		}
 	}
-	else {
-		console.log("MISSING: ",liked_query, liker_query)
-		res.status(200).send({message: "One of the users does not exist", code:"LIKE_MISS"})
+	catch (e) {
+		if (e.code == 'ER_NO_REFERENCED_ROW') {
+			res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_DUP_ENTRY') {
+			res.status(200).send({message: "Already Liked", code: e.code})
+		}
+		else {
+			console.log("EROOL: ", e)
+			throw(e)
+		}
 	}
+
 
 }
 
