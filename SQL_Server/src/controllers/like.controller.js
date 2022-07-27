@@ -20,7 +20,6 @@ exports.like_user = async (req, res) => {
 			// console.log(like_query_result)
 		}
 		else {
-			console.log("MISSING: ",liked_query, liker_query)
 			res.status(200).send({message: "One of the users does not exist", code:"LIKE_MISS"})
 		}
 	}
@@ -33,6 +32,7 @@ exports.like_user = async (req, res) => {
 		}
 		else {
 			console.log("EROOL: ", e)
+			res.status(500).send({message: "Error in like user ", error: e})
 			throw(e)
 		}
 	}

@@ -56,3 +56,22 @@ exports.Mark = {
 	latitude          : 3,
 	isCompleteProfile : true,
 };
+
+exports.JhonnyDupName = {
+	username          : 'Jhonny le bege',
+	firstName         : 'Jhonnys',
+	lastName          : 'Corleonse',
+	bio               : 'I runnes the import export biziness.',
+	mail              : 'Joni@msafia.com',
+	password          : 'lepsass',
+	mailVerified      : true,
+	gender            : "Male",
+	sekesualOri       : "bi",
+	popScore          : 5,
+	zipCode           : '75010',
+	city              : 'Parigi',
+	completeProfile   : true,
+	longitude         : 1.1,
+	latitude          : 2.2,
+	isCompleteProfile : true,
+};
