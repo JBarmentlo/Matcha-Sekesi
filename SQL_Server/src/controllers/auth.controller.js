@@ -14,8 +14,7 @@ exports.signup = async (req, res) => {
 	let city       		= req.body.city;
 	let latitude        = req.body.latitude;
 	let longitude       = req.body.longitude;
-	// con = await db.conn
-	// console.log("database", con.connection.config.database)
+
 	try {
 		let query_result = await db.query(
 			'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -33,6 +32,5 @@ exports.signup = async (req, res) => {
 			console.log("signup error:\n", e, "\nend signup error")
 			throw(e)
 		}
-	}
-		
+	}	
 };
