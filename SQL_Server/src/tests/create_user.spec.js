@@ -38,22 +38,26 @@ const userJoni = {
 };
 
 
-describe('Test signup', () => {
-	// describe('Create Jhonny user', () => {
-	// 	it('should status 200', async () => {
-	// 		let req = mockRequest(userJoni)
-	// 		let res = mockResponse()
-	// 		await AuthController.signup(req, res)
-	// 		assert.isTrue(res.status.calledWith(200))
-	// 	})
-	// })
+describe('Test create user', () => {
+	let insterted_id
 	describe('Create Jhonny user Test', () => {
 		it('should just work', async () => {
 			let req = mockRequest(userJoni)
 			let res = mockResponse()
-
 			await UserController.create_user_test(req, res)
+			arg = res.send.getCall(0).firstArg
 			assert.isTrue(res.status.calledWith(200))
+			insterted_id = arg.id
+		})
+	})
+	describe('Get user by id', () => {
+		it('should get him', async () => {
+			let req = mockRequest({id: insterted_id})
+			let res = mockResponse()
+			await UserController.get_user_by_id(req, res)
+			arg = res.send.getCall(0).lastArg
+			assert.isTrue(res.status.calledWith(200))
+			insterted_id = arg.id
 		})
 	})
 })

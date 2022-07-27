@@ -65,25 +65,6 @@ exports.create_user_test = async (req, res) => {
 	longitude         = req.body.longitude
 	latitude          = req.body.latitude
 
-	// console.log("create test user:", {
-	// 		username          : req.body.username,
-	// 		firstName         : req.body.firstName,
-	// 		lastName          : req.body.lastName,
-	// 		bio               : req.body.bio,
-	// 		mail              : req.body.mail,
-	// 		password          : bcrypt.hashSync(req.body.password, 8),
-	// 		mailVerified      : req.body.mailVerified,
-	// 		gender            : req.body.gender,
-	// 		sekesualOri       : req.body.sekesualOri,
-	// 		popScore          : req.body.popScore,
-	// 		zipCode           : req.body.zipCode,
-	// 		city              : req.body.city,
-	// 		isCompleteProfile : req.body.isCompleteProfile,
-	// 		longitude         : req.body.longitude,
-	// 		latitude          : req.body.latitude
-	// 		})
-
-
 	try {
 		let query_result = await db.query(
 			'INSERT INTO USERS \
@@ -103,3 +84,19 @@ exports.create_user_test = async (req, res) => {
 		}
 	}	
 };
+
+exports.get_user_by_id = async (req, res) => {
+	try {
+		let [rows, fields] = await db.query('select * from USERS where id=?', req.body.id,)
+		res.status(200).send({message: 'Successfully queried user for id.', data: rows})
+	}
+	catch (e) {
+		if (e.code == 'ER_DUP_ENTRY') {
+			res.status(200).send({message: e.sqlMessage, code: e.code})
+		}
+		else {
+			console.log("signup error:\n", e, "\nend signup error")
+			res.status(500).send({message: e})
+		}
+	}	
+}
