@@ -14,7 +14,7 @@ exports.like_user = async (req, res) => {
 				'INSERT INTO LIKES \
 				(liker, liked) \
 				VALUES (?, ?)',
-				[liked_query.username, liker_query.username]
+				[liker_query.username, liked_query.username]
 				)
 			res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
 			// console.log(like_query_result)
@@ -42,6 +42,25 @@ exports.like_user = async (req, res) => {
 	}
 
 
+}
+
+exports.get_users_that_i_liked = async (req, res) => {
+	try {
+		let rows = await db.query('select liked from LIKES where liker=?', req.body.liker_username,)
+		console.log("Liker: ", req.body.liker_username)
+		res.status(200).send({message: 'Successfully queried liked users.', data: rows, code:'SUCCESS'})
+	}
+	catch (e) {
+		if (e.code == 'ER_NO_REFERENCED_ROW') {
+			console.log("NO LIKES", e)
+			res.status(200).send({message: "User not liked", code: e.code})
+		}
+		else {
+			console.log("get user by id error:\n", e, "\nend error")
+			res.status(500).send({message: 'error in get user by id', error: e})
+			throw(e)
+		}
+	}	
 }
 
 // try {

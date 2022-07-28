@@ -80,5 +80,13 @@ describe('Test likes', () => {
 			})
 		})
 	})
+	describe("Get Liked Users", () => {
+		describe("Get Marks liked users", () => {
+			it("DUNNO", async () => {
+				await LikeController.get_users_that_i_liked(mockRequest({liker_username: users.Mark.username}), res)
+				assert.equal(res.send.lastCall.firstArg.code,  "LIKE_MISS")
+			})
+		})
+	})
 })
 // MISSING_LIKE
