@@ -118,6 +118,23 @@ describe('Test likes', () => {
 			})
 		})
 	})
+	describe("Unlike", () => {
+		describe("Jhonny unlike bella", async () => {
+			await LikeController.un_like_user(mockRequest({unliker: users.Jhonny.username, unliked: users.Bella.username}), res)
+		})
+	})
+	describe("Bella's likers", () => {
+		it("?", async () => {
+			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Bella.username}), res)
+			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+		})
+	})
+	// describe("Bella's matches", () => {
+	// 	it("jhonny", async () => {
+	// 		await LikeController.get_matches(mockRequest({username: users.Bella.username}), res)
+	// 		assert.isTrue(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+	// 	})
+	// })
 })
 
 // MISSING_LIKE

@@ -40,8 +40,29 @@ exports.like_user = async (req, res) => {
 			throw(e)
 		}
 	}
+}
 
-
+exports.un_like_user = async (req, res) => {
+	console.log(req)
+	try {
+		let unlike_query_result = await db.query(
+			"DELETE FROM LIKES \
+			WHERE liker = ? and liked = ?",
+			[req.body.unliker, req.body.unliked])
+		console.log(unlike_query_result)
+		res.status(200).send({message: 'Succesfully liked user', data: unlike_query_result, code: "SUCCESS"})
+	}
+	catch (e) {
+		if (e.code == 'ER_PARSE_ERROR') {
+			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			throw (e)
+		}
+		else {
+			console.log("EROOL: ", e)
+			res.status(500).send({message: "Error in like user ", error: e})
+			throw(e)
+		}
+	}
 }
 
 exports.get_users_that_i_liked = async (req, res) => {
@@ -70,7 +91,6 @@ exports.get_users_that_i_liked = async (req, res) => {
 		}
 	}	
 }
-
 
 
 exports.get_users_that_liked_me = async (req, res) => {
