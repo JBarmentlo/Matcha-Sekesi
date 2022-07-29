@@ -12,54 +12,40 @@ describe('Test likes', () => {
 	let mark_id
 	
 	describe('Get Users by username', () => {
-		describe('Jhonny', () => {
-			it('status 200', async () => {
+			it('Jhonny status 200', async () => {
 				await UserController.get_user_by_username(mockRequest({username: users.Jhonny.username}), res)
 				jhonny_id = res.send.lastCall.firstArg.data.id
 				assert(res.status.lastCall.args == 200)
 			})
-		})
-		describe('Bella', () => {
-			it('status 200', async () => {
+			it('Bella status 200', async () => {
 				await UserController.get_user_by_username(mockRequest({username: users.Bella.username}), res)
 				bella_id = res.send.lastCall.firstArg.data.id
 				assert(res.status.lastCall.args == 200)
 			})
-		})
-		describe('Mark', () => {
-			it('status 200', async () => {
+			it('Mark status 200', async () => {
 			await UserController.get_user_by_username(mockRequest({username: users.Mark.username}), res)
 			mark_id = res.send.lastCall.firstArg.data.id
 			assert(res.status.lastCall.args == 200)
 		})
 	})
-	})
 	describe("Create Lonely Mark", () => {
-		describe("mark => jhonny", () => {
-			it('Code SUCCESS', async () => {
+			it('mark   => jhonny Code SUCCESS', async () => {
 				await LikeController.like_user(mockRequest({liker_id: mark_id, liked_id: jhonny_id}), res)
 				assert(res.send.lastCall.firstArg.code == "SUCCESS")
 			})
-		})
-		describe("mark => bella", () => {
-			it('Code Success', async () => {
+			it('mark   => bella Code Success', async ()  => {
 				await LikeController.like_user(mockRequest({liker_id: mark_id, liked_id: bella_id}), res)
 				assert(res.send.lastCall.firstArg.code == "SUCCESS")
 			})
-		})
-		describe("bella => jhonny", () => {
-			it('Code Success', async () => {
+			it('bella  => jhonny Code Success', async () => {
 				await LikeController.like_user(mockRequest({liker_id: bella_id, liked_id: jhonny_id}), res)
 				assert(res.send.lastCall.firstArg.code == "SUCCESS")
 			})
-		})
-		describe("jhonny => bella", () => {
-			it('Code Success', async () => {
+			it('jhonny => bella Code Success', async ()  => {
 				await LikeController.like_user(mockRequest({liker_id: jhonny_id, liked_id: bella_id}), res)
 				assert(res.send.lastCall.firstArg.code == "SUCCESS")
 			})
 		})
-	})
 	describe("Like Error Handling", () => {
 		describe("duplicate like", () => {
 			it('Code ER_DUP_ENTRY', async () => {
@@ -118,23 +104,24 @@ describe('Test likes', () => {
 			})
 		})
 	})
-	describe("Unlike", () => {
-		describe("Jhonny unlike bella", async () => {
+	describe("Jhonny unlike bella", () => {
+		it("affects 1 row", async () => {
 			await LikeController.un_like_user(mockRequest({unliker: users.Jhonny.username, unliked: users.Bella.username}), res)
+			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
 		})
 	})
 	describe("Bella's likers", () => {
-		it("?", async () => {
+		it("Jhonny's gone !", async () => {
 			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Bella.username}), res)
 			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 		})
 	})
-	// describe("Bella's matches", () => {
-	// 	it("jhonny", async () => {
-	// 		await LikeController.get_matches(mockRequest({username: users.Bella.username}), res)
-	// 		assert.isTrue(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
-	// 	})
-	// })
+	describe("Bella's matches", () => {
+		it("Bye Bye Jhonny", async () => {
+			await LikeController.get_matches(mockRequest({username: users.Bella.username}), res)
+			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+		})
+	})
 })
 
 // MISSING_LIKE

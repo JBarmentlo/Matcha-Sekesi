@@ -12,24 +12,20 @@ describe('Test users', () => {
 	let mark_id
 	
 	describe('Create Users', () => {
-		describe('Create Jhonny', () => {
-			it('should code SUCESS', async () => {
+		describe('Create Jhonny, Bella & Mark', () => {
+			it('Create Jhonny code SUCESS', async () => {
 				let req = mockRequest(users.Jhonny)
 				await UserController.create_user_test(req, res)
 				jhonny_id = res.send.lastCall.lastArg.id
 				assert.equal(res.send.lastCall.lastArg.code, 'SUCCESS')
 			})
-		})
-		describe('Create Bella', () => {
-			it('should code SUCESS', async () => {
+			it('Create Bella code SUCESS', async () => {
 				let req = mockRequest(users.Bella)
 				await UserController.create_user_test(req, res)
 				assert.isTrue(res.send.lastCall.lastArg.code == 'SUCCESS')
 				bella_id = res.send.lastCall.lastArg.id
 			})
-		})
-		describe('Create Mark', () => {
-			it('should code SUCESS', async () => {
+			it('Create Mark code SUCESS', async () => {
 				let req = mockRequest(users.Mark)
 				await UserController.create_user_test(req, res)
 				assert.isTrue(res.send.lastCall.lastArg.code == 'SUCCESS')

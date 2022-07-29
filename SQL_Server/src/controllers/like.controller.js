@@ -49,7 +49,6 @@ exports.un_like_user = async (req, res) => {
 			"DELETE FROM LIKES \
 			WHERE liker = ? and liked = ?",
 			[req.body.unliker, req.body.unliked])
-		console.log(unlike_query_result)
 		res.status(200).send({message: 'Succesfully liked user', data: unlike_query_result, code: "SUCCESS"})
 	}
 	catch (e) {
