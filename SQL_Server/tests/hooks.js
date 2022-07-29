@@ -6,7 +6,9 @@ exports.mochaHooks = {
 		await db.drop_all()
 	},
 	
-	afterAll() {
+	async afterAll() {
+		db = require('../src/db/sql.conn')
+		await db.drop_all()
 		process.env.MATCHA_DB = "sekesidbd"
 		process.env.TEST = "false"
 	}

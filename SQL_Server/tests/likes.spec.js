@@ -82,9 +82,12 @@ describe('Test likes', () => {
 	})
 	describe("Get Liked Users", () => {
 		describe("Get Marks liked users", () => {
-			it("DUNNO", async () => {
-				await LikeController.get_users_that_i_liked(mockRequest({liker_username: users.Mark.username}), res)
-				assert.equal(res.send.lastCall.firstArg.code,  "LIKE_MISS")
+			it("Includes bella and jhonny", async () => {
+				let reso = mockResponse()
+				await LikeController.get_users_that_i_liked(mockRequest({liker_username: users.Mark.username}), reso)
+				yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
+				assert.isTrue(yusers.includes(users.Bella.username))
+				assert.isTrue(yusers.includes(users.Jhonny.username))
 			})
 		})
 	})
