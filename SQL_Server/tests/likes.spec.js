@@ -102,6 +102,22 @@ describe('Test likes', () => {
 			})
 		})
 	})
+	describe("Get Matches", () => {
+		describe("Bella's matches", () => {
+			it("jhonny", async () => {
+				let reso = mockResponse()
+				await LikeController.get_matches(mockRequest({username: users.Bella.username}), reso)
+				assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+			})
+		})
+		describe("Marks's matches", () => {
+			it("All Alone HAHA", async () => {
+				await LikeController.get_matches(mockRequest({username: users.Mark.username}), res)
+				// assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+				assert.equal(res.send.lastCall.firstArg.data.length, 0)
+			})
+		})
+	})
 })
 
 // MISSING_LIKE

@@ -99,3 +99,33 @@ exports.get_users_that_liked_me = async (req, res) => {
 		}
 	}	
 }
+
+exports.get_matches = async (req, res) => {
+	try {
+		let rows = await db.query(
+			"SELECT r1.liker, r1.liked, \
+				IF(( SELECT COUNT(*)  \
+					FROM   LIKES r2  \
+					WHERE  r2.liker = r1.liked AND r2.liked = r1.liker \
+				) > 0, 1, 0) AS reciprocal \
+			FROM   LIKES r1 \
+			WHERE  r1.liker = ?;",
+			req.body.username)
+		// console.log("ROOOS:", rows)
+		matches = rows.filter(a =>  a.reciprocal == 1)
+		matches = matches.map(function(a) {return a.liked})
+		// console.log("ROOOS:", matches)
+		res.status(200).send({message: 'Successfully queried liked you users.', data: matches, code:'SUCCESS'})
+	}
+	catch (e) {
+		if (e.code == 'ER_NO_REFERENCED_ROW') {
+			console.log("NO LIKES", e)
+			res.status(200).send({message: "nobody likes you mark", data:[], code: e.code})
+		}
+		else {
+			console.log("get user by id error:\n", e, "\nend error")
+			res.status(500).send({message: 'error in get user by id', error: e})
+			throw(e)
+		}
+	}	
+}
