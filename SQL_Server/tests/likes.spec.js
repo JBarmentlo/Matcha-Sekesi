@@ -91,5 +91,17 @@ describe('Test likes', () => {
 			})
 		})
 	})
+	describe("Get Users that liked me", () => {
+		describe("Get users that like bella", () => {
+			it("Includes Mard and jhonny", async () => {
+				let reso = mockResponse()
+				await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Bella.username}), reso)
+				yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
+				assert.isTrue(yusers.includes(users.Mark.username))
+				assert.isTrue(yusers.includes(users.Jhonny.username))
+			})
+		})
+	})
 })
+
 // MISSING_LIKE

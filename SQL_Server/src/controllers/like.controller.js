@@ -61,7 +61,7 @@ exports.get_users_that_i_liked = async (req, res) => {
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			console.log("NO LIKES", e)
-			res.status(200).send({message: "User not liked", code: e.code})
+			res.status(200).send({message: "User not liked", data:[], code: e.code})
 		}
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
@@ -71,21 +71,31 @@ exports.get_users_that_i_liked = async (req, res) => {
 	}	
 }
 
-// try {
-// 	let query_result = await db.query(
-// 		'INSERT INTO USERS \
-// 		(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude) \
-// 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-// 		[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude]
-// 		)
-// 	res.status(200).send({message: 'Succesfully created user', id: query_result.insertId})
-// }
-// catch (e) {
-// 	if (e.code == 'ER_DUP_ENTRY') {
-// 		res.status(200).send({message: e.sqlMessage, code: e.code})
-// 	}
-// 	else {
-// 		console.log("signup error:\n", e, "\nend signup error")
-// 		res.status(500).send({message: e})
-// 	}
-// }	
+
+
+exports.get_users_that_liked_me = async (req, res) => {
+	try {
+
+		let rows = await db.query(
+			'SELECT * \
+			FROM LIKES \
+			INNER JOIN USERS \
+			ON LIKES.liker=USERS.username \
+			WHERE LIKES.liked=?;', 
+			req.body.liked_username,)
+		// console.log("ROOOS:", rows)
+		// console.log("Liker: ", req.body.liker_username)
+		res.status(200).send({message: 'Successfully queried liked you users.', data: rows, code:'SUCCESS'})
+	}
+	catch (e) {
+		if (e.code == 'ER_NO_REFERENCED_ROW') {
+			console.log("NO LIKES", e)
+			res.status(200).send({message: "nobody likes you mark", data:[], code: e.code})
+		}
+		else {
+			console.log("get user by id error:\n", e, "\nend error")
+			res.status(500).send({message: 'error in get user by id', error: e})
+			throw(e)
+		}
+	}	
+}
