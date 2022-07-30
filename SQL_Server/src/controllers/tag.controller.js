@@ -79,29 +79,28 @@ exports.get_tags_from_user = async (req, res) => {
 			'SELECT tag \
 			FROM TAGS \
 			WHERE TAGS.user=?;', 
-			req.body.liked_username,)
+			req.body.username,)
 		// console.log("ROOOS:", rows)
 		// console.log("Liker: ", req.body.liker_username)
 		res.status(200).send({message: 'Successfully queried users tags.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
-		if (e.code == 'ER_NO_REFERENCED_ROW') {
-			console.log("NO TAGS", e)
-			res.status(200).send({message: "nobody likes you mark", data:[], code: e.code})
-		}
-		else if (e.code == 'ER_DATA_TOO_LONG') {
-			res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
-		}
-		else if (e.code == 'ER_NO_REFERENCED_ROW') {
-			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
-		}
-		else if (e.code == 'ER_BAD_NULL_ERROR') {
-			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
-		}
-		else {
-			console.log("get user tags errorr:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get yuser tags', error: e})
-			throw(e)
-		}
+		console.log("get user tags errorr:\n", e, "\nend error")
+		res.status(500).send({message: 'error in get yuser tags', error: e})
+		throw(e)
+	}	
+}
+
+exports.get_all_tags = async (req, res) => {
+	try {
+		let rows = await db.query(
+			'SELECT DISTINCT tag from TAGS;'
+		)
+		res.status(200).send({message: 'Successfully queried all tags.', data: rows, code:'SUCCESS'})
+	}
+	catch (e) {
+		console.log("get user tags errorr:\n", e, "\nend error")
+		res.status(500).send({message: 'error in get yuser tags', error: e})
+		throw(e)
 	}	
 }
