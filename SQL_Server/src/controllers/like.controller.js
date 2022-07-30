@@ -1,4 +1,4 @@
-const db	 	= require("../db/sql.conn");
+const db = require("../db/sql.conn");
 
 
 exports.like_user = async (req, res) => {

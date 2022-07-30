@@ -2,13 +2,13 @@ exports.mochaHooks = {
 	beforeAll () {
 		process.env.MATCHA_DB = "sekesitest"
 		process.env.TEST = "true"
-		db = require('../src/db/sql.conn')
-		return db.drop_all()
+		test_con = require('../src/controllers/test.controller')
+		return test_con.clear_db()
 	},
 	
 	async afterAll() {
-		db = require('../src/db/sql.conn')
-		await db.drop_all()
+		test_con = require('../src/controllers/test.controller')
+		await test_con.clear_db()
 		process.env.MATCHA_DB = "sekesidbd"
 		process.env.TEST = "false"
 	}
