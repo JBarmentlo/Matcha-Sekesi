@@ -78,16 +78,16 @@ exports.un_like_user = async (req, res) => {
 			"DELETE FROM LIKES \
 			WHERE liker = ? and liked = ?",
 			[req.body.unliker, req.body.unliked])
-		res.status(200).send({message: 'Succesfully liked user', data: unlike_query_result, code: "SUCCESS"})
+		res.status(200).send({message: 'Succesfully luniked user', data: unlike_query_result, code: "SUCCESS"})
 	}
 	catch (e) {
 		if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			res.status(500).send({message: "Parsing error when unliking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in like user ", error: e})
+			res.status(500).send({message: "Error in unlike user ", error: e})
 			throw(e)
 		}
 	}

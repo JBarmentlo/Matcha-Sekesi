@@ -110,7 +110,10 @@ create table TAGS
 
     constraint user___fk
         foreign key (user) references USERS (username)
-            on delete cascade
+            on delete cascade,
+            
+    constraint no_duplicate_tags
+        unique (user, tag)
 );
 
 create table VERIFY
