@@ -50,57 +50,43 @@ describe('Test likes', () => {
 		})
 	})
 	describe("Get Liked Users", () => {
-		describe("Get Marks liked users", () => {
-			step("Includes bella and jhonny", async () => {
-				let reso = mockResponse()
-				await LikeController.get_users_that_i_liked(mockRequest({liker_username: users.Mark.username}), reso)
-				yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
-				assert.isTrue(yusers.includes(users.Bella.username))
-				assert.isTrue(yusers.includes(users.Jhonny.username))
-			})
+		step("Marks liked users:  bella and jhonny", async () => {
+			let reso = mockResponse()
+			await LikeController.get_users_that_i_liked(mockRequest({liker_username: users.Mark.username}), reso)
+			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
+			assert.isTrue(yusers.includes(users.Bella.username))
+			assert.isTrue(yusers.includes(users.Jhonny.username))
 		})
-	})
-	describe("Get Users that liked me", () => {
-		describe("Get users that like bella", () => {
-			step("Includes Mard and jhonny", async () => {
-				let reso = mockResponse()
-				await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Bella.username}), reso)
-				yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
-				assert.isTrue(yusers.includes(users.Mark.username))
-				assert.isTrue(yusers.includes(users.Jhonny.username))
-			})
+		step("users that like bella: Mard and jhonny", async () => {
+			let reso = mockResponse()
+			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Bella.username}), reso)
+			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
+			assert.isTrue(yusers.includes(users.Mark.username))
+			assert.isTrue(yusers.includes(users.Jhonny.username))
 		})
-	})
+		})
 	describe("Get Matches", () => {
-		describe("Bella's matches", () => {
-			step("jhonny", async () => {
-				let reso = mockResponse()
-				await LikeController.get_matches(mockRequest({username: users.Bella.username}), reso)
-				assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
-			})
+		step("Bella's matches: jhonny", async () => {
+			let reso = mockResponse()
+			await LikeController.get_matches(mockRequest({username: users.Bella.username}), reso)
+			assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 		})
-		describe("Marks's matches", () => {
-			step("All Alone HAHA", async () => {
-				await LikeController.get_matches(mockRequest({username: users.Mark.username}), res)
-				// assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
-				assert.equal(res.send.lastCall.firstArg.data.length, 0)
-			})
+		step("Marks's matches: All Alone HAHA", async () => {
+			await LikeController.get_matches(mockRequest({username: users.Mark.username}), res)
+			// assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+			assert.equal(res.send.lastCall.firstArg.data.length, 0)
 		})
 	})
-	describe("Jhonny unlike bella", () => {
-		step("affects 1 row", async () => {
+	describe("Unliking", () => {
+		step("Jhonny unlike bella: affects 1 row", async () => {
 			await LikeController.un_like_user(mockRequest({unliker: users.Jhonny.username, unliked: users.Bella.username}), res)
 			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
 		})
-	})
-	describe("Bella's likers", () => {
-		step("Jhonny's gone !", async () => {
+		step("Bella's likers: Jhonny's gone !", async () => {
 			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Bella.username}), res)
 			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 		})
-	})
-	describe("Bella's matches", () => {
-		step("Bye Bye Jhonny", async () => {
+		step("Bella's matches: Bye Bye Jhonny", async () => {
 			await LikeController.get_matches(mockRequest({username: users.Bella.username}), res)
 			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 		})
