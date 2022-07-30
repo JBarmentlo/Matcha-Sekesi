@@ -73,7 +73,6 @@ exports.like_user = async (req, res) => {
 }
 
 exports.un_like_user = async (req, res) => {
-	console.log(req)
 	try {
 		let unlike_query_result = await db.query(
 			"DELETE FROM LIKES \
