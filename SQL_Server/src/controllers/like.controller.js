@@ -1,7 +1,7 @@
 const db = require("../db/sql.conn");
 
 
-exports.like_user = async (req, res) => {
+exports.like_user_by_id = async (req, res) => {
 	let liked_id = req.body.liked_id
 	let liker_id = req.body.liker_id
 
@@ -22,6 +22,36 @@ exports.like_user = async (req, res) => {
 		else {
 			res.status(200).send({message: "One of the users does not exist", code:"LIKE_MISS"})
 		}
+	}
+	catch (e) {
+		if (e.code == 'ER_NO_REFERENCED_ROW') {
+			res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_DUP_ENTRY') {
+			res.status(200).send({message: "Already Liked", code: e.code})
+		}
+		else if (e.code == 'ER_PARSE_ERROR') {
+			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			throw (e)
+		}
+		else {
+			console.log("EROOL: ", e)
+			res.status(500).send({message: "Error in like user ", error: e})
+			throw(e)
+		}
+	}
+}
+
+exports.like_user = async (req, res) => {
+
+	try {
+		let like_query_result = await db.query(
+			'INSERT INTO LIKES \
+			(liker, liked) \
+			VALUES (?, ?)',
+			[req.body.liker, req.body.liked]
+			)
+		res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
