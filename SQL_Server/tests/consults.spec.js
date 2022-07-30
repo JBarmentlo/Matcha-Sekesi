@@ -2,16 +2,20 @@ const { assert }                  = require('chai');
 
 const ConsultController           = require('../src/controllers/consult.controller')
 const UserController              = require('../src/controllers/user.controller')
+const test_con		              = require('../src/controllers/test.controller')
 const users                       = require('./data/users.mock')
 const {mockResponse, mockRequest} = require('./data/res.req.mock')
 
 describe('Test consults', () => {
 	let res = mockResponse()
-	describe("Clear db and make users.", async () => {
-		await test_con.clear_db()
-		await UserController.create_user_test(mockRequest(users.Jhonny), res)
-		await UserController.create_user_test(mockRequest(users.Bella), res)
-		await UserController.create_user_test(mockRequest(users.Mark), res)
+	step("Init db", async () => {
+		let res = mockResponse()
+		return (Promise.all([
+			test_con.clear_db(),
+			UserController.create_user_test(mockRequest(users.Jhonny), res),
+			UserController.create_user_test(mockRequest(users.Bella), res),
+			UserController.create_user_test(mockRequest(users.Mark), res)
+		]))
 	})
 	describe("Create Consults", () => {
 		step('mark   => jhonny Code SUCCESS', async () => {
