@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha  --exit --require './tests/hooks.js' ./tests/*.spec.js",
+    "test": "mocha  --exit --require './tests/hooks.js' --require mocha-steps ./tests/*.spec.js",
     "ci_test": "mocha  --exit ./tests/*.spec.js",
     "coverage": "nyc --reporter=text npm run test"
   },
@@ -20,6 +20,7 @@
   "devDependencies": {
     "chai": "^4.3.6",
     "mocha": "^10.0.0",
+    "mocha-steps": "^1.3.0",
     "nodemon": "^2.0.19",
     "nyc": "^15.1.0",
     "nys": "^0.0.0",
