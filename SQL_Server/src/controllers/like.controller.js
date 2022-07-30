@@ -97,12 +97,15 @@ exports.get_users_that_i_liked = async (req, res) => {
 	try {
 
 		let rows = await db.query(
-			'SELECT * \
+			"SELECT * \
 			FROM LIKES \
 			INNER JOIN USERS \
 			ON LIKES.liked=USERS.username \
-			WHERE LIKES.liker=?;', 
-			req.body.liker_username,)
+			WHERE LIKES.liker=? AND \
+			NOT EXISTS (SELECT 1 FROM BLOCKS  \
+				WHERE LIKES.liker = BLOCKS.blocked AND LIKES.liked = BLOCKS.blocker OR \
+				LIKES.liker = BLOCKS.blocker AND LIKES.liked = BLOCKS.blocked);" 
+			,req.body.liker_username,)
 		// console.log("ROOOS:", rows)
 		// console.log("Liker: ", req.body.liker_username)
 		res.status(200).send({message: 'Successfully queried liked users.', data: rows, code:'SUCCESS'})
