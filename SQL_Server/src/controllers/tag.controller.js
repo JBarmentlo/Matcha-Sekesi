@@ -63,7 +63,7 @@ exports.remove_tag_from_user = async (req, res) => {
 			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_BAD_NULL_ERROR') {
-			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
+			res.status(200).send({message: "User cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
 			console.log("EROOL: ", e)

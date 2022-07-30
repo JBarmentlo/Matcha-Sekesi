@@ -70,11 +70,17 @@ exports.create_user_test = async (req, res) => {
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: e.sqlMessage, code: e.code})
+			res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(400).send({message: 'There was an error parsing your request', code: e.code})
+			res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
 			// throw(e)
+		}
+		else if (e.code == 'ER_DATA_TOO_LONG') {
+			res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else if (e.code == 'ER_BAD_NULL_ERROR') {
+			res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
 			console.log("signup error:\n", e, "\nend signup error")
