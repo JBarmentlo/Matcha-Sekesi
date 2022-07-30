@@ -18,11 +18,12 @@ describe('Test users', () => {
 		]))
 	})
 	describe('User create errors', () => {
-		step('Duplicate username: ER_DUP_ENTRY', async () => {
+		step('Duplicate username: ER_DUP_ENTRY', async (done) => {
 			let req = mockRequest(users.JhonnyDupName)
 			await UserController.create_user_test(req, res)
 			assert.isTrue(res.status.lastCall.lastArg == 200)
 			assert.isTrue(res.send.lastCall.firstArg.code == 'ER_DUP_ENTRY')
+			done()
 		})
 		step('with code 200', () => {
 			assert.isTrue(res.status.lastCall.lastArg == 200)

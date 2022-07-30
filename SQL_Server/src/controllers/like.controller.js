@@ -129,10 +129,13 @@ exports.get_users_that_liked_me = async (req, res) => {
 			FROM LIKES \
 			INNER JOIN USERS \
 			ON LIKES.liker=USERS.username\
-			WHERE LIKES.liked=?;"
+			WHERE LIKES.liked=? AND \
+			NOT EXISTS (SELECT 1 FROM BLOCKS  \
+				WHERE LIKES.liker = BLOCKS.blocked AND LIKES.liked = BLOCKS.blocker OR \
+				LIKES.liker = BLOCKS.blocker AND LIKES.liked = BLOCKS.blocked);"		
 
-			,req.body.liked_username,)
-		// console.log("ROOOS:", rows)
+		
+			,[req.body.liked_username, req.body.liked_username],)
 		// console.log("Liker: ", req.body.liker_username)
 		res.status(200).send({message: 'Successfully queried liked you users.', data: rows, code:'SUCCESS'})
 	}
@@ -150,6 +153,16 @@ exports.get_users_that_liked_me = async (req, res) => {
 }
 
 
+	// "SELECT * \
+	// FROM USERS u \
+	// INNER JOIN LIKES c \
+	// 	ON c.user_one = u.user_id OR \
+	// 	   c.user_two = u.user_id \
+	// WHERE \
+	// 	u.user_id = 16 AND \
+	// 	NOT EXISTS (SELECT 1 FROM block b \
+	// 				WHERE b.user_who = c.user_one AND b.user_whom = c.user_two OR \
+	// 					  b.user_who = c.user_two AND b.user_whom = c.user_one);"		
 
 exports.get_matches = async (req, res) => {
 	try {

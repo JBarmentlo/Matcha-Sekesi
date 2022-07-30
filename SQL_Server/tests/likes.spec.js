@@ -36,23 +36,17 @@ describe('Test likes', () => {
 		})
 	})
 	describe("Like Error Handling", () => {
-		describe("duplicate like", () => {
-			step('Code ER_DUP_ENTRY', async () => {
-				await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
-				assert.equal(res.send.lastCall.firstArg.code, "ER_DUP_ENTRY")
-			})
+		step('duplicate like: Code ER_DUP_ENTRY', async () => {
+			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
+			assert.equal(res.send.lastCall.firstArg.code, "ER_DUP_ENTRY")
 		})
-		describe("Missing liked", () => {
-			step('Code LIKE_MISS', async () => {
-				await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: 'lol'}), res)
-				assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
-			})
+		step('Missing liked: Code LIKE_MISS', async () => {
+			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: 'lol'}), res)
+			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
 		})
-		describe("Missing liker", () => {
-			step('Code LIKE_MISS', async () => {
-				await LikeController.like_user(mockRequest({liker: 'lol', liked: users.Jhonny.username}), res)
-				assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
-			})
+		step('Missing liker: Code LIKE_MISS', async () => {
+			await LikeController.like_user(mockRequest({liker: 'lol', liked: users.Jhonny.username}), res)
+			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
 		})
 	})
 	describe("Get Liked Users", () => {
