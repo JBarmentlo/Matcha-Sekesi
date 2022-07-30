@@ -1,11 +1,22 @@
 const { assert }                  = require('chai');
 
+const UserController              = require('../src/controllers/user.controller')
+const test_con		              = require('../src/controllers/test.controller')
 const TagController               = require('../src/controllers/tag.controller')
 const users                       = require('./data/users.mock')
 const {mockResponse, mockRequest} = require('./data/res.req.mock')
 
 describe("Tags", () => {
 	let res = mockResponse()
+	step("Init db", async () => {
+		let res = mockResponse()
+		return (Promise.all([
+			test_con.clear_db(),
+			UserController.create_user_test(mockRequest(users.Jhonny), res),
+			UserController.create_user_test(mockRequest(users.Bella), res),
+			UserController.create_user_test(mockRequest(users.Mark), res)
+		]))
+	})
 	describe("Adding tags", () => {
 		it("Returns success", async () => {
 			await TagController.add_tag_to_user(mockRequest({username: users.Bella.username, tag: "Bitching about Mark"}), res)
