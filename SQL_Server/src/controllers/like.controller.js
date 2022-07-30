@@ -125,12 +125,13 @@ exports.get_users_that_liked_me = async (req, res) => {
 	try {
 
 		let rows = await db.query(
-			'SELECT * \
+			"SELECT * \
 			FROM LIKES \
 			INNER JOIN USERS \
-			ON LIKES.liker=USERS.username \
-			WHERE LIKES.liked=?;', 
-			req.body.liked_username,)
+			ON LIKES.liker=USERS.username\
+			WHERE LIKES.liked=?;"
+
+			,req.body.liked_username,)
 		// console.log("ROOOS:", rows)
 		// console.log("Liker: ", req.body.liker_username)
 		res.status(200).send({message: 'Successfully queried liked you users.', data: rows, code:'SUCCESS'})
@@ -147,6 +148,11 @@ exports.get_users_that_liked_me = async (req, res) => {
 		}
 	}	
 }
+
+// AND \
+// NOT EXISTS (SELECT 1 FROM BLOCKS \
+// 	WHERE BLOCKS.blocker = LIKES.liker AND BLOCKS.blocked = LIKES.liked OR \
+// 		  BLOCKS.blocker = LIKES.liked AND BLOCKS.blocked = LIKES.liker);"
 
 exports.get_matches = async (req, res) => {
 	try {
@@ -177,3 +183,14 @@ exports.get_matches = async (req, res) => {
 		}
 	}	
 }
+
+"SELECT u.user_id, u.user_name, c.user_one, c.user_two \
+FROM user u \
+INNER JOIN chat c \
+    ON c.user_one = u.user_id OR \
+       c.user_two = u.user_id \
+WHERE \
+    u.user_id = 16 AND \
+    NOT EXISTS (SELECT 1 FROM block b \
+                WHERE b.user_who = c.user_one AND b.blocked = c.user_two OR \
+                      b.user_who = c.user_two AND b.blocked = c.user_one);"
