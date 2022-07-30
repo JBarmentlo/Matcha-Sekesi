@@ -63,6 +63,7 @@ describe('Test likes', () => {
 			yusers = res.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Bella.username))
 			assert.isFalse(yusers.includes(users.Jhonny.username))
+			await BlockController.un_block_user(mockRequest({unblocker: users.Mark.username, unblocked: users.Jhonny.username}), res)
 		})
 		step("users that like bella: Mard and jhonny", async () => {
 			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Bella.username}), res)
@@ -75,12 +76,25 @@ describe('Test likes', () => {
 		step("Bella's matches: jhonny", async () => {
 			await LikeController.get_matches(mockRequest({username: users.Bella.username}), res)
 			assert.isTrue(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+			await LikeController.get_matches(mockRequest({username: users.Jhonny.username}), res)
+			assert.isTrue(res.send.lastCall.firstArg.data.includes(users.Bella.username))
 		})
 		step("Marks's matches: All Alone HAHA", async () => {
 			await LikeController.get_matches(mockRequest({username: users.Mark.username}), res)
 			// assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 			assert.equal(res.send.lastCall.firstArg.data.length, 0)
 		})
+		step("After a block: bella's alone ", async () => {
+			await BlockController.block_user(mockRequest({blocker: users.Jhonny.username, blocked: users.Bella.username}), res)
+			await LikeController.get_matches(mockRequest({username: users.Bella.username}), res)
+			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+
+			await LikeController.get_matches(mockRequest({username: users.Jhonny.username}), res)
+			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Bella.username))
+
+			await BlockController.un_block_user(mockRequest({unblocker: users.Jhonny.username, unblocked: users.Bella.username}), res)
+		})
+
 	})
 	describe("Unliking", () => {
 		step("Jhonny unlike bella: affects 1 row", async () => {
