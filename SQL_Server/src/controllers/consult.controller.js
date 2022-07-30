@@ -133,7 +133,10 @@ exports.get_users_that_consulted_me = async (req, res) => {
 			FROM CONSULTS \
 			INNER JOIN USERS \
 			ON CONSULTS.consulter=USERS.username \
-			WHERE CONSULTS.consulted=?;', 
+			WHERE CONSULTS.consulted=? AND \
+			NOT EXISTS (SELECT 1 FROM BLOCKS  \
+				WHERE CONSULTS.consulter = BLOCKS.blocked AND CONSULTS.consulted = BLOCKS.blocker OR \
+				CONSULTS.consulter = BLOCKS.blocker AND CONSULTS.consulted = BLOCKS.blocked);', 
 			req.body.consulted_username,)
 		// console.log("ROOOS:", rows)
 		// console.log("consulter: ", req.body.consulter_username)
