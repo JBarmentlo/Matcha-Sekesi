@@ -74,7 +74,6 @@ exports.consult_user = async (req, res) => {
 
 
 exports.un_consult_user = async (req, res) => {
-	console.log(req)
 	try {
 		let unconsult_query_result = await db.query(
 			"DELETE FROM CONSULTS \
