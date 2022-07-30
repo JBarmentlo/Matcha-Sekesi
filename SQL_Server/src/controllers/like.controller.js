@@ -149,10 +149,7 @@ exports.get_users_that_liked_me = async (req, res) => {
 	}	
 }
 
-// AND \
-// NOT EXISTS (SELECT 1 FROM BLOCKS \
-// 	WHERE BLOCKS.blocker = LIKES.liker AND BLOCKS.blocked = LIKES.liked OR \
-// 		  BLOCKS.blocker = LIKES.liked AND BLOCKS.blocked = LIKES.liker);"
+
 
 exports.get_matches = async (req, res) => {
 	try {
