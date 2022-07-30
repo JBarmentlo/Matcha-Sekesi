@@ -1,9 +1,9 @@
 exports.mochaHooks = {
-	async beforeAll () {
+	beforeAll () {
 		process.env.MATCHA_DB = "sekesitest"
 		process.env.TEST = "true"
 		db = require('../src/db/sql.conn')
-		await db.drop_all()
+		return db.drop_all()
 	},
 	
 	async afterAll() {
