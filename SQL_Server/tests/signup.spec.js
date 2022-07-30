@@ -31,7 +31,14 @@ const jhonnyBody = {
 }
 
 
-describe('Test signup', () => {
+describe('Test signup',  () => {
+	let res = mockResponse()
+	describe("Clear db and make users.", async () => {
+		await test_con.clear_db()
+		await UserController.create_user_test(mockRequest(users.Jhonny), res)
+		await UserController.create_user_test(mockRequest(users.Bella), res)
+		await UserController.create_user_test(mockRequest(users.Mark), res)
+	})
 	describe('Create Jhonny user', () => {
 		it('should status 200', async () => {
 			let req = mockRequest(jhonnyBody)

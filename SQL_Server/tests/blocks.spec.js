@@ -6,7 +6,12 @@ const {mockResponse, mockRequest} = require('./data/res.req.mock')
 
 describe('Test blocks', () => {
 	let res = mockResponse()
-
+	describe("Clear db and make users.", async () => {
+		await test_con.clear_db()
+		await UserController.create_user_test(mockRequest(users.Jhonny), res)
+		await UserController.create_user_test(mockRequest(users.Bella), res)
+		await UserController.create_user_test(mockRequest(users.Mark), res)
+	})
 	describe("Create blocks", () => {
 		step('jhonny   => mark Code SUCCESS', async () => {
 			await BlockController.block_user(mockRequest({blocker: users.Jhonny.username, blocked: users.Mark.username}), res)

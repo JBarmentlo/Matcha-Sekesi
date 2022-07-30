@@ -1,8 +1,8 @@
 const db = require("../db/sql.conn");
 
 
-exports.clear_db = (req, res) => {
-console.log("DROP ALL FROM TABLE")
+exports.clear_db = () => {
+	console.log("DROP ALL FROM TABLE")
 	let promise_BLOCKS = db.query('DELETE FROM BLOCKS;')
 	let promise_CONSULTS = db.query('DELETE FROM CONSULTS;')
 	let promise_LIKES = db.query('DELETE FROM LIKES;')

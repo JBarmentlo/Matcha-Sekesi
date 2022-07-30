@@ -1,20 +1,20 @@
 const mysql = require('mysql2/promise')
 
+const connection = mysql.createConnection({
+	host: 'localhost',
+	user: 'sammy',
+	database: process.env.MATCHA_DB,
+	password: 'password'
+  });
+
+const test_connection = mysql.createConnection({
+	host: 'localhost',
+	user: 'sammy',
+	database: process.env.MATCHA_TEST_DB,
+	password: 'password'
+	});
+
 async function connect() {
-	const connection = await mysql.createConnection({
-		host: 'localhost',
-		user: 'sammy',
-		database: process.env.MATCHA_DB,
-		password: 'password'
-	  });
-
-	const test_connection = await mysql.createConnection({
-		host: 'localhost',
-		user: 'sammy',
-		database: process.env.MATCHA_TEST_DB,
-		password: 'password'
-		});
-
 	if (process.env.TEST == 'true') {
 		return test_connection
 	}
@@ -23,37 +23,23 @@ async function connect() {
 	}
 }
 
-const pool = mysql.createPool({
-	host: 'localhost',
-	user: 'sammy',
-	database: process.env.MATCHA_DB,
-	password: 'password',
-	waitForConnections: true,
-	connectionLimit: 10,
-	queueLimit: 0
-  });
+// const pool = mysql.createPool({
+// 	host: 'localhost',
+// 	user: 'sammy',
+// 	database: process.env.MATCHA_DB,
+// 	password: 'password',
+// 	waitForConnections: true,
+// 	connectionLimit: 10,
+// 	queueLimit: 0
+//   });
 
 async function query(sql, params) {
-	const connection = await mysql.createConnection({
-		host: 'localhost',
-		user: 'sammy',
-		database: process.env.MATCHA_DB,
-		password: 'password'
-	  });
-
-	const test_connection = await mysql.createConnection({
-		host: 'localhost',
-		user: 'sammy',
-		database: process.env.MATCHA_TEST_DB,
-		password: 'password'
-		});
-
 	let used_connection
 	if (process.env.TEST == 'true') {
-		used_connection = test_connection
+		used_connection = await test_connection
 	}
 	else {
-		used_connection = connection
+		used_connection = await connection
 	}
 	// console.log("daba: ",used_connection.config.database)
 	// console.log("KERI:\n", sql, "\n\n, params: ", params)
@@ -64,26 +50,12 @@ async function query(sql, params) {
 }
 
 async function drop_all() {
-	const connection = await mysql.createConnection({
-		host: 'localhost',
-		user: 'sammy',
-		database: process.env.MATCHA_DB,
-		password: 'password'
-	  });
-
-	const test_connection = await mysql.createConnection({
-		host: 'localhost',
-		user: 'sammy',
-		database: process.env.MATCHA_TEST_DB,
-		password: 'password'
-		});
-
 	let used_connection
 	if (process.env.TEST == 'true') {
-		used_connection = test_connection
+		used_connection = await test_connection
 	}
 	else {
-		used_connection = connection
+		used_connection = await connection
 	}
 	console.log("DROP ALL FROM TABLE")
 	used_connection.execute('DELETE FROM BLOCKS;')

@@ -6,7 +6,7 @@ exports.mochaHooks = {
 	async beforeAll () {
 		process.env.MATCHA_DB = "sekesitest"
 		process.env.TEST = "true"
-		test_con = require('../src/controllers/test.controller')
+		test_con = require('../src/controllers/test.controller.js')
 		await test_con.clear_db()
 		let res = mockResponse()
 		let req = mockRequest(users.Jhonny)

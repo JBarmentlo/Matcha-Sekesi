@@ -6,6 +6,12 @@ const {mockResponse, mockRequest} = require('./data/res.req.mock')
 
 describe("Tags", () => {
 	let res = mockResponse()
+	describe("Clear db and make users.", async () => {
+		await test_con.clear_db()
+		await UserController.create_user_test(mockRequest(users.Jhonny), res)
+		await UserController.create_user_test(mockRequest(users.Bella), res)
+		await UserController.create_user_test(mockRequest(users.Mark), res)
+	})
 	describe("Adding tags", () => {
 		it("Returns success", async () => {
 			await TagController.add_tag_to_user(mockRequest({username: users.Bella.username, tag: "Bitching about Mark"}), res)
