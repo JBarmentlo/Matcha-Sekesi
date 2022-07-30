@@ -50,9 +50,11 @@ create table LIKES
     constraint no_duplicates
         unique (liker, liked),
     constraint liked_username_fk
-        foreign key (liked) references USERS (username),
+        foreign key (liked) references USERS (username)
+            on delete cascade,
     constraint liker_username_fk
         foreign key (liker) references USERS (username)
+            on delete cascade
 );
 
 create table PICTURES
