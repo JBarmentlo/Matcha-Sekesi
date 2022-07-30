@@ -1,5 +1,5 @@
-# sudo mysql -e 'DROP DATABASE sekesidb;' -uroot -ppassword
-# sudo mysql -e 'DROP DATABASE sekesitest;' -uroot -ppassword
+sudo mysql -e 'DROP DATABASE sekesidb;' -uroot -ppassword
+sudo mysql -e 'DROP DATABASE sekesitest;' -uroot -ppassword
 
 sudo mysql -e 'CREATE DATABASE sekesidb;' -uroot -ppassword
 sudo mysql -e 'CREATE DATABASE sekesitest;' -uroot -ppassword
