@@ -1,5 +1,6 @@
 const { assert }                  = require('chai');
 
+const BlockController           = require('../src/controllers/block.controller')
 const LikeController              = require('../src/controllers/like.controller')
 const UserController              = require('../src/controllers/user.controller')
 const test_con		              = require('../src/controllers/test.controller')
@@ -51,25 +52,29 @@ describe('Test likes', () => {
 	})
 	describe("Get Liked Users", () => {
 		step("Marks liked users:  bella and jhonny", async () => {
-			let reso = mockResponse()
-			await LikeController.get_users_that_i_liked(mockRequest({liker_username: users.Mark.username}), reso)
-			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
+			await LikeController.get_users_that_i_liked(mockRequest({liker_username: users.Mark.username}), res)
+			yusers = res.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Bella.username))
 			assert.isTrue(yusers.includes(users.Jhonny.username))
 		})
+		step("After a block: just bella ", async () => {
+			await BlockController.block_user(mockRequest({blocker: users.Mark.username, blocked: users.Jhonny.username}), res)
+			await LikeController.get_users_that_i_liked(mockRequest({liker_username: users.Mark.username}), res)
+			yusers = res.send.lastCall.firstArg.data.map(function(a) {return a.username})
+			assert.isTrue(yusers.includes(users.Bella.username))
+			assert.isFalse(yusers.includes(users.Jhonny.username))
+		})
 		step("users that like bella: Mard and jhonny", async () => {
-			let reso = mockResponse()
-			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Bella.username}), reso)
-			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
+			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Bella.username}), res)
+			yusers = res.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Mark.username))
 			assert.isTrue(yusers.includes(users.Jhonny.username))
 		})
 		})
 	describe("Get Matches", () => {
 		step("Bella's matches: jhonny", async () => {
-			let reso = mockResponse()
-			await LikeController.get_matches(mockRequest({username: users.Bella.username}), reso)
-			assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+			await LikeController.get_matches(mockRequest({username: users.Bella.username}), res)
+			assert.isTrue(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 		})
 		step("Marks's matches: All Alone HAHA", async () => {
 			await LikeController.get_matches(mockRequest({username: users.Mark.username}), res)
