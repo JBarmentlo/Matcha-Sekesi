@@ -5,7 +5,14 @@ const LikeController              = require('../src/controllers/like.controller'
 const UserController              = require('../src/controllers/user.controller')
 const test_con		              = require('../src/controllers/test.controller')
 const users                       = require('./data/users.mock')
-const {mockResponse, mockRequest} = require('./data/res.req.mock')
+const {mockResponse, mockRequest} = require('./data/res.req.mock');
+const { step } = require('mocha-steps');
+
+function sleep(ms) {
+	return new Promise((resolve) => {
+	  setTimeout(resolve, ms);
+	});
+  }
 
 describe('Test likes', () => {
 	let res = mockResponse()
@@ -37,9 +44,9 @@ describe('Test likes', () => {
 		})
 	})
 	describe("Like Error Handling", () => {
-		step('duplicate like: Code ER_DUP_ENTRY', async () => {
-			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
-			assert.equal(res.send.lastCall.firstArg.code, "ER_DUP_ENTRY")
+		step('duplicate like: Code SUCCESS', async () => {
+			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username, test:true}), res)
+			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 		})
 		step('Missing liked: Code LIKE_MISS', async () => {
 			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: 'lol'}), res)
@@ -94,7 +101,6 @@ describe('Test likes', () => {
 
 			await BlockController.un_block_user(mockRequest({unblocker: users.Jhonny.username, unblocked: users.Bella.username}), res)
 		})
-
 	})
 	describe("Unliking", () => {
 		step("Jhonny unlike bella: affects 1 row", async () => {

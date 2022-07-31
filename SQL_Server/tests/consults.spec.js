@@ -36,9 +36,9 @@ describe('Test consults', () => {
 		})
 	})
 	describe("Consult Error Handling", () => {
-		step('duplicate consult: Code ER_DUP_ENTRY', async () => {
+		step('duplicate consult: Code SUCCESS', async () => {
 			await ConsultController.consult_user(mockRequest({consulter: users.Mark.username, consulted: users.Jhonny.username}), res)
-			assert.equal(res.send.lastCall.firstArg.code, "ER_DUP_ENTRY")
+			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 		})
 		step('Missing consulted: Code LIKE_MISS', async () => {
 			await ConsultController.consult_user(mockRequest({consulter: users.Mark.username, consulted: 'lol'}), res)

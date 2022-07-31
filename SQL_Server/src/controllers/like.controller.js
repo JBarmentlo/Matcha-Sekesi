@@ -45,7 +45,7 @@ exports.like_user_by_id = async (req, res) => {
 exports.like_user = async (req, res) => {
 	try {
 		let like_query_result = await db.query(
-			'INSERT INTO LIKES \
+			'REPLACE INTO LIKES \
 			(liker, liked) \
 			VALUES (?, ?)',
 			[req.body.liker, req.body.liked]
@@ -55,9 +55,6 @@ exports.like_user = async (req, res) => {
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			res.status(200).send({message: "User name not existing", code: e.code})
-		}
-		else if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: "Already Liked", code: e.code})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})

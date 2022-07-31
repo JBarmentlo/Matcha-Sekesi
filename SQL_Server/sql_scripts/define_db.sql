@@ -15,7 +15,6 @@ create table USERS
     isCompleteProfile tinyint(1)  default 0    not null,
     longitude         float                    null,
     latitude          float                    null,
-    last_updated        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     id                mediumint auto_increment
         primary key,

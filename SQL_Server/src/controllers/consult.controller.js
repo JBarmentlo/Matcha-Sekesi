@@ -46,7 +46,7 @@ exports.consult_user = async (req, res) => {
 
 	try {
 		let consult_query_result = await db.query(
-			'INSERT INTO CONSULTS \
+			'REPLACE INTO CONSULTS \
 			(consulter, consulted) \
 			VALUES (?, ?)',
 			[req.body.consulter, req.body.consulted]
@@ -56,9 +56,6 @@ exports.consult_user = async (req, res) => {
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			res.status(200).send({message: "User name not existing", code: e.code})
-		}
-		else if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: "Already consulted", code: e.code})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})

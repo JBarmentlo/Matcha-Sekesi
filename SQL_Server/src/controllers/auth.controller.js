@@ -108,12 +108,6 @@ exports.requestresetPass = async (req, res) => {
 	}
 };
 
-function sleep(ms) {
-	return new Promise((resolve) => {
-	  setTimeout(resolve, ms);
-	});
-  }
-
 exports.resetPass = async (req, res) => {
 	try {
 		let verify_reset_result = await db.query(
