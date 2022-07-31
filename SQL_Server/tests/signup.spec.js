@@ -64,8 +64,17 @@ describe('Test signup', () => {
 		})
 	})
 	describe("Create real Joep", () => {
-		it("Send mail verify", async () => {
+		let hash
+		step("Send mail", async () => {
 			await UserController.create_user(mockRequest(users.Joep), res)
+			hash = res.send.lastCall.firstArg.hash
+			await UserController.get_user_by_username(mockRequest({username: users.Joep.username}), res)
+			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 0)
+		})
+		step("verify", async () => {
+			await UserController.verifyMail({params:{idHash: hash}}, res)
+			await UserController.get_user_by_username(mockRequest({username: users.Joep.username}), res)
+			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 1)
 		})
 	})
 })

@@ -31,7 +31,7 @@ exports.create_user = async (req, res) => {
 			[username, hash]
 		)
 		await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
-		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS"})
+		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
@@ -55,37 +55,16 @@ exports.create_user = async (req, res) => {
 	}	
 };
 
-exports.verifyMail = (req, res) => {
-    console.log("verifying mail with %o", req.params)
-    verifyCollection.findOneAndDelete({idHash: req.params.idHash})
-        .then(id => {
-            if (id.lastErrorObject.n == 0)
-            {
-                res.status(400).send({message: "invalid hash code"})
-                return
-            }
-            console.log("found id match %o", id)
-            filter = {_id: id.value.userId};
-            update = {$set: {mailVerified: true,},}
-            user_collection.findOneAndUpdate(filter, update)
-            .then(user => {
-                if (user == null || user.lastErrorObject.n == 0)
-                    console.log("didnt find user matching confirm, WIERD AS FUCK %o", id)
-                console.log("found user match %o", user)
-    
-                res.send({
-                    username : user.value.username,
-                    mail     : user.value.mail,
-                })
-                console.log("sent %o", {
-                    username : user.value.username,
-                    mail     : user.value.mail,
-                })
-            })
-        })
-        .catch(err => {
-            res.status(500).send({error: err})
-        })
+exports.verifyMail = async (req, res) => {
+	let verify_mail_result = await db.query(
+		"SELECT * FROM VERIFY \
+		where id_hash=?",
+		req.params.idHash)
+	let verify_user_result = await db.query(
+		"UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
+		verify_mail_result[0].user
+	)
+	res.status(200).send({message: "verified mail for " + verify_mail_result.user, code: "SUCCESS"})
 };
 
 exports.create_user_test = async (req, res) => {
