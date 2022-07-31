@@ -54,47 +54,55 @@ describe('Test signup', () => {
 	})
 	describe("Create real Joep", () => {
 		let hash
-		step("Send mail", async () => {
+		step("Send mail", async (done) => {
 			await AuthController.signup(mockRequest(users.Joep), res)
 			hash = res.send.lastCall.firstArg.hash
 			await UserController.get_user_by_username(mockRequest({username: users.Joep.username}), res)
 			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 0)
+			done()
 		})
-		step("verify", async () => {
+		step("verify", async (done) => {
 			await AuthController.verifyMail({params:{idHash: hash}}, res)
 			await UserController.get_user_by_username(mockRequest({username: users.Joep.username}), res)
 			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 1)
+			done()
 		})
 	})
 	describe("Signing", () => {
-		step("First signin", async () => {
+		step("First signin", async (done) => {
 			await AuthController.signin(mockRequest({username: users.Joep.username, password: users.Joep.password}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
-		step("Incorrect pass", async () => {
+		step("Incorrect pass", async (done) => {
 			await AuthController.signin(mockRequest({username: users.Joep.username, password: 'wrong'}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "WRONG_PASSWORD")
+			done()
 		})
-		step("Incorrect username", async () => {
+		step("Incorrect username", async (done) => {
 			await AuthController.signin(mockRequest({username: "jondoe", password: 'wrong'}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "MISSING_USERNAME")
+			done()
 		})
-		step("request password change", async () => {
+		step("request password change", async (done) => {
 			await AuthController.requestresetPass(mockRequest({mail: users.Joep.mail}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
-		step("reset password to caca", async () => {
+		step("reset password to caca", async (done) => {
 			let hash = res.send.lastCall.firstArg.hash
 			let pass = "caca"
 			await AuthController.resetPass(mockRequest({id_hash: hash, password: pass}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			// console.log("SIGL, ", res.send.lastCall.firstArg)
+			done()
 		})
-		step("login with caca", async () => {
+		step("login with caca", async (done) => {
 			let pass = "caca"
 			await AuthController.signin(mockRequest({username: users.Joep.username, password: pass}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			// console.log(res.send.lastCall.firstArg)
+			done()
 		})
 	})
 	describe("JWT auth", () => {
@@ -104,29 +112,32 @@ describe('Test signup', () => {
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			done()
 		})
-		step("Verify headers calls next", async () => {
+		step("Verify headers calls next", async (done) => {
 			let next = sinon.stub()
 			await AuthController.verifyToken({ headers: {
 												"x-access-token": res.send.lastCall.firstArg.accessToken,
 												"x-access-signature": res.send.lastCall.firstArg.signature
 											}}, res, next)
 			assert.isTrue(next.calledOnce)
+			done()
 		})
-		step("Incorrect does not call next", async () => {
+		step("Incorrect does not call next", async (done) => {
 			let next = sinon.stub()
 			await AuthController.verifyToken({ headers: {
 												"x-access-token": "res.send.lastCall.firstArg.accessToken",
 												"x-access-signature": res.send.lastCall.firstArg.signature
 											}}, res, next)
 			assert.isFalse(next.calledOnce)
+			done()
 		})
-		step("Incorrect does not call next", async () => {
+		step("Incorrect does not call next", async (done) => {
 			let next = sinon.stub()
 			await AuthController.verifyToken({ headers: {
 												"x-access-token": res.send.lastCall.firstArg.accessToken,
 												"x-access-signature": "res.send.lastCall.firstArg.signature"
 											}}, res, next)
 			assert.isFalse(next.calledOnce)
-		})
+		done()
+	})
 	})
 })

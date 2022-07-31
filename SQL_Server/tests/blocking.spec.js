@@ -19,23 +19,27 @@ describe('Test blocking behaviour', () => {
 		]))
 	})
 	describe("Create blocks", () => {
-		step('jhonny blocks mark Code SUCCESS', async () => {
+		step('jhonny blocks mark Code SUCCESS', async (done) => {
 			await BlockController.block_user(mockRequest({blocker: users.Jhonny.username, blocked: users.Mark.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
-		step('bella blocks mark Code Success', async ()  => {
+		step('bella blocks mark Code Success', async (done)  => {
 			await BlockController.block_user(mockRequest({blocker: users.Bella.username, blocked: users.Mark.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
 	})
 	describe("Test likes are blocked", () => {
-		step("mark like jhonny", async () => {
+		step("mark like jhonny", async (done) => {
 			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
-		step("like doesnt show", async () => {
+		step("like doesnt show", async (done) => {
 			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.data.length, 0)
+			done()
 		})
 	})
 })

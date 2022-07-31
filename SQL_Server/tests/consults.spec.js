@@ -18,77 +18,91 @@ describe('Test consults', () => {
 		]))
 	})
 	describe("Create Consults", () => {
-		step('mark   => jhonny Code SUCCESS', async () => {
+		step('mark   => jhonny Code SUCCESS', async (done) => {
 			await ConsultController.consult_user(mockRequest({consulter: users.Mark.username, consulted: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
-		step('mark   => bella Code Success', async ()  => {
+		step('mark   => bella Code Success', async (done)  => {
 			await ConsultController.consult_user(mockRequest({consulter: users.Mark.username, consulted: users.Bella.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
-		step('bella  => jhonny Code Success', async () => {
+		step('bella  => jhonny Code Success', async (done) => {
 			await ConsultController.consult_user(mockRequest({consulter: users.Bella.username, consulted: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
-		step('jhonny => bella Code Success', async ()  => {
+		step('jhonny => bella Code Success', async (done)  => {
 			await ConsultController.consult_user(mockRequest({consulter: users.Jhonny.username, consulted: users.Bella.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
 	})
 	describe("Consult Error Handling", () => {
-		step('duplicate consult: Code SUCCESS', async () => {
+		step('duplicate consult: Code SUCCESS', async (done) => {
 			await ConsultController.consult_user(mockRequest({consulter: users.Mark.username, consulted: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
 		})
-		step('Missing consulted: Code LIKE_MISS', async () => {
+		step('Missing consulted: Code LIKE_MISS', async (done) => {
 			await ConsultController.consult_user(mockRequest({consulter: users.Mark.username, consulted: 'lol'}), res)
 			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
+			done()
 		})
-		step('Missing consulter: Code LIKE_MISS', async () => {
+		step('Missing consulter: Code LIKE_MISS', async (done) => {
 			await ConsultController.consult_user(mockRequest({consulter: 'lol', consulted: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
+			done()
 		})
 	})
 	describe("Get consulted Users", () => {
-		step("Marks consulted users = bella and jhonny", async () => {
+		step("Marks consulted users = bella and jhonny", async (done) => {
 			let reso = mockResponse()
 			await ConsultController.get_users_that_i_consulted(mockRequest({consulter_username: users.Mark.username}), reso)
 			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Bella.username))
 			assert.isTrue(yusers.includes(users.Jhonny.username))
+			done()
 		})
-		step("users that consulted bella = Mard and jhonny", async () => {
+		step("users that consulted bella = Mard and jhonny", async (done) => {
 			let reso = mockResponse()
 			await ConsultController.get_users_that_consulted_me(mockRequest({consulted_username: users.Bella.username}), reso)
 			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Mark.username))
 			assert.isTrue(yusers.includes(users.Jhonny.username))
+			done()
 		})
 	})
 	describe("Get Matches", () => {
-		step("Bella's matches = jhonny", async () => {
+		step("Bella's matches = jhonny", async (done) => {
 			let reso = mockResponse()
 			await ConsultController.get_consult_matches(mockRequest({username: users.Bella.username}), reso)
 			assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+			done()
 		})
-		step("Marks's matches = All Alone HAHA", async () => {
+		step("Marks's matches = All Alone HAHA", async (done) => {
 			await ConsultController.get_consult_matches(mockRequest({username: users.Mark.username}), res)
 			// assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 			assert.equal(res.send.lastCall.firstArg.data.length, 0)
+			done()
 		})
 	})
 	describe("Unconsulting", () => {
-		step("Jhonny unconsult bella: affects 1 row", async () => {
+		step("Jhonny unconsult bella: affects 1 row", async (done) => {
 			await ConsultController.un_consult_user(mockRequest({unconsulter: users.Jhonny.username, unconsulted: users.Bella.username}), res)
 			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
+			done()
 		})
-		step("Bella's consulters: Jhonny's gone !", async () => {
+		step("Bella's consulters: Jhonny's gone !", async (done) => {
 			await ConsultController.get_users_that_consulted_me(mockRequest({consulted_username: users.Bella.username}), res)
 			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+			done()
 		})
-		step("Bella's matches: Bye Bye Jhonny", async () => {
+		step("Bella's matches: Bye Bye Jhonny", async (done) => {
 			await ConsultController.get_consult_matches(mockRequest({username: users.Bella.username}), res)
 			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+			done()
 		})
 	})
 })

@@ -27,7 +27,7 @@ describe('Test users', () => {
 			assert.isTrue(res.send.lastCall.firstArg.code == 'ER_DUP_ENTRY')
 			done()
 		})
-		step('Too long field: ER_DATA_TOO_LONG', async () => {
+		step('Too long field: ER_DATA_TOO_LONG', async (done) => {
 			var user = JSON.parse(JSON.stringify(users.JhonnyDupName));
 			user.username = "LKJHSDFLKJHSDFLKJHSDLFKJHSDFKLJHSDLFKJSD<>FMN>XC<VN><XCMNFV>KJSHDFLKJHSDFGKJHSDFKJHSDLFKJHSDLFKJHSDLKFJHSDLFKJHSLDFKJHSDFLKJHSDLFKLjh"
 			let res = mockResponse()
@@ -35,6 +35,7 @@ describe('Test users', () => {
 			await UserController.create_user_test(req, res)
 			assert.equal(res.status.lastCall.lastArg, 200)
 			assert.equal(res.send.lastCall.firstArg.code, 'ER_DATA_TOO_LONG')
+			done()
 		})
 		step('Null field: ER_BAD_NULL_ERROR', async (done) => {
 			var yuser = JSON.parse(JSON.stringify(users.JhonnyDupName));
@@ -48,15 +49,17 @@ describe('Test users', () => {
 		})
 	})
 	describe("User updates", () => {
-		step('Updated jhonny', async () => {
+		step('Updated jhonny', async (done) => {
 			let res = mockResponse()
 			await UserController.update_user_test(mockRequest({update: {zipCode: 'lol'}, username: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, 'SUCCESS')
 			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
+			done()
 		})
-		step("get jhonny modified", async () => {
+		step("get jhonny modified", async (done) => {
 			await UserController.get_user_by_username(mockRequest({username: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.data.zipCode, 'lol')
+			done()
 		})
 	})
 })
