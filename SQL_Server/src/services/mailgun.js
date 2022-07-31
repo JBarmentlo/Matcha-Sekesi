@@ -22,7 +22,6 @@ async function sendMail(dest, subject, text)
 		};
 	try {
 		res = await client.messages.create(DOMAIN, messageData)
-		// console.log(res);
 	}
 	catch (err) {
 		console.error(err);

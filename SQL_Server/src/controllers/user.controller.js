@@ -55,17 +55,6 @@ exports.create_user = async (req, res) => {
 	}	
 };
 
-exports.verifyMail = async (req, res) => {
-	let verify_mail_result = await db.query(
-		"SELECT * FROM VERIFY \
-		where id_hash=?",
-		req.params.idHash)
-	let verify_user_result = await db.query(
-		"UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
-		verify_mail_result[0].user
-	)
-	res.status(200).send({message: "verified mail for " + verify_mail_result.user, code: "SUCCESS"})
-};
 
 exports.create_user_test = async (req, res) => {
 

@@ -7,6 +7,7 @@ const connection = mysql.createConnection({
 	password: 'password'
   });
 
+
 const test_connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'sammy',

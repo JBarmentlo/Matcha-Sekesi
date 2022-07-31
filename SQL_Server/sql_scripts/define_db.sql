@@ -127,3 +127,13 @@ create table VERIFY
             on delete cascade
 );
 
+create table RESET
+(
+    user         varchar(100)                        null,
+    id_hash      varchar(100)                        null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    constraint user_reset___fk
+        foreign key (user) references USERS (username)
+            on delete cascade
+);
+
