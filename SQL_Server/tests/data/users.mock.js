@@ -71,3 +71,21 @@ exports.JhonnyDupName = {
 	latitude          : 2.2,
 	isCompleteProfile : 1,
 };
+
+exports.Joep = {
+	username          : 'Jeop le bege',
+	firstName         : 'Jhonnys',
+	lastName          : 'Corleonse',
+	bio               : 'I runnes the import export biziness.',
+	mail              : 'joepbarmentlo@gmail.com',
+	password          : 'lepsass',
+	mailVerified      : 1,
+	gender            : "Male",
+	sekesualOri       : "bi",
+	popScore          : 5,
+	zipCode           : '75010',
+	city              : 'Parigi',
+	longitude         : 1.1,
+	latitude          : 2.2,
+	isCompleteProfile : 1,
+};

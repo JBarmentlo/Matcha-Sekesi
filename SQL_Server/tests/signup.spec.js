@@ -63,4 +63,9 @@ describe('Test signup', () => {
 			assert.isTrue(arg.code == "ER_DUP_ENTRY")
 		})
 	})
+	describe("Create real Joep", () => {
+		it("Send mail verify", async () => {
+			await UserController.create_user(mockRequest(users.Joep), res)
+		})
+	})
 })

@@ -1,5 +1,6 @@
 const db	 	= require("../db/sql.conn");
 var bcrypt 		= require("bcryptjs");
+const sendMail  = require('../services/mailgun');
 
 
 // function check_create_user_input(req) {
@@ -22,20 +23,70 @@ exports.create_user = async (req, res) => {
 			'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			[username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
 			)
+		let hash = bcrypt.hashSync(query_result.insertId.toString(), 8)
+		let insert_mail_result = await db.query(
+			"INSERT INTO VERIFY \
+			(user, id_hash) \
+			VALUES (?, ?)",
+			[username, hash]
+		)
+		await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
 		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS"})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: e.sqlMessage, code: e.code})
+			res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else if (e.code == 'ER_PARSE_ERROR') {
+			res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
+			// throw(e)
+		}
+		else if (e.code == 'ER_DATA_TOO_LONG') {
+			res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else if (e.code == 'ER_BAD_NULL_ERROR') {
+			res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
 			console.log("signup error:\n", e, "\nend signup error")
-			res.status(500).send({message: 'error in create user', error: e})
+			res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
 			throw(e)
 		}
 	}	
 };
 
+exports.verifyMail = (req, res) => {
+    console.log("verifying mail with %o", req.params)
+    verifyCollection.findOneAndDelete({idHash: req.params.idHash})
+        .then(id => {
+            if (id.lastErrorObject.n == 0)
+            {
+                res.status(400).send({message: "invalid hash code"})
+                return
+            }
+            console.log("found id match %o", id)
+            filter = {_id: id.value.userId};
+            update = {$set: {mailVerified: true,},}
+            user_collection.findOneAndUpdate(filter, update)
+            .then(user => {
+                if (user == null || user.lastErrorObject.n == 0)
+                    console.log("didnt find user matching confirm, WIERD AS FUCK %o", id)
+                console.log("found user match %o", user)
+    
+                res.send({
+                    username : user.value.username,
+                    mail     : user.value.mail,
+                })
+                console.log("sent %o", {
+                    username : user.value.username,
+                    mail     : user.value.mail,
+                })
+            })
+        })
+        .catch(err => {
+            res.status(500).send({error: err})
+        })
+};
 
 exports.create_user_test = async (req, res) => {
 
