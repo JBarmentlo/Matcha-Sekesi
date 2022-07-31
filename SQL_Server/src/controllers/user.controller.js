@@ -91,6 +91,39 @@ exports.create_user_test = async (req, res) => {
 };
 
 
+exports.update_user_test = async (req, res) => {
+	// TODO: Upload tag on user creation
+	// TODO: create comet user at creation
+	// * req.body.tags.forEach(tag => tag = completeAndUploadTag(tag))
+
+	let update_str = ""
+	let first = true
+	for (const [key, value] of Object.entries(req.body.update)) {
+		if (!(first==true)) {
+			update_str += ', '
+		}
+		first = false
+		update_str += `${key} = '${value}'`
+	}
+	console.log("UPPDATO: ", update_str)
+
+	try {
+		let update_result = await db.query(
+			`UPDATE USERS \
+			SET ${update_str}\
+			WHERE USERS.username=?;`,
+			req.body.username)
+			console.log("KERI UP: ", update_result)
+	}
+	catch (e) {
+
+		console.log("signup error:\n", e, "\nend signup error")
+		res.status(500).send({message: 'error in create test user', error: e, code: 'SUCCESS'})
+		throw(e)
+
+	}	
+}
+
 exports.get_user_by_id = async (req, res) => {
 	try {
 		let [rows, fields] = await db.query('select * from USERS where id=?', req.body.id,)

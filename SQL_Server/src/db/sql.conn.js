@@ -41,6 +41,7 @@ async function query(sql, params) {
 	else {
 		used_connection = await connection
 	}
+	// console.log(sql)
 	// console.log("daba: ",used_connection.config.database)
 	// console.log("KERI:\n", sql, "\n\n, params: ", params)
 	const [results, ] = await used_connection.query(sql, params);

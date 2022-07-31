@@ -6,16 +6,15 @@ exports.Jhonny = {
 	bio               : 'I runne the import export biziness.',
 	mail              : 'Joni@mafia.com',
 	password          : 'lepass',
-	mailVerified      : true,
+	mailVerified      : 1,
 	gender            : "Male",
 	sekesualOri       : "bi",
 	popScore          : 5,
 	zipCode           : '75010',
 	city              : 'Parigi',
-	completeProfile   : true,
 	longitude         : 1.1,
 	latitude          : 2.2,
-	isCompleteProfile : true,
+	isCompleteProfile : 1,
 };
 
 
@@ -26,16 +25,15 @@ exports.Bella = {
 	bio               : 'I sekesi dance.',
 	mail              : 'bella@love.com',
 	password          : 'lepass',
-	mailVerified      : true,
+	mailVerified      : 1,
 	gender            : "female",
 	sekesualOri       : "bi",
 	popScore          : 5,
 	zipCode           : '75011',
 	city              : 'Parigi',
-	completeProfile   : true,
 	longitude         : 1.12,
 	latitude          : 2.22,
-	isCompleteProfile : true,
+	isCompleteProfile : 1,
 };
 
 exports.Mark = {
@@ -45,16 +43,15 @@ exports.Mark = {
 	bio               : 'Moi trop intelijen toi nul.',
 	mail              : 'mark@jmelapete.com',
 	password          : 'lepass',
-	mailVerified      : true,
+	mailVerified      : 1,
 	gender            : "male",
 	sekesualOri       : "bi",
 	popScore          : 5,
 	zipCode           : '75012',
 	city              : 'Parigi',
-	completeProfile   : true,
 	longitude         : 3,
 	latitude          : 3,
-	isCompleteProfile : true,
+	isCompleteProfile : 1,
 };
 
 exports.JhonnyDupName = {
@@ -64,14 +61,13 @@ exports.JhonnyDupName = {
 	bio               : 'I runnes the import export biziness.',
 	mail              : 'Joni@msafia.com',
 	password          : 'lepsass',
-	mailVerified      : true,
+	mailVerified      : 1,
 	gender            : "Male",
 	sekesualOri       : "bi",
 	popScore          : 5,
 	zipCode           : '75010',
 	city              : 'Parigi',
-	completeProfile   : true,
 	longitude         : 1.1,
 	latitude          : 2.2,
-	isCompleteProfile : true,
+	isCompleteProfile : 1,
 };

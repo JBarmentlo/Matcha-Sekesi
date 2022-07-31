@@ -3,7 +3,8 @@ const { assert }                  = require('chai');
 const UserController              = require('../src/controllers/user.controller')
 const test_con		              = require('../src/controllers/test.controller')
 const users                       = require('./data/users.mock')
-const {mockResponse, mockRequest} = require('./data/res.req.mock')
+const {mockResponse, mockRequest} = require('./data/res.req.mock');
+const { step } = require('mocha-steps');
 
 
 describe('Test users', () => {
@@ -43,6 +44,13 @@ describe('Test users', () => {
 			await UserController.create_user_test(req, res)
 			assert.equal(res.status.lastCall.lastArg, 200)
 			assert.equal(res.send.lastCall.firstArg.code, 'ER_BAD_NULL_ERROR')
+		})
+	})
+	describe("User updates", () => {
+		step('Updated jhonny', async () => {
+			UserController.update_user_test(mockRequest({update: users.Jhonny, username: users.Jhonny.username}), res)
+			console.log(res.send.lastCall.firstArg.data)
+			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
 		})
 	})
 })
