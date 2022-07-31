@@ -65,6 +65,10 @@ exports.verifyMail = async (req, res) => {
 			res.status(200).send({message: "No user for the verif", code: "MISSING_VERIFY"})
 			return
 		}
+		let delete_reset_result = await db.query(
+			"DELETE FROM VERIFY \
+			where id_hash=?",
+			req.params.idHash)
 		let verify_user_result = await db.query(
 			"UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
 			verify_mail_result[0].user
