@@ -100,7 +100,7 @@ describe('Test signup', () => {
 			let pass = "caca"
 			await AuthController.resetPass(mockRequest({id_hash: hash, password: pass}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
-			console.log("SIGL, ", res.send.lastCall.firstArg)
+			// console.log("SIGL, ", res.send.lastCall.firstArg)
 		})
 		step("login with caca", async () => {
 			let pass = "caca"

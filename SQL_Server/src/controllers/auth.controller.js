@@ -4,6 +4,7 @@ const jwt      = require("jsonwebtoken");
 
 const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
+const { syncBuiltinESMExports } = require("module");
 
 
 exports.signup = async (req, res) => {
@@ -54,9 +55,6 @@ exports.signup = async (req, res) => {
 	}	
 };
 
-
-
-
 exports.verifyMail = async (req, res) => {
 	try {
 		let verify_mail_result = await db.query(
@@ -78,7 +76,6 @@ exports.verifyMail = async (req, res) => {
 		throw (e)
 	}
 };
-
 
 exports.requestresetPass = async (req, res) => {
     // console.log("requesting reset psw for mail %s", req.body.mail)
@@ -111,6 +108,12 @@ exports.requestresetPass = async (req, res) => {
 	}
 };
 
+function sleep(ms) {
+	return new Promise((resolve) => {
+	  setTimeout(resolve, ms);
+	});
+  }
+
 exports.resetPass = async (req, res) => {
 	try {
 		let verify_reset_result = await db.query(
@@ -118,8 +121,10 @@ exports.resetPass = async (req, res) => {
 			where id_hash=?",
 			req.body.id_hash)
 		if (verify_reset_result.length == 0) {
-			res.status(200).send({message: "No user for the reset", code: "MISSING_VERIFY"})
-			return
+			return res.status(201).send({message: "No user for the reset", code: "MISSING_VERIFY"})
+		}
+		if ((Date.now() - verify_reset_result[0].last_updated) > 600000) {
+			return res.status(201).send({message: "Code Timed out", code: "TIMEOUT_RESET"})
 		}
 	let password_hash  = bcrypt.hashSync(req.body.password, 8);
 		let verify_user_result = await db.query(
