@@ -12,6 +12,8 @@ env:
   MATCHA_DB: sekesidb
   MATCHA_TEST_DB: sekesitest
   TEST: 'true'
+  APIkey: ${{ secrets.API_KEY}},
+  APIurl: ${{ secrets.API_URL}},
 
 jobs:
   run_unittests:
