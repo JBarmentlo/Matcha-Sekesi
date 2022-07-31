@@ -30,7 +30,7 @@ exports.create_user = async (req, res) => {
 			VALUES (?, ?)",
 			[username, hash]
 		)
-		await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
+		// TODO await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
 		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
 	}
 	catch (e) {

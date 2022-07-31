@@ -30,7 +30,7 @@ exports.signup = async (req, res) => {
 			VALUES (?, ?);",
 			[username, hash]
 		)
-		await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
+		// TODO sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
 		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
@@ -99,7 +99,7 @@ exports.requestresetPass = async (req, res) => {
 			VALUES (?,?);",
 			[user_request[0].username, hash]
 		)
-        sendMail(user.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://localhost:8081/reset/" + encodeURIComponent(hash))
+        // TODO sendMail(user.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://localhost:8081/reset/" + encodeURIComponent(hash))
 		res.status(200).send({message: "Sucessfully requested reset", code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
@@ -117,6 +117,10 @@ exports.resetPass = async (req, res) => {
 		if (verify_reset_result.length == 0) {
 			return res.status(201).send({message: "No user for the reset", code: "MISSING_VERIFY"})
 		}
+		let delete_reset_result = await db.query(
+			"DELETE FROM RESET \
+			where id_hash=?",
+			req.body.id_hash)
 		if ((Date.now() - verify_reset_result[0].last_updated) > 600000) {
 			return res.status(201).send({message: "Code Timed out", code: "TIMEOUT_RESET"})
 		}
@@ -179,4 +183,30 @@ exports.signin = async (req, res) => {
 		throw (e)
 	}
  
+};
+
+exports.verifyToken = (req, res, next) => {
+	try {
+		let token = req.headers["x-access-token"];
+		let secret = req.headers["x-access-signature"];
+		// console.log("TOK", token, secret)
+		if (!token) {
+			return res.status(403).send({ message: "No token provided!" });
+		}
+	
+		jwt.verify(token, secret, (err, decoded) => {
+			if (err) {
+				return res.status(401).send({ message: "Unauthorized!" });
+			}
+			// console.log("Identified user %s from token", decoded.username)
+			req.username = decoded.username;
+			next();
+		});
+	}
+	catch (e) {
+		console.log('error in verify token')
+		console.log(e)
+		throw(e)
+	}
+
 };

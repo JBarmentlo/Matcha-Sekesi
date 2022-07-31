@@ -4,22 +4,10 @@ const sinon		= require('sinon');
 const AuthController			  = require('../src/controllers/auth.controller')
 const UserController              = require('../src/controllers/user.controller')
 const test_con		              = require('../src/controllers/test.controller')
+const {mockResponse, mockRequest} = require('./data/res.req.mock');
 const users                       = require('./data/users.mock');
 const { step } = require('mocha-steps');
 
-const mockResponse = () => {
-	const res = {};
-	res.status = sinon.stub().returns(res);
-	res.json = sinon.stub().returns(res);
-	res.send = sinon.stub()
-	return res;
-  };
-
-const mockRequest = (body) => {
-	return {
-		body: body,
-	};
-};
 
 const jhonnyBody = {
 	username	: 'jhonny',
@@ -106,6 +94,39 @@ describe('Test signup', () => {
 			let pass = "caca"
 			await AuthController.signin(mockRequest({username: users.Joep.username, password: pass}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			// console.log(res.send.lastCall.firstArg)
+		})
+	})
+	describe("JWT auth", () => {
+		step("Login", async (done) => {
+			let pass = "caca"
+			await AuthController.signin(mockRequest({username: users.Joep.username, password: pass}), res)
+			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+			done()
+		})
+		step("Verify headers calls next", async () => {
+			let next = sinon.stub()
+			await AuthController.verifyToken({ headers: {
+												"x-access-token": res.send.lastCall.firstArg.accessToken,
+												"x-access-signature": res.send.lastCall.firstArg.signature
+											}}, res, next)
+			assert.isTrue(next.calledOnce)
+		})
+		step("Incorrect does not call next", async () => {
+			let next = sinon.stub()
+			await AuthController.verifyToken({ headers: {
+												"x-access-token": "res.send.lastCall.firstArg.accessToken",
+												"x-access-signature": res.send.lastCall.firstArg.signature
+											}}, res, next)
+			assert.isFalse(next.calledOnce)
+		})
+		step("Incorrect does not call next", async () => {
+			let next = sinon.stub()
+			await AuthController.verifyToken({ headers: {
+												"x-access-token": res.send.lastCall.firstArg.accessToken,
+												"x-access-signature": "res.send.lastCall.firstArg.signature"
+											}}, res, next)
+			assert.isFalse(next.calledOnce)
 		})
 	})
 })

@@ -10,6 +10,6 @@ exports.mockResponse = () => {
 
 exports.mockRequest = (body) => {
 	return {
-		body: body,
+		body: body
 	};
 };
