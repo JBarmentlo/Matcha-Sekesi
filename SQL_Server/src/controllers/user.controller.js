@@ -84,7 +84,7 @@ exports.create_user_test = async (req, res) => {
 		}
 		else {
 			console.log("signup error:\n", e, "\nend signup error")
-			res.status(500).send({message: 'error in create test user', error: e, code: 'SUCCESS'})
+			res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
 			throw(e)
 		}
 	}	
@@ -105,23 +105,21 @@ exports.update_user_test = async (req, res) => {
 		first = false
 		update_str += `${key} = '${value}'`
 	}
-	console.log("UPPDATO: ", update_str)
-
 	try {
 		let update_result = await db.query(
 			`UPDATE USERS \
 			SET ${update_str}\
 			WHERE USERS.username=?;`,
 			req.body.username)
-			console.log("KERI UP: ", update_result)
+			res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
 	}
 	catch (e) {
-
 		console.log("signup error:\n", e, "\nend signup error")
-		res.status(500).send({message: 'error in create test user', error: e, code: 'SUCCESS'})
+		res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
 		throw(e)
 
 	}	
+
 }
 
 exports.get_user_by_id = async (req, res) => {
