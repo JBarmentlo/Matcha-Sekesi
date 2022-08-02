@@ -11,18 +11,17 @@ exports.create_notif = async (type, source, target) => {
 			  VALUES (?, ?, ?);"
 			, [type, source, target]
 			)
-		// console.log("NOOTIKF: ", notif_query)
-		return "SUCCESS"
+		return {code: "SUCCESS", id: notif_query.insertedId}
 	}
 	catch (e) {
-		console.log("error in create notif")
-		return "FAILURE"
+		console.log("error in create notif:", e)
 		throw(e)	
+		return "FAILURE"
 	}
 } 
 
 exports.get_my_notifs = async (req, res) => {
-	console.log("get notif: ", [req.username, req.body.limit, req.body.offset])
+	// console.log("get notif: ", [req.username, req.body.limit, req.body.offset])
 	try {
 		notif_query = await db.query(
 			"SELECT * FROM NOTIFS \
@@ -32,7 +31,6 @@ exports.get_my_notifs = async (req, res) => {
 				NOTIFS.source_user = BLOCKS.blocker AND NOTIFS.target_user = BLOCKS.blocked) \
 				LIMIT ? OFFSET ?;",
 			[req.username, req.body.limit, req.body.offset],)
-		console.log("KERI NOOTIKF: ", notif_query)
 		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
 	}
 	catch (e) {

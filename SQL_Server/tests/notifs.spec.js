@@ -19,9 +19,11 @@ describe('Notifications', () => {
 			UserController.create_user_test(mockRequest(users.Mark), res)
 		]))
 	})
+	let notif_id
 	step("Create notif", async (done) => {
 		ret = await NotifController.create_notif('LIKE', users.Jhonny.username, users.Bella.username)
-		assert.equal(ret, "SUCCESS")
+		assert.equal(ret.code, "SUCCESS")
+		notif_id = ret.id
 		done()
 	})
 	step("Get notif", async (done) => {
@@ -32,4 +34,8 @@ describe('Notifications', () => {
 		await NotifController.get_my_notifs({username: "kiki", body: {limit:10, offset:0},}, res)
 		done()
 	})
+	// step("set notif seen", async (done) => {
+	// 	await NotifController.set_seen_notif({body: {id: notif_id}, username: users.Bella.username})
+	// 	done()
+	// })
 })
