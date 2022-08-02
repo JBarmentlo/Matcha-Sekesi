@@ -4,7 +4,6 @@ const jwt      = require("jsonwebtoken");
 
 const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
-const { syncBuiltinESMExports } = require("module");
 
 
 exports.signup = async (req, res) => {

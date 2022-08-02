@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha  --exit --require './tests/hooks.js' --require mocha-steps ./tests/*.spec.js",
+    "test": "mocha  --exit --require './tests/hooks.js' --require mocha-steps ./tests/noti*.spec.js",
     "ci_test": "mocha  --exit ./tests/*.spec.js",
     "coverage": "nyc --reporter=text npm run test"
   },
