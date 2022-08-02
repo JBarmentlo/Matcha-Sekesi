@@ -34,8 +34,12 @@ describe('Notifications', () => {
 		await NotifController.get_my_notifs({username: "kiki", body: {limit:10, offset:0},}, res)
 		done()
 	})
-	// step("set notif seen", async (done) => {
-	// 	await NotifController.set_seen_notif({body: {id: notif_id}, username: users.Bella.username})
-	// 	done()
-	// })
+	step("set notif seen", async (done) => {
+		await NotifController.set_seen_notif({body: {id: notif_id}, username: users.Bella.username}, res)
+		done()
+	})
+	step("set missing notif seen", async (done) => {
+		await NotifController.set_seen_notif({body: {id: 1000}, username: "lkjsdf"}, res)
+		done()
+	})
 })

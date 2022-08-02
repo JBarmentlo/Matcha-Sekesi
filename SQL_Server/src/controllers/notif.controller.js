@@ -11,7 +11,7 @@ exports.create_notif = async (type, source, target) => {
 			  VALUES (?, ?, ?);"
 			, [type, source, target]
 			)
-		return {code: "SUCCESS", id: notif_query.insertedId}
+		return {code: "SUCCESS", id: notif_query.insertId}
 	}
 	catch (e) {
 		console.log("error in create notif:", e)
@@ -41,18 +41,21 @@ exports.get_my_notifs = async (req, res) => {
 }
 
 exports.set_seen_notif = async (req, res) => {
+	console.log("KERI set seen NOOTIKF: ", [req.body.id, req.username])
+	console.log(res)
 	try {
-		query = await db.query(
-			"UPDATE NOTIFS n\
+		notif_query = await db.query(
+			"UPDATE NOTIFS\
 			set seen=1 \
 			WHERE id=? and target_user=?;",
 			[req.body.id, req.username],)
-		console.log("KERI set seen NOOTIKF: ", query)
-		res.status(200).send({message: "succesfull notif set seen", data: query, code: "SUCCESS"})
+		console.log("KERI set seen NOOTIKF: ", notif_query)
+		return res.status(200).send({message: "succesfull notif set seen", data: notif_query, code: "SUCCESS"})
 	}
 	catch (e) {
-		res.status(201).send({message: "failed notif set seen", data: [], code: "FAILURE"})
+		console.log(e)
 		throw (e)
+		return res.status(201).send({message: "failed notif set seen", data: [], code: "FAILURE"})
 	}
 }
 
