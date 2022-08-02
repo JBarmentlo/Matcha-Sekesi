@@ -28,4 +28,8 @@ describe('Notifications', () => {
 		await NotifController.get_my_notifs({username: users.Bella.username, body: {limit:10, offset:0},}, res)
 		done()
 	})
+	step("Get notif missing user", async (done) => {
+		await NotifController.get_my_notifs({username: "kiki", body: {limit:10, offset:0},}, res)
+		done()
+	})
 })

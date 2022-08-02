@@ -22,15 +22,16 @@ exports.create_notif = async (type, source, target) => {
 } 
 
 exports.get_my_notifs = async (req, res) => {
-	console.log("get notif: ")
+	console.log("get notif: ", [req.username, req.body.limit, req.body.offset])
 	try {
 		notif_query = await db.query(
 			"SELECT * FROM NOTIFS \
 			WHERE target_user=? AND \
 			NOT EXISTS (SELECT 1 FROM BLOCKS \
 				WHERE NOTIFS.source_user = BLOCKS.blocked AND NOTIFS.target_user = BLOCKS.blocker OR \
-				NOTIFS.source_user = BLOCKS.blocker AND NOTIFS.target_user = BLOCKS.blocked);",
-			req.username,)
+				NOTIFS.source_user = BLOCKS.blocker AND NOTIFS.target_user = BLOCKS.blocked) \
+				LIMIT ? OFFSET ?;",
+			[req.username, req.body.limit, req.body.offset],)
 		console.log("KERI NOOTIKF: ", notif_query)
 		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
 	}
