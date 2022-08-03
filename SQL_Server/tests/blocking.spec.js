@@ -37,7 +37,7 @@ describe('Test blocking behaviour', () => {
 			return Promise.resolve()
 		})
 		step("like doesnt show", async () => {
-			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Jhonny.username}), res)
+			await LikeController.get_users_that_liked_me(mockRequest({}, users.Jhonny.username), res)
 			assert.equal(res.send.lastCall.firstArg.data.length, 0)
 			return Promise.resolve()
 		})
