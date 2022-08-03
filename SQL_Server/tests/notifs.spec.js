@@ -21,27 +21,27 @@ describe('Notifications', () => {
 		]))
 	})
 	let notif_id
-	step("Create notif", async (done) => {
+	step("Create notif", async () => {
 		ret = await NotifController.create_notif('LIKE', users.Jhonny.username, users.Bella.username)
 		assert.equal(ret.code, "SUCCESS")
 		notif_id = ret.id
-		done()
+		Promise.resolve()
 	})
-	step("Get notif", async (done) => {
+	step("Get notif", async () => {
 		await NotifController.get_my_notifs({username: users.Bella.username, body: {limit:10, offset:0},}, res)
-		done()
+		Promise.resolve()
 	})
-	step("Get notif missing user", async (done) => {
+	step("Get notif missing user", async () => {
 		await NotifController.get_my_notifs({username: "kiki", body: {limit:10, offset:0},}, res)
-		done()
+		Promise.resolve()
 	})
-	step("set notif seen", async (done) => {
+	step("set notif seen", async () => {
 		await NotifController.set_seen_notif({body: {id: notif_id}, username: users.Bella.username}, res)
-		done()
+		Promise.resolve()
 	})
-	step("set missing notif seen", async (done) => {
+	step("set missing notif seen", async () => {
 		await NotifController.set_seen_notif({body: {id: 1000}, username: "lkjsdf"}, res)
-		done()
+		Promise.resolve()
 	})
 	step("Consult notif", async () => {
 		await ConsultController.consult_user(mockRequest({consulter: users.Mark.username, consulted: users.Jhonny.username}), res)
