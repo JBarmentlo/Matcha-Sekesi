@@ -7,6 +7,18 @@ const sendMail  = require('../services/mailgun');
 // 	if (typeof())
 // }
 
+async function handle_new_mail_for_user(username, id, mail) {
+	let hash = bcrypt.hashSync(id.toString(), 8)
+	let insert_mail_result = await db.query(
+		"INSERT INTO VERIFY \
+		(user, id_hash) \
+		VALUES (?, ?)",
+		[username, hash]
+	)
+	return Promise.resolve()
+	// return await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
+}
+
 exports.create_user = async (req, res) => {
 	let username  = req.body.username;
 	let firstName = req.body.firstName;
@@ -23,14 +35,7 @@ exports.create_user = async (req, res) => {
 			'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			[username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
 			)
-		let hash = bcrypt.hashSync(query_result.insertId.toString(), 8)
-		let insert_mail_result = await db.query(
-			"INSERT INTO VERIFY \
-			(user, id_hash) \
-			VALUES (?, ?)",
-			[username, hash]
-		)
-		// TODO await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
+		await handle_new_mail_for_user(username, query_result.insertId, mail)
 		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
@@ -117,6 +122,7 @@ exports.update_user_test = async (req, res) => {
 
 	let update_str = ""
 	let first = true
+	let update_mail = Object.keys(req.body.update).includes('mail')
 	for (const [key, value] of Object.entries(req.body.update)) {
 		if (!(first==true)) {
 			update_str += ', '
@@ -130,6 +136,9 @@ exports.update_user_test = async (req, res) => {
 			SET ${update_str}\
 			WHERE USERS.username=?;`,
 			req.body.username)
+			if (update_mail == true) {
+				await handle_new_mail_for_user(req.body.username, update_result.insertId, req.body.update.mail)
+			}
 			res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
 	}
 	catch (e) {

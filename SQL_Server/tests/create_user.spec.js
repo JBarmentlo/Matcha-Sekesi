@@ -44,22 +44,27 @@ describe('Test users', () => {
 			let req = mockRequest(yuser)
 			await UserController.create_user_test(req, res)
 			assert.equal(res.status.lastCall.lastArg, 200)
-			assert.equal(res.send.lastCall.firstArg.code, 'ER_BAD_NULL_ERROR')
+			assert.equal(res.send.lastCall.firstArg.code, 'return ER_BAD_NULL_ERROR')
 			Promise.resolve()
 		})
 	})
 	describe("User updates", () => {
 		step('Updated jhonny', async () => {
 			let res = mockResponse()
-			await UserController.update_user_test(mockRequest({update: {zipCode: 'lol'}, username: users.Jhonny.username}), res)
+			await UserController.update_user_test(mockRequest({update: {zipCode: 'lol', mail: "newmail@mail.com"}, username: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, 'SUCCESS')
 			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
-			Promise.resolve()
+			return Promise.resolve()
+		})
+		step("modified mail is unverified", async () => {
+			await UserController.get_user_by_username(mockRequest({username: users.Jhonny.username}), res)
+			// assert.equal
+			console.log("MAILVEFIR", res.send.lastCall.firstArg.data.mailVerified)
 		})
 		step("get jhonny modified", async () => {
 			await UserController.get_user_by_username(mockRequest({username: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.data.zipCode, 'lol')
-			Promise.resolve()
+			return Promise.resolve()
 		})
 	})
 })
