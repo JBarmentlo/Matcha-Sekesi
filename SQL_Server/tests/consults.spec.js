@@ -59,7 +59,7 @@ describe('Test consults', () => {
 	describe("Get consulted Users", () => {
 		step("Marks consulted users = bella and jhonny", async () => {
 			let reso = mockResponse()
-			await ConsultController.get_users_that_i_consulted(mockRequest({consulter_username: users.Mark.username}), reso)
+			await ConsultController.get_users_that_i_consulted(mockRequest({},users.Mark.username), reso)
 			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Bella.username))
 			assert.isTrue(yusers.includes(users.Jhonny.username))
@@ -67,7 +67,7 @@ describe('Test consults', () => {
 		})
 		step("users that consulted bella = Mard and jhonny", async () => {
 			let reso = mockResponse()
-			await ConsultController.get_users_that_consulted_me(mockRequest({consulted_username: users.Bella.username}), reso)
+			await ConsultController.get_users_that_consulted_me(mockRequest({}, users.Bella.username), reso)
 			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Mark.username))
 			assert.isTrue(yusers.includes(users.Jhonny.username))
@@ -85,23 +85,6 @@ describe('Test consults', () => {
 			await ConsultController.get_consult_matches(mockRequest({username: users.Mark.username}), res)
 			// assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 			assert.equal(res.send.lastCall.firstArg.data.length, 0)
-			return Promise.resolve()
-		})
-	})
-	describe("Unconsulting", () => {
-		step("Jhonny unconsult bella: affects 1 row", async () => {
-			await ConsultController.un_consult_user(mockRequest({unconsulter: users.Jhonny.username, unconsulted: users.Bella.username}), res)
-			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
-			return Promise.resolve()
-		})
-		step("Bella's consulters: Jhonny's gone !", async () => {
-			await ConsultController.get_users_that_consulted_me(mockRequest({consulted_username: users.Bella.username}), res)
-			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
-			return Promise.resolve()
-		})
-		step("Bella's matches: Bye Bye Jhonny", async () => {
-			await ConsultController.get_consult_matches(mockRequest({username: users.Bella.username}), res)
-			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 			return Promise.resolve()
 		})
 	})
