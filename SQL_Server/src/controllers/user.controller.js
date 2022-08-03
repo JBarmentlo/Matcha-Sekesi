@@ -138,9 +138,9 @@ exports.update_user_test = async (req, res) => {
 			`UPDATE USERS \
 			SET ${update_str}\
 			WHERE USERS.username=?;`,
-			req.body.username)
+			req.username)
 			if (update_mail == true) {
-				await handle_new_mail_for_user(req.body.username, update_result.insertId, req.body.update.mail)
+				await handle_new_mail_for_user(req.username, update_result.insertId, req.body.update.mail)
 			}
 			res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
 	}

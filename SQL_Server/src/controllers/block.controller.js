@@ -49,7 +49,7 @@ exports.block_user = async (req, res) => {
 			'INSERT INTO BLOCKS \
 			(blocker, blocked) \
 			VALUES (?, ?)',
-			[req.body.blocker, req.body.blocked]
+			[req.username, req.body.blocked]
 			)
 		res.status(200).send({message: 'Succesfully blocked user', code: "SUCCESS"})
 	}
@@ -78,7 +78,7 @@ exports.un_block_user = async (req, res) => {
 		let unblock_query_result = await db.query(
 			"DELETE FROM BLOCKS \
 			WHERE blocker = ? and blocked = ?",
-			[req.body.unblocker, req.body.unblocked])
+			[req.username, req.body.unblocked])
 		res.status(200).send({message: 'Succesfully blocked user', data: unblock_query_result, code: "SUCCESS"})
 	}
 	catch (e) {
@@ -103,7 +103,7 @@ exports.get_users_that_i_blocked = async (req, res) => {
 			INNER JOIN USERS \
 			ON BLOCKS.blocked=USERS.username \
 			WHERE BLOCKS.blocker=?;', 
-			req.body.blocker_username,)
+			req.username,)
 		// console.log("ROOOS:", rows)
 		// console.log("blocker: ", req.body.blocker_username)
 		res.status(200).send({message: 'Successfully queried blocked users.', data: rows, code:'SUCCESS'})
@@ -131,7 +131,7 @@ exports.get_users_that_blocked_me = async (req, res) => {
 			INNER JOIN USERS \
 			ON BLOCKS.blocker=USERS.username \
 			WHERE BLOCKS.blocked=?;', 
-			req.body.blocked_username,)
+			req.username,)
 		// console.log("ROOOS:", rows)
 		// console.log("blocker: ", req.body.blocker_username)
 		res.status(200).send({message: 'Successfully queried blocked you users.', data: rows, code:'SUCCESS'})
@@ -149,32 +149,32 @@ exports.get_users_that_blocked_me = async (req, res) => {
 	}	
 }
 
-exports.get_block_matches = async (req, res) => {
-	try {
-		let rows = await db.query(
-			"SELECT r1.blocker, r1.blocked, \
-				IF(( SELECT COUNT(*)  \
-					FROM   BLOCKS r2  \
-					WHERE  r2.blocker = r1.blocked AND r2.blocked = r1.blocker \
-				) > 0, 1, 0) AS reciprocal \
-			FROM   BLOCKS r1 \
-			WHERE  r1.blocker = ?;",
-			req.body.username)
-		// console.log("ROOOS:", rows)
-		matches = rows.filter(a =>  a.reciprocal == 1)
-		matches = matches.map(function(a) {return a.blocked})
-		// console.log("ROOOS:", matches)
-		res.status(200).send({message: 'Successfully queried blocked you users.', data: matches, code:'SUCCESS'})
-	}
-	catch (e) {
-		if (e.code == 'ER_NO_REFERENCED_ROW') {
-			console.log("NO BLOCKS", e)
-			res.status(200).send({message: "nobody BLOCKS you mark", data:[], code: e.code})
-		}
-		else {
-			console.log("get user by id error:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
-		}
-	}	
-}
+// exports.get_block_matches = async (req, res) => {
+// 	try {
+// 		let rows = await db.query(
+// 			"SELECT r1.blocker, r1.blocked, \
+// 				IF(( SELECT COUNT(*)  \
+// 					FROM   BLOCKS r2  \
+// 					WHERE  r2.blocker = r1.blocked AND r2.blocked = r1.blocker \
+// 				) > 0, 1, 0) AS reciprocal \
+// 			FROM   BLOCKS r1 \
+// 			WHERE  r1.blocker = ?;",
+// 			req.body.username)
+// 		// console.log("ROOOS:", rows)
+// 		matches = rows.filter(a =>  a.reciprocal == 1)
+// 		matches = matches.map(function(a) {return a.blocked})
+// 		// console.log("ROOOS:", matches)
+// 		res.status(200).send({message: 'Successfully queried blocked you users.', data: matches, code:'SUCCESS'})
+// 	}
+// 	catch (e) {
+// 		if (e.code == 'ER_NO_REFERENCED_ROW') {
+// 			console.log("NO BLOCKS", e)
+// 			res.status(200).send({message: "nobody BLOCKS you mark", data:[], code: e.code})
+// 		}
+// 		else {
+// 			console.log("get user by id error:\n", e, "\nend error")
+// 			res.status(500).send({message: 'error in get user by id', error: e})
+// 			throw(e)
+// 		}
+// 	}	
+// }

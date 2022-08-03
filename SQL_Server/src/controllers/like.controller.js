@@ -50,10 +50,10 @@ exports.like_user = async (req, res) => {
 			'INSERT INTO LIKES \
 			(liker, liked) \
 			VALUES (?, ?)',
-			[req.body.liker, req.body.liked]
+			[req.username, req.body.liked]
 			)
 		// console.log(like_query_result)
-		await NotifController.create_notif("LIKE", req.body.liker, req.body.liked)
+		await NotifController.create_notif("LIKE", req.username, req.body.liked)
 		return res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
 	}
 	catch (e) {
@@ -81,8 +81,8 @@ exports.un_like_user = async (req, res) => {
 		let unlike_query_result = await db.query(
 			"DELETE FROM LIKES \
 			WHERE liker = ? and liked = ?",
-			[req.body.unliker, req.body.unliked])
-		await NotifController.create_notif("UNLIKE", req.body.unliker, req.body.unliked)
+			[req.username, req.body.unliked])
+		await NotifController.create_notif("UNLIKE", req.username, req.body.unliked)
 		return res.status(200).send({message: 'Succesfully unliked user', data: unlike_query_result, code: "SUCCESS"})
 	}
 	catch (e) {
@@ -110,7 +110,7 @@ exports.get_users_that_i_liked = async (req, res) => {
 			NOT EXISTS (SELECT 1 FROM BLOCKS  \
 				WHERE LIKES.liker = BLOCKS.blocked AND LIKES.liked = BLOCKS.blocker OR \
 				LIKES.liker = BLOCKS.blocker AND LIKES.liked = BLOCKS.blocked);" 
-			,req.body.liker_username,)
+			,req.username,)
 		// console.log("ROOOS:", rows)
 		// console.log("Liker: ", req.body.liker_username)
 		return res.status(200).send({message: 'Successfully queried liked users.', data: rows, code:'SUCCESS'})
@@ -142,7 +142,7 @@ exports.get_users_that_liked_me = async (req, res) => {
 				LIKES.liker = BLOCKS.blocker AND LIKES.liked = BLOCKS.blocked);"		
 
 		
-			,[req.body.liked_username, req.body.liked_username],)
+			,[req.username],)
 		// console.log("Liker: ", req.body.liker_username)
 		return res.status(200).send({message: 'Successfully queried liked you users.', data: rows, code:'SUCCESS'})
 	}
@@ -173,7 +173,7 @@ exports.get_matches = async (req, res) => {
 			NOT EXISTS (SELECT 1 FROM BLOCKS  \
 				WHERE LIKES.liker = BLOCKS.blocked AND LIKES.liked = BLOCKS.blocker OR \
 				LIKES.liker = BLOCKS.blocker AND LIKES.liked = BLOCKS.blocked);"
-			, req.body.username)
+			, req.username)
 		// console.log("ROOOS:", rows)
 		matches = rows.filter(a =>  a.reciprocal == 1)
 		matches = matches.map(function(a) {return a.liked})

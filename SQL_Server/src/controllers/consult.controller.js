@@ -45,15 +45,14 @@ exports.consult_user_by_id = async (req, res) => {
 
 // async function update_consult_timestamp()
 exports.consult_user = async (req, res) => {
-
 	try {
 		let consult_query_result = await db.query(
 			'REPLACE INTO CONSULTS \
 			(consulter, consulted) \
 			VALUES (?, ?)',
-			[req.body.consulter, req.body.consulted]
+			[req.username, req.body.consulted]
 			)
-		await NotifController.create_notif("CONSULT", req.body.consulter, req.body.consulted)
+		await NotifController.create_notif("CONSULT", req.username, req.body.consulted)
 		return res.status(200).send({message: 'Succesfully consulted user', code: "SUCCESS"})
 	}
 	catch (e) {
@@ -76,27 +75,6 @@ exports.consult_user = async (req, res) => {
 }
 
 
-exports.un_consult_user = async (req, res) => {
-	try {
-		let unconsult_query_result = await db.query(
-			"DELETE FROM CONSULTS \
-			WHERE consulter = ? and consulted = ?",
-			[req.body.unconsulter, req.body.unconsulted])
-		return res.status(200).send({message: 'Succesfully consulted user', data: unconsult_query_result, code: "SUCCESS"})
-	}
-	catch (e) {
-		if (e.code == 'ER_PARSE_ERROR') {
-			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
-			throw (e)
-		}
-		else {
-			console.log("EROOL: ", e)
-			return res.status(500).send({message: "Error in consult user ", error: e})
-			throw(e)
-		}
-	}
-}
-
 exports.get_users_that_i_consulted = async (req, res) => {
 	try {
 
@@ -109,7 +87,7 @@ exports.get_users_that_i_consulted = async (req, res) => {
 			NOT EXISTS (SELECT 1 FROM BLOCKS  \
 				WHERE CONSULTS.consulter = BLOCKS.blocked AND CONSULTS.consulted = BLOCKS.blocker OR \
 				CONSULTS.consulter = BLOCKS.blocker AND CONSULTS.consulted = BLOCKS.blocked);", 
-			req.body.consulter_username,)
+			req.username,)
 		// console.log("ROOOS:", rows)
 		// console.log("consulter: ", req.body.consulter_username)
 		return res.status(200).send({message: 'Successfully queried consulted users.', data: rows, code:'SUCCESS'})
@@ -140,7 +118,7 @@ exports.get_users_that_consulted_me = async (req, res) => {
 			NOT EXISTS (SELECT 1 FROM BLOCKS  \
 				WHERE CONSULTS.consulter = BLOCKS.blocked AND CONSULTS.consulted = BLOCKS.blocker OR \
 				CONSULTS.consulter = BLOCKS.blocker AND CONSULTS.consulted = BLOCKS.blocked);', 
-			req.body.consulted_username,)
+			req.username,)
 		// console.log("ROOOS:", rows)
 		// console.log("consulter: ", req.body.consulter_username)
 		return res.status(200).send({message: 'Successfully queried consulted you users.', data: rows, code:'SUCCESS'})
@@ -168,7 +146,7 @@ exports.get_consult_matches = async (req, res) => {
 				) > 0, 1, 0) AS reciprocal \
 			FROM   CONSULTS r1 \
 			WHERE  r1.consulter = ?;",
-			req.body.username)
+			req.username)
 		// console.log("ROOOS:", rows)
 		matches = rows.filter(a =>  a.reciprocal == 1)
 		matches = matches.map(function(a) {return a.consulted})

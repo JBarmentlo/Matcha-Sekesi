@@ -20,24 +20,24 @@ describe('Test blocking behaviour', () => {
 	})
 	describe("Create blocks", () => {
 		step('jhonny blocks mark Code SUCCESS', async () => {
-			await BlockController.block_user(mockRequest({blocker: users.Jhonny.username, blocked: users.Mark.username}), res)
+			await BlockController.block_user(mockRequest({blocked: users.Mark.username}, users.Jhonny.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 		step('bella blocks mark Code Success', async ()  => {
-			await BlockController.block_user(mockRequest({blocker: users.Bella.username, blocked: users.Mark.username}), res)
+			await BlockController.block_user(mockRequest({blocked: users.Mark.username}, users.Bella.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 	})
 	describe("Test likes are blocked", () => {
 		step("mark like jhonny", async () => {
-			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
+			await LikeController.like_user(mockRequest({liked: users.Jhonny.username}, users.Mark.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 		step("like doesnt show", async () => {
-			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Jhonny.username}), res)
+			await LikeController.get_users_that_liked_me(mockRequest({}, users.Jhonny.username), res)
 			assert.equal(res.send.lastCall.firstArg.data.length, 0)
 			return Promise.resolve()
 		})
