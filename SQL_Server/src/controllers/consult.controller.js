@@ -146,7 +146,7 @@ exports.get_consult_matches = async (req, res) => {
 				) > 0, 1, 0) AS reciprocal \
 			FROM   CONSULTS r1 \
 			WHERE  r1.consulter = ?;",
-			req.body.username)
+			req.username)
 		// console.log("ROOOS:", rows)
 		matches = rows.filter(a =>  a.reciprocal == 1)
 		matches = matches.map(function(a) {return a.consulted})

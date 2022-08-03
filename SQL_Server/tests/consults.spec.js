@@ -77,12 +77,12 @@ describe('Test consults', () => {
 	describe("Get Matches", () => {
 		step("Bella's matches = jhonny", async () => {
 			let reso = mockResponse()
-			await ConsultController.get_consult_matches(mockRequest({username: users.Bella.username}), reso)
+			await ConsultController.get_consult_matches(mockRequest({}, users.Bella.username), reso)
 			assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 			return Promise.resolve()
 		})
 		step("Marks's matches = All Alone HAHA", async () => {
-			await ConsultController.get_consult_matches(mockRequest({username: users.Mark.username}), res)
+			await ConsultController.get_consult_matches(mockRequest({}, users.Mark.username), res)
 			// assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 			assert.equal(res.send.lastCall.firstArg.data.length, 0)
 			return Promise.resolve()
