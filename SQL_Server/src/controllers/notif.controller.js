@@ -6,15 +6,8 @@ const BlockController = require('./like.controller')
 
 // Type: LIKE, UNLIKE, CONSULT, MATCH, UNMATCH, MESSAGE
 exports.create_notif = async (type, source, target) => {
-	console.log(type,": ", source, " -> ", target)
+	// console.log(type,": ", source, " -> ", target)
 	try {
-		// TODO if type = "LIKE"
-		// let block_keri = await db.query(
-		// 	"SELECT * FROM BLOCKS  \
-		// 	WHERE BLOCKS.blocked = ? AND BLOCKS.blocker = ? OR \
-		// 	BLOCKS.blocker = ? AND BLOCKS.blocked = ?;",
-		// 	[source, target, source, target]
-		// )
 		if (type == "LIKE") {
 			let love_query = await db.query(
 				"SELECT 1 \
@@ -32,7 +25,7 @@ exports.create_notif = async (type, source, target) => {
 				FROM LIKES \
 				WHERE LIKES.liker=? AND LIKES.liked=?;",
 				[target, source])
-			console.log(love_query)
+			// console.log(love_query)
 			if (love_query.length == 1) {
 				type = "UNMATCH"
 			}
@@ -40,19 +33,7 @@ exports.create_notif = async (type, source, target) => {
 				return {message: "Simple unlike no notif", code: "SUCCESS", id: notif_query.insertId}
 			}
 		}
-		// console.log("BELOK: ", block_keri)
-		// if (type == "LIKE") {
-		// 	let love_query = await db.query(
-		// 		"SELECT * \
-		// 		FROM LIKES \
-		// 		WHERE LIKES.liked=? AND \
-		// 		NOT EXISTS (SELECT 1 FROM BLOCKS  \
-		// 			WHERE LIKES.liker = BLOCKS.blocked AND LIKES.liked = BLOCKS.blocker OR \
-		// 			LIKES.liker = BLOCKS.blocker AND LIKES.liked = BLOCKS.blocked);"	"
-		// 		, [type, source, target]
-		// 		)	
-		// }
-		console.log("FINALE TYPE : ", type)
+		// console.log("FINALE TYPE : ", type)
 		notif_query = await db.query(
 			" INSERT INTO NOTIFS \
 			  (type, source_user, target_user) \
