@@ -78,7 +78,7 @@ exports.un_block_user = async (req, res) => {
 		let unblock_query_result = await db.query(
 			"DELETE FROM BLOCKS \
 			WHERE blocker = ? and blocked = ?",
-			[req.body.unblocker, req.body.unblocked])
+			[req.username, req.body.unblocked])
 		res.status(200).send({message: 'Succesfully blocked user', data: unblock_query_result, code: "SUCCESS"})
 	}
 	catch (e) {

@@ -65,7 +65,7 @@ describe('Test blocks', () => {
 	})
 	describe("Unblocking", () => {
 		step("Jhonny unblock mark: affects 1 row", async () => {
-			await BlockController.un_block_user(mockRequest({unblocker: users.Jhonny.username, unblocked: users.Mark.username}), res)
+			await BlockController.un_block_user(mockRequest({unblocked: users.Mark.username}, users.Jhonny.username), res)
 			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
 			return Promise.resolve()
 		})

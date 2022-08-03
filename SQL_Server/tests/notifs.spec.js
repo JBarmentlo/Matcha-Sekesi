@@ -56,7 +56,7 @@ describe('Notifications', () => {
 		assert.equal(res.send.lastCall.firstArg.data.length, 0)
 	})
 	step("match notif", async () => {
-		await BlockController.un_block_user(mockRequest({unblocker: users.Jhonny.username, unblocked: users.Mark.username}), res)
+		await BlockController.un_block_user(mockRequest({unblocked: users.Mark.username}, users.Jhonny.username), res)
 
 		await LikeController.like_user(mockRequest({liker: users.Jhonny.username, liked: users.Mark.username}), res)
 		await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
