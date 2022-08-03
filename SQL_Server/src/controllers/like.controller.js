@@ -1,4 +1,5 @@
 const db = require("../db/sql.conn");
+const NotifController = require('./notif.controller')
 
 
 exports.like_user_by_id = async (req, res) => {
@@ -16,53 +17,60 @@ exports.like_user_by_id = async (req, res) => {
 				VALUES (?, ?)',
 				[liker_query.username, liked_query.username]
 				)
-			res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
+			return res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
 			// console.log(like_query_result)
 		}
 		else {
-			res.status(200).send({message: "One of the users does not exist", code:"LIKE_MISS"})
+			return res.status(200).send({message: "One of the users does not exist", code:"LIKE_MISS"})
 		}
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
-			res.status(200).send({message: "User name not existing", code: e.code})
+			return res.status(200).send({message: "User name not existing", code: e.code})
 		}
 		else if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: "Already Liked", code: e.code})
+			return res.status(200).send({message: "Already Liked", code: e.code})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in like user ", error: e})
+			return res.status(500).send({message: "Error in like user ", error: e})
 			throw(e)
 		}
 	}
 }
 
+
 exports.like_user = async (req, res) => {
 	try {
 		let like_query_result = await db.query(
-			'REPLACE INTO LIKES \
+			'INSERT INTO LIKES \
 			(liker, liked) \
 			VALUES (?, ?)',
 			[req.body.liker, req.body.liked]
 			)
-		res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
+		// console.log(like_query_result)
+		await NotifController.create_notif("LIKE", req.body.liker, req.body.liked)
+		return res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
-			res.status(200).send({message: "User name not existing", code: e.code})
+			return res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_DUP_ENTRY') {
+			return res.status(200).send({message: "Already Liked", code: e.code})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			console.log("EROOL: ", e)
+			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in like user ", error: e})
+			return res.status(500).send({message: "Error in like user ", error: e})
 			throw(e)
 		}
 	}
@@ -74,16 +82,17 @@ exports.un_like_user = async (req, res) => {
 			"DELETE FROM LIKES \
 			WHERE liker = ? and liked = ?",
 			[req.body.unliker, req.body.unliked])
-		res.status(200).send({message: 'Succesfully luniked user', data: unlike_query_result, code: "SUCCESS"})
+		await NotifController.create_notif("UNLIKE", req.body.unliker, req.body.unliked)
+		return res.status(200).send({message: 'Succesfully unliked user', data: unlike_query_result, code: "SUCCESS"})
 	}
 	catch (e) {
 		if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when unliking.", error: e, code: 'FAILURE'})
+			return res.status(500).send({message: "Parsing error when unliking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in unlike user ", error: e})
+			return res.status(500).send({message: "Error in unlike user ", error: e})
 			throw(e)
 		}
 	}
@@ -104,16 +113,16 @@ exports.get_users_that_i_liked = async (req, res) => {
 			,req.body.liker_username,)
 		// console.log("ROOOS:", rows)
 		// console.log("Liker: ", req.body.liker_username)
-		res.status(200).send({message: 'Successfully queried liked users.', data: rows, code:'SUCCESS'})
+		return res.status(200).send({message: 'Successfully queried liked users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			console.log("NO LIKES", e)
-			res.status(200).send({message: "User not liked", data:[], code: e.code})
+			return res.status(200).send({message: "User not liked", data:[], code: e.code})
 		}
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get user by id', error: e})
+			return res.status(500).send({message: 'error in get user by id', error: e})
 			throw(e)
 		}
 	}	
@@ -135,16 +144,16 @@ exports.get_users_that_liked_me = async (req, res) => {
 		
 			,[req.body.liked_username, req.body.liked_username],)
 		// console.log("Liker: ", req.body.liker_username)
-		res.status(200).send({message: 'Successfully queried liked you users.', data: rows, code:'SUCCESS'})
+		return res.status(200).send({message: 'Successfully queried liked you users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			console.log("NO LIKES", e)
-			res.status(200).send({message: "nobody likes you mark", data:[], code: e.code})
+			return res.status(200).send({message: "nobody likes you mark", data:[], code: e.code})
 		}
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get user by id', error: e})
+			return res.status(500).send({message: 'error in get user by id', error: e})
 			throw(e)
 		}
 	}	
@@ -169,16 +178,16 @@ exports.get_matches = async (req, res) => {
 		matches = rows.filter(a =>  a.reciprocal == 1)
 		matches = matches.map(function(a) {return a.liked})
 		// console.log("ROOOS:", matches)
-		res.status(200).send({message: 'Successfully queried liked you users.', data: matches, code:'SUCCESS'})
+		return res.status(200).send({message: 'Successfully queried liked you users.', data: matches, code:'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			console.log("NO LIKES", e)
-			res.status(200).send({message: "nobody likes you mark", data:[], code: e.code})
+			return res.status(200).send({message: "nobody likes you mark", data:[], code: e.code})
 		}
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get user by id', error: e})
+			return res.status(500).send({message: 'error in get user by id', error: e})
 			throw(e)
 		}
 	}	

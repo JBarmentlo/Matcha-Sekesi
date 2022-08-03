@@ -1,6 +1,7 @@
 const { assert }                  = require('chai');
 
 const LikeController              = require('../src/controllers/like.controller')
+const ConsultController           = require('../src/controllers/consult.controller')
 const BlockController             = require('../src/controllers/block.controller')
 const UserController              = require('../src/controllers/user.controller')
 const NotifController             = require('../src/controllers/notif.controller')
@@ -41,5 +42,31 @@ describe('Notifications', () => {
 	step("set missing notif seen", async (done) => {
 		await NotifController.set_seen_notif({body: {id: 1000}, username: "lkjsdf"}, res)
 		done()
+	})
+	step("Consult notif", async () => {
+		await ConsultController.consult_user(mockRequest({consulter: users.Mark.username, consulted: users.Jhonny.username}), res)
+		await NotifController.get_my_notifs(mockRequest({limit: 10, offset: 0}, users.Jhonny.username), res)
+		assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+		assert.equal(res.send.lastCall.firstArg.data[0].source_user, users.Mark.username)
+	})
+	step("Blocking blocks notifs", async () => {
+		await BlockController.block_user(mockRequest({blocker: users.Jhonny.username, blocked: users.Mark.username}), res)
+		await NotifController.get_my_notifs(mockRequest({limit: 10, offset: 0}, users.Jhonny.username), res)
+		assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+		assert.equal(res.send.lastCall.firstArg.data.length, 0)
+	})
+	step("match notif", async () => {
+		await BlockController.un_block_user(mockRequest({unblocker: users.Jhonny.username, unblocked: users.Mark.username}), res)
+
+		await LikeController.like_user(mockRequest({liker: users.Jhonny.username, liked: users.Mark.username}), res)
+		await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
+		await LikeController.un_like_user(mockRequest({unliker: users.Mark.username, unliked: users.Jhonny.username}), res)
+		// await LikeController.like_user(mockRequest({liker: users.Jhonny.username, liked: users.Mark.username}), res)
+		// await LikeController.like_user(mockRequest({liker: users.Jhonny.username, liked: users.Mark.username}), res)
+		// await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
+		await NotifController.get_my_notifs(mockRequest({limit: 10, offset: 0}, users.Jhonny.username), res)
+		assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
+		// assert.equal(res.send.lastCall.firstArg.data.length, 0)
+		console.log("Datum",res.send.lastCall.firstArg.data)
 	})
 })

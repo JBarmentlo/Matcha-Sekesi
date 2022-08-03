@@ -8,8 +8,9 @@ exports.mockResponse = () => {
 	return res;
 };
 
-exports.mockRequest = (body) => {
+exports.mockRequest = (body, username) => {
 	return {
+		username: username,
 		body: body
 	};
 };

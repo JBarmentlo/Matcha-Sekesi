@@ -76,6 +76,7 @@ create table NOTIFS
     source_user varchar(100)         not null,
     target_user varchar(100)         not null,
     seen        tinyint(1) default 0 null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint source_user_notif_fk
         foreign key (source_user) references USERS (username)
                         on delete cascade,
