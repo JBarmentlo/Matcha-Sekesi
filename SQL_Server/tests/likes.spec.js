@@ -104,7 +104,7 @@ describe('Test likes', () => {
 	})
 	describe("Unliking", () => {
 		step("Jhonny unlike bella: affects 1 row", async () => {
-			await LikeController.un_like_user(mockRequest({unliker: users.Jhonny.username, unliked: users.Bella.username}), res)
+			await LikeController.un_like_user(mockRequest({unliked: users.Bella.username}, users.Jhonny.username), res)
 			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
 		})
 		step("Bella's likers: Jhonny's gone !", async () => {

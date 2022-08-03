@@ -81,8 +81,8 @@ exports.un_like_user = async (req, res) => {
 		let unlike_query_result = await db.query(
 			"DELETE FROM LIKES \
 			WHERE liker = ? and liked = ?",
-			[req.body.unliker, req.body.unliked])
-		await NotifController.create_notif("UNLIKE", req.body.unliker, req.body.unliked)
+			[req.username, req.body.unliked])
+		await NotifController.create_notif("UNLIKE", req.username, req.body.unliked)
 		return res.status(200).send({message: 'Succesfully unliked user', data: unlike_query_result, code: "SUCCESS"})
 	}
 	catch (e) {

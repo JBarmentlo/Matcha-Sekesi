@@ -60,7 +60,7 @@ describe('Notifications', () => {
 
 		await LikeController.like_user(mockRequest({liked: users.Mark.username}, users.Jhonny.username), res)
 		await LikeController.like_user(mockRequest({liked: users.Jhonny.username}, users.Mark.username), res)
-		await LikeController.un_like_user(mockRequest({unliker: users.Mark.username, unliked: users.Jhonny.username}), res)
+		await LikeController.un_like_user(mockRequest({unliked: users.Jhonny.username}, users.Mark.username), res)
 		await NotifController.get_my_notifs(mockRequest({limit: 10, offset: 0}, users.Jhonny.username), res)
 		assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 		assert.equal(JSON.stringify(res.send.lastCall.firstArg.data.map(e => e.type)), JSON.stringify(['CONSULT', 'MATCH', "UNMATCH"]))
