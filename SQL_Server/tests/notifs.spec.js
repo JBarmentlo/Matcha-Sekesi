@@ -25,23 +25,23 @@ describe('Notifications', () => {
 		ret = await NotifController.create_notif('LIKE', users.Jhonny.username, users.Bella.username)
 		assert.equal(ret.code, "SUCCESS")
 		notif_id = ret.id
-		Promise.resolve()
+		return Promise.resolve()
 	})
 	step("Get notif", async () => {
 		await NotifController.get_my_notifs({username: users.Bella.username, body: {limit:10, offset:0},}, res)
-		Promise.resolve()
+		return Promise.resolve()
 	})
 	step("Get notif missing user", async () => {
 		await NotifController.get_my_notifs({username: "kiki", body: {limit:10, offset:0},}, res)
-		Promise.resolve()
+		return Promise.resolve()
 	})
 	step("set notif seen", async () => {
 		await NotifController.set_seen_notif({body: {id: notif_id}, username: users.Bella.username}, res)
-		Promise.resolve()
+		return Promise.resolve()
 	})
 	step("set missing notif seen", async () => {
 		await NotifController.set_seen_notif({body: {id: 1000}, username: "lkjsdf"}, res)
-		Promise.resolve()
+		return Promise.resolve()
 	})
 	step("Consult notif", async () => {
 		await ConsultController.consult_user(mockRequest({consulter: users.Mark.username, consulted: users.Jhonny.username}), res)

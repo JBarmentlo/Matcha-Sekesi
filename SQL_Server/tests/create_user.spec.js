@@ -25,7 +25,7 @@ describe('Test users', () => {
 			await UserController.create_user_test(req, res)
 			assert.isTrue(res.status.lastCall.lastArg == 200)
 			assert.isTrue(res.send.lastCall.firstArg.code == 'ER_DUP_ENTRY')
-			Promise.resolve()
+			return Promise.resolve()
 		})
 		step('Too long field: ER_DATA_TOO_LONG', async () => {
 			var user = JSON.parse(JSON.stringify(users.JhonnyDupName));
@@ -35,7 +35,7 @@ describe('Test users', () => {
 			await UserController.create_user_test(req, res)
 			assert.equal(res.status.lastCall.lastArg, 200)
 			assert.equal(res.send.lastCall.firstArg.code, 'ER_DATA_TOO_LONG')
-			Promise.resolve()
+			return Promise.resolve()
 		})
 		step('Null field: ER_BAD_NULL_ERROR', async () => {
 			var yuser = JSON.parse(JSON.stringify(users.JhonnyDupName));
@@ -44,8 +44,8 @@ describe('Test users', () => {
 			let req = mockRequest(yuser)
 			await UserController.create_user_test(req, res)
 			assert.equal(res.status.lastCall.lastArg, 200)
-			assert.equal(res.send.lastCall.firstArg.code, 'return ER_BAD_NULL_ERROR')
-			Promise.resolve()
+			assert.equal(res.send.lastCall.firstArg.code, 'ER_BAD_NULL_ERROR')
+			return Promise.resolve()
 		})
 	})
 	describe("User updates", () => {
@@ -58,8 +58,8 @@ describe('Test users', () => {
 		})
 		step("modified mail is unverified", async () => {
 			await UserController.get_user_by_username(mockRequest({username: users.Jhonny.username}), res)
-			// assert.equal
-			console.log("MAILVEFIR", res.send.lastCall.firstArg.data.mailVerified)
+			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 0)
+			return Promise.resolve()
 		})
 		step("get jhonny modified", async () => {
 			await UserController.get_user_by_username(mockRequest({username: users.Jhonny.username}), res)

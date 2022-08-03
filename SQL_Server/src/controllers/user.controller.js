@@ -123,6 +123,9 @@ exports.update_user_test = async (req, res) => {
 	let update_str = ""
 	let first = true
 	let update_mail = Object.keys(req.body.update).includes('mail')
+	if (update_mail) {
+		req.body.update.mailVerified = 0
+	}
 	for (const [key, value] of Object.entries(req.body.update)) {
 		if (!(first==true)) {
 			update_str += ', '

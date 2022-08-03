@@ -22,24 +22,24 @@ describe('Test blocking behaviour', () => {
 		step('jhonny blocks mark Code SUCCESS', async () => {
 			await BlockController.block_user(mockRequest({blocker: users.Jhonny.username, blocked: users.Mark.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
-			Promise.resolve()
+			return Promise.resolve()
 		})
 		step('bella blocks mark Code Success', async ()  => {
 			await BlockController.block_user(mockRequest({blocker: users.Bella.username, blocked: users.Mark.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
-			Promise.resolve()
+			return Promise.resolve()
 		})
 	})
 	describe("Test likes are blocked", () => {
 		step("mark like jhonny", async () => {
 			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
-			Promise.resolve()
+			return Promise.resolve()
 		})
 		step("like doesnt show", async () => {
 			await LikeController.get_users_that_liked_me(mockRequest({liked_username: users.Jhonny.username}), res)
 			assert.equal(res.send.lastCall.firstArg.data.length, 0)
-			Promise.resolve()
+			return Promise.resolve()
 		})
 	})
 })
