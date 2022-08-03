@@ -49,14 +49,14 @@ describe('Test blocks', () => {
 	describe("Get blocked Users", () => {
 		step("Jhonnies blocks: Mark", async () => {
 			let reso = mockResponse()
-			await BlockController.get_users_that_i_blocked(mockRequest({blocker_username: users.Jhonny.username}), reso)
+			await BlockController.get_users_that_i_blocked(mockRequest({}, users.Jhonny.username), reso)
 			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Mark.username))
 			return Promise.resolve()
 		})
 		step("Blocked mark: Bella and jhonny", async () => {
 			let reso = mockResponse()
-			await BlockController.get_users_that_blocked_me(mockRequest({blocked_username: users.Mark.username}), reso)
+			await BlockController.get_users_that_blocked_me(mockRequest({}, users.Mark.username), reso)
 			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Bella.username))
 			assert.isTrue(yusers.includes(users.Jhonny.username))
@@ -70,7 +70,7 @@ describe('Test blocks', () => {
 			return Promise.resolve()
 		})
 		step("Marks's blockers: Jhonny's gone !", async () => {
-			await BlockController.get_users_that_blocked_me(mockRequest({blocked_username: users.Mark.username}), res)
+			await BlockController.get_users_that_blocked_me(mockRequest({}, users.Mark.username), res)
 			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 			return Promise.resolve()
 		})		

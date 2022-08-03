@@ -103,7 +103,7 @@ exports.get_users_that_i_blocked = async (req, res) => {
 			INNER JOIN USERS \
 			ON BLOCKS.blocked=USERS.username \
 			WHERE BLOCKS.blocker=?;', 
-			req.body.blocker_username,)
+			req.username,)
 		// console.log("ROOOS:", rows)
 		// console.log("blocker: ", req.body.blocker_username)
 		res.status(200).send({message: 'Successfully queried blocked users.', data: rows, code:'SUCCESS'})
@@ -131,7 +131,7 @@ exports.get_users_that_blocked_me = async (req, res) => {
 			INNER JOIN USERS \
 			ON BLOCKS.blocker=USERS.username \
 			WHERE BLOCKS.blocked=?;', 
-			req.body.blocked_username,)
+			req.username,)
 		// console.log("ROOOS:", rows)
 		// console.log("blocker: ", req.body.blocker_username)
 		res.status(200).send({message: 'Successfully queried blocked you users.', data: rows, code:'SUCCESS'})
