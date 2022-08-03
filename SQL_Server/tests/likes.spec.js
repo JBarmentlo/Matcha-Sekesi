@@ -65,7 +65,7 @@ describe('Test likes', () => {
 			assert.isTrue(yusers.includes(users.Jhonny.username))
 		})
 		step("After a block: just bella ", async () => {
-			await BlockController.block_user(mockRequest({blocker: users.Mark.username, blocked: users.Jhonny.username}), res)
+			await BlockController.block_user(mockRequest({blocked: users.Jhonny.username}, users.Mark.username,), res)
 			await LikeController.get_users_that_i_liked(mockRequest({liker_username: users.Mark.username}), res)
 			yusers = res.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Bella.username))
@@ -92,7 +92,7 @@ describe('Test likes', () => {
 			assert.equal(res.send.lastCall.firstArg.data.length, 0)
 		})
 		step("After a block: bella's alone ", async () => {
-			await BlockController.block_user(mockRequest({blocker: users.Jhonny.username, blocked: users.Bella.username}), res)
+			await BlockController.block_user(mockRequest({blocked: users.Bella.username}, users.Jhonny.username), res)
 			await LikeController.get_matches(mockRequest({username: users.Bella.username}), res)
 			assert.isFalse(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
 

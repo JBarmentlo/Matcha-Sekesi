@@ -50,7 +50,7 @@ describe('Notifications', () => {
 		assert.equal(res.send.lastCall.firstArg.data[0].source_user, users.Mark.username)
 	})
 	step("Blocking blocks notifs", async () => {
-		await BlockController.block_user(mockRequest({blocker: users.Jhonny.username, blocked: users.Mark.username}), res)
+		await BlockController.block_user(mockRequest({blocked: users.Mark.username}, users.Jhonny.username), res)
 		await NotifController.get_my_notifs(mockRequest({limit: 10, offset: 0}, users.Jhonny.username), res)
 		assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 		assert.equal(res.send.lastCall.firstArg.data.length, 0)

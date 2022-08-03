@@ -49,7 +49,7 @@ exports.block_user = async (req, res) => {
 			'INSERT INTO BLOCKS \
 			(blocker, blocked) \
 			VALUES (?, ?)',
-			[req.body.blocker, req.body.blocked]
+			[req.username, req.body.blocked]
 			)
 		res.status(200).send({message: 'Succesfully blocked user', code: "SUCCESS"})
 	}

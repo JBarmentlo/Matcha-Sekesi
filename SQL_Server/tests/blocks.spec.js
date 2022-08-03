@@ -19,29 +19,29 @@ describe('Test blocks', () => {
 	})
 	describe("Create blocks", () => {
 		step('jhonny   => mark Code SUCCESS', async () => {
-			await BlockController.block_user(mockRequest({blocker: users.Jhonny.username, blocked: users.Mark.username}), res)
+			await BlockController.block_user(mockRequest({blocked: users.Mark.username}, users.Jhonny.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 		step('bella => mark Code Success', async ()  => {
-			await BlockController.block_user(mockRequest({blocker: users.Bella.username, blocked: users.Mark.username}), res)
+			await BlockController.block_user(mockRequest({blocked: users.Mark.username}, users.Bella.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 	})
 	describe("Block Error Handling", () => {
 		step('duplicate block: Code ER_DUP_ENTRY', async () => {
-			await BlockController.block_user(mockRequest({blocker: users.Bella.username, blocked: users.Mark.username}), res)
+			await BlockController.block_user(mockRequest({blocked: users.Mark.username}, users.Bella.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "ER_DUP_ENTRY")
 			return Promise.resolve()
 		})
 		step('Missing blocked: Code LIKE_MISS', async () => {
-			await BlockController.block_user(mockRequest({blocker: users.Mark.username, blocked: 'lol'}), res)
+			await BlockController.block_user(mockRequest({blocked: 'lol'}, users.Mark.username), res)
 			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
 			return Promise.resolve()
 		})
 		step('Missing blocker: Code LIKE_MISS', async () => {
-			await BlockController.block_user(mockRequest({blocker: 'lol', blocked: users.Jhonny.username}), res)
+			await BlockController.block_user(mockRequest({blocked: users.Jhonny.username}, 'lol'), res)
 			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
 			return Promise.resolve()
 		})
