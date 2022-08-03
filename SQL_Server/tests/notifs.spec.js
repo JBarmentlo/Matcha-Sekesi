@@ -58,8 +58,8 @@ describe('Notifications', () => {
 	step("match notif", async () => {
 		await BlockController.un_block_user(mockRequest({unblocked: users.Mark.username}, users.Jhonny.username), res)
 
-		await LikeController.like_user(mockRequest({liker: users.Jhonny.username, liked: users.Mark.username}), res)
-		await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
+		await LikeController.like_user(mockRequest({liked: users.Mark.username}, users.Jhonny.username), res)
+		await LikeController.like_user(mockRequest({liked: users.Jhonny.username}, users.Mark.username), res)
 		await LikeController.un_like_user(mockRequest({unliker: users.Mark.username, unliked: users.Jhonny.username}), res)
 		await NotifController.get_my_notifs(mockRequest({limit: 10, offset: 0}, users.Jhonny.username), res)
 		assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")

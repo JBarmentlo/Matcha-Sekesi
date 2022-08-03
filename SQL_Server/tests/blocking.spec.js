@@ -32,7 +32,7 @@ describe('Test blocking behaviour', () => {
 	})
 	describe("Test likes are blocked", () => {
 		step("mark like jhonny", async () => {
-			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
+			await LikeController.like_user(mockRequest({liked: users.Jhonny.username}, users.Mark.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})

@@ -50,10 +50,10 @@ exports.like_user = async (req, res) => {
 			'INSERT INTO LIKES \
 			(liker, liked) \
 			VALUES (?, ?)',
-			[req.body.liker, req.body.liked]
+			[req.username, req.body.liked]
 			)
 		// console.log(like_query_result)
-		await NotifController.create_notif("LIKE", req.body.liker, req.body.liked)
+		await NotifController.create_notif("LIKE", req.username, req.body.liked)
 		return res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
 	}
 	catch (e) {

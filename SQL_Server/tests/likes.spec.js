@@ -27,33 +27,33 @@ describe('Test likes', () => {
 	})
 	describe("Create Lonely Mark", () => {
 		step('mark   => jhonny Code SUCCESS', async () => {
-			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username}), res)
+			await LikeController.like_user(mockRequest({liked: users.Jhonny.username}, users.Mark.username), res)
 			assert(res.send.lastCall.firstArg.code == "SUCCESS")
 		})
 		step('mark   => bella Code Success', async ()  => {
-			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Bella.username}), res)
+			await LikeController.like_user(mockRequest({liked: users.Bella.username}, users.Mark.username), res)
 			assert(res.send.lastCall.firstArg.code == "SUCCESS")
 		})
 		step('bella  => jhonny Code Success', async () => {
-			await LikeController.like_user(mockRequest({liker: users.Bella.username, liked: users.Jhonny.username}), res)
+			await LikeController.like_user(mockRequest({liked: users.Jhonny.username}, users.Bella.username), res)
 			assert(res.send.lastCall.firstArg.code == "SUCCESS")
 		})
 		step('jhonny => bella Code Success', async ()  => {
-			await LikeController.like_user(mockRequest({liker: users.Jhonny.username, liked: users.Bella.username}), res)
+			await LikeController.like_user(mockRequest({liked: users.Bella.username}, users.Jhonny.username), res)
 			assert(res.send.lastCall.firstArg.code == "SUCCESS")
 		})
 	})
 	describe("Like Error Handling", () => {
 		step('duplicate like: Code ERR_DUP_ENTRY', async () => {
-			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: users.Jhonny.username, test:true}), res)
+			await LikeController.like_user(mockRequest({liked: users.Jhonny.username}, users.Mark.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "ER_DUP_ENTRY")
 		})
 		step('Missing liked: Code LIKE_MISS', async () => {
-			await LikeController.like_user(mockRequest({liker: users.Mark.username, liked: 'lol'}), res)
+			await LikeController.like_user(mockRequest({liked: 'lol'}, users.Mark.username), res)
 			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
 		})
 		step('Missing liker: Code LIKE_MISS', async () => {
-			await LikeController.like_user(mockRequest({liker: 'lol', liked: users.Jhonny.username}), res)
+			await LikeController.like_user(mockRequest({liked: users.Jhonny.username}, 'lol'), res)
 			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
 		})
 	})
