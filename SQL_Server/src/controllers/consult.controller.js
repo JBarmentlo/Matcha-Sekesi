@@ -1,4 +1,5 @@
-const db = require("../db/sql.conn");
+const db              = require("../db/sql.conn");
+const NotifController = require('./notif.controller')
 
 
 exports.consult_user_by_id = async (req, res) => {
@@ -42,6 +43,7 @@ exports.consult_user_by_id = async (req, res) => {
 	}
 }
 
+// async function update_consult_timestamp()
 exports.consult_user = async (req, res) => {
 
 	try {
@@ -51,19 +53,23 @@ exports.consult_user = async (req, res) => {
 			VALUES (?, ?)',
 			[req.body.consulter, req.body.consulted]
 			)
-		res.status(200).send({message: 'Succesfully consulted user', code: "SUCCESS"})
+		await NotifController.create_notif("CONSULT", req.body.consulter, req.body.consulted)
+		return res.status(200).send({message: 'Succesfully consulted user', code: "SUCCESS"})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
-			res.status(200).send({message: "User name not existing", code: e.code})
+			return res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_DUP_ENTRY') {
+			return res.status(200).send({message: "Already Liked", code: e.code})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in consult user ", error: e})
+			return res.status(500).send({message: "Error in consult user ", error: e})
 			throw(e)
 		}
 	}
@@ -76,16 +82,16 @@ exports.un_consult_user = async (req, res) => {
 			"DELETE FROM CONSULTS \
 			WHERE consulter = ? and consulted = ?",
 			[req.body.unconsulter, req.body.unconsulted])
-		res.status(200).send({message: 'Succesfully consulted user', data: unconsult_query_result, code: "SUCCESS"})
+		return res.status(200).send({message: 'Succesfully consulted user', data: unconsult_query_result, code: "SUCCESS"})
 	}
 	catch (e) {
 		if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in consult user ", error: e})
+			return res.status(500).send({message: "Error in consult user ", error: e})
 			throw(e)
 		}
 	}
@@ -106,16 +112,16 @@ exports.get_users_that_i_consulted = async (req, res) => {
 			req.body.consulter_username,)
 		// console.log("ROOOS:", rows)
 		// console.log("consulter: ", req.body.consulter_username)
-		res.status(200).send({message: 'Successfully queried consulted users.', data: rows, code:'SUCCESS'})
+		return res.status(200).send({message: 'Successfully queried consulted users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			console.log("NO CONSULTS", e)
-			res.status(200).send({message: "User not consulted", data:[], code: e.code})
+			return res.status(200).send({message: "User not consulted", data:[], code: e.code})
 		}
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get user by id', error: e})
+			return res.status(500).send({message: 'error in get user by id', error: e})
 			throw(e)
 		}
 	}	
@@ -137,16 +143,16 @@ exports.get_users_that_consulted_me = async (req, res) => {
 			req.body.consulted_username,)
 		// console.log("ROOOS:", rows)
 		// console.log("consulter: ", req.body.consulter_username)
-		res.status(200).send({message: 'Successfully queried consulted you users.', data: rows, code:'SUCCESS'})
+		return res.status(200).send({message: 'Successfully queried consulted you users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			console.log("NO CONSULTS", e)
-			res.status(200).send({message: "nobody CONSULTS you mark", data:[], code: e.code})
+			return res.status(200).send({message: "nobody CONSULTS you mark", data:[], code: e.code})
 		}
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get user by id', error: e})
+			return res.status(500).send({message: 'error in get user by id', error: e})
 			throw(e)
 		}
 	}	

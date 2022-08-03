@@ -15,10 +15,8 @@ create table USERS
     isCompleteProfile tinyint(1)  default 0    not null,
     longitude         float                    null,
     latitude          float                    null,
-
     id                mediumint auto_increment
         primary key,
-
     constraint USERS_mail_uindex
         unique (mail),
     constraint USERS_username_uindex
@@ -27,10 +25,9 @@ create table USERS
 
 create table BLOCKS
 (
-    blocker varchar(100) not null,
-    blocked varchar(100) not null,
-    last_updated        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
+    blocker      varchar(100)                        not null,
+    blocked      varchar(100)                        not null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint no_duplicates_BLOCKS
         unique (blocker, blocked),
     constraint blocked_fk
@@ -43,16 +40,14 @@ create table BLOCKS
 
 create table CONSULTS
 (
-    consulter varchar(100) not null,
-    consulted varchar(100) not null,
-    last_updated        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
+    consulter    varchar(100)                        not null,
+    consulted    varchar(100)                        not null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint no_duplicates_CONSULTS
         unique (consulter, consulted),
     constraint consulted_fk
         foreign key (consulted) references USERS (username)
             on delete cascade,
-
     constraint consulter_fk
         foreign key (consulter) references USERS (username)
             on delete cascade
@@ -60,10 +55,9 @@ create table CONSULTS
 
 create table LIKES
 (
-    liker varchar(100) not null,
-    liked varchar(100) not null,
-    last_updated        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
+    liker        varchar(100)                        not null,
+    liked        varchar(100)                        not null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint no_duplicates_LIKES
         unique (liker, liked),
     constraint liked_username_fk
@@ -74,12 +68,38 @@ create table LIKES
             on delete cascade
 );
 
+create table NOTIFS
+(
+    id          int auto_increment
+        primary key,
+    type        varchar(10)          not null,
+    source_user varchar(100)         not null,
+    target_user varchar(100)         not null,
+    seen        tinyint(1) default 0 null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    constraint source_user_notif_fk
+        foreign key (source_user) references USERS (username)
+                        on delete cascade,
+    constraint target_user_notif_fk
+        foreign key (target_user) references USERS (username)
+            on delete cascade
+);
+
+create table PICTURES
+(
+    url          varchar(100)                        null,
+    user         varchar(100)                        null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    constraint PICTURES_USERS_username_fk
+        foreign key (user) references USERS (username)
+            on delete cascade
+);
+
 create table REPORTS
 (
-    reporter varchar(100) not null,
-    reported varchar(100) not null,
-    last_updated        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
+    reporter     varchar(100)                        not null,
+    reported     varchar(100)                        not null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint no_duplicates_REPORTS
         unique (reporter, reported),
     constraint reported_username_fk
@@ -90,48 +110,34 @@ create table REPORTS
             on delete cascade
 );
 
-create table PICTURES
-(
-    url  varchar(100) null,
-    user varchar(100) null,
-    last_updated        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    constraint PICTURES_USERS_username_fk
-        foreign key (user) references USERS (username)
-            on delete cascade
-);
-
-create table TAGS
-(
-    tag  varchar(100) not null,
-    user varchar(100) not null,
-    last_updated        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    constraint user___fk
-        foreign key (user) references USERS (username)
-            on delete cascade,
-            
-    constraint no_duplicate_tags
-        unique (user, tag)
-);
-
-create table VERIFY
-(
-    user    varchar(100) null,
-    id_hash varchar(100) null,
-    last_updated        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    constraint user_verify___fk
-        foreign key (user) references USERS (username)
-            on delete cascade
-);
-
 create table RESET
 (
     user         varchar(100)                        null,
     id_hash      varchar(100)                        null,
     last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint user_reset___fk
+        foreign key (user) references USERS (username)
+            on delete cascade
+);
+
+create table TAGS
+(
+    tag          varchar(100)                        not null,
+    user         varchar(100)                        not null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    constraint no_duplicate_tags
+        unique (user, tag),
+    constraint user___fk
+        foreign key (user) references USERS (username)
+            on delete cascade
+);
+
+create table VERIFY
+(
+    user         varchar(100)                        null,
+    id_hash      varchar(100)                        null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    constraint user_verify___fk
         foreign key (user) references USERS (username)
             on delete cascade
 );
