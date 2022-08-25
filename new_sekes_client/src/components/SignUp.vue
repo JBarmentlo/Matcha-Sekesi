@@ -14,6 +14,8 @@
 							@keyup="validate_user_name"
 						/>
 						<div v-if="!is_valid_username" class="login_error">Error: 5 characters minimum are required</div>
+						<div v-if="username_taken" class="login_error">Username not available</div>
+
 					</div>
 
 					<div class="form-group">
@@ -43,6 +45,7 @@
 							@keyup="validate_email"
 						/>
 						<div v-if="!is_valid_email" class="login_error">Error: An email should contain a "@" and "."</div>
+						<div v-if="mail_already_used" class="login_error">Mail already in use</div>
 					</div>
 
 					<div class="form-group pb-2">
@@ -91,6 +94,9 @@ export default {
 			is_valid_username: true,
 			is_valid_email   : true,
 			is_valid_password: true,
+
+			mail_already_used: false,
+			username_taken   : false,
 		};
 	},
 	methods: {
@@ -119,10 +125,18 @@ export default {
 				mail     : this.mail,
 				password : this.password,
 			})
-			console.log("SINUPRESL ", signup_res)
+			// console.log("SIGnup RES: ", signup_res)
+			this.username_taken    = false
+			this.mail_already_used = false
 			if (signup_res.data.code == 'ER_DUP_ENTRY') {
 				console.log("err dup entry on signup")
 				console.log(signup_res.data.message)
+				if (signup_res.data.message.includes("key 'USERS.USERS_mail_uindex'")) {
+					this.mail_already_used = true
+				}
+				if (signup_res.data.message.includes("key 'USERS.USERS_username_uindex'")) {
+					this.username_taken = true
+				}
 			}
 		},
 	},
