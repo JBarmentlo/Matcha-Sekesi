@@ -25,13 +25,13 @@ export const signup = async item => {
 	return response;
 };
 
-export const login = async item => {
+export const signin = async item => {
 	let data = {
 		username: item.username,
 		password: item.password
 	};
 	let request = {
-		url: "http://localhost:8080/api/auth/signin", // should be replaced after going to production with domain url
+		url: "http://localhost:8081/api/auth/signin", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json"

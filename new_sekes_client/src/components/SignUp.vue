@@ -4,6 +4,7 @@
 			<!-- <div class="vue-template"> -->
 				<form @submit="signupFormSubmit">
 					<h3>Sign Up</h3>
+					<div v-if="status_not_200" class="login_error">There was an error handling your request</div>
 					<div class="form-group">
 						<label>Username</label>
 						<input
@@ -76,7 +77,7 @@
 <script>
 // import inputValidate from "../services/formValidate";
 import { signup } from "../services/auth";
-// import router from "@/router";
+import router from "@/router";
 
 export default {
 	data() {
@@ -97,6 +98,7 @@ export default {
 
 			mail_already_used: false,
 			username_taken   : false,
+			status_not_200   : false
 		};
 	},
 	methods: {
@@ -128,6 +130,10 @@ export default {
 			// console.log("SIGnup RES: ", signup_res)
 			this.username_taken    = false
 			this.mail_already_used = false
+			if (signup_res.status != 200) {
+				this.status_not_200 = true
+				return
+			}
 			if (signup_res.data.code == 'ER_DUP_ENTRY') {
 				console.log("err dup entry on signup")
 				console.log(signup_res.data.message)
@@ -137,6 +143,10 @@ export default {
 				if (signup_res.data.message.includes("key 'USERS.USERS_username_uindex'")) {
 					this.username_taken = true
 				}
+			}
+			if (signup_res.data.code == "SUCCESS") {
+				console.log("sign up success");
+				router.push("/signin");
 			}
 		},
 	},
