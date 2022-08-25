@@ -1,5 +1,5 @@
 <template>
-<div class="center">
+<div class="center pt-5">
 		<div>
 				<form @submit="submitLoginForm">
 					<h3>Sign In</h3>
@@ -23,7 +23,7 @@
 						Sign In
 					</button>
 					<p class="forgot-password text-right mt-2 mb-4">
-						<router-link to="/forgot-password">Forgot password ?</router-link>
+						<router-link :to="{ name: 'Forgot Password' }">Forgot password ?</router-link>
 					</p>
 				</form>
 			</div>
@@ -53,7 +53,7 @@ export default {
 		},
 	},
 	created() {
-		console.log("Created");
+		console.log("Signin Created");
 		if (
 			this.$cookies.isKey("user") &&
 			this.$cookies.get("user").data.id != null
@@ -67,7 +67,14 @@ export default {
 
 <style scoped>
 
-
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  /* border: 3px solid green; */
+}
 .forgot-password,
 .forgot-password a {
   text-align: right;

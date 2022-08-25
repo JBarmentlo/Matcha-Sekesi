@@ -53,10 +53,6 @@ export default {
 		onSubmit(e) {
 			console.log("requestin reset");
 			e.preventDefault();
-			if (!inputValidate.validateMail(this.mail)) {
-				alert("enter a valid email pls");
-				return;
-			}
 			requestReset(this.mail)
 				.then((res) => {
 					this.requestSent = true;

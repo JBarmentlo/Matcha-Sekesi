@@ -1,6 +1,5 @@
 <template>
-	<div class="center">
-		<div class="inner-block">
+	<div class="center pt-5">
 			<!-- <div class="vue-template"> -->
 				<form @submit="signupFormSubmit">
 					<h3>Sign Up</h3>
@@ -67,11 +66,10 @@
 
 					<p class="forgot-password text-right">
 						Already registered
-						<router-link :to="{ name: 'login' }">sign in?</router-link>
+						<router-link :to="{ name: 'Sign In' }">sign in?</router-link>
 					</p>
 				</form>
 			<!-- </div> -->
-		</div>
 	</div>
 </template>
 <script>
@@ -163,6 +161,14 @@ export default {
 
 
 <style scoped>
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  /* border: 3px solid green; */
+}
 .login_error {
 	color : red;
 	font-size: 80%;
