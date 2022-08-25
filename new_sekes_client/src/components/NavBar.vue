@@ -15,7 +15,7 @@
                         <router-link class="btn btn-outline-primary" to="/login">Sign in</router-link>
                     </li>
                     <li class="nav-item px-1">
-                        <router-link class="btn btn-outline-primary" to="/">Sign up</router-link>
+                        <router-link class="btn btn-outline-primary" to="/signup">Sign up</router-link>
                     </li>
                 </ul>
             </div>

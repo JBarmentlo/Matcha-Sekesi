@@ -13,7 +13,7 @@ export const signup = async item => {
 		longitude : item.longitude,
 	};
 	let request = {
-		url: "http://localhost:8080/api/auth/signup", // should be replaced after going to production with domain url
+		url: "http://localhost:8081/api/auth/signup", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json"
