@@ -30,7 +30,7 @@ exports.signup = async (req, res) => {
 			VALUES (?, ?);",
 			[username, hash]
 		)
-		// TODO sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
+		sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
 		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
@@ -103,7 +103,7 @@ exports.requestresetPass = async (req, res) => {
 			VALUES (?,?);",
 			[user_request[0].username, hash]
 		)
-        // TODO sendMail(user.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://localhost:8081/reset/" + encodeURIComponent(hash))
+        sendMail(user.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://localhost:8081/reset/" + encodeURIComponent(hash))
 		res.status(200).send({message: "Sucessfully requested reset", code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
@@ -176,10 +176,10 @@ exports.signin = async (req, res) => {
 		});
 	
 		res.status(200).send({
-			user: user,
+			user       : user,
 			accessToken: token,
-			signature: signature,
-			code: "SUCCESS"
+			signature  : signature,
+			code       : "SUCCESS"
 		});
 	}
 	catch (e) {
