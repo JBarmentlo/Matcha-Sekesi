@@ -106,19 +106,24 @@ export default {
 			console.log(e)
 			this.is_valid_password = true
 		},
-		signupFormSubmit(e) {
+		async signupFormSubmit(e) {
 			// console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
 			if (this.is_valid_username == false || this.is_valid_email == false || this.is_valid_password == false) {
 				return false;
 			}
-			signup({
-				username: this.username,
+			let signup_res = await signup({
+				username : this.username,
 				firstName: this.firstName,
-				lastName: this.lastName,
-				mail: this.mail,
-				password: this.password,
+				lastName : this.lastName,
+				mail     : this.mail,
+				password : this.password,
 			})
+			console.log("SINUPRESL ", signup_res)
+			if (signup_res.data.code == 'ER_DUP_ENTRY') {
+				console.log("err dup entry on signup")
+				console.log(signup_res.data.message)
+			}
 		},
 	},
 	created() {
