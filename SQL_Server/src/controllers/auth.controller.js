@@ -30,7 +30,7 @@ exports.signup = async (req, res) => {
 			VALUES (?, ?);",
 			[username, hash]
 		)
-		sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
+		sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8080/#/verify/" + encodeURIComponent(hash))
 		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
@@ -57,22 +57,24 @@ exports.signup = async (req, res) => {
 
 exports.verifyMail = async (req, res) => {
 	try {
+		console.log("verifying mail")
 		let verify_mail_result = await db.query(
 			"SELECT * FROM VERIFY \
 			where id_hash=?",
-			req.params.idHash)
+			req.params.hash)
 		if (verify_mail_result.length == 0) {
-			res.status(200).send({message: "No user for the verif", code: "MISSING_VERIFY"})
+			res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
 			return
 		}
 		let delete_reset_result = await db.query(
 			"DELETE FROM VERIFY \
 			where id_hash=?",
-			req.params.idHash)
+			req.params.hash)
 		let verify_user_result = await db.query(
 			"UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
 			verify_mail_result[0].user
 		)
+		// sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
 		res.status(200).send({message: "verified mail for " + verify_mail_result.user, code: "SUCCESS"})
 	}
 	catch (e) {

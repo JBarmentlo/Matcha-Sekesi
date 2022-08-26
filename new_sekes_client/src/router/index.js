@@ -28,7 +28,17 @@ const routes = [
     path: '/forgotpassword',
     name: 'Forgot Password',
     component: ForgotPassword
-  }
+  },
+  {
+    path: '/verify/:hash',
+    name: 'Verify Mail',
+    component: () => import('../components/VerifyMail.vue')
+  },
+  // {
+  //   path: '/reset/:hash',
+  //   name: 'Reset Password',
+  //   component: () => import('../components/ResetPassword.vue')
+  // },
 ]
 
 const router = new VueRouter({

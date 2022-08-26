@@ -43,11 +43,11 @@ export const signin = async item => {
 	return response;
 };
 
-export const verify = async hashId => {
-	console.log("verifying url %s", "http://localhost:8080/api/auth/verify/" + encodeURIComponent(hashId))
+export const verifyMail = async hash => {
+	console.log("verifying url %s", "http://localhost:8081/api/auth/verify/" + encodeURIComponent(hash))
 	let request = {
-		url: "http://localhost:8080/api/auth/verify/" + encodeURIComponent(hashId), // should be replaced after going to production with domain url
-		method: "get",
+		url: "http://localhost:8081/api/auth/verify/" + encodeURIComponent(hash), // should be replaced after going to production with domain url
+		method: "post",
 		headers: {
 			"Content-type": "application/json"
 		},
