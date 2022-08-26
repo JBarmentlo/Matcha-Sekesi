@@ -52,9 +52,11 @@ export default {
 			e.preventDefault();
 			try {
 				await requestPassReset(this.mail)
+				console.log("Success in request reset pass")
 				this.requestSent = true;
 			}
-			catch {
+			catch (e) {
+				console.log("error in request reset pass: ", e)
 				this.error = true
 			}
 		},

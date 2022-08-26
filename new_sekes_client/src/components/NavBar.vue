@@ -12,7 +12,7 @@
             <div v-if="!logged_in">
                 <ul class="nav navbar-nav flex-row float-right">
                     <li class="nav-item px-1">
-                        <router-link class="btn btn-outline-primary" to="/login">Sign in</router-link>
+                        <router-link class="btn btn-outline-primary" to="/signin">Sign in</router-link>
                     </li>
                     <li class="nav-item px-1">
                         <router-link class="btn btn-outline-primary" to="/signup">Sign up</router-link>

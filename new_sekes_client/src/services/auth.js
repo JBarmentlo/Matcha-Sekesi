@@ -61,7 +61,7 @@ export const verify = async hashId => {
 export const requestPassReset = async mail => {
 	console.log("requesting pass reset for %s", mail)
 	let request = {
-		url: "http://localhost:8080/api/auth/requestpassreset", // should be replaced after going to production with domain url
+		url: "http://localhost:8081/api/auth/requestpassreset", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json"

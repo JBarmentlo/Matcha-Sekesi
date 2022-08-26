@@ -82,7 +82,7 @@ exports.verifyMail = async (req, res) => {
 };
 
 exports.requestresetPass = async (req, res) => {
-    // console.log("requesting reset psw for mail %s", req.body.mail)
+    console.log("requesting reset psw for mail %s", req.body.mail)
     // console.log("requesting reset psw for mail %s", req.body)
     
 	try {
@@ -92,22 +92,23 @@ exports.requestresetPass = async (req, res) => {
 
 		if (user_request.length == 0) {
 		console.log("MISSING: ", user_request)
-		res.status(200).send({message: "No user for the reset reqyest", code: "MISSING_RESET"})
+		res.status(200).send({message: "No user for the reset request", code: "MISSING_RESET"})
 			return
 		}
-
-		let hash = bcrypt.hashSync(user_request[0].id.toString(), 8) 
-		let insert_req = await db.query(
+		let user = user_request[0]
+		let hash = bcrypt.hashSync(user.id.toString(), 8) 
+		await db.query(
 			"INSERT INTO RESET \
 			(user, id_hash) \
 			VALUES (?,?);",
-			[user_request[0].username, hash]
+			[user.username, hash]
 		)
-        sendMail(user.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://localhost:8081/reset/" + encodeURIComponent(hash))
+        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://localhost:8081/reset/" + encodeURIComponent(hash))
 		res.status(200).send({message: "Sucessfully requested reset", code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
 		console.log("error in request reset")
+		res.status(400).send({message: "Error in requested reset", code: "FAILURE"})
 		throw (e)
 	}
 };
