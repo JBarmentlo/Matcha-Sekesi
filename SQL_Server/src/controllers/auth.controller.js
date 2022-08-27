@@ -7,6 +7,7 @@ const db       = require("../db/sql.conn");
 
 
 exports.signup = async (req, res) => {
+	console.log('Signup for user: ', req.body.username)
 	let username  = req.body.username;
 	let firstName = req.body.firstName;
 	let lastName  = req.body.lastName;
@@ -29,7 +30,7 @@ exports.signup = async (req, res) => {
 			VALUES (?, ?);",
 			[username, hash]
 		)
-		// TODO sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
+		sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8080/#/verify/" + encodeURIComponent(hash))
 		res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
@@ -56,22 +57,24 @@ exports.signup = async (req, res) => {
 
 exports.verifyMail = async (req, res) => {
 	try {
+		console.log("verifying mail")
 		let verify_mail_result = await db.query(
 			"SELECT * FROM VERIFY \
 			where id_hash=?",
-			req.params.idHash)
+			req.params.hash)
 		if (verify_mail_result.length == 0) {
-			res.status(200).send({message: "No user for the verif", code: "MISSING_VERIFY"})
+			res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
 			return
 		}
 		let delete_reset_result = await db.query(
 			"DELETE FROM VERIFY \
 			where id_hash=?",
-			req.params.idHash)
+			req.params.hash)
 		let verify_user_result = await db.query(
 			"UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
 			verify_mail_result[0].user
 		)
+		// sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
 		res.status(200).send({message: "verified mail for " + verify_mail_result.user, code: "SUCCESS"})
 	}
 	catch (e) {
@@ -81,7 +84,7 @@ exports.verifyMail = async (req, res) => {
 };
 
 exports.requestresetPass = async (req, res) => {
-    // console.log("requesting reset psw for mail %s", req.body.mail)
+    console.log("requesting reset psw for mail %s", req.body.mail)
     // console.log("requesting reset psw for mail %s", req.body)
     
 	try {
@@ -90,41 +93,44 @@ exports.requestresetPass = async (req, res) => {
 			req.body.mail)
 
 		if (user_request.length == 0) {
-		console.log("MISSING: ", user_request)
-		res.status(200).send({message: "No user for the reset reqyest", code: "MISSING_RESET"})
-			return
+			console.log("MISSING: ", user_request)
+			return res.status(200).send({message: "No user for the reset request", code: "MISSING_RESET"})
 		}
-
-		let hash = bcrypt.hashSync(user_request[0].id.toString(), 8) 
-		let insert_req = await db.query(
+		let user = user_request[0]
+		let hash = bcrypt.hashSync(user.id.toString(), 8) 
+		await db.query(
 			"INSERT INTO RESET \
 			(user, id_hash) \
 			VALUES (?,?);",
-			[user_request[0].username, hash]
+			[user.username, hash]
 		)
-        // TODO sendMail(user.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://localhost:8081/reset/" + encodeURIComponent(hash))
-		res.status(200).send({message: "Sucessfully requested reset", code: "SUCCESS", hash: hash})
+        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://localhost:8080/#/reset/" + encodeURIComponent(hash))
+		return res.status(200).send({message: "Sucessfully requested reset", code: "SUCCESS", hash: hash})
 	}
 	catch (e) {
 		console.log("error in request reset")
+		return res.status(400).send({message: "Error in requested reset", code: "FAILURE"})
 		throw (e)
 	}
 };
 
 exports.resetPass = async (req, res) => {
 	try {
+		console.log("resetting password")
 		let verify_reset_result = await db.query(
 			"SELECT * FROM RESET \
 			where id_hash=?",
-			req.body.id_hash)
+			req.body.hash)
 		if (verify_reset_result.length == 0) {
+			console.log("return res.status(201).send({message: 'No user for the reset', code: 'MISSING_VERIFY'})")
 			return res.status(201).send({message: "No user for the reset", code: "MISSING_VERIFY"})
 		}
 		let delete_reset_result = await db.query(
 			"DELETE FROM RESET \
 			where id_hash=?",
-			req.body.id_hash)
+			req.body.hash)
 		if ((Date.now() - verify_reset_result[0].last_updated) > 600000) {
+			console.log("return res.status(201).send({message: 'Code Timed out', code: 'TIMEOUT_RESET'})")
 			return res.status(201).send({message: "Code Timed out", code: "TIMEOUT_RESET"})
 		}
 	let password_hash  = bcrypt.hashSync(req.body.password, 8);
@@ -132,9 +138,11 @@ exports.resetPass = async (req, res) => {
 			"UPDATE USERS SET password=? WHERE USERS.username=?",
 			[password_hash, verify_reset_result[0].user]
 		)
-		res.status(200).send({message: "reset pass for " + verify_reset_result[0].user, code: "SUCCESS"})
+		console.log("return res.status(200).send({message: 'reset pass for ' + verify_reset_result[0].user, code: 'SUCCESS'})")
+		return res.status(200).send({message: "reset pass for " + verify_reset_result[0].user, code: "SUCCESS"})
 	}
 	catch (e) {
+		console.log("error in reset Pass: ",e)
 		res.status(200).send({message: "Error in reset pass", code: "Failure"})
 		throw (e)
 	}
@@ -175,10 +183,10 @@ exports.signin = async (req, res) => {
 		});
 	
 		res.status(200).send({
-			user: user,
+			user       : user,
 			accessToken: token,
-			signature: signature,
-			code: "SUCCESS"
+			signature  : signature,
+			code       : "SUCCESS"
 		});
 	}
 	catch (e) {

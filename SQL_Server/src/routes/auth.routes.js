@@ -6,6 +6,10 @@ const auth = require("../controllers/auth.controller");
 var router				= require("express").Router();
 
 router.post("/signup", auth.signup);
+router.post("/signin", auth.signin);
+router.post("/requestpassreset", auth.requestresetPass);
+router.post("/verify/:hash", auth.verifyMail);
+router.post("/passreset", auth.resetPass);
 
 // router.post("/like", 				auth.auth_jwt_token.verifyToken,		userController.like_user)
 // router.post("/unlike" , 			auth.auth_jwt_token.verifyToken,		userController.unlike_user)
