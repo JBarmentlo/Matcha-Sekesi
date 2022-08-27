@@ -1,5 +1,5 @@
 <template>
-	<div class="center">
+	<div class="center pt-5">
 		<div class="inner-block">
 			<div v-if="success">
 				<p class="centered-paragraph">
@@ -45,5 +45,12 @@ export default {
 </script>
 
 <style scoped>
-
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  /* border: 3px solid green; */
+}
 </style>

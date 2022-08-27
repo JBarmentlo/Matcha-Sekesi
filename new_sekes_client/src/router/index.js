@@ -3,6 +3,9 @@ import VueRouter      from 'vue-router'
 import HomeView       from '../views/HomeView.vue'
 import SignIn         from '../components/SignIn'
 import ForgotPassword from '../components/ForgotPassword'
+import VerifyMail     from '../components/VerifyMail.vue'
+import ResetPassword  from '../components/ResetPassword.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,13 +35,13 @@ const routes = [
   {
     path: '/verify/:hash',
     name: 'Verify Mail',
-    component: () => import('../components/VerifyMail.vue')
+    component: VerifyMail
   },
-  // {
-  //   path: '/reset/:hash',
-  //   name: 'Reset Password',
-  //   component: () => import('../components/ResetPassword.vue')
-  // },
+  {
+    path: '/reset/:hash',
+    name: 'Reset Password',
+    component: ResetPassword
+  },
 ]
 
 const router = new VueRouter({

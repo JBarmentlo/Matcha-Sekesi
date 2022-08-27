@@ -73,17 +73,18 @@ export const requestPassReset = async mail => {
 	return response;
 };
 
-export const resetPassword = async (hashId, pass) => {
-	console.log("pass reset for %s with hash %s", pass, hashId)
+export const resetPassword = async (hash, pass) => {
+	console.log("pass reset for %s with the hash %s", pass, hash)
 	let request = {
-		url: "http://localhost:8080/api/auth/resetpas", // should be replaced after going to production with domain url
+		url: "http://localhost:8081/api/auth/passreset",
 		method: "post",
 		headers: {
 			"Content-type": "application/json"
 		},
-		data: JSON.stringify({idHash: hashId, password: pass})
+		data: JSON.stringify({hash: hash, password: pass})
 	};
 
-	const response = await axios(request);
+	const response = await axios(request)
+	// console.log("in req: ", response)
 	return response;
 };
