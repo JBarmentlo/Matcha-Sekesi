@@ -1,0 +1,20 @@
+import axios from "axios";
+
+
+export const updateUser = async (user, access_token) => {
+	console.log("User update for: ", user)
+	let request = {
+		url: "http://localhost:8081/api/auth/updateuser", // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+			"x-access-signature" : access_token.signature,
+		},
+		data: JSON.stringify({update: user})
+	};
+
+	const response = await axios(request);
+	return response;
+}
+

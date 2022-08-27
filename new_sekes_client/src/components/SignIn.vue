@@ -63,13 +63,16 @@ export default {
 					password: this.password
 				})
 				this.status = signin_res.data.code
+				console.log("signin_res: ", signin_res.data)
+				console.log("signin_res_use: ", signin_res.data.user)
 				if (signin_res.data.code == 'SUCCESS') {
-					this.$cookies.set("user", signin_res.data)
-					console.log("cookie set: ", signin_res.data)
+					this.$cookies.set("user", {...signin_res.data.user})
+					delete signin_res.data.user
+					this.$cookies.set("sekes_tokens", signin_res.data)
+					// console.log("cookie set: ", signin_res.data)
 
 					this.$router.push('/editprofile')
 				}
-				console.log("signin_res: ", signin_res)
 			}
 			catch (e) {
 				console.log("error in signin form submit: ", e)
@@ -79,18 +82,19 @@ export default {
 		},
 	},
 	created() {
-		console.log("Signin Created");
-		if (this.$cookies.isKey("user") && this.$cookies.get("user").user.username != null) {
-			console.log("already logged in by cookie");
-			this.$emit("setLoggedIn", true);
-			this.$router.push('/editprofile')
-		}
-		else {
-			console.log("not cookie signed in")
-			console.log(this.$cookies.keys())
-			console.log(this.$cookies.isKey('user'))
+		console.log("cookie signin disabled")
+		// console.log("Signin Created");
+		// if (this.$cookies.isKey("user") && this.$cookies.get("user").user.username != null) {
+		// 	console.log("already logged in by cookie");
+		// 	this.$emit("setLoggedIn", true);
+		// 	this.$router.push('/editprofile')
+		// }
+		// else {
+		// 	console.log("not cookie signed in")
+		// 	console.log(this.$cookies.keys())
+		// 	console.log(this.$cookies.isKey('user'))
 
-		}
+		// }
 	},
 };
 </script>

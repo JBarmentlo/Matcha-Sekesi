@@ -1,15 +1,19 @@
 const auth = require("../controllers/auth.controller");
+const userController = require("../controllers/user.controller");
 
 // const userController	= require("../controllers/user.controller.js");
 // const notifController	= require("../controllers/notification.controller.js");
 // const auth				= require("../authentication");
 var router				= require("express").Router();
 
-router.post("/signup", auth.signup);
-router.post("/signin", auth.signin);
+router.post("/signup"          , auth.signup);
+router.post("/signin"          , auth.signin);
 router.post("/requestpassreset", auth.requestresetPass);
-router.post("/verify/:hash", auth.verifyMail);
-router.post("/passreset", auth.resetPass);
+router.post("/verify/:hash"    , auth.verifyMail);
+router.post("/passreset"       , auth.resetPass);
+router.post("/updateuser"      , auth.verifyToken       , userController.update_user_test);
+
+
 
 // router.post("/like", 				auth.auth_jwt_token.verifyToken,		userController.like_user)
 // router.post("/unlike" , 			auth.auth_jwt_token.verifyToken,		userController.unlike_user)

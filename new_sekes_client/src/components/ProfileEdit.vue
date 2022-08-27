@@ -202,12 +202,13 @@
 </template>
 
 <script>
+import {updateUser} from '../services/user'
 
 export default {
 	data() {
 		return {
 			password          : '',
-			current_user      : this.$cookies.get('user').user,
+			current_user      : {...this.$cookies.get('user')},
 			message           : null,
 			file              : null,
 			profilePic        : "",
@@ -225,18 +226,25 @@ export default {
 	},
 
 	computed: {
-		user: function() {
-			if (this.$cookies.isKey('user')) {
-				return this.$cookies.get('user').user
-			}
-			else {
-				return null
+		user: {
+			get: function() {
+				if (this.$cookies.isKey('user')) {
+					return this.$cookies.get('user')
+				}
+				else {
+					return null
+				}
+			},
+			set: function(new_val) {
+				console.log("setting user cookie with: ", new_val)
+				// {...this.$cookies.get('user').user, user: new_val}
+				this.$cookies.set('user', new_val)
 			}
 		},
 
 		accessTokens: function() {
-			if (this.$cookies.isKey('user')) {
-				return this.$cookies.get('user')
+			if (this.$cookies.isKey('sekes_tokens')) {
+				return this.$cookies.get('sekes_tokens')
 			}
 			else {
 				return null
@@ -245,8 +253,31 @@ export default {
 	},
 
 	methods: {
-		updateProfile() {
-			return
+		filter_update(entry, keep_keys) {
+			return (keep_keys.includes(entry[0]))
+		},
+
+		async updateProfile() {
+			try {
+				console.log("curr: ", this.current_user, "line: ", this.user)
+				let diff_keys = Object.keys(this.current_user).filter(k => this.current_user[k] != this.user[k])
+				let updato = Object.fromEntries(Object.entries(this.current_user).filter(entry => this.filter_update(entry, diff_keys)))
+				if (diff_keys.length != 0) {
+					let update_res = await updateUser(updato, this.accessTokens)
+					console.log("update_res: ", update_res)
+					if (update_res.data.code == 'SUCCESS') {
+						this.user = this.current_user
+					}
+				}
+				else {
+					console.log("skipped empty update call")
+				}
+
+			}
+			catch (e) {
+				console.log("err in update user: ", e)
+			}
+			
 		},
 
 		onSelect() {
@@ -265,8 +296,8 @@ export default {
 	},
 
 	mounted() {
-		console.log("Yooser", this.$cookies.get('user'))
-		console.log(this.user)
+		// console.log("Yooser", this.$cookies.get('user'))
+		// console.log(this.user)
 
 	},
 };

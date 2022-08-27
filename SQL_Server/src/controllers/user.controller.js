@@ -117,23 +117,23 @@ exports.create_user_test = async (req, res) => {
 
 exports.update_user_test = async (req, res) => {
 	// TODO: Upload tag on user creation
-	// TODO: create comet user at creation
 	// * req.body.tags.forEach(tag => tag = completeAndUploadTag(tag))
 
-	let update_str = ""
-	let first = true
-	let update_mail = Object.keys(req.body.update).includes('mail')
-	if (update_mail) {
-		req.body.update.mailVerified = 0
-	}
-	for (const [key, value] of Object.entries(req.body.update)) {
-		if (!(first==true)) {
-			update_str += ', '
-		}
-		first = false
-		update_str += `${key} = '${value}'`
-	}
 	try {
+		let update_str  = ""
+		let first       = true
+		let update_mail = Object.keys(req.body.update).includes('mail')
+		if (update_mail) {
+			req.body.update.mailVerified = 0
+		}
+		for (const [key, value] of Object.entries(req.body.update)) {
+			if (!(first==true)) {
+				update_str += ', '
+			}
+			first = false
+			update_str += `${key} = '${value}'`
+		}
+		console.log("Updating user %s with str: %s", req.username, update_str)
 		let update_result = await db.query(
 			`UPDATE USERS \
 			SET ${update_str}\
