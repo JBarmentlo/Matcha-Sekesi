@@ -7,10 +7,10 @@
 			<div class="account-settings">
 				<div class="user-profile">
 					<div class="user-avatar">
-						<img :src="profilePic" :alt="username">
+						<img :src="profilePic" :alt="current_user.username">
 					</div>
-					<h5 class="user-name">{{ username }}</h5>
-					<h6 class="user-email">{{ mail }}</h6>
+					<h5 class="user-name">{{ current_user.username }}</h5>
+					<h6 class="user-email">{{ current_user.mail }}</h6>
 				</div>
 				<div class = "popularity">
 					<div class = "d-flex justify-content-center align-items-center text-center">
@@ -22,9 +22,9 @@
 						</div>
 					</div>
 				</div>
-				<div v-if="bio.length != 0" class="about">
+				<div v-if="current_user.bio && current_user.bio.length != 0" class="about">
 					<h5>About</h5>
-					<p>{{ bio }}</p>
+					<p>{{ current_user.bio }}</p>
 				</div>
 			</div>
 			
@@ -43,7 +43,7 @@
 						<label class="labels">Name</label>
 						<input
 							type="text"
-							v-model="firstName"
+							v-model="current_user.firstName"
 							class="form-control"
 							placeholder="Enter first name"
 							value=""
@@ -55,7 +55,7 @@
 						<label class="labels">Last Name</label>
 						<input
 							type="text"
-							v-model="lastName"
+							v-model="current_user.lastName"
 							class="form-control"
 							value=""
 							placeholder="Enter last name"
@@ -67,7 +67,7 @@
 						<label class="labels">Email</label>
 						<input
 							type="text"
-							v-model="mail"
+							v-model="current_user.mail"
 							class="form-control"
 							placeholder="Enter email adress"
 							value=""
@@ -90,7 +90,7 @@
 					<label class="labels">ZIP Code</label>
 					<input
 						type="text"
-						v-model="zipCode"
+						v-model="current_user.zipCode"
 						class="form-control"
 						placeholder="zip"
 						value=""
@@ -113,7 +113,7 @@
 					<div>
 						<b-dropdown
 							class="dropdown-1"
-							v-bind:text="sekesualOri"
+							v-bind:text="current_user.sekesualOri"
 						>
 							<b-dropdown-item @click="setSekesual('Hetero')">
 								Hetero
@@ -130,7 +130,7 @@
 				<div class="col">
 					<label class="labels"> Gender </label>
 					<div>
-						<b-dropdown class="dropdown-2" v-bind:text="gender">
+						<b-dropdown class="dropdown-2" v-bind:text="current_user.gender">
 							<b-dropdown-item @click="setGender('Male')">
 								Male
 							</b-dropdown-item>
@@ -147,7 +147,7 @@
 					<label class="labels">Bio</label>
 					<textarea
 						type="text"
-						v-model="bio"
+						v-model="current_user.bio"
 						class="form-control"
 						placeholder="Tell us a few words about you"
 						value=""
@@ -206,15 +206,8 @@
 export default {
 	data() {
 		return {
-			username          : "Not Specified",
-			firstName         : "Not Specified",
-			lastName          : "Not Specified",
-			password          : "",
-			bio               : "Not Specified",
-			zipCode           : "Not Specified",
-			sekesualOri       : "Not Specified",
-			mail              : "Not Specified",
-			gender            : "Not Specified",
+			password          : '',
+			current_user      : this.$cookies.get('user').user,
 			message           : null,
 			file              : null,
 			profilePic        : "",
@@ -234,7 +227,7 @@ export default {
 	computed: {
 		user: function() {
 			if (this.$cookies.isKey('user')) {
-				return this.$cookies.user.user
+				return this.$cookies.get('user').user
 			}
 			else {
 				return null
@@ -243,7 +236,7 @@ export default {
 
 		accessTokens: function() {
 			if (this.$cookies.isKey('user')) {
-				return this.$cookies.user
+				return this.$cookies.get('user')
 			}
 			else {
 				return null
@@ -261,18 +254,19 @@ export default {
 		},
 
 		setGender(val) {
-			this.gender = val;
-			console.log("gender %s", this.gender);
+			this.current_user.gender = val;
+			console.log("gender %s", this.current_user.gender);
 		},
 
 		setSekesual(val) {
-			this.sekesualOri = val;
-			console.log("sekesualOri %s", this.sekesualOri);
+			this.current_user.sekesualOri = val;
+			console.log("sekesualOri %s", this.current_user.sekesualOri);
 		},
 	},
 
 	mounted() {
 		console.log("Yooser", this.$cookies.get('user'))
+		console.log(this.user)
 
 	},
 };
