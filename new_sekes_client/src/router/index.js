@@ -5,6 +5,7 @@ import SignIn         from '../components/SignIn'
 import ForgotPassword from '../components/ForgotPassword'
 import VerifyMail     from '../components/VerifyMail.vue'
 import ResetPassword  from '../components/ResetPassword.vue'
+import ProfileEdit    from '../components/ProfileEdit.vue'
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,11 @@ const routes = [
     name: 'Reset Password',
     component: ResetPassword
   },
+  {
+    path: '/editprofile',
+    name: 'Edit Profile',
+    component: ProfileEdit
+  }
 ]
 
 const router = new VueRouter({

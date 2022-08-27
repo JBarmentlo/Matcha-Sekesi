@@ -202,202 +202,78 @@
 </template>
 
 <script>
-import { getMyUserDetails, updateUserProfile, getTags, getConsultsOfMe} from "../services/user.script";
-import { likesOfMe } from "../services/like.script";
-import formValidate from "../services/formValidate";
-import axios from "axios";
-import empty_profile from "../assets/empty_profile.png";
-import empty_photo from "../assets/empty2.png";
-import plus_photo from "../assets/plus.png";
 
 export default {
 	data() {
 		return {
-			username: "Not Specified",
-			firstName: "Not Specified",
-			lastName: "Not Specified",
-			password: "",
-			bio: "Not Specified",
-			zipCode: "Not Specified",
-			sekesualOri: "Not Specified",
-			mail: "Not Specified",
-			gender: "Not Specified",
-			message: null,
-			file: null,
-			profilePic: "",
-			defaultProfilePic: "",
-			pictures: [],
+			username          : "Not Specified",
+			firstName         : "Not Specified",
+			lastName          : "Not Specified",
+			password          : "",
+			bio               : "Not Specified",
+			zipCode           : "Not Specified",
+			sekesualOri       : "Not Specified",
+			mail              : "Not Specified",
+			gender            : "Not Specified",
+			message           : null,
+			file              : null,
+			profilePic        : "",
+			defaultProfilePic : "",
+			pictures          : [],
 			pictures_to_upload: 0,
-			selectedTags: [],
-			existingTags: [],
-			likes: -1,
-			likes_of_me: [],
-			consults: -1,
-			consults_of_me: [],
-			show_delete: false,
+			selectedTags      : [],
+			existingTags      : [],
+			likes             : -1,
+			likes_of_me       : [],
+			consults          : -1,
+			consults_of_me    : [],
+			show_delete       : false,
 		};
 	},
 
-	mounted() {
-		console.log("mounted my profile");
-		getMyUserDetails(this.$cookies.get("user"))
-			.then((user) => {
-				(this.firstName 		= user.data.firstName),
-					(this.username 		= user.data.username),
-					(this.lastName 		= user.data.lastName),
-					(this.bio 			= user.data.bio),
-					(this.zipCode 		= user.data.zipCode),
-					(this.sekesualOri 	= user.data.sekesualOri),
-					(this.mail 			= user.data.mail),
-					(this.gender 		= user.data.gender);
-					(this.selectedTags	= user.data.tags);
+	computed: {
+		user: function() {
+			if (this.$cookies.isKey('user')) {
+				return this.$cookies.user.user
+			}
+			else {
+				return null
+			}
+		},
 
-					(this.pictures_to_upload = user.data.pictures.length > 0 ? user.data.pictures.length - 1 : 0);
-					(this.pictures = new Array(5));
-					for (let i = 0; i < 5; i++) {
-						if (i < user.data.pictures.length) {
-							if (user.data.pictures[i] != "") {
-								this.pictures[i] = user.data.pictures[i];
-							}
-							else if (user.data.pictures[i] == "" && i == user.data.pictures.length - 1) {
-								this.pictures[i] = plus_photo;
-							}
-						}
-						else {
-							this.pictures[i] = empty_photo;
-							if (user.data.pictures.length == 0 && i == 0) {
-								this.pictures[i] = plus_photo;
-							}
-						}
-						console.log("i = " + i)
-					}
-
-					if (user.data.profilePic == "") {
-						console.log("EMPTY PROFILE");
-						(this.profilePic = empty_profile);
-					}
-					else {
-						(this.profilePic = user.profilePic);
-					}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-
-
-		likesOfMe(this.$cookies.get("user"))
-			.then((likes_of_me) => {
-				console.log("Getting likes of me: " + likes_of_me.data)
-				this.likes_of_me = likes_of_me.data
-				this.likes = likes_of_me.data.length
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-
-
-		getConsultsOfMe(this.$cookies.get("user"))
-			.then((consults_of_me) => {
-				console.log("Getting consults of me: " + consults_of_me.data)
-				this.consults_of_me = consults_of_me.data
-				this.consults = consults_of_me.data.length
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-
-
-		getTags(this.$cookies.get("user"))
-		.then(tags => {
-			this.existingTags = tags.data
-			console.log("tags found: ",  this.existingTags)
-		})
+		accessTokens: function() {
+			if (this.$cookies.isKey('user')) {
+				return this.$cookies.user
+			}
+			else {
+				return null
+			}
+		}
 	},
 
 	methods: {
+		updateProfile() {
+			return
+		},
+
+		onSelect() {
+
+		},
+
 		setGender(val) {
 			this.gender = val;
 			console.log("gender %s", this.gender);
 		},
+
 		setSekesual(val) {
 			this.sekesualOri = val;
 			console.log("sekesualOri %s", this.sekesualOri);
 		},
-		actual_pictures() {
-			var actual_pic = []
-			for (let i = 0; i < this.pictures.length; i++) {
-				const picture = this.pictures[i];
-				if (picture.localeCompare(empty_photo) == 0 || picture.localeCompare(plus_photo) == 0) {
-					actual_pic.push("");
-					return actual_pic;
-				}
-				else {
-					actual_pic.push(picture);
-				}
-			}
-			console.log("PICTURES AFTER");
-			console.log(actual_pic);
-			return actual_pic;
-		},
-		updateProfile() {
-			console.log("updating profile with these pictures:");
-			console.log(this.pictures);
-			const updato = {
-				firstName    : this.firstName,
-				lastName     : this.lastName,
-				bio          : this.bio,
-				zipCode      : this.zipCode,
-				sekesualOri  : this.sekesualOri,
-				mail         : this.mail,
-				gender       : this.gender,
-				pictures     : this.actual_pictures(),
-				profilePic   : this.profilePic,
-				selectedTags : this.selectedTags
-			};
-			if (formValidate.validateUpdate(updato)) {
-				updateUserProfile(this.$cookies.get("user"), updato);
-			}
-		},
-		onSelect() {
-			const file = this.$refs.file.files[0];
-			this.file = file;
-			this.onSubmit();
-		},
-		async onSubmit() {
-			const formData = new FormData();
-			if (this.file == null)
-				return
-			formData.append("file", this.file);
-			try {
-				console.log(formData);
-				console.log("Sending form data:...")
-				axios.post("http://localhost:8080/api/upload", formData)
-				.then( (res) => {
-					this.pictures[this.pictures_to_upload] = "http://localhost:8080/static/" + res.data.file.filename;
-					this.pictures_to_upload += 1;
-					if (this.pictures_to_upload < 5) {
-						this.pictures[this.pictures_to_upload] = plus_photo;
-					}
-				})
-				this.message = "Uploaded";
-			} catch (err) {
-				console.log(err);
-				this.message = "Something Went wrong";
-			}
-			this.file = null
-		},
-		deletePic(index)
-		{
-			if (this.profilePic == this.pictures[index])
-				this.profilePic = this.defaultProfilePic
-			this.pictures[index] = empty_photo;
-			this.pictures[this.pictures_to_upload] = empty_photo;
-			this.pictures[this.pictures_to_upload - 1] = plus_photo;
-			console.log("deleting picture for index: " + index);
-			console.log(this.pictures)
-			console.log("pictures_to_upload: " + this.pictures_to_upload)
-			this.pictures_to_upload -= 1;
-		}
+	},
+
+	mounted() {
+		console.log("Yooser", this.$cookies.get('user'))
+
 	},
 };
 </script>
