@@ -18,3 +18,17 @@ export const updateUser = async (user, access_token) => {
 	return response;
 }
 
+export const getUserTags = async (username) => {
+	console.log("User update for: ", username)
+	let request = {
+		url: "http://localhost:8081/api/auth/getusertags", // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+		},
+		data: JSON.stringify({username: username})
+	};
+
+	const response = await axios(request);
+	return response;
+}

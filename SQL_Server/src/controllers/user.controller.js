@@ -19,6 +19,7 @@ async function handle_new_mail_for_user(username, id, mail) {
 	// return await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
 }
 
+
 exports.create_user = async (req, res) => {
 	let username  = req.body.username;
 	let firstName = req.body.firstName;
@@ -153,6 +154,7 @@ exports.update_user_test = async (req, res) => {
 
 }
 
+
 exports.get_user_by_id = async (req, res) => {
 	try {
 		let [rows, fields] = await db.query('select * from USERS where id=?', req.body.id,)
@@ -168,7 +170,24 @@ exports.get_user_by_id = async (req, res) => {
 
 exports.get_user_by_username = async (req, res) => {
 	try {
-		let [rows, fields] = await db.query('select * from USERS WHERE username=? LIMIT 1' , req.body.username)
+		let [rows, fields] = await db.query(
+			"WITH CTE as (                    \
+			SELECT                            \
+				username,                     \
+				GROUP_CONCAT(tag) as tag_list \
+			FROM USERS                        \
+			INNER JOIN TAGS T                 \
+				on USERS.username = T.user    \
+			WHERE username=?                  \
+			GROUP BY username)                \
+			SELECT username,                  \
+					GROUP_CONCAT(liker),      \
+					tag_list                  \
+			FROM CTE                          \
+			INNER JOIN LIKES L                \
+				on CTE.username = L.liked     \
+			GROUP BY username, tag_list;"
+		, req.body.username)
 		res.status(200).send({message: 'Successfully queried user for username.', data: rows})
 	}
 	catch (e) {
