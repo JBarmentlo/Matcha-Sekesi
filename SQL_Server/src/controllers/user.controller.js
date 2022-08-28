@@ -169,25 +169,35 @@ exports.get_user_by_id = async (req, res) => {
 
 
 exports.get_user_by_username = async (req, res) => {
+	// TODO add groupby maybe
 	try {
 		let [rows, fields] = await db.query(
-			"WITH CTE as (                    \
-			SELECT                            \
-				username,                     \
-				GROUP_CONCAT(tag) as tag_list \
-			FROM USERS                        \
-			INNER JOIN TAGS T                 \
-				on USERS.username = T.user    \
-			WHERE username=?                  \
-			GROUP BY username)                \
-			SELECT username,                  \
-					GROUP_CONCAT(liker),      \
-					tag_list                  \
-			FROM CTE                          \
-			INNER JOIN LIKES L                \
-				on CTE.username = L.liked     \
-			GROUP BY username, tag_list;"
-		, req.body.username)
+			"SELECT                                                                       \
+				username,                                                                 \
+				firstName,                                                                \
+				lastName,                                                                 \
+				bio,                                                                      \
+				mail,                                                                     \
+				password,                                                                 \
+				mailVerified,                                                             \
+				gender,                                                                   \
+				sekesualOri,                                                              \
+				popScore,                                                                 \
+				zipCode,                                                                  \
+				city,                                                                     \
+				isCompleteProfile,                                                        \
+				longitude,                                                                \
+				latitude,                                                                 \
+				id,                                                                       \
+				GROUP_CONCAT(tag) as tag_list,                                            \
+				IF((? IN(SELECT liked FROm LIKES where liker = ?)),1,0) as did_i_like_him \
+			FROM USERS                                                                    \
+				LEFT JOIN TAGS T                                                          \
+				on USERS.username = T.user                                                \
+			WHERE username=?                                                              \
+			GROUP BY username;"
+							  
+		, req.body.username, req.username, req.body.username)
 		res.status(200).send({message: 'Successfully queried user for username.', data: rows})
 	}
 	catch (e) {
@@ -196,3 +206,7 @@ exports.get_user_by_username = async (req, res) => {
 		throw(e)
 	}	
 }
+
+
+
+

@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const signup = async item => {
+	// TODO NO COMMAS IN USERNAME !
 	let data = {
 		username  : item.username,
 		mail      : item.mail,
