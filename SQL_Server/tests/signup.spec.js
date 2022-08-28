@@ -62,7 +62,7 @@ describe('Test signup', () => {
 			return Promise.resolve()
 		})
 		step("verify", async () => {
-			await AuthController.verifyMail({params:{idHash: hash}}, res)
+			await AuthController.verifyMail({params:{hash: hash}}, res)
 			await UserController.get_user_by_username(mockRequest({username: users.Joep.username}), res)
 			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 1)
 			return Promise.resolve()
@@ -92,7 +92,7 @@ describe('Test signup', () => {
 		step("reset password to caca", async () => {
 			let hash = res.send.lastCall.firstArg.hash
 			let pass = "caca"
-			await AuthController.resetPass(mockRequest({id_hash: hash, password: pass}), res)
+			await AuthController.resetPass(mockRequest({hash: hash, password: pass}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			// console.log("SIGL, ", res.send.lastCall.firstArg)
 			return Promise.resolve()
