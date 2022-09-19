@@ -1,8 +1,10 @@
+const db       = require("../db/sql.conn");
 
-exports.search_users = async (req, res) => {
-	// TODO add groupby maybe
+
+exports.get_all_users = async (req, res) => {
+	console.log("getting all users relative to: ", req.username)
 	try {
-		let [rows, fields] = await db.query(
+		let user_query = await db.query(
 			"SELECT                                                                       \
 				username,                                                                 \
 				firstName,                                                                \
@@ -21,15 +23,16 @@ exports.search_users = async (req, res) => {
 				latitude,                                                                 \
 				id,                                                                       \
 				GROUP_CONCAT(tag) as tag_list,                                            \
-				IF((? IN(SELECT liked FROm LIKES where liker = ?)),1,0) as did_i_like_him \
+				IF((username IN(SELECT liked FROM LIKES where liker = ?)),1,0) as did_i_like_him \
 			FROM USERS                                                                    \
 				LEFT JOIN TAGS T                                                          \
 				on USERS.username = T.user                                                \
-			WHERE username=?                                                              \
-			GROUP BY username;"
+			GROUP BY username                                                             \
+			LIMIT 10;"
 							  
-		, req.body.username, req.username)
-		res.status(200).send({message: 'Successfully queried users.', data: rows})
+		, req.username)
+		console.log("Rows: ", user_query.map(user => user.username))
+		res.status(200).send({message: 'Successfully queried users.', data: user_query})
 	}
 	catch (e) {
 		console.log("get user by name error:\n", e, "\nend error")
