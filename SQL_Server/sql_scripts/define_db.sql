@@ -3,6 +3,7 @@ create table USERS
     username          varchar(100)             not null,
     firstName         varchar(100)             null,
     lastName          varchar(100)             null,
+    age               int                      null,
     bio               varchar(100)             null,
     mail              varchar(100)             not null,
     password          varchar(100)             not null,

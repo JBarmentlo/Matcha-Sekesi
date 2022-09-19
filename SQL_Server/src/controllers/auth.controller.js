@@ -150,85 +150,86 @@ exports.resetPass = async (req, res) => {
 
 exports.signin = async (req, res) => {
 	try {
-		// console.log("signing in %o", req.body)
+		console.log("signing in %o", req.body)
 		let user_request = await db.query(
-			"WITH TAGLIST as (                                  \
-				SELECT                                          \
-					username,                                   \
-					firstName,                                  \
-					lastName,                                   \
-					bio,                                        \
-					mail,                                       \
-					password,                                   \
-					mailVerified,                               \
-					gender,                                     \
-					sekesualOri,                                \
-					popScore,                                   \
-					zipCode,                                    \
-					city,                                       \
-					isCompleteProfile,                          \
-					longitude,                                  \
-					latitude,                                   \
-					id,                                         \
-					GROUP_CONCAT(tag) as tag_list               \
-				FROM USERS                                      \
-				INNER JOIN TAGS T                               \
-					on USERS.username = T.user                  \
-				WHERE username=?                                \
-				GROUP BY username),                             \
-				                                                \
-				LIKELIST AS (                                   \
-					SELECT                                      \
-						username,                               \
-						firstName,                              \
-						lastName,                               \
-						bio,                                    \
-						mail,                                   \
-						password,                               \
-						mailVerified,                           \
-						gender,                                 \
-						sekesualOri,                            \
-						popScore,                               \
-						zipCode,                                \
-						city,                                   \
-						isCompleteProfile,                      \
-						longitude,                              \
-						latitude,                               \
-						id,                                     \
-						GROUP_CONCAT(liker) as like_list,       \
-						tag_list                                \
-				FROM TAGLIST                                    \
-				INNER JOIN LIKES L                              \
-					on TAGLIST.username = L.liked               \
-				GROUP BY username,                              \
-				password, tag_list)                             \
-				                                                \
-				SELECT                                          \
-						username,                               \
-						firstName,                              \
-						lastName,                               \
-						bio,                                    \
-						mail,                                   \
-						password,                               \
-						mailVerified,                           \
-						gender,                                 \
-						sekesualOri,                            \
-						popScore,                               \
-						zipCode,                                \
-						city,                                   \
-						isCompleteProfile,                      \
-						longitude,                              \
-						latitude,                               \
-						id,                                     \
-						like_list,                              \
-						tag_list,                               \
-						GROUP_CONCAT(consulter) as consult_list \
-				FROM LIKELIST                                   \
-				INNER JOIN CONSULTS                             \
-					on LIKELIST.username = CONSULTS.consulted   \
-				GROUP BY username,                              \
-				password, tag_list, like_list;" 
+			"WITH TAGLIST as (                                 \
+				SELECT                                         \
+					username,                                  \
+					firstName,                                 \
+					lastName,                                  \
+					bio,                                       \
+					mail,                                      \
+					password,                                  \
+					mailVerified,                              \
+					gender,                                    \
+					sekesualOri,                               \
+					popScore,                                  \
+					zipCode,                                   \
+					city,                                      \
+					isCompleteProfile,                         \
+					longitude,                                 \
+					latitude,                                  \
+					id,                                        \
+					GROUP_CONCAT(tag) as tag_list              \
+				FROM USERS                                     \
+				LEFT JOIN TAGS T                               \
+					on USERS.username = T.user                 \
+				WHERE username=?                               \
+				GROUP BY username),                            \
+			                                                   \
+				LIKELIST AS (                                  \
+					SELECT                                     \
+						username,                              \
+						firstName,                             \
+						lastName,                              \
+						bio,                                   \
+						mail,                                  \
+						password,                              \
+						mailVerified,                          \
+						gender,                                \
+						sekesualOri,                           \
+						popScore,                              \
+						zipCode,                               \
+						city,                                  \
+						isCompleteProfile,                     \
+						longitude,                             \
+						latitude,                              \
+						id,                                    \
+						GROUP_CONCAT(liker) as like_list,      \
+						tag_list                               \
+				FROM TAGLIST                                   \
+				LEFT JOIN LIKES L                              \
+					on TAGLIST.username = L.liked              \
+				GROUP BY username,                             \
+				password, tag_list)                            \
+			                                                   \
+				SELECT                                         \
+						username,                              \
+						firstName,                             \
+						lastName,                              \
+						bio,                                   \
+						mail,                                  \
+						password,                              \
+						mailVerified,                          \
+						gender,                                \
+						sekesualOri,                           \
+						popScore,                              \
+						zipCode,                               \
+						city,                                  \
+						isCompleteProfile,                     \
+						longitude,                             \
+						latitude,                              \
+						id,                                    \
+						like_list,                             \
+						tag_list,                              \
+						GROUP_CONCAT(consulter) as consult_list\
+				FROM LIKELIST                                  \
+				LEFT JOIN CONSULTS                             \
+					on LIKELIST.username = CONSULTS.consulted  \
+				GROUP BY username,                             \
+				password, tag_list, like_list;"
 		, req.body.username)
+		console.log("signing user request: ", user_request)
 		if (user_request.length == 0) {
 			return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
 		}
