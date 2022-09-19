@@ -1,6 +1,7 @@
 const db	 	= require("../db/sql.conn");
 var bcrypt 		= require("bcryptjs");
 const sendMail  = require('../services/mailgun');
+const searches = require("./user.request.js")
 
 
 // function check_create_user_input(req) {
@@ -171,34 +172,8 @@ exports.get_user_by_id = async (req, res) => {
 exports.get_user_by_username = async (req, res) => {
 	// TODO add groupby maybe
 	try {
-		let [rows, fields] = await db.query(
-			"SELECT                                                                       \
-				username,                                                                 \
-				firstName,                                                                \
-				lastName,                                                                 \
-				bio,                                                                      \
-				mail,                                                                     \
-				password,                                                                 \
-				mailVerified,                                                             \
-				gender,                                                                   \
-				sekesualOri,                                                              \
-				popScore,                                                                 \
-				zipCode,                                                                  \
-				city,                                                                     \
-				isCompleteProfile,                                                        \
-				longitude,                                                                \
-				latitude,                                                                 \
-				id,                                                                       \
-				GROUP_CONCAT(tag) as tag_list,                                            \
-				IF((? IN(SELECT liked FROm LIKES where liker = ?)),1,0) as did_i_like_him \
-			FROM USERS                                                                    \
-				LEFT JOIN TAGS T                                                          \
-				on USERS.username = T.user                                                \
-			WHERE username=?                                                              \
-			GROUP BY username;"
-							  
-		, req.body.username, req.username, req.body.username)
-		res.status(200).send({message: 'Successfully queried user for username.', data: rows})
+		let user_query = await searches.get_user(req.username, req.body.username)
+		res.status(200).send({message: 'Successfully queried user for username.', data: user_query})
 	}
 	catch (e) {
 		console.log("get user by name error:\n", e, "\nend error")

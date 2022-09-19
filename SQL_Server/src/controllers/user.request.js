@@ -107,7 +107,8 @@ exports.get_all_users = async (searcher_username) => {
 };
 
 exports.get_user = async (searcher_username, searched_username) => {
-    return await db.query(
+    console.log(searcher_username, " is looking for: ", searched_username)
+    let user_query = await db.query(
         "WITH TAGLIST as (                                  \
             SELECT                                          \
                 username,                                   \
@@ -130,7 +131,7 @@ exports.get_user = async (searcher_username, searched_username) => {
             FROM USERS                                      \
             LEFT JOIN TAGS T                                \
                 on USERS.username = T.user                  \
-                WHERE username=?                            \
+                WHERE username='searched_username'                       \
             GROUP BY username),                             \
             LIKELIST AS (                                   \
                 SELECT                                      \
@@ -164,7 +165,7 @@ exports.get_user = async (searcher_username, searched_username) => {
                     IF(                                     \
                         (username IN(SELECT liked           \
                                      FROM LIKES             \
-                                     where liker = ?        \
+                                     WHERE liker='searcher_username'          \
                                      )                      \
                         ), 1 , 0)                           \
                         as did_i_like_him,                  \
@@ -188,6 +189,9 @@ exports.get_user = async (searcher_username, searched_username) => {
             LEFT JOIN CONSULTS                              \
                 on LIKELIST.username = CONSULTS.consulted   \
             GROUP BY username,                              \
-            password, tag_list, like_list;"
-    , searched_username, searcher_username)
+            password, tag_list, like_list;".replace('searcher_username', searcher_username).replace('searched_username', searched_username)
+    , )
+
+    // console.log("KERIIIIIIII: ", user_query[0])
+    return user_query[0]
 };

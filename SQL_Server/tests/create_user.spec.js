@@ -57,12 +57,13 @@ describe('Test users', () => {
 			return Promise.resolve()
 		})
 		step("modified mail is unverified", async () => {
-			await UserController.get_user_by_username(mockRequest({username: users.Jhonny.username}), res)
+			await UserController.get_user_by_username(mockRequest(body = {username: users.Jhonny.username}, username = 'bella'), res)
+			console.log("RESS send: ", res.send.lastCall.firstArg)
 			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 0)
 			return Promise.resolve()
 		})
 		step("get jhonny modified", async () => {
-			await UserController.get_user_by_username(mockRequest({username: users.Jhonny.username}), res)
+			await UserController.get_user_by_username(mockRequest(body = {username: users.Jhonny.username}, username = 'bella'), res)
 			assert.equal(res.send.lastCall.firstArg.data.zipCode, 'lol')
 			return Promise.resolve()
 		})
