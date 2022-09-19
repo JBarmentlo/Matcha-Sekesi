@@ -193,5 +193,5 @@ exports.get_user = async (searcher_username, searched_username) => {
     , )
 
     // console.log("KERIIIIIIII: ", user_query[0])
-    return user_query[0]
+    return transform_csv_lists_to_arrays(user_query[0])
 };
