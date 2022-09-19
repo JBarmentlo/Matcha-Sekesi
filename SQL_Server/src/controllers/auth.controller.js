@@ -234,7 +234,6 @@ exports.signin = async (req, res) => {
 			return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
 		}
 
-		console.log("user req: ", user_request)
 		user = user_request[0]
 		var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 		if (!passwordIsValid) {

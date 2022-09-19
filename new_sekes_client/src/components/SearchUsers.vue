@@ -48,32 +48,38 @@
 					</div>
 				</form>
 			</div>
-			</div>
+		</div>
+		<profile-list :users="users"></profile-list>
 	</div>
 </template>
 
 <script>
 import { getAllUsers } from "../services/search";
+import ProfileList from './ProfileList.vue'
 
 export default {
+	components: { ProfileList },
 	data() {
 		return {
-			users: [],
-			min_age : 30,
-			max_age: 50,
+			users        : [],
+			min_age      : 30,
+			max_age      : 50,
 			interest_tags: [],
-			min_rating: 2,
-			min_km: 10,
+			min_rating   : 2,
+			zipcodes     : [],
 		}
 	},
 	methods: {
 		
 	},
-	async created() {
+	created() {
 		console.log("hey");
-		await getAllUsers(this.$cookies.get("sekes_tokens")).then(users => {this.users = users.data}).catch(err => {console.log("error fetchin all users %o", err)})
-		console.log("YUSER SERCH")
-		console.log(this.users)
+		getAllUsers(this.$cookies.get("sekes_tokens"), this.min_age, this.max_age, this.interest_tags, this.min_rating, this.zipcodes)
+		.then(users => {
+			console.log("YUSERS: ", users.data.data)
+			this.users = users.data.data;
+			})
+		.catch(err => {console.log("error fetchin all users %o", err)})
 	},
 
 }
