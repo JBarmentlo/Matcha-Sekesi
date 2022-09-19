@@ -67,9 +67,7 @@ export default {
 				console.log("signin_res_use: ", signin_res.data.user)
 				if (signin_res.data.code == 'SUCCESS') {
 					this.$cookies.set("user", {...signin_res.data.user})
-					delete signin_res.data.user
-					this.$cookies.set("sekes_tokens", signin_res.data)
-					// console.log("cookie set: ", signin_res.data)
+					this.$cookies.set("sekes_tokens",  (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
 
 					this.$router.push('/editprofile')
 				}
