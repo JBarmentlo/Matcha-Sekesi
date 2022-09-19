@@ -19,6 +19,7 @@ async function handle_new_mail_for_user(username, id, mail) {
 	// return await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
 }
 
+
 exports.create_user = async (req, res) => {
 	let username  = req.body.username;
 	let firstName = req.body.firstName;
@@ -117,23 +118,23 @@ exports.create_user_test = async (req, res) => {
 
 exports.update_user_test = async (req, res) => {
 	// TODO: Upload tag on user creation
-	// TODO: create comet user at creation
 	// * req.body.tags.forEach(tag => tag = completeAndUploadTag(tag))
 
-	let update_str = ""
-	let first = true
-	let update_mail = Object.keys(req.body.update).includes('mail')
-	if (update_mail) {
-		req.body.update.mailVerified = 0
-	}
-	for (const [key, value] of Object.entries(req.body.update)) {
-		if (!(first==true)) {
-			update_str += ', '
-		}
-		first = false
-		update_str += `${key} = '${value}'`
-	}
 	try {
+		let update_str  = ""
+		let first       = true
+		let update_mail = Object.keys(req.body.update).includes('mail')
+		if (update_mail) {
+			req.body.update.mailVerified = 0
+		}
+		for (const [key, value] of Object.entries(req.body.update)) {
+			if (!(first==true)) {
+				update_str += ', '
+			}
+			first = false
+			update_str += `${key} = '${value}'`
+		}
+		console.log("Updating user %s with str: %s", req.username, update_str)
 		let update_result = await db.query(
 			`UPDATE USERS \
 			SET ${update_str}\
@@ -153,6 +154,7 @@ exports.update_user_test = async (req, res) => {
 
 }
 
+
 exports.get_user_by_id = async (req, res) => {
 	try {
 		let [rows, fields] = await db.query('select * from USERS where id=?', req.body.id,)
@@ -167,8 +169,35 @@ exports.get_user_by_id = async (req, res) => {
 
 
 exports.get_user_by_username = async (req, res) => {
+	// TODO add groupby maybe
 	try {
-		let [rows, fields] = await db.query('select * from USERS WHERE username=? LIMIT 1' , req.body.username)
+		let [rows, fields] = await db.query(
+			"SELECT                                                                       \
+				username,                                                                 \
+				firstName,                                                                \
+				lastName,                                                                 \
+				bio,                                                                      \
+				mail,                                                                     \
+				password,                                                                 \
+				mailVerified,                                                             \
+				gender,                                                                   \
+				sekesualOri,                                                              \
+				popScore,                                                                 \
+				zipCode,                                                                  \
+				city,                                                                     \
+				isCompleteProfile,                                                        \
+				longitude,                                                                \
+				latitude,                                                                 \
+				id,                                                                       \
+				GROUP_CONCAT(tag) as tag_list,                                            \
+				IF((? IN(SELECT liked FROm LIKES where liker = ?)),1,0) as did_i_like_him \
+			FROM USERS                                                                    \
+				LEFT JOIN TAGS T                                                          \
+				on USERS.username = T.user                                                \
+			WHERE username=?                                                              \
+			GROUP BY username;"
+							  
+		, req.body.username, req.username, req.body.username)
 		res.status(200).send({message: 'Successfully queried user for username.', data: rows})
 	}
 	catch (e) {
@@ -177,3 +206,7 @@ exports.get_user_by_username = async (req, res) => {
 		throw(e)
 	}	
 }
+
+
+
+

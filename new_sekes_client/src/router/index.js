@@ -5,6 +5,8 @@ import SignIn         from '../components/SignIn'
 import ForgotPassword from '../components/ForgotPassword'
 import VerifyMail     from '../components/VerifyMail.vue'
 import ResetPassword  from '../components/ResetPassword.vue'
+import ProfileEdit    from '../components/ProfileEdit.vue'
+import SearchUsers    from '../components/SearchUsers.vue'
 
 Vue.use(VueRouter)
 
@@ -42,6 +44,16 @@ const routes = [
     name: 'Reset Password',
     component: ResetPassword
   },
+  {
+    path: '/editprofile',
+    name: 'Edit Profile',
+    component: ProfileEdit
+  },
+  {
+    path: '/getallusers',
+    name: 'See Users',
+    component: SearchUsers
+  }
 ]
 
 const router = new VueRouter({

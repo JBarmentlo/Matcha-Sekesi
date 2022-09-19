@@ -14,7 +14,7 @@ const client = mailgun.client({username: 'api', key: API_KEY, url:"https://api.e
 
 async function sendMail(dest, subject, text)
 {
-	console.log("sending mail: ", '\ndest: ', dest, '\nsubject: ', subject, '\ntext: ', text)
+	// console.log("sending mail: ", '\ndest: ', dest, '\nsubject: ', subject, '\ntext: ', text)
 	const messageData = {
 		from: 'Sekesi <sekesi@yoopster.com>',
 		to: dest,

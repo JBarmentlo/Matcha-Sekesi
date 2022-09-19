@@ -43,7 +43,6 @@ exports.like_user_by_id = async (req, res) => {
 	}
 }
 
-
 exports.like_user = async (req, res) => {
 	try {
 		let like_query_result = await db.query(

@@ -7,10 +7,10 @@
 			<div class="account-settings">
 				<div class="user-profile">
 					<div class="user-avatar">
-						<img :src="profilePic" :alt="username">
+						<img :src="profilePic" :alt="current_user.username">
 					</div>
-					<h5 class="user-name">{{ username }}</h5>
-					<h6 class="user-email">{{ mail }}</h6>
+					<h5 class="user-name">{{ current_user.username }}</h5>
+					<h6 class="user-email">{{ current_user.mail }}</h6>
 				</div>
 				<div class = "popularity">
 					<div class = "d-flex justify-content-center align-items-center text-center">
@@ -22,9 +22,9 @@
 						</div>
 					</div>
 				</div>
-				<div v-if="bio.length != 0" class="about">
+				<div v-if="current_user.bio && current_user.bio.length != 0" class="about">
 					<h5>About</h5>
-					<p>{{ bio }}</p>
+					<p>{{ current_user.bio }}</p>
 				</div>
 			</div>
 			
@@ -43,7 +43,7 @@
 						<label class="labels">Name</label>
 						<input
 							type="text"
-							v-model="firstName"
+							v-model="current_user.firstName"
 							class="form-control"
 							placeholder="Enter first name"
 							value=""
@@ -55,7 +55,7 @@
 						<label class="labels">Last Name</label>
 						<input
 							type="text"
-							v-model="lastName"
+							v-model="current_user.lastName"
 							class="form-control"
 							value=""
 							placeholder="Enter last name"
@@ -67,7 +67,7 @@
 						<label class="labels">Email</label>
 						<input
 							type="text"
-							v-model="mail"
+							v-model="current_user.mail"
 							class="form-control"
 							placeholder="Enter email adress"
 							value=""
@@ -90,7 +90,7 @@
 					<label class="labels">ZIP Code</label>
 					<input
 						type="text"
-						v-model="zipCode"
+						v-model="current_user.zipCode"
 						class="form-control"
 						placeholder="zip"
 						value=""
@@ -113,7 +113,7 @@
 					<div>
 						<b-dropdown
 							class="dropdown-1"
-							v-bind:text="sekesualOri"
+							v-bind:text="current_user.sekesualOri"
 						>
 							<b-dropdown-item @click="setSekesual('Hetero')">
 								Hetero
@@ -130,7 +130,7 @@
 				<div class="col">
 					<label class="labels"> Gender </label>
 					<div>
-						<b-dropdown class="dropdown-2" v-bind:text="gender">
+						<b-dropdown class="dropdown-2" v-bind:text="current_user.gender">
 							<b-dropdown-item @click="setGender('Male')">
 								Male
 							</b-dropdown-item>
@@ -147,7 +147,7 @@
 					<label class="labels">Bio</label>
 					<textarea
 						type="text"
-						v-model="bio"
+						v-model="current_user.bio"
 						class="form-control"
 						placeholder="Tell us a few words about you"
 						value=""
@@ -202,202 +202,103 @@
 </template>
 
 <script>
-import { getMyUserDetails, updateUserProfile, getTags, getConsultsOfMe} from "../services/user.script";
-import { likesOfMe } from "../services/like.script";
-import formValidate from "../services/formValidate";
-import axios from "axios";
-import empty_profile from "../assets/empty_profile.png";
-import empty_photo from "../assets/empty2.png";
-import plus_photo from "../assets/plus.png";
+import {updateUser} from '../services/user'
 
 export default {
 	data() {
 		return {
-			username: "Not Specified",
-			firstName: "Not Specified",
-			lastName: "Not Specified",
-			password: "",
-			bio: "Not Specified",
-			zipCode: "Not Specified",
-			sekesualOri: "Not Specified",
-			mail: "Not Specified",
-			gender: "Not Specified",
-			message: null,
-			file: null,
-			profilePic: "",
-			defaultProfilePic: "",
-			pictures: [],
+			password          : '',
+			current_user      : {...this.$cookies.get('user')},
+			message           : null,
+			file              : null,
+			profilePic        : "",
+			defaultProfilePic : "",
+			pictures          : [],
 			pictures_to_upload: 0,
-			selectedTags: [],
-			existingTags: [],
-			likes: -1,
-			likes_of_me: [],
-			consults: -1,
-			consults_of_me: [],
-			show_delete: false,
+			selectedTags      : [],
+			existingTags      : [],
+			likes             : -1,
+			likes_of_me       : [],
+			consults          : -1,
+			consults_of_me    : [],
+			show_delete       : false,
 		};
 	},
 
-	mounted() {
-		console.log("mounted my profile");
-		getMyUserDetails(this.$cookies.get("user"))
-			.then((user) => {
-				(this.firstName 		= user.data.firstName),
-					(this.username 		= user.data.username),
-					(this.lastName 		= user.data.lastName),
-					(this.bio 			= user.data.bio),
-					(this.zipCode 		= user.data.zipCode),
-					(this.sekesualOri 	= user.data.sekesualOri),
-					(this.mail 			= user.data.mail),
-					(this.gender 		= user.data.gender);
-					(this.selectedTags	= user.data.tags);
+	computed: {
+		user: {
+			get: function() {
+				if (this.$cookies.isKey('user')) {
+					return this.$cookies.get('user')
+				}
+				else {
+					return null
+				}
+			},
+			set: function(new_val) {
+				console.log("setting user cookie with: ", new_val)
+				// {...this.$cookies.get('user').user, user: new_val}
+				this.$cookies.set('user', new_val)
+			}
+		},
 
-					(this.pictures_to_upload = user.data.pictures.length > 0 ? user.data.pictures.length - 1 : 0);
-					(this.pictures = new Array(5));
-					for (let i = 0; i < 5; i++) {
-						if (i < user.data.pictures.length) {
-							if (user.data.pictures[i] != "") {
-								this.pictures[i] = user.data.pictures[i];
-							}
-							else if (user.data.pictures[i] == "" && i == user.data.pictures.length - 1) {
-								this.pictures[i] = plus_photo;
-							}
-						}
-						else {
-							this.pictures[i] = empty_photo;
-							if (user.data.pictures.length == 0 && i == 0) {
-								this.pictures[i] = plus_photo;
-							}
-						}
-						console.log("i = " + i)
-					}
-
-					if (user.data.profilePic == "") {
-						console.log("EMPTY PROFILE");
-						(this.profilePic = empty_profile);
-					}
-					else {
-						(this.profilePic = user.profilePic);
-					}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-
-
-		likesOfMe(this.$cookies.get("user"))
-			.then((likes_of_me) => {
-				console.log("Getting likes of me: " + likes_of_me.data)
-				this.likes_of_me = likes_of_me.data
-				this.likes = likes_of_me.data.length
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-
-
-		getConsultsOfMe(this.$cookies.get("user"))
-			.then((consults_of_me) => {
-				console.log("Getting consults of me: " + consults_of_me.data)
-				this.consults_of_me = consults_of_me.data
-				this.consults = consults_of_me.data.length
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-
-
-		getTags(this.$cookies.get("user"))
-		.then(tags => {
-			this.existingTags = tags.data
-			console.log("tags found: ",  this.existingTags)
-		})
+		accessTokens: function() {
+			if (this.$cookies.isKey('sekes_tokens')) {
+				return this.$cookies.get('sekes_tokens')
+			}
+			else {
+				return null
+			}
+		}
 	},
 
 	methods: {
-		setGender(val) {
-			this.gender = val;
-			console.log("gender %s", this.gender);
+		filter_update(entry, keep_keys) {
+			return (keep_keys.includes(entry[0]))
 		},
-		setSekesual(val) {
-			this.sekesualOri = val;
-			console.log("sekesualOri %s", this.sekesualOri);
-		},
-		actual_pictures() {
-			var actual_pic = []
-			for (let i = 0; i < this.pictures.length; i++) {
-				const picture = this.pictures[i];
-				if (picture.localeCompare(empty_photo) == 0 || picture.localeCompare(plus_photo) == 0) {
-					actual_pic.push("");
-					return actual_pic;
+
+		async updateProfile() {
+			try {
+				console.log("curr: ", this.current_user, "line: ", this.user)
+				let diff_keys = Object.keys(this.current_user).filter(k => this.current_user[k] != this.user[k])
+				let updato = Object.fromEntries(Object.entries(this.current_user).filter(entry => this.filter_update(entry, diff_keys)))
+				if (diff_keys.length != 0) {
+					let update_res = await updateUser(updato, this.accessTokens)
+					console.log("update_res: ", update_res)
+					if (update_res.data.code == 'SUCCESS') {
+						this.user = this.current_user
+					}
 				}
 				else {
-					actual_pic.push(picture);
+					console.log("skipped empty update call")
 				}
+
 			}
-			console.log("PICTURES AFTER");
-			console.log(actual_pic);
-			return actual_pic;
-		},
-		updateProfile() {
-			console.log("updating profile with these pictures:");
-			console.log(this.pictures);
-			const updato = {
-				firstName    : this.firstName,
-				lastName     : this.lastName,
-				bio          : this.bio,
-				zipCode      : this.zipCode,
-				sekesualOri  : this.sekesualOri,
-				mail         : this.mail,
-				gender       : this.gender,
-				pictures     : this.actual_pictures(),
-				profilePic   : this.profilePic,
-				selectedTags : this.selectedTags
-			};
-			if (formValidate.validateUpdate(updato)) {
-				updateUserProfile(this.$cookies.get("user"), updato);
+			catch (e) {
+				console.log("err in update user: ", e)
 			}
+			
 		},
+
 		onSelect() {
-			const file = this.$refs.file.files[0];
-			this.file = file;
-			this.onSubmit();
+
 		},
-		async onSubmit() {
-			const formData = new FormData();
-			if (this.file == null)
-				return
-			formData.append("file", this.file);
-			try {
-				console.log(formData);
-				console.log("Sending form data:...")
-				axios.post("http://localhost:8080/api/upload", formData)
-				.then( (res) => {
-					this.pictures[this.pictures_to_upload] = "http://localhost:8080/static/" + res.data.file.filename;
-					this.pictures_to_upload += 1;
-					if (this.pictures_to_upload < 5) {
-						this.pictures[this.pictures_to_upload] = plus_photo;
-					}
-				})
-				this.message = "Uploaded";
-			} catch (err) {
-				console.log(err);
-				this.message = "Something Went wrong";
-			}
-			this.file = null
+
+		setGender(val) {
+			this.current_user.gender = val;
+			console.log("gender %s", this.current_user.gender);
 		},
-		deletePic(index)
-		{
-			if (this.profilePic == this.pictures[index])
-				this.profilePic = this.defaultProfilePic
-			this.pictures[index] = empty_photo;
-			this.pictures[this.pictures_to_upload] = empty_photo;
-			this.pictures[this.pictures_to_upload - 1] = plus_photo;
-			console.log("deleting picture for index: " + index);
-			console.log(this.pictures)
-			console.log("pictures_to_upload: " + this.pictures_to_upload)
-			this.pictures_to_upload -= 1;
-		}
+
+		setSekesual(val) {
+			this.current_user.sekesualOri = val;
+			console.log("sekesualOri %s", this.current_user.sekesualOri);
+		},
+	},
+
+	mounted() {
+		// console.log("Yooser", this.$cookies.get('user'))
+		// console.log(this.user)
+
 	},
 };
 </script>

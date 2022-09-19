@@ -36,7 +36,6 @@ export default {
     async setLoggedIn(val) {
       this.logged_in = val;
       console.log("logged in set to: %s", val)
-      this.CometFullShebang()
     },
   },
 
