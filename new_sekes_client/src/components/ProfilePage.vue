@@ -7,10 +7,10 @@
 			<div class="account-settings">
 				<div class="user-profile">
 					<div class="user-avatar">
-						<img :src="profilePic" :alt="user.username">
+						<img :src="profilePic" :alt="current_user.username">
 					</div>
-					<h5 class="user-name">{{ user.username }}</h5>
-					<h6 class="user-email">{{ user.mail }}</h6>
+					<h5 class="user-name">{{ current_user.username }}</h5>
+					<h6 class="user-email">{{ current_user.mail }}</h6>
 				</div>
 				<div class = "popularity">
 					<div class = "d-flex justify-content-center align-items-center text-center">
@@ -22,9 +22,9 @@
 						</div>
 					</div>
 				</div>
-				<div v-if="user.bio && user.bio.length != 0" class="about">
+				<div v-if="current_user.bio && current_user.bio.length != 0" class="about">
 					<h5>About</h5>
-					<p>{{ user.bio }}</p>
+					<p>{{ current_user.bio }}</p>
 				</div>
 			</div>
 			
@@ -43,7 +43,7 @@
 						<label class="labels">Name</label>
 						<input
 							type="text"
-							v-model="user.firstName"
+							v-model="current_user.firstName"
 							class="form-control"
 							placeholder="Enter first name"
 							value=""
@@ -55,7 +55,7 @@
 						<label class="labels">Last Name</label>
 						<input
 							type="text"
-							v-model="user.lastName"
+							v-model="current_user.lastName"
 							class="form-control"
 							value=""
 							placeholder="Enter last name"
@@ -67,9 +67,21 @@
 						<label class="labels">Email</label>
 						<input
 							type="text"
-							v-model="user.mail"
+							v-model="current_user.mail"
 							class="form-control"
 							placeholder="Enter email adress"
+							value=""
+						/>
+					</div>
+				</div>
+				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+					<div class="form-group">
+						<label class="labels">Password</label>
+						<input
+							type="password"
+							v-model="password"
+							class="form-control"
+							placeholder="Password"
 							value=""
 						/>
 					</div>
@@ -78,7 +90,7 @@
 					<label class="labels">ZIP Code</label>
 					<input
 						type="text"
-						v-model="user.zipCode"
+						v-model="current_user.zipCode"
 						class="form-control"
 						placeholder="zip"
 						value=""
@@ -101,7 +113,7 @@
 					<div>
 						<b-dropdown
 							class="dropdown-1"
-							v-bind:text="user.sekesualOri"
+							v-bind:text="current_user.sekesualOri"
 						>
 							<b-dropdown-item @click="setSekesual('Hetero')">
 								Hetero
@@ -118,7 +130,7 @@
 				<div class="col">
 					<label class="labels"> Gender </label>
 					<div>
-						<b-dropdown class="dropdown-2" v-bind:text="user.gender">
+						<b-dropdown class="dropdown-2" v-bind:text="current_user.gender">
 							<b-dropdown-item @click="setGender('Male')">
 								Male
 							</b-dropdown-item>
@@ -135,7 +147,7 @@
 					<label class="labels">Bio</label>
 					<textarea
 						type="text"
-						v-model="user.bio"
+						v-model="current_user.bio"
 						class="form-control"
 						placeholder="Tell us a few words about you"
 						value=""
@@ -224,10 +236,9 @@ export default {
 				}
 			},
 			set: function(new_val) {
-				console.log("void setter")
 				console.log("setting user cookie with: ", new_val)
 				// {...this.$cookies.get('user').user, user: new_val}
-				// this.$cookies.set('user', new_val)
+				this.$cookies.set('user', new_val)
 			}
 		},
 
