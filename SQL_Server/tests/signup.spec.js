@@ -57,13 +57,13 @@ describe('Test signup', () => {
 		step("Send mail", async () => {
 			await AuthController.signup(mockRequest(users.Joep), res)
 			hash = res.send.lastCall.firstArg.hash
-			await UserController.get_user_by_username(mockRequest({username: users.Joep.username}), res)
+			await UserController.get_user_by_username(mockRequest(body = {username: users.Joep.username}, username = users.Joep.username), res)
 			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 0)
 			return Promise.resolve()
 		})
 		step("verify", async () => {
 			await AuthController.verifyMail({params:{hash: hash}}, res)
-			await UserController.get_user_by_username(mockRequest({username: users.Joep.username}), res)
+			await UserController.get_user_by_username(mockRequest(body = {username: users.Joep.username}, username = users.Joep.username), res)
 			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 1)
 			return Promise.resolve()
 		})

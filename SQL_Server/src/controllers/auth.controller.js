@@ -229,7 +229,7 @@ exports.signin = async (req, res) => {
 				GROUP BY username,                             \
 				password, tag_list, like_list;"
 		, req.body.username)
-		console.log("signing user request: ", user_request)
+		// console.log("signing user request: ", user_request)
 		if (user_request.length == 0) {
 			return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
 		}
@@ -282,7 +282,8 @@ exports.verifyToken = (req, res, next) => {
 	
 		jwt.verify(token, secret, (err, decoded) => {
 			if (err) {
-				console.log("error: ", err)
+				console.log("error: in token")
+				// console.log("error: ", err)
 				return res.status(401).send({ message: "Unauthorized!" });
 			}
 			// console.log("Identified user %s from token", decoded.username)
@@ -293,8 +294,8 @@ exports.verifyToken = (req, res, next) => {
 	}
 	catch (e) {
 		console.log('error in verify token')
-		console.log(e)
-		throw(e)
+		// console.log(e)
+		// throw(e)
 	}
 
 };
