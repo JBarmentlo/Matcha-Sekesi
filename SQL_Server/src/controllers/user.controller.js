@@ -1,6 +1,6 @@
-const db	 	= require("../db/sql.conn");
-var bcrypt 		= require("bcryptjs");
-const sendMail  = require('../services/mailgun');
+const db       = require("../db/sql.conn");
+var bcrypt     = require("bcryptjs");
+const sendMail = require('../services/mailgun');
 const searches = require("./user.request.js")
 
 

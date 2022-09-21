@@ -46,19 +46,9 @@ app.use('/api/auth', authRouter, function(req, res, next){
 
 // #######################   IMAGE ROUTES   ########################
 
-const upload = multer({
-  dest: "./uploads"
-})
 
 
-app.use('/static', express.static('./uploads'))
-
-
-app.post("/api/upload", upload.single('file'), (req, res) => {
-  res.send({file: req.file})
-})	
-
-
+require("./src/routes/image.routes")(app)
 
 
 const PORT = process.env.PORT || 8081;
