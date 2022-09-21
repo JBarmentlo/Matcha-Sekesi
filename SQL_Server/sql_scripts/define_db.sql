@@ -31,6 +31,7 @@ create table USERS
     image2            varchar(100)             null,
     image3            varchar(100)             null,
     image4            varchar(100)             null,
+    image0            varchar(100)             null,
     constraint USERS_mail_uindex
         unique (mail),
     constraint USERS_username_uindex
@@ -46,6 +47,9 @@ create table USERS
             on update cascade on delete set null,
     constraint USERS_PICTURES_url_fk_4
         foreign key (image4) references PICTURES (url)
+            on update cascade on delete set null,
+    constraint USERS_PICTURES_url_fk_5
+        foreign key (image0) references PICTURES (url)
             on update cascade on delete set null
 );
 
