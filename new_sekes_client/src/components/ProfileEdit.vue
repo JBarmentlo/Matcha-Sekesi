@@ -175,40 +175,18 @@ export default {
 
 	data() {
 		return {
-			password          : '',
 			current_user      : {...this.$cookies.get('user')},
-			message           : null,
-			file              : null,
-			profilePic        : "",
-			defaultProfilePic : "",
-			pictures          : [],
-			pictures_to_upload: 0,
-			selectedTags      : [],
-			existingTags      : [],
-			likes             : -1,
-			likes_of_me       : [],
-			consults          : -1,
-			consults_of_me    : [],
-			show_delete       : false,
 		};
 	},
 
 	computed: {
-		user: {
-			get: function() {
+		user: function() {
 				if (this.$cookies.isKey('user')) {
 					return this.$cookies.get('user')
 				}
 				else {
 					return null
 				}
-			},
-			set: function(new_val) {
-				console.log("void setter")
-				console.log("setting user cookie with: ", new_val)
-				// {...this.$cookies.get('user').user, user: new_val}
-				// this.$cookies.set('user', new_val)
-			}
 		},
 
 		accessTokens: function() {

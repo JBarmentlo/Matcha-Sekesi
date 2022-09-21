@@ -11,6 +11,9 @@
 			<div class="fields">
 				<button>Submit</button>
 			</div>
+			<div class="message">
+				<h5>{{message}}</h5>
+			</div>
 		</form>
 	</div>
 </template>
@@ -37,11 +40,11 @@ export default {
 
 		async onSubmit() {
 			try {
-				console.log("ese: ", this.selected_file)
-				let res = await uploadImage(this.$cookies.get('sekes_tokens'), this.selected_file)
-				console.log("rese ", res)
+				await uploadImage(this.$cookies.get('sekes_tokens'), this.selected_file)
+				this.message = "Upload complete"
 			}
 			catch {
+				this.message = "Error"
 				console.log("ERR")
 			}
 		}
