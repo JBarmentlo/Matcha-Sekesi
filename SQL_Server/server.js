@@ -50,10 +50,15 @@ const upload = multer({
   dest: "./uploads"
 })
 
+
 app.use('/static', express.static('./uploads'))
+
+
 app.post("/api/upload", upload.single('file'), (req, res) => {
   res.send({file: req.file})
-})
+})	
+
+
 
 
 const PORT = process.env.PORT || 8081;

@@ -9,7 +9,7 @@
 
 
 <script>
-import NavBar from "./components/NavBar.vue"
+import NavBar from "./shared/NavBar.vue"
 
 // process.env.USER_ID; // "239482"
 // process.env.USER_KEY; // "foobar"

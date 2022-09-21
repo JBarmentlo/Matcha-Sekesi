@@ -10,7 +10,8 @@ module.exports = (app) => {
 
 
 	app.post("/api/upload", upload.single('file'), (req, res) => {
-	  res.send({file: req.file})
+		console.log("Uploading")
+		res.send({file: req.file})
 	})	
 }
 

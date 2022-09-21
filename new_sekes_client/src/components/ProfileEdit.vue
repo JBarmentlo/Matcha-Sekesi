@@ -146,32 +146,7 @@
 				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
 				</div>
 				<div class="col">
-					<div class="file" v-if="pictures.length <= 5">
-						<form @submit.prevent="onSubmit" enctype="multipart/form-data">
-							<div class="fields">
-								<label> Upload Pictures </label><br />
-									<input id="file-input" type="file" ref="file" @change="onSelect" accept = ".png,.jpg,.jpeg">
-									<div class="row">
-										<div class="column" v-for="(url, index) in pictures" :key="index">
-											<label v-if="index < pictures_to_upload" class = "full">
-												<img :src=pictures[index] @mouseover="show_delete = true" @mouseleave="show_delete = false">
-												<b-col lg="4"><button class = "img-overlay btn btn-warning px-3" @click="deletePic(index)" size="sm" ><i class="fa fa-trash"></i></button></b-col>
-												<b-col lg="12"><button type="button" class="img-overlay btn btn-outline-default waves-effect" @click="profilePic = pictures[index]"><i class="fa fa-star pr-2" aria-hidden="true"></i>Make Profile</button></b-col>
-											</label>
-											<label v-if="index == pictures_to_upload" for="file-input" class = "next">
-												<img :src=pictures[index]>
-											</label>
-											<label v-if="index > pictures_to_upload" class = "empty">
-												<img :src=pictures[index]>
-											</label>
-										</div>
-									</div>
-							</div>
-							<div class="message">
-								{{ message }}
-							</div>
-						</form>
-					</div>
+					<file-upload />
 				</div>
 			</div>
 			<div class="row gutters">
@@ -190,9 +165,14 @@
 </template>
 
 <script>
-import {updateUser} from '../services/user'
+// import {updateUser} from '../services/user'
+import FileUpload from '../shared/FileUpload.vue'
 
 export default {
+	components: {
+		FileUpload
+	},
+
 	data() {
 		return {
 			password          : '',
@@ -247,32 +227,15 @@ export default {
 		},
 
 		async updateProfile() {
-			try {
-				console.log("curr: ", this.current_user, "line: ", this.user)
-				let diff_keys = Object.keys(this.current_user).filter(k => this.current_user[k] != this.user[k])
-				let updato = Object.fromEntries(Object.entries(this.current_user).filter(entry => this.filter_update(entry, diff_keys)))
-				if (diff_keys.length != 0) {
-					let update_res = await updateUser(updato, this.accessTokens)
-					console.log("update_res: ", update_res)
-					if (update_res.data.code == 'SUCCESS') {
-						this.user = this.current_user
-					}
-				}
-				else {
-					console.log("skipped empty update call")
-				}
-
-			}
-			catch (e) {
-				console.log("err in update user: ", e)
-			}
 			
 		},
 
 		onSelect() {
 
 		},
+		async onSubmit() {
 
+		},
 		setGender(val) {
 			this.current_user.gender = val;
 			console.log("gender %s", this.current_user.gender);
