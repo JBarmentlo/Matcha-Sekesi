@@ -7,7 +7,7 @@
 			<div class="account-settings">
 				<div class="user-profile">
 					<div class="user-avatar">
-						<img :src="profilePic" :alt="user.username">
+						<img :src="user.image0" :alt="user.username">
 					</div>
 					<h5 class="user-name">{{ user.username }}</h5>
 					<h6 class="user-email">{{ user.mail }}</h6>
@@ -15,10 +15,10 @@
 				<div class = "popularity">
 					<div class = "d-flex justify-content-center align-items-center text-center">
 						<div class = "views p-3">
-							<i class="fa fa-eye fa-lm"></i>  {{ consults }}
+							<i class="fa fa-eye fa-lm"></i>  {{ user.consults.length }}
 						</div>
 						<div class = "likes p-3">
-							<i class="fa fa-thumbs-up fa-lm"></i>  {{ likes }}
+							<i class="fa fa-thumbs-up fa-lm"></i>  {{ user.likes.length }}
 						</div>
 					</div>
 				</div>
@@ -175,7 +175,8 @@ export default {
 
 	data() {
 		return {
-			current_user      : {...this.$cookies.get('user')},
+			existing_tags : [],
+			selected_tags : []
 		};
 	},
 
