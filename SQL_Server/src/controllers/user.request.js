@@ -1,17 +1,23 @@
 const db       = require("../db/sql.conn");
 
 function csv_to_array(user, csv_property_name) {
-    if (user[csv_property_name] === null) {
-        user[csv_property_name] = []
+    try {
+        if (user[csv_property_name] === null) {
+            user[csv_property_name] = []
+        }
+        else {
+            user[csv_property_name] = user[csv_property_name].split(",")
+        }
     }
-    else {
-        user[csv_property_name] = user[csv_property_name].split(",")
+    catch {
+        console.log("ERR IN CSV TO ARR")
     }
     return user
+    
 }
 
 function transform_csv_lists_to_arrays(user) {
-    for (const property_name of ['tag_list', 'like_list', 'consult_list', 'picture_list']) {
+    for (const property_name of ['tag_list', 'like_list', 'consult_list']) {
         user = csv_to_array(user, property_name)
     }
     return user
@@ -103,7 +109,6 @@ exports.get_all_users = async (searcher_username) => {
                 GROUP BY username,                              \
                 password, tag_list, like_list;"
         , searcher_username)
-
         return query.map(user => transform_csv_lists_to_arrays(user))
     
 };

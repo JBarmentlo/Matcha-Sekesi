@@ -36,7 +36,7 @@ describe("Tags", () => {
 		})
 		it("Missing user", async () => {
 			await TagController.add_tag_to_user(mockRequest({username: "youseure", tag: "Bitching about Mark"}), res)
-			assert.equal(res.send.lastCall.firstArg.code, "ER_NO_REFERENCED_ROW")
+			assert.equal(res.send.lastCall.firstArg.code, "ER_NO_REFERENCED_ROW_2")
 		})
 		it("undefined user", async () => {
 			await TagController.add_tag_to_user(mockRequest({tag: "Bitching about Mark"}), res)

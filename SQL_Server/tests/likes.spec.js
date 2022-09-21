@@ -50,11 +50,11 @@ describe('Test likes', () => {
 		})
 		step('Missing liked: Code LIKE_MISS', async () => {
 			await LikeController.like_user(mockRequest({liked: 'lol'}, users.Mark.username), res)
-			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
+			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW_2")
 		})
 		step('Missing liker: Code LIKE_MISS', async () => {
 			await LikeController.like_user(mockRequest({liked: users.Jhonny.username}, 'lol'), res)
-			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
+			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW_2")
 		})
 	})
 	describe("Get Liked Users", () => {

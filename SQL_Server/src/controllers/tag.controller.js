@@ -24,6 +24,9 @@ exports.add_tag_to_user = async (req, res) => {
 		else if (e.code == 'ER_NO_REFERENCED_ROW') {
 			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
 		}
+		else if (e.code == 'ER_NO_REFERENCED_ROW_2') {
+			res.status(200).send({message: "User name not existing", code: e.code})
+		}
 		else if (e.code == 'ER_BAD_NULL_ERROR') {
 			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
 		}

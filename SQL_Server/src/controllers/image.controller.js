@@ -18,3 +18,20 @@ exports.upload_image = async (req, res) => {
 		res.status(500).send({error: e})
 	}
 }
+
+exports.insert_fake_picture_test = async (filename, username) => {
+	console.log("Uploading fake image")
+	try {
+		let insert_query = db.query(
+			"INSERT INTO PICTURES \
+				(url, user) \
+				VALUES (?, ?);",
+			
+			["http://localhost:8081/images/get/" + filename, req.username])
+
+		return ("http://localhost:8081/images/get/" + filename)
+	}
+	catch (e){
+		throw(e)
+	}
+}
