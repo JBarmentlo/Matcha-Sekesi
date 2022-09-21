@@ -10,14 +10,13 @@ function csv_to_array(user, csv_property_name) {
         }
     }
     catch {
-        console.log("ERR IN CSV TO ARR")
     }
     return user
     
 }
 
 function transform_csv_lists_to_arrays(user) {
-    for (const property_name of ['tag_list', 'like_list', 'consult_list']) {
+    for (const property_name of ['tag_list', 'like_list', 'consult_list', 'picture_list']) {
         user = csv_to_array(user, property_name)
     }
     return user
