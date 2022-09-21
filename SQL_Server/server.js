@@ -1,9 +1,12 @@
 const express 		= require("express");
 const bodyParser 	= require("body-parser");
 const cors 			  = require("cors");
+const multer 	= require("multer");
+
 require('dotenv').config()
 
 const app = express();
+
 var corsOptions = {
   origin: "http://localhost:8080"
 };
@@ -12,10 +15,12 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// require("./src/routes/image.route")(app)
 
 const userRouter = require("./src/routes/user.routes")
 const authRouter = require("./src/routes/auth.routes")
+
+
+// #######################   USER ROUTES   ########################
 
 app.use('/api/users',userRouter, function(req, res, next){
   res.header(
@@ -25,6 +30,10 @@ app.use('/api/users',userRouter, function(req, res, next){
   next();
 })
 
+
+
+// #######################   AUTH ROUTES   ########################
+
 app.use('/api/auth', authRouter, function(req, res, next){
   res.header(
     "Access-Control-Allow-Headers",
@@ -33,6 +42,18 @@ app.use('/api/auth', authRouter, function(req, res, next){
   next();
 }) // auth authentication
 
+
+
+// #######################   IMAGE ROUTES   ########################
+
+const upload = multer({
+  dest: "./uploads"
+})
+
+app.use('/static', express.static('./uploads'))
+app.post("/api/upload", upload.single('file'), (req, res) => {
+  res.send({file: req.file})
+})
 
 
 const PORT = process.env.PORT || 8081;
