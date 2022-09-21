@@ -15,10 +15,10 @@
 				<div class = "popularity">
 					<div class = "d-flex justify-content-center align-items-center text-center">
 						<div class = "views p-3">
-							<i class="fa fa-eye fa-lm"></i>  {{ user.consults.length }}
+							<i class="fa fa-eye fa-lm"></i>  {{ user.consult_list.length }}
 						</div>
 						<div class = "likes p-3">
-							<i class="fa fa-thumbs-up fa-lm"></i>  {{ user.likes.length }}
+							<i class="fa fa-thumbs-up fa-lm"></i>  {{ user.like_list.length }}
 						</div>
 					</div>
 				</div>
@@ -175,13 +175,14 @@ export default {
 
 	data() {
 		return {
-			existing_tags : [],
-			selected_tags : []
+			existingTags : [],
+			selectedTags : [],
+			user : {...this.$cookies.get('user')}
 		};
 	},
 
 	computed: {
-		user: function() {
+		userr: function() {
 				if (this.$cookies.isKey('user')) {
 					return this.$cookies.get('user')
 				}
@@ -206,15 +207,9 @@ export default {
 		},
 
 		async updateProfile() {
-			
+			console.log("Updating profile dummy: ", {...this.user})
 		},
 
-		onSelect() {
-
-		},
-		async onSubmit() {
-
-		},
 		setGender(val) {
 			this.current_user.gender = val;
 			console.log("gender %s", this.current_user.gender);

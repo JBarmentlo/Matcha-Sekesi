@@ -179,7 +179,7 @@ exports.signin = async (req, res) => {
         var token = jwt.sign({ username: user.username }, signature, {
             expiresIn: 86400 // 24 hours
         });
-    
+        console.log("signed in: ", user)
         res.status(200).send({
             user       : user,
             accessToken: token,

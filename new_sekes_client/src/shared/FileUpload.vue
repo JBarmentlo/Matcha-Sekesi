@@ -39,13 +39,21 @@ export default {
 		},
 
 		async onSubmit() {
-			try {
-				await uploadImage(this.$cookies.get('sekes_tokens'), this.selected_file)
-				this.message = "Upload complete"
+			if (this.selected_file == null) {
+				this.message = "Please select a file"
 			}
-			catch {
-				this.message = "Error"
-				console.log("ERR")
+			else {
+					try {
+					await uploadImage(this.$cookies.get('sekes_tokens'), this.selected_file)
+					this.message = "Upload complete"
+				}
+				catch {
+					this.message = "Error"
+					console.log("ERR")
+				}
+				finally {
+					this.selected_file = null
+				}
 			}
 		}
 	}
