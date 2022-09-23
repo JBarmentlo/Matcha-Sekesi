@@ -167,7 +167,7 @@
 <script>
 // import {updateUser} from '../services/user'
 import FileUpload from '../shared/FileUpload.vue'
-
+import { diff } from '../services/utils'
 export default {
 	components: {
 		FileUpload
@@ -182,15 +182,6 @@ export default {
 	},
 
 	computed: {
-		userr: function() {
-				if (this.$cookies.isKey('user')) {
-					return this.$cookies.get('user')
-				}
-				else {
-					return null
-				}
-		},
-
 		accessTokens: function() {
 			if (this.$cookies.isKey('sekes_tokens')) {
 				return this.$cookies.get('sekes_tokens')
@@ -208,6 +199,8 @@ export default {
 
 		async updateProfile() {
 			console.log("Updating profile dummy: ", {...this.user})
+			let user_diff = diff(this.$cookies.get('user'), this.user)
+			console.log("DIFFY: ", user_diff)
 		},
 
 		setGender(val) {

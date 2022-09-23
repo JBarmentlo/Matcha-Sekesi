@@ -180,4 +180,3 @@ exports.get_my_user = async (req, res) => {
 		throw(e)
 	}	
 }
-

@@ -124,7 +124,7 @@ exports.resetPass = async (req, res) => {
             where id_hash=?",
             req.body.hash)
         if (verify_reset_result.length == 0) {
-            console.log("return res.status(201).send({message: 'No user for the reset', code: 'MISSING_VERIFY'})")
+            // console.log("return res.status(201).send({message: 'No user for the reset', code: 'MISSING_VERIFY'})")
             return res.status(201).send({message: "No user for the reset", code: "MISSING_VERIFY"})
         }
         let delete_reset_result = await db.query(
@@ -132,7 +132,7 @@ exports.resetPass = async (req, res) => {
             where id_hash=?",
             req.body.hash)
         if ((Date.now() - verify_reset_result[0].last_updated) > 600000) {
-            console.log("return res.status(201).send({message: 'Code Timed out', code: 'TIMEOUT_RESET'})")
+            // console.log("return res.status(201).send({message: 'Code Timed out', code: 'TIMEOUT_RESET'})")
             return res.status(201).send({message: "Code Timed out", code: "TIMEOUT_RESET"})
         }
     let password_hash  = bcrypt.hashSync(req.body.password, 8);
@@ -140,7 +140,7 @@ exports.resetPass = async (req, res) => {
             "UPDATE USERS SET password=? WHERE USERS.username=?",
             [password_hash, verify_reset_result[0].user]
         )
-        console.log("return res.status(200).send({message: 'reset pass for ' + verify_reset_result[0].user, code: 'SUCCESS'})")
+        // console.log("return res.status(200).send({message: 'reset pass for ' + verify_reset_result[0].user, code: 'SUCCESS'})")
         return res.status(200).send({message: "reset pass for " + verify_reset_result[0].user, code: "SUCCESS"})
     }
     catch (e) {
@@ -179,7 +179,7 @@ exports.signin = async (req, res) => {
         var token = jwt.sign({ username: user.username }, signature, {
             expiresIn: 86400 // 24 hours
         });
-        console.log("signed in: ", user)
+        // console.log("signed in: ", user)
         res.status(200).send({
             user       : user,
             accessToken: token,
@@ -198,7 +198,8 @@ exports.verifyToken = (req, res, next) => {
     try {
         let token = req.headers["x-access-token"];
         let secret = req.headers["x-access-signature"];
-        console.log("Verifying token: ", token," ,secret: ", secret)
+        // console.log("Verifying tokens")
+        // console.log("Verifying token: ", token," ,secret: ", secret)
         if (!token) {
             return res.status(403).send({ message: "No token provided!" });
         }

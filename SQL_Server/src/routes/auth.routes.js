@@ -11,7 +11,6 @@ router.post("/signin"          , auth.signin);
 router.post("/requestpassreset", auth.requestresetPass);
 router.post("/verify/:hash"    , auth.verifyMail);
 router.post("/passreset"       , auth.resetPass);
-router.post("/updateuser"      , auth.verifyToken     , userController.update_user_test);
 
 
 
