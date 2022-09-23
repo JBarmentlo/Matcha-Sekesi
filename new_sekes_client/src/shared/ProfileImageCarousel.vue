@@ -10,8 +10,6 @@
       img-width="1024"
       img-height="480"
       style="text-shadow: 1px 1px 2px #333;"
-      @sliding-start="onSlideStart"
-      @sliding-end="onSlideEnd"
     >
       <!-- Text slides with image -->
     <div v-for="url in image_urls" :key="url">
@@ -28,6 +26,12 @@
       Slide #: {{ slide }}<br>
       Sliding: {{ sliding }}
     </p>
+    <button @click="EmitAddImage">
+        Add Slide
+    </button>
+    <button @click="emitDeleteCurrentSlide" >
+        Remove Slide
+    </button>
   </div>
 </template>
 
@@ -42,12 +46,12 @@
       }
     },
     methods: {
-      onSlideStart() {
-        this.sliding = true
-      },
-      onSlideEnd() {
-        this.sliding = false
-      }
+        emitDeleteCurrentSlide() {
+            this.$emit("DeleteImage", this.slide)
+        },
+        EmitAddImage() {
+            this.$emit("AddImage")
+        }
     },
     mounted() {
         console.log("IMAGEGE: ", this.image_urls)

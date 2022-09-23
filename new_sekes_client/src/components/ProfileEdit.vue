@@ -27,7 +27,7 @@
                     <p>{{ user.bio }}</p>
                 </div>
             </div>
-		<ProfileImageCarousel :images="user.picture_list"/>
+		<ProfileImageCarousel :images="user.picture_list" @AddImage.prevent="" @DeleteImage="RemoveImage"/>
             
         </div>
     </div>
@@ -162,7 +162,6 @@
     </div>
     </div>
     </div>
-    <!-- <img src="http://localhost:8081/api/image/get/9b6b598ae90e2b6693366c3c7840d886"/> -->
 
     </div>
 </template>
@@ -200,6 +199,11 @@ export default {
     },
 
     methods: {
+		RemoveImage(image_index) {
+			this.user.picture_list.splice(image_index, 1)
+			console.log("removed image: ", image_index, this.user.picture_list)
+		},
+
         async updateProfile() {
             console.log("Updating profile dummy: ", {...this.user})
             let user_diffy = diff(this.$cookies.get('user'), this.user)
