@@ -1,245 +1,244 @@
 <template>
-	<div class="container">
-	<div class="row gutters">
-	<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-	<div class="card h-100">
-		<div class="card-body d-flex flex-column">
-			<div class="account-settings">
-				<div class="user-profile">
-					<div class="user-avatar">
-						<img :src="user.image0" :alt="user.username">
-					</div>
-					<h5 class="user-name">{{ user.username }}</h5>
-					<h6 class="user-email">{{ user.mail }}</h6>
-				</div>
-				<div class = "popularity">
-					<div class = "d-flex justify-content-center align-items-center text-center">
-						<div class = "views p-3">
-							<i class="fa fa-eye fa-lm"></i>  {{ user.consult_list.length }}
-						</div>
-						<div class = "likes p-3">
-							<i class="fa fa-thumbs-up fa-lm"></i>  {{ user.like_list.length }}
-						</div>
-					</div>
-				</div>
-				<div v-if="user.bio && user.bio.length != 0" class="about">
-					<h5>About</h5>
-					<p>{{ user.bio }}</p>
-				</div>
-			</div>
-			<ul>
-				<div v-for="image in [user.image0, user.image1, user.image2, user.image3, user.image4]" v-bind:key="image">
-					<div v-if="image != null">
-						<img v-bind:src="image" alt="picture text" />
-					</div>
-				</div>
-			</ul>
-		</div>
-	</div>
+    <div class="container">
+    <div class="row gutters">
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+    <div class="card h-100">
+        <div class="card-body d-flex flex-column">
+            <div class="account-settings">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <img :src="user.image0" :alt="user.username">
+                    </div>
+                    <h5 class="user-name">{{ user.username }}</h5>
+                    <h6 class="user-email">{{ user.mail }}</h6>
+                </div>
+                <div class = "popularity">
+                    <div class = "d-flex justify-content-center align-items-center text-center">
+                        <div class = "views p-3">
+                            <i class="fa fa-eye fa-lm"></i>  {{ user.consult_list.length }}
+                        </div>
+                        <div class = "likes p-3">
+                            <i class="fa fa-thumbs-up fa-lm"></i>  {{ user.like_list.length }}
+                        </div>
+                    </div>
+                </div>
+                <div v-if="user.bio && user.bio.length != 0" class="about">
+                    <h5>About</h5>
+                    <p>{{ user.bio }}</p>
+                </div>
+            </div>
+		<ProfileImageCarousel :images="user.picture_list"/>
+            
+        </div>
+    </div>
+    </div>
+    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+    <div class="card h-100">
+        <div class="card-body">
+            <div class="row gutters pt-2">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <h6 class="mb-2 text-primary">Account Details</h6>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label class="labels">Name</label>
+                        <input
+                            type="text"
+                            v-model="user.firstName"
+                            class="form-control"
+                            placeholder="Enter first name"
+                            value=""
+                        />
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label class="labels">Last Name</label>
+                        <input
+                            type="text"
+                            v-model="user.lastName"
+                            class="form-control"
+                            value=""
+                            placeholder="Enter last name"
+                        />
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label class="labels">Email</label>
+                        <input
+                            type="text"
+                            v-model="user.mail"
+                            class="form-control"
+                            placeholder="Enter email adress"
+                            value=""
+                        />
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <label class="labels">ZIP Code</label>
+                    <input
+                        type="text"
+                        v-model="user.zipCode"
+                        class="form-control"
+                        placeholder="zip"
+                        value=""
+                    />
+                </div>
+            </div>
+            <div class="row gutters pt-5">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <h6 class="mt-3 mb-2 text-primary">Personal details</h6>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <label class="labels">Interests</label>
+                    <tags-input element-id="tags"
+                    v-model="selectedTags"
+                    :existing-tags="existingTags"
+                    :typeahead="true"></tags-input>
+                </div>
+                <div class="col">
+                    <label class="labels">Sekesual Orientation</label>
+                    <div>
+                        <b-dropdown
+                            class="dropdown-1"
+                            v-bind:text="user.sekesualOri"
+                        >
+                            <b-dropdown-item @click="setSekesual('Hetero')">
+                                Hetero
+                            </b-dropdown-item>
+                            <b-dropdown-item @click="setSekesual('Gay')">
+                                Gay
+                            </b-dropdown-item>
+                            <b-dropdown-item @click="setSekesual('Bi')">
+                                Bi
+                            </b-dropdown-item>
+                        </b-dropdown>
+                    </div>
+                </div>
+                <div class="col">
+                    <label class="labels"> Gender </label>
+                    <div>
+                        <b-dropdown class="dropdown-2" v-bind:text="user.gender">
+                            <b-dropdown-item @click="setGender('Male')">
+                                Male
+                            </b-dropdown-item>
+                            <b-dropdown-item @click="setGender('Female')">
+                                Female
+                            </b-dropdown-item>
+                            <b-dropdown-item @click="setGender('NonBinary')">
+                                NonBinary
+                            </b-dropdown-item>
+                        </b-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+                    <label class="labels">Bio</label>
+                    <textarea
+                        type="text"
+                        v-model="user.bio"
+                        class="form-control"
+                        placeholder="Tell us a few words about you"
+                        value=""
+                        maxlength="255"
+                        rows="6"
+                    />
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                </div>
+                <div class="col">
+                    <file-upload />
+                </div>
+            </div>
+            <div class="row gutters">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="text-right">
+                        <button type="button" id="submit" name="submit" class="btn btn-secondary btn-rounded m-2">Cancel</button>
+                        <button type="button" id="submit" name="submit" class="btn btn-primary btn-rounded m-2" @click="updateProfile">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <!-- <img src="http://localhost:8081/api/image/get/9b6b598ae90e2b6693366c3c7840d886"/> -->
 
-	</div>
-	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-	<div class="card h-100">
-		<div class="card-body">
-			<div class="row gutters pt-2">
-				<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-					<h6 class="mb-2 text-primary">Account Details</h6>
-				</div>
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-					<div class="form-group">
-						<label class="labels">Name</label>
-						<input
-							type="text"
-							v-model="user.firstName"
-							class="form-control"
-							placeholder="Enter first name"
-							value=""
-						/>
-					</div>
-				</div>
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-					<div class="form-group">
-						<label class="labels">Last Name</label>
-						<input
-							type="text"
-							v-model="user.lastName"
-							class="form-control"
-							value=""
-							placeholder="Enter last name"
-						/>
-					</div>
-				</div>
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-					<div class="form-group">
-						<label class="labels">Email</label>
-						<input
-							type="text"
-							v-model="user.mail"
-							class="form-control"
-							placeholder="Enter email adress"
-							value=""
-						/>
-					</div>
-				</div>
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-					<label class="labels">ZIP Code</label>
-					<input
-						type="text"
-						v-model="user.zipCode"
-						class="form-control"
-						placeholder="zip"
-						value=""
-					/>
-				</div>
-			</div>
-			<div class="row gutters pt-5">
-				<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-					<h6 class="mt-3 mb-2 text-primary">Personal details</h6>
-				</div>
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-					<label class="labels">Interests</label>
-					<tags-input element-id="tags"
-					v-model="selectedTags"
-					:existing-tags="existingTags"
-					:typeahead="true"></tags-input>
-				</div>
-				<div class="col">
-					<label class="labels">Sekesual Orientation</label>
-					<div>
-						<b-dropdown
-							class="dropdown-1"
-							v-bind:text="user.sekesualOri"
-						>
-							<b-dropdown-item @click="setSekesual('Hetero')">
-								Hetero
-							</b-dropdown-item>
-							<b-dropdown-item @click="setSekesual('Gay')">
-								Gay
-							</b-dropdown-item>
-							<b-dropdown-item @click="setSekesual('Bi')">
-								Bi
-							</b-dropdown-item>
-						</b-dropdown>
-					</div>
-				</div>
-				<div class="col">
-					<label class="labels"> Gender </label>
-					<div>
-						<b-dropdown class="dropdown-2" v-bind:text="user.gender">
-							<b-dropdown-item @click="setGender('Male')">
-								Male
-							</b-dropdown-item>
-							<b-dropdown-item @click="setGender('Female')">
-								Female
-							</b-dropdown-item>
-							<b-dropdown-item @click="setGender('NonBinary')">
-								NonBinary
-							</b-dropdown-item>
-						</b-dropdown>
-					</div>
-				</div>
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
-					<label class="labels">Bio</label>
-					<textarea
-						type="text"
-						v-model="user.bio"
-						class="form-control"
-						placeholder="Tell us a few<ul>
-  <li v-for="user in users" v-bind:key="user.name">
-    <img v-bind:src="user.photoURL" alt="picture text" />
-    <p>{{ user.name }}</p>
-    <p v-for="address in user.addresses">{{ address }}</p>
-  </li>
-</ul>md-6 col-sm-6 col-12">
-				</div>
-				<div class="col">
-					<file-upload />
-				</div>
-			</div>
-			<div class="row gutters">
-				<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-					<div class="text-right">
-						<button type="button" id="submit" name="submit" class="btn btn-secondary btn-rounded m-2">Cancel</button>
-						<button type="button" id="submit" name="submit" class="btn btn-primary btn-rounded m-2" @click="updateProfile">Update</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	</div>
-	</div>
-	</div>
+    </div>
 </template>
 
 <script>
+
+
 import {updateUser, getMyUser} from '../services/user'
 import FileUpload from '../shared/FileUpload.vue'
+import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
 import { diff } from '../services/utils'
 export default {
-	components: {
-		FileUpload
-	},
+    components: {
+        FileUpload,
+		ProfileImageCarousel
+    },
 
-	data() {
-		return {
-			existingTags : [],
-			selectedTags : [],
-			user : {...this.$cookies.get('user')}
-		};
-	},
+    data() {
+        return {
+            existingTags : [],
+            selectedTags : [],
+            user : {...this.$cookies.get('user')}
+        };
+    },
 
-	computed: {
-		accessTokens: function() {
-			if (this.$cookies.isKey('sekes_tokens')) {
-				return this.$cookies.get('sekes_tokens')
-			}
-			else {
-				return null
-			}
-		}
-	},
+    computed: {
+        accessTokens: function() {
+            if (this.$cookies.isKey('sekes_tokens')) {
+                return this.$cookies.get('sekes_tokens')
+            }
+            else {
+                return null
+            }
+        }
+    },
 
-	methods: {
-		filter_update(entry, keep_keys) {
-			return (keep_keys.includes(entry[0]))
-		},
+    methods: {
+        async updateProfile() {
+            console.log("Updating profile dummy: ", {...this.user})
+            let user_diffy = diff(this.$cookies.get('user'), this.user)
+            // console.log("DIFFY: ", user_diffy)
+            if (Object.keys(user_diffy).length === 0) {
+                console.log("useless update ignored")
+                return
+            }
+            try {
+                await updateUser(this.$cookies.get('sekes_tokens'), user_diffy)
+                let user_response = await getMyUser(this.$cookies.get('sekes_tokens'))
+                // console.log("res: ",user_response.data.data)
+                this.$cookies.set('user', user_response.data.data)
+                this.user = user_response.data.data
+            }
+            catch (e) {
+                console.log("error in update User or get response:\n", e)
+            }
+        },
 
-		async updateProfile() {
-			console.log("Updating profile dummy: ", {...this.user})
-			let user_diffy = diff(this.$cookies.get('user'), this.user)
-			// console.log("DIFFY: ", user_diffy)
-			if (Object.keys(user_diffy).length === 0) {
-				console.log("useless update ignored")
-				return
-			}
-			try {
-				await updateUser(this.$cookies.get('sekes_tokens'), user_diffy)
-				let user_response = await getMyUser(this.$cookies.get('sekes_tokens'))
-				// console.log("res: ",user_response.data.data)
-				this.$cookies.set('user', user_response.data.data)
-				this.user = user_response.data.data
-			}
-			catch (e) {
-				console.log("error in update User or get response:\n", e)
-			}
-		},
+        setGender(val) {
+            this.user.gender = val;
+            console.log("gender %s", this.user.gender);
+        },
 
-		setGender(val) {
-			this.user.gender = val;
-			console.log("gender %s", this.user.gender);
-		},
+        setSekesual(val) {
+            this.user.sekesualOri = val;
+            console.log("sekesualOri %s", this.user.sekesualOri);
+        },
+        onSelectImage(val) {
+            console.log("selected: ", val)
+        }
+    },
 
-		setSekesual(val) {
-			this.user.sekesualOri = val;
-			console.log("sekesualOri %s", this.user.sekesualOri);
-		},
-	},
+    mounted() {
+        // console.log("Yooser", this.$cookies.get('user'))
+        console.log(this.slide, this.sliding)
 
-	mounted() {
-		// console.log("Yooser", this.$cookies.get('user'))
-		// console.log(this.user)
-
-	},
+    },
 };
 </script>
 
@@ -266,12 +265,12 @@ export default {
 }
 
 .next > img:hover {
-	background-color: rgb(240, 236, 236);
-	cursor: pointer;
+    background-color: rgb(240, 236, 236);
+    cursor: pointer;
 }
 
 input[type = "file"] {
-	display: none
+    display: none
 }
 
 .img-overlay {
@@ -301,8 +300,8 @@ input[type = "file"] {
 }
 
 .popularity {
-	/* background-color:rgba(11, 244, 189, 0.568); */
-	color: rgb(56, 56, 56);
+    /* background-color:rgba(11, 244, 189, 0.568); */
+    color: rgb(56, 56, 56);
 }
 
 body {
@@ -368,7 +367,7 @@ body {
 }
 
 .container {
-	margin-top: 5%;
+    margin-top: 5%;
 }
 
 

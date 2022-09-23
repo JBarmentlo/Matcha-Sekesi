@@ -9,6 +9,8 @@ import VueCookies from 'vue-cookies-reactive'
 Vue.use(VueCookies)
 Vue.component('tags-input', VoerroTagsInput);
 
+
+
 // Vue.use(require('vue-cookies'))
 // Vue.use(require('vue-cookies-reactive'))
 
