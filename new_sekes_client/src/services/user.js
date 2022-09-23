@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-export const updateUser = async (user, access_token) => {
+export const updateUser = async (access_token, user) => {
 	console.log("User update for: ", user)
 	let request = {
 		url: "http://localhost:8081/api/users/updateuser", // should be replaced after going to production with domain url

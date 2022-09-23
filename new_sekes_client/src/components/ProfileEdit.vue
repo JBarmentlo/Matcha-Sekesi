@@ -165,7 +165,7 @@
 </template>
 
 <script>
-// import {updateUser} from '../services/user'
+import {updateUser} from '../services/user'
 import FileUpload from '../shared/FileUpload.vue'
 import { diff } from '../services/utils'
 export default {
@@ -199,8 +199,18 @@ export default {
 
 		async updateProfile() {
 			console.log("Updating profile dummy: ", {...this.user})
-			let user_diff = diff(this.$cookies.get('user'), this.user)
-			console.log("DIFFY: ", user_diff)
+			let user_diffy = diff(this.$cookies.get('user'), this.user)
+			console.log("DIFFY: ", user_diffy)
+			if (Object.keys(user_diffy).length === 0) {
+				console.log("useless update ignored")
+				return
+			}
+			try {
+				await updateUser(this.$cookies.get('sekes_tokens'), user_diffy)
+			}
+			catch (e) {
+				console.log("error in update User:\n", e)
+			}
 		},
 
 		setGender(val) {
