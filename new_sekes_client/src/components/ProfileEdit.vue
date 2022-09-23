@@ -27,7 +27,7 @@
                     <p>{{ user.bio }}</p>
                 </div>
             </div>
-		<ProfileImageCarousel :images="user.picture_list" @AddImage.prevent="" @DeleteImage="RemoveImage"/>
+		<ProfileImageCarousel :images="user_images" @AddImage.prevent="" @DeleteImage="RemoveImage"/>
             
         </div>
     </div>
@@ -195,13 +195,28 @@ export default {
             else {
                 return null
             }
-        }
+        },
+		user_images: {
+			get: function() {
+				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3, this.user.image4].filter((im) => {return im != undefined})
+			},
+
+		}
     },
 
     methods: {
 		RemoveImage(image_index) {
-			this.user.picture_list.splice(image_index, 1)
-			console.log("removed image: ", image_index, this.user.picture_list)
+			this.user['image' + image_index] = null
+			console.log("removed image: ", image_index, this.user_images)
+			for (let i = 0; i < 5; i++) {
+					console.log(this.user_images.length)
+					if (i < this.user_images.length) {
+						this.user["image" + i] = this.user_images[i]
+					}
+					else {
+						this.user["image" + i] = null
+					}
+				} 
 		},
 
         async updateProfile() {

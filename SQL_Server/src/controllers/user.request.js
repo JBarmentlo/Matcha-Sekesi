@@ -126,6 +126,11 @@ exports.get_user = async (searcher_username, searched_username) => {
                 zipCode,                                             \
                 city,                                                \
                 isCompleteProfile,                                   \
+                image0,                                              \
+                image1,                                              \
+                image2,                                              \
+                image3,                                              \
+                image4,                                              \
                 longitude,                                           \
                 latitude,                                            \
                 mailVerified, \
@@ -142,7 +147,7 @@ exports.get_user = async (searcher_username, searched_username) => {
             GROUP BY username;".replace('searcher_username', searcher_username).replace('searched_username', searched_username)
     , )
 
-    // console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+    console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
     return transform_csv_lists_to_arrays(user_query[0])
 };
 
@@ -167,6 +172,11 @@ exports.get_my_user = async (searched_username) => {
                 longitude,                                           \
                 latitude,                                            \
                 id,                                                  \
+                image0,                                              \
+                image1,                                              \
+                image2,                                              \
+                image3,                                              \
+                image4,                                              \
                 GROUP_CONCAT(tag) as tag_list                        \
             FROM USERS                                               \
             LEFT JOIN TAGS T                                         \
@@ -192,6 +202,11 @@ exports.get_my_user = async (searched_username) => {
                     longitude,                                       \
                     latitude,                                        \
                     id,                                              \
+                    image0,                                              \
+                    image1,                                              \
+                    image2,                                              \
+                    image3,                                              \
+                    image4,                                              \
                     GROUP_CONCAT(liker) as like_list,                \
                     tag_list                                         \
             FROM TAGLIST                                             \
@@ -218,6 +233,11 @@ exports.get_my_user = async (searched_username) => {
                     longitude,                                       \
                     latitude,                                        \
                     id,                                              \
+                    image0,                                              \
+                    image1,                                              \
+                    image2,                                              \
+                    image3,                                              \
+                    image4,                                              \
                     GROUP_CONCAT(url) as picture_list,               \
                     tag_list,                                        \
                     like_list                                        \
@@ -254,6 +274,11 @@ exports.get_my_user = async (searched_username) => {
                     longitude,                                       \
                     latitude,                                        \
                     id,                                              \
+                    image0,                                              \
+                    image1,                                              \
+                    image2,                                              \
+                    image3,                                              \
+                    image4,                                              \
                     like_list,                                       \
                     tag_list,                                        \
                     picture_list,                                    \
@@ -265,6 +290,6 @@ exports.get_my_user = async (searched_username) => {
             password, tag_list, like_list, picture_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
     , )
 
-    // console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+    console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
     return transform_csv_lists_to_arrays(user_query[0])
 };
