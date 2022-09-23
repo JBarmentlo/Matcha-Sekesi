@@ -153,7 +153,7 @@ exports.resetPass = async (req, res) => {
 exports.signin = async (req, res) => {
     try {
         console.log("signing in %o", req.body)
-        let user = await searches.get_user(req.body.username, req.body.username)
+        let user = await searches.get_my_user(req.body.username)
         if (user == undefined) {
             return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
         }

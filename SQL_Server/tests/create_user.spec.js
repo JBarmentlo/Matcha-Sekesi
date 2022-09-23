@@ -62,7 +62,7 @@ describe('Test users', () => {
 			return Promise.resolve()
 		})
 		step("get jhonny modified", async () => {
-			await UserController.get_user_by_username(mockRequest(body = {username: users.Jhonny.username}, username = 'bella'), res)
+			await UserController.get_my_user(mockRequest(body = {}, username = users.Jhonny.username), res)
 			assert.equal(res.send.lastCall.firstArg.data.zipCode, 'lol')
 			return Promise.resolve()
 		})

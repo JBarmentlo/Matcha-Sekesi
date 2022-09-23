@@ -169,5 +169,15 @@ exports.get_user_by_username = async (req, res) => {
 }
 
 
-
+exports.get_my_user = async (req, res) => {
+	try {
+		let user_query = await searches.get_my_user(req.username)
+		res.status(200).send({message: 'Successfully queried user for username.', data: user_query})
+	}
+	catch (e) {
+		console.log("get user by name error:\n", e, "\nend error")
+		res.status(500).send({message: 'error in get user by username', error: e})
+		throw(e)
+	}	
+}
 

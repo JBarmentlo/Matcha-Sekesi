@@ -115,6 +115,40 @@ exports.get_all_users = async (searcher_username) => {
 exports.get_user = async (searcher_username, searched_username) => {
     console.log(searcher_username, " is looking for: ", searched_username)
     let user_query = await db.query(
+            "SELECT                                                  \
+                username,                                            \
+                firstName,                                           \
+                lastName,                                            \
+                bio,                                                 \
+                gender,                                              \
+                sekesualOri,                                         \
+                popScore,                                            \
+                zipCode,                                             \
+                city,                                                \
+                isCompleteProfile,                                   \
+                longitude,                                           \
+                latitude,                                            \
+                mailVerified, \
+                GROUP_CONCAT(tag) as tag_list,                       \
+                IF((username IN(SELECT liked                         \
+                                FROM LIKES                           \
+                                WHERE liker='searcher_username')     \
+                                ), 1 , 0)                            \
+                                AS did_i_like_him                    \
+            FROM USERS                                               \
+            LEFT JOIN TAGS T                                         \
+                on USERS.username = T.user                           \
+                WHERE username='searched_username'                   \
+            GROUP BY username;".replace('searcher_username', searcher_username).replace('searched_username', searched_username)
+    , )
+
+    // console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+    return transform_csv_lists_to_arrays(user_query[0])
+};
+
+exports.get_my_user = async (searched_username) => {
+    console.log("Getting my profile: ", searched_username)
+    let user_query = await db.query(
         "WITH TAGLIST as (                                           \
             SELECT                                                   \
                 username,                                            \
@@ -228,7 +262,7 @@ exports.get_user = async (searcher_username, searched_username) => {
             LEFT JOIN CONSULTS                                       \
                 on PICTURELIST.username = CONSULTS.consulted            \
             GROUP BY username,                                       \
-            password, tag_list, like_list, picture_list;".replace('searcher_username', searcher_username).replace('searched_username', searched_username)
+            password, tag_list, like_list, picture_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
     , )
 
     // console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
