@@ -199,7 +199,7 @@ exports.verifyToken = (req, res, next) => {
         let token = req.headers["x-access-token"];
         let secret = req.headers["x-access-signature"];
         // console.log("Verifying tokens")
-        console.log("Verifying token: ", token," ,secret: ", secret)
+        console.log("Verifying token: ", token == undefined," ,secret: ", secret == undefined)
         if (!token) {
             return res.status(403).send({ message: "No token provided!" });
         }

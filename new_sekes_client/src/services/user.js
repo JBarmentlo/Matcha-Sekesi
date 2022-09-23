@@ -22,7 +22,7 @@ export const getMyUser = async (access_token) => {
 	console.log("Get my user")
 	let request = {
 		url: "http://localhost:8081/api/users/getmyuser", // should be replaced after going to production with domain url
-		method: "post",
+		method: "get",
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,

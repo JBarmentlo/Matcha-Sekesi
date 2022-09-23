@@ -147,8 +147,9 @@ exports.update_user_test = async (req, res) => {
 			res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
 	}
 	catch (e) {
+		// TODO ER_BAD_FIELD_ERROR
 		console.log("signup error:\n", e, "\nend signup error")
-		res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
+		res.status(500).send({message: 'error in update test user', error: e, code: 'FAILURE'})
 		throw(e)
 
 	}	

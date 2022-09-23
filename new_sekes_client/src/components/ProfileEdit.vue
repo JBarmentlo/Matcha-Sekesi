@@ -27,9 +27,16 @@
 					<p>{{ user.bio }}</p>
 				</div>
 			</div>
-			
+			<ul>
+				<div v-for="image in [user.image0, user.image1, user.image2, user.image3, user.image4]" v-bind:key="image">
+					<div v-if="image != null">
+						<img v-bind:src="image" alt="picture text" />
+					</div>
+				</div>
+			</ul>
 		</div>
 	</div>
+
 	</div>
 	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
 	<div class="card h-100">
@@ -137,13 +144,13 @@
 						type="text"
 						v-model="user.bio"
 						class="form-control"
-						placeholder="Tell us a few words about you"
-						value=""
-						maxlength="255"
-						rows="6"
-					/>
-				</div>
-				<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+						placeholder="Tell us a few<ul>
+  <li v-for="user in users" v-bind:key="user.name">
+    <img v-bind:src="user.photoURL" alt="picture text" />
+    <p>{{ user.name }}</p>
+    <p v-for="address in user.addresses">{{ address }}</p>
+  </li>
+</ul>md-6 col-sm-6 col-12">
 				</div>
 				<div class="col">
 					<file-upload />
@@ -165,7 +172,7 @@
 </template>
 
 <script>
-import {updateUser} from '../services/user'
+import {updateUser, getMyUser} from '../services/user'
 import FileUpload from '../shared/FileUpload.vue'
 import { diff } from '../services/utils'
 export default {
@@ -200,27 +207,31 @@ export default {
 		async updateProfile() {
 			console.log("Updating profile dummy: ", {...this.user})
 			let user_diffy = diff(this.$cookies.get('user'), this.user)
-			console.log("DIFFY: ", user_diffy)
+			// console.log("DIFFY: ", user_diffy)
 			if (Object.keys(user_diffy).length === 0) {
 				console.log("useless update ignored")
 				return
 			}
 			try {
 				await updateUser(this.$cookies.get('sekes_tokens'), user_diffy)
+				let user_response = await getMyUser(this.$cookies.get('sekes_tokens'))
+				// console.log("res: ",user_response.data.data)
+				this.$cookies.set('user', user_response.data.data)
+				this.user = user_response.data.data
 			}
 			catch (e) {
-				console.log("error in update User:\n", e)
+				console.log("error in update User or get response:\n", e)
 			}
 		},
 
 		setGender(val) {
-			this.current_user.gender = val;
-			console.log("gender %s", this.current_user.gender);
+			this.user.gender = val;
+			console.log("gender %s", this.user.gender);
 		},
 
 		setSekesual(val) {
-			this.current_user.sekesualOri = val;
-			console.log("sekesualOri %s", this.current_user.sekesualOri);
+			this.user.sekesualOri = val;
+			console.log("sekesualOri %s", this.user.sekesualOri);
 		},
 	},
 
