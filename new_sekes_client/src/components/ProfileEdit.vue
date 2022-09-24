@@ -15,10 +15,10 @@
                 <div class = "popularity">
                     <div class = "d-flex justify-content-center align-items-center text-center">
                         <div class = "views p-3">
-                            <i class="fa fa-eye fa-lm"></i>  {{ user.consult_list.length }}
+                            <b-icon-eye />  {{ user.consult_list.length }}
                         </div>
                         <div class = "likes p-3">
-                            <i class="fa fa-thumbs-up fa-lm"></i>  {{ user.like_list.length }}
+                            <b-icon-hand-thumbs-up />  {{ user.like_list.length }}
                         </div>
                     </div>
                 </div>
@@ -173,10 +173,14 @@ import {updateUser, getMyUser} from '../services/user'
 import FileUpload from '../shared/FileUpload.vue'
 import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
 import { diff } from '../services/utils'
+
+import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
 export default {
     components: {
         FileUpload,
-		ProfileImageCarousel
+		ProfileImageCarousel,
+        BIconEye,
+        BIconHandThumbsUp
     },
 
     data() {
