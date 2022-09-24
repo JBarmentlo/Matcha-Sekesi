@@ -1,13 +1,3 @@
-create table PICTURES
-(
-    url          varchar(100)                        null,
-    user         varchar(100)                        null,
-    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP
-);
-
-create index PICTURES_url_index
-    on PICTURES (url);
-
 create table USERS
 (
     username          varchar(100)             not null,
@@ -30,28 +20,12 @@ create table USERS
     image1            varchar(100)             null,
     image2            varchar(100)             null,
     image3            varchar(100)             null,
-    image4            varchar(100)             null,
     image0            varchar(100)             null,
     profilePic        varchar(100)             null,
     constraint USERS_mail_uindex
         unique (mail),
     constraint USERS_username_uindex
-        unique (username),
-    constraint USERS_PICTURES_url_fk
-        foreign key (image1) references PICTURES (url)
-            on update cascade on delete set null,
-    constraint USERS_PICTURES_url_fk_2
-        foreign key (image2) references PICTURES (url)
-            on update cascade on delete set null,
-    constraint USERS_PICTURES_url_fk_3
-        foreign key (image3) references PICTURES (url)
-            on update cascade on delete set null,
-    constraint USERS_PICTURES_url_fk_4
-        foreign key (image4) references PICTURES (url)
-            on update cascade on delete set null,
-    constraint USERS_PICTURES_url_fk_5
-        foreign key (image0) references PICTURES (url)
-            on update cascade on delete set null
+        unique (username)
 );
 
 create table BLOCKS
@@ -116,11 +90,6 @@ create table NOTIFS
             on delete cascade
 );
 
-alter table PICTURES
-    add constraint PICTURES_USERS_username_fk
-        foreign key (user) references USERS (username)
-            on delete cascade;
-
 create table REPORTS
 (
     reporter     varchar(100)                        not null,
@@ -157,6 +126,7 @@ create table TAGS
         foreign key (user) references USERS (username)
             on delete cascade
 );
+
 
 create table VERIFY
 (
