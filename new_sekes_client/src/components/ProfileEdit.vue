@@ -198,7 +198,7 @@ export default {
         },
 
 		user_images: function() {
-				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3].filter((im) => {return (im != undefined & im != null)})
+				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3]
         },
 		
         user_image_indexes: function() {
@@ -214,22 +214,14 @@ export default {
 
     methods: {
 		RemoveImage(image_index) {
-            let true_index = this.user_image_indexes[image_index]
-            console.log("removing: ",'image' + true_index,  this.user['image' + true_index])
-			this.user['image' + true_index] = null
-			console.log("removed image: ", true_index, this.user_images)
+			this.user['image' + image_index] = null
+			console.log("removed image: ", image_index, this.user_images)
 		},
 
-        AddImage(image_url) {
+        AddImage(image_url, index) {
             console.log("adding image: ", image_url)
-            for (let i = 0; i < 4; i++) {
-                if (this.user['image' + i] == null) {
-                    this.user['image' + i] = image_url
-                    console.log("added to: ", i)
-                    return
-                }
-            }
-            console.log("EROOOOOOOOOOOR add image: ", image_url, this.user_images)
+            this.user['image' + index] = image_url
+            return
         },
 
         async updateProfile() {
@@ -267,9 +259,6 @@ export default {
     },
 
     mounted() {
-        // console.log("Yooser", this.$cookies.get('user'))
-        console.log(this.slide, this.sliding)
-
     },
 };
 </script>

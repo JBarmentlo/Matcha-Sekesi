@@ -93,7 +93,8 @@ export default {
           else {
             try {
               let upload_res = await uploadImage(this.$cookies.get('sekes_tokens'), file)
-              this.$emit("AddImage", upload_res.data.url)
+              // this.$emit("AddImage", upload_res.data.url)
+              this.EmitAddImage(upload_res.data.url)
             }
             catch {
               console.log("ERR")
