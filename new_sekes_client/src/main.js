@@ -10,10 +10,6 @@ Vue.use(VueCookies)
 Vue.component('tags-input', VoerroTagsInput);
 
 
-
-// Vue.use(require('vue-cookies'))
-// Vue.use(require('vue-cookies-reactive'))
-
 Vue.use(BootstrapVueIcons)
 Vue.config.productionTip = false
 

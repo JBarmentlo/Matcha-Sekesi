@@ -9,6 +9,7 @@
                     <div class="user-avatar">
                         <img :src="profile_pic" :alt="user.username">
                     </div>
+
                     <h5 class="user-name">{{ user.username }}</h5>
                     <h6 class="user-email">{{ user.mail }}</h6>
                 </div>
@@ -92,10 +93,7 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <label class="labels">Interests</label>
-                    <tags-input element-id="tags"
-                    v-model="selectedTags"
-                    :existing-tags="existingTags"
-                    :typeahead="true"></tags-input>
+                    <tag-input-handler/>
                 </div>
                 <div class="col">
                     <label class="labels">Sekesual Orientation</label>
@@ -172,6 +170,7 @@
 import {updateUser, getMyUser} from '../services/user'
 import FileUpload from '../shared/FileUpload.vue'
 import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
+import TagInputHandler from '../shared/TagInputHandler.vue'
 import { diff } from '../services/utils'
 
 import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
@@ -180,7 +179,8 @@ export default {
         FileUpload,
 		ProfileImageCarousel,
         BIconEye,
-        BIconHandThumbsUp
+        BIconHandThumbsUp,
+        TagInputHandler
     },
 
     data() {
@@ -215,10 +215,12 @@ export default {
 
     methods: {
 		RemoveImage(image_index) {
+            console.log("Remov ", image_index)
 			this.user['image' + image_index] = null
 		},
 
         AddImage(image_url, index) {
+            console.log("Add ", image_url, index)
             this.user['image' + index] = image_url
         },
 

@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const userRouter = require("./src/routes/user.routes")
 const authRouter = require("./src/routes/auth.routes")
+const tagRouter  = require("./src/routes/tag.routes")
 
 
 // #######################   USER ROUTES   ########################
@@ -41,6 +42,20 @@ app.use('/api/auth', authRouter, function(req, res, next){
   );
   next();
 }) // auth authentication
+
+
+
+// #######################   TAG ROUTES   ########################
+
+app.use('/api/tags', tagRouter, function(req, res, next){
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+}) // auth authentication
+
+
 
 
 

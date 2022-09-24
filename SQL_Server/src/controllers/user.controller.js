@@ -2,6 +2,7 @@ const db       = require("../db/sql.conn");
 var bcrypt     = require("bcryptjs");
 const sendMail = require('../services/mailgun');
 const searches = require("./user.request.js")
+const tagController = require("./tag.controller")
 
 
 // function check_create_user_input(req) {
@@ -117,10 +118,10 @@ exports.create_user_test = async (req, res) => {
 };
 
 
+
 exports.update_user_test = async (req, res) => {
 	// TODO: Upload tag on user creation
 	// * req.body.tags.forEach(tag => tag = completeAndUploadTag(tag))
-
 	try {
 		let update_str  = ""
 		let first       = true
@@ -173,6 +174,7 @@ exports.get_user_by_username = async (req, res) => {
 exports.get_my_user = async (req, res) => {
 	try {
 		let user_query = await searches.get_my_user(req.username)
+		console.log("USERSE: ", user_query)
 		res.status(200).send({message: 'Successfully queried user for username.', data: user_query})
 	}
 	catch (e) {

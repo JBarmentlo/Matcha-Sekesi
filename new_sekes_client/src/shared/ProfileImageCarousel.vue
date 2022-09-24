@@ -10,6 +10,7 @@
       background="#ababab"
       img-width="1024"
       img-height="480"
+      no-animation
       style="text-shadow: 1px 1px 2px #333;"
     >
     <div v-for="url in user_images" :key="url">
@@ -46,7 +47,6 @@ export default {
   data() {
     return {
       slide: 0,
-      image_urls: this.images,
     }
   },
 
