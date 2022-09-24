@@ -27,7 +27,7 @@
                     <p>{{ user.bio }}</p>
                 </div>
             </div>
-		<ProfileImageCarousel :images="user_images" @AddImage.prevent="" @DeleteImage="RemoveImage"/>
+		<ProfileImageCarousel :images="user_images" @AddImage="AddImage" @DeleteImage="RemoveImage"/>
             
         </div>
     </div>
@@ -196,28 +196,39 @@ export default {
                 return null
             }
         },
-		user_images: {
-			get: function() {
-				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3, this.user.image4].filter((im) => {return im != undefined})
-			},
 
-		}
+		user_images: function() {
+				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3].filter((im) => {return (im != undefined & im != null)})
+        },
+		
+        user_image_indexes: function() {
+            let indexes = []
+            for (let i = 0; i < 4; i++) {
+                if (this.user['image' + i] != null) {
+                    indexes.push(i)
+                }
+            } 
+            return indexes
+        }
     },
 
     methods: {
 		RemoveImage(image_index) {
-			this.user['image' + image_index] = null
-			console.log("removed image: ", image_index, this.user_images)
-			for (let i = 0; i < 5; i++) {
-					console.log(this.user_images.length)
-					if (i < this.user_images.length) {
-						this.user["image" + i] = this.user_images[i]
-					}
-					else {
-						this.user["image" + i] = null
-					}
-				} 
+            let true_index = this.user_image_indexes[image_index]
+            console.log("removing: ",'image' + true_index,  this.user['image' + true_index])
+			this.user['image' + true_index] = null
+			console.log("removed image: ", true_index, this.user_images)
 		},
+
+        AddImage(image_url) {
+            for (let i = 0; i < 4; i++) {
+                if (this.user['image' + i] == null) {
+                    this.user['image' + i] = image_url
+                    return
+                }
+            }
+            console.log("EROOOOOOOOOOOR add image: ", image_url, this.user_images)
+        },
 
         async updateProfile() {
             console.log("Updating profile dummy: ", {...this.user})
