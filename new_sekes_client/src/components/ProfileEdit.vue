@@ -221,9 +221,11 @@ export default {
 		},
 
         AddImage(image_url) {
+            console.log("adding image: ", image_url)
             for (let i = 0; i < 4; i++) {
                 if (this.user['image' + i] == null) {
                     this.user['image' + i] = image_url
+                    console.log("added to: ", i)
                     return
                 }
             }
