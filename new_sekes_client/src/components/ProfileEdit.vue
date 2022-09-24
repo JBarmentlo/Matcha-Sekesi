@@ -7,7 +7,7 @@
             <div class="account-settings">
                 <div class="user-profile">
                     <div class="user-avatar">
-                        <img :src="user.image0" :alt="user.username">
+                        <img :src="profile_pic" :alt="user.username">
                     </div>
                     <h5 class="user-name">{{ user.username }}</h5>
                     <h6 class="user-email">{{ user.mail }}</h6>
@@ -200,6 +200,13 @@ export default {
 		user_images: function() {
 				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3]
         },
+
+        profile_pic: function() {
+            if (this.user.profilePic != null) {
+                return this.user.profilePic
+            }
+            return require("../assets/empty_profile.png")
+        }
     },
 
     methods: {
