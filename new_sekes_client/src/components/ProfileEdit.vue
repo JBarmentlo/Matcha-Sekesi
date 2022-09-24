@@ -200,28 +200,15 @@ export default {
 		user_images: function() {
 				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3]
         },
-		
-        user_image_indexes: function() {
-            let indexes = []
-            for (let i = 0; i < 4; i++) {
-                if (this.user['image' + i] != null) {
-                    indexes.push(i)
-                }
-            } 
-            return indexes
-        }
     },
 
     methods: {
 		RemoveImage(image_index) {
 			this.user['image' + image_index] = null
-			console.log("removed image: ", image_index, this.user_images)
 		},
 
         AddImage(image_url, index) {
-            console.log("adding image: ", image_url)
             this.user['image' + index] = image_url
-            return
         },
 
         async updateProfile() {

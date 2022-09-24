@@ -16,12 +16,8 @@
             :img-src=url>
       </b-carousel-slide>
     </div>
-
   </b-carousel>
 
-  <p class="mt-4">
-    Slide #: {{ slide }}<br>
-  </p>
 
 	<form enctype="multipart/form-data">
 			<div class = "fields">
