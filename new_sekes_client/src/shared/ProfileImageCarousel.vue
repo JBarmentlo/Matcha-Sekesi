@@ -20,15 +20,16 @@
   </b-carousel>
 
 
-	<form enctype="multipart/form-data">
 			<div class = "fields">
-				<label>Add Image</label> <br />
+				<!-- <label>Add Image</label> <br /> -->
 				<input
+          hidden
+          id="fileUpload"
 					type="file"
 					@change="UploadAndAddImage"
 				>
+        <button @click="chooseFiles()">Add Image</button>
 			</div>
-		</form>
 
     <button @click="emitDeleteCurrentSlide" >
         Remove Image
@@ -66,42 +67,46 @@ export default {
   },
 
   methods: {
-      emitDeleteCurrentSlide() {
-          this.$emit("DeleteImage", this.user_image_indexes[this.slide])
-      },
+    chooseFiles() {
+        document.getElementById("fileUpload").click()
+    },
 
-      EmitAddImage(image_url) {
-          console.log("adding image: ", image_url)
-          for (let i = 0; i < 4; i++) {
-              if (this.images[i] == null) {
-                this.$emit("AddImage", image_url, i)
-                return
-              }
-          }
-          console.log("EROOOOR IN ADDIMAGES")
-      },
+    emitDeleteCurrentSlide() {
+        this.$emit("DeleteImage", this.user_image_indexes[this.slide])
+    },
 
-      async UploadAndAddImage(e) {
-          const file = e.target.files[0]
-          if (file == null) {
-            console.log("WIERD SELECT NO FILE BUT CHANGE")
-            return
-          }
-          else {
-            try {
-              let upload_res = await uploadImage(this.$cookies.get('sekes_tokens'), file)
-              // this.$emit("AddImage", upload_res.data.url)
-              this.EmitAddImage(upload_res.data.url)
+    EmitAddImage(image_url) {
+        console.log("adding image: ", image_url)
+        for (let i = 0; i < 4; i++) {
+            if (this.images[i] == null) {
+              this.$emit("AddImage", image_url, i)
+              return
             }
-            catch {
-              console.log("ERR")
-            }
-          }
-      },
+        }
+        console.log("EROOOOR IN ADDIMAGES")
+    },
 
-      mounted() {
-        console.log("IM", this.user_images)
-      }
+    async UploadAndAddImage(e) {
+        const file = e.target.files[0]
+        if (file == null) {
+          console.log("WIERD SELECT NO FILE BUT CHANGE")
+          return
+        }
+        else {
+          try {
+            let upload_res = await uploadImage(this.$cookies.get('sekes_tokens'), file)
+            // this.$emit("AddImage", upload_res.data.url)
+            this.EmitAddImage(upload_res.data.url)
+          }
+          catch {
+            console.log("ERR")
+          }
+        }
+    },
+
+    mounted() {
+      console.log("IM", this.user_images)
+    }
   }
 }
 </script>
