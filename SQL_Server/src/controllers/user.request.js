@@ -25,8 +25,7 @@ function transform_csv_lists_to_arrays(user) {
 
 exports.get_all_users = async (searcher_username) => {
         let query = await db.query(
-            "WITH TAGLIST as (                                  \
-                SELECT                                          \
+                "SELECT                                          \
                     username,                                   \
                     firstName,                                  \
                     lastName,                                   \
@@ -43,70 +42,18 @@ exports.get_all_users = async (searcher_username) => {
                     longitude,                                  \
                     latitude,                                   \
                     id,                                         \
+                    IF(                                     \
+                        (username IN(SELECT liked           \
+                                     FROM LIKES             \
+                                     where liker = ?        \
+                                     )                      \
+                        ), 1 , 0)                           \
+                        as did_i_like_him,                  \
                     GROUP_CONCAT(tag) as tag_list               \
                 FROM USERS                                      \
                 LEFT JOIN TAGS T                                \
                     on USERS.username = T.user                  \
-                GROUP BY username),                             \
-                                                                \
-                LIKELIST AS (                                   \
-                    SELECT                                      \
-                        username,                               \
-                        firstName,                              \
-                        lastName,                               \
-                        bio,                                    \
-                        mail,                                   \
-                        password,                               \
-                        mailVerified,                           \
-                        gender,                                 \
-                        sekesualOri,                            \
-                        popScore,                               \
-                        zipCode,                                \
-                        city,                                   \
-                        isCompleteProfile,                      \
-                        longitude,                              \
-                        latitude,                               \
-                        id,                                     \
-                        GROUP_CONCAT(liker) as like_list,       \
-                        tag_list                                \
-                FROM TAGLIST                                    \
-                LEFT JOIN LIKES L                               \
-                    on TAGLIST.username = L.liked               \
-                GROUP BY username,                              \
-                password, tag_list)                             \
-                                                                \
-                SELECT                                          \
-                        username,                               \
-                        firstName,                              \
-                        lastName,                               \
-                        IF(                                     \
-                            (username IN(SELECT liked           \
-                                         FROM LIKES             \
-                                         where liker = ?        \
-                                         )                      \
-                            ), 1 , 0)                           \
-                            as did_i_like_him,                  \
-                        bio,                                    \
-                        mail,                                   \
-                        password,                               \
-                        mailVerified,                           \
-                        gender,                                 \
-                        sekesualOri,                            \
-                        popScore,                               \
-                        zipCode,                                \
-                        city,                                   \
-                        isCompleteProfile,                      \
-                        longitude,                              \
-                        latitude,                               \
-                        id,                                     \
-                        like_list,                              \
-                        tag_list,                               \
-                        GROUP_CONCAT(consulter) as consult_list \
-                FROM LIKELIST                                   \
-                LEFT JOIN CONSULTS                              \
-                    on LIKELIST.username = CONSULTS.consulted   \
-                GROUP BY username,                              \
-                password, tag_list, like_list;"
+                GROUP BY username;"
         , searcher_username)
         return query.map(user => transform_csv_lists_to_arrays(user))
     
@@ -130,7 +77,6 @@ exports.get_user = async (searcher_username, searched_username) => {
                 image1,                                              \
                 image2,                                              \
                 image3,                                              \
-                image4,                                              \
                 longitude,                                           \
                 latitude,                                            \
                 mailVerified, \
