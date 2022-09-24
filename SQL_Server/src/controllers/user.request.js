@@ -16,7 +16,7 @@ function csv_to_array(user, csv_property_name) {
 }
 
 function transform_csv_lists_to_arrays(user) {
-    for (const property_name of ['tag_list', 'like_list', 'consult_list', 'picture_list']) {
+    for (const property_name of ['tag_list', 'like_list', 'consult_list']) {
         user = csv_to_array(user, property_name)
     }
     return user
@@ -93,7 +93,7 @@ exports.get_user = async (searcher_username, searched_username) => {
             GROUP BY username;".replace('searcher_username', searcher_username).replace('searched_username', searched_username)
     , )
 
-    console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+    // console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
     return transform_csv_lists_to_arrays(user_query[0])
 };
 
@@ -122,7 +122,7 @@ exports.get_my_user = async (searched_username) => {
                 image1,                                              \
                 image2,                                              \
                 image3,                                              \
-                image4,                                              \
+                profilePic,                                          \
                 GROUP_CONCAT(tag) as tag_list                        \
             FROM USERS                                               \
             LEFT JOIN TAGS T                                         \
@@ -148,94 +148,58 @@ exports.get_my_user = async (searched_username) => {
                     longitude,                                       \
                     latitude,                                        \
                     id,                                              \
-                    image0,                                              \
-                    image1,                                              \
-                    image2,                                              \
-                    image3,                                              \
-                    image4,                                              \
+                    image0,                                          \
+                    image1,                                          \
+                    image2,                                          \
+                    image3,                                          \
+                    profilePic,                                      \
                     GROUP_CONCAT(liker) as like_list,                \
                     tag_list                                         \
             FROM TAGLIST                                             \
             LEFT JOIN LIKES L                                        \
                 on TAGLIST.username = L.liked                        \
             GROUP BY username,                                       \
-            password, tag_list),                                     \
-                                                                     \
-            PICTURELIST AS (                                         \
-                SELECT                                               \
-                    username,                                        \
-                    firstName,                                       \
-                    lastName,                                        \
-                    bio,                                             \
-                    mail,                                            \
-                    password,                                        \
-                    mailVerified,                                    \
-                    gender,                                          \
-                    sekesualOri,                                     \
-                    popScore,                                        \
-                    zipCode,                                         \
-                    city,                                            \
-                    isCompleteProfile,                               \
-                    longitude,                                       \
-                    latitude,                                        \
-                    id,                                              \
-                    image0,                                              \
-                    image1,                                              \
-                    image2,                                              \
-                    image3,                                              \
-                    image4,                                              \
-                    GROUP_CONCAT(url) as picture_list,               \
-                    tag_list,                                        \
-                    like_list                                        \
-            FROM LIKELIST                                            \
-            LEFT JOIN PICTURES P                                     \
-                on LIKELIST.username = P.user                        \
-            GROUP BY                                                 \
-                username,                                            \
-                password,                                            \
-                tag_list,                                            \
-                like_list)                                           \
+            password, tag_list)                                      \
                                                                      \
             SELECT                                                   \
-                    username,                                        \
-                    firstName,                                       \
-                    lastName,                                        \
-                    IF(                                              \
-                        (username IN(SELECT liked                    \
-                                     FROM LIKES                      \
-                                     WHERE liker='searcher_username' \
-                                     )                               \
-                        ), 1 , 0)                                    \
-                        as did_i_like_him,                           \
-                    bio,                                             \
-                    mail,                                            \
-                    password,                                        \
-                    mailVerified,                                    \
-                    gender,                                          \
-                    sekesualOri,                                     \
-                    popScore,                                        \
-                    zipCode,                                         \
-                    city,                                            \
-                    isCompleteProfile,                               \
-                    longitude,                                       \
-                    latitude,                                        \
-                    id,                                              \
-                    image0,                                              \
-                    image1,                                              \
-                    image2,                                              \
-                    image3,                                              \
-                    image4,                                              \
-                    like_list,                                       \
-                    tag_list,                                        \
-                    picture_list,                                    \
-                    GROUP_CONCAT(consulter) as consult_list          \
-            FROM PICTURELIST                                         \
+                username,                                            \
+                firstName,                                           \
+                lastName,                                            \
+                IF(                                                  \
+                    (username IN(SELECT liked                        \
+                                    FROM LIKES                       \
+                                    WHERE liker='searcher_username'  \
+                                    )                                \
+                    ), 1 , 0)                                        \
+                    as did_i_like_him,                               \
+                bio,                                                 \
+                mail,                                                \
+                password,                                            \
+                mailVerified,                                        \
+                gender,                                              \
+                sekesualOri,                                         \
+                popScore,                                            \
+                zipCode,                                             \
+                city,                                                \
+                isCompleteProfile,                                   \
+                longitude,                                           \
+                latitude,                                            \
+                id,                                                  \
+                image0,                                              \
+                image1,                                              \
+                image2,                                              \
+                image3,                                              \
+                profilePic,                                          \
+                like_list,                                           \
+                tag_list,                                            \
+                GROUP_CONCAT(consulter) as consult_list              \
+            FROM LIKELIST                                            \
             LEFT JOIN CONSULTS                                       \
-                on PICTURELIST.username = CONSULTS.consulted            \
+                on LIKELIST.username = CONSULTS.consulted            \
             GROUP BY username,                                       \
-            password, tag_list, like_list, picture_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
+            password, tag_list, like_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
     , )
 
-    console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+    // console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
     return transform_csv_lists_to_arrays(user_query[0])
 };

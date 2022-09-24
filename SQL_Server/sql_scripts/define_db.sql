@@ -32,6 +32,7 @@ create table USERS
     image3            varchar(100)             null,
     image4            varchar(100)             null,
     image0            varchar(100)             null,
+    profilePic        varchar(100)             null,
     constraint USERS_mail_uindex
         unique (mail),
     constraint USERS_username_uindex
