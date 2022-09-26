@@ -58,7 +58,6 @@ exports.get_all_users = async (searcher_username) => {
                 GROUP BY username;"
         , searcher_username)
         return query.map(user => transform_csv_lists_to_arrays(user))
-    
 };
 
 exports.get_user = async (searcher_username, searched_username) => {
