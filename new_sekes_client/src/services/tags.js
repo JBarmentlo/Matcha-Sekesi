@@ -16,3 +16,20 @@ export const getAllTags = async (sekes_tokens) => {
 
 	return response
 }
+
+export const updateUserTags = async (sekes_tokens, tag_list) => {
+	// console.log("Get all tags")
+	let request = {
+		url: "http://localhost:8081/api/tags/update", // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : sekes_tokens.accessToken,
+			"x-access-signature" : sekes_tokens.signature,
+		},
+		data: JSON.stringify({'tag_list': tag_list})
+	};
+	let response = await axios(request)
+
+	return response
+}

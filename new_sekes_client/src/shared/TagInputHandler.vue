@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getAllTags }from '../services/tags'
+import { getAllTags, updateUserTags }from '../services/tags'
 
 
 export default {
@@ -55,9 +55,11 @@ export default {
 
     onTagAdded() {
       this.$emit('change_selected_tags', this.rawSelectedTagList)
+      updateUserTags(this.$cookies.get('sekes_tokens'), this.rawSelectedTagList)
     },
 
     onTagRemoved() {
+
       this.$emit('change_selected_tags', this.rawSelectedTagList)
     },
 
