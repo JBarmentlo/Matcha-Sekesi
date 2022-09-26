@@ -94,13 +94,13 @@ exports.create_user_test = async (req, res) => {
 		tag_list = []
 	}
 
-	console.log("\n\n\n\n\n\n\nusername: ", username, "\nfirstName: ", firstName, "\nlastName: ", lastName, "\nmail: ", mail, "\npassword: ", "\npopScore: ", popScore, "\nzipCode: ", zipCode, "\ncity: ", city, "\nisCompleteProfile: ", isCompleteProfile, "\nlongitude: ", longitude, "\nlatitude: ", latitude, "\nDOB: ", DOB, "\nimage0: ", image0, "\nprofilePic: ", profilePic)
+	console.log("\n\n\n\n\n\n\nusername: ", username, "\nfirstName: ", firstName, "\nlastName: ", lastName, "\ntag_list: ", tag_list, "\nmail: ", mail, "\npassword: ", "\npopScore: ", popScore, "\nzipCode: ", zipCode, "\ncity: ", city, "\nisCompleteProfile: ", isCompleteProfile, "\nlongitude: ", longitude, "\nlatitude: ", latitude, "\nDOB: ", DOB, "\nimage0: ", image0, "\nprofilePic: ", profilePic)
 	try {
 		await db.query(
 			'INSERT INTO USERS \
-			(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic) \
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic]
+			(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB) \
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DOB)',
+			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB]
 			)
 		let keri_string ="INSERT INTO TAGS (tag, user) VALUES "
 		for (const tag of tag_list) {
@@ -111,26 +111,25 @@ exports.create_user_test = async (req, res) => {
 			await db.query(keri_string)
 		}
 		console.log("Created user: ", username)
-		res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS'})
+		return res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
 			// throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
-			res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_BAD_NULL_ERROR') {
-			res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
 			console.log("create user test error:\n", e, "\n\nend signup error")
-			// res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
-			res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
+			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
 			throw(e)
 		}
 	}	
