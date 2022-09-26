@@ -130,7 +130,9 @@ exports.update_user_tags = async (req, res) => {
 		}
 		keri_string = keri_string.slice(0, -1)
 		console.log("KERI TAG: ", keri_string)
-		let tag_insert_query = await db.query(keri_string)
+		if (tag_list.length != 0) {
+			let tag_insert_query = await db.query(keri_string)
+		}
 		res.status(200).send({message: 'Succesfully added tag to user', code: "SUCCESS"})
 	}
 	catch (e) {

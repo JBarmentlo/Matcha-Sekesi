@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <label class="labels">Interests</label>
-                    <TagInputHandler v-model="user.tag_list"/>
+                    <TagInputHandler v-model="user.tag_list" ref="tagHandler"/>
                 </div>
                 <div class="col">
                     <label class="labels">Sekesual Orientation</label>
@@ -227,15 +227,12 @@ export default {
         },
 
         async updateProfile() {
-            console.log("Updating profile dummy: ", {...this.user})
             let user_diffy = diff(this.$cookies.get('user'), this.user)
-            // console.log("DIFFY: ", user_diffy)
-            if (Object.keys(user_diffy).length === 0) {
-                console.log("useless update ignored")
-                return
-            }
             try {
+                let tagUploadRes = this.$refs.tagHandler.uploadTags()
+                delete user_diffy.tag_list
                 await updateUser(this.$cookies.get('sekes_tokens'), user_diffy)
+                await tagUploadRes
                 let user_response = await getMyUser(this.$cookies.get('sekes_tokens'))
                 // console.log("res: ",user_response.data.data)
                 this.$cookies.set('user', user_response.data.data)

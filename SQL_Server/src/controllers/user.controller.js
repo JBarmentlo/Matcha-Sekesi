@@ -120,8 +120,6 @@ exports.create_user_test = async (req, res) => {
 
 
 exports.update_user_test = async (req, res) => {
-	// TODO: Upload tag on user creation
-	// * req.body.tags.forEach(tag => tag = completeAndUploadTag(tag))
 	try {
 		let update_str  = ""
 		let first       = true
@@ -137,19 +135,24 @@ exports.update_user_test = async (req, res) => {
 			update_str += `${key} = '${value}'`
 		}
 		console.log("Updating user %s with str: %s", req.username, update_str)
-		let update_result = await db.query(
-			`UPDATE USERS \
-			SET ${update_str}\
-			WHERE USERS.username=?;`,
-			req.username)
-			if (update_mail == true) {
-				await handle_new_mail_for_user(req.username, update_result.insertId, req.body.update.mail)
-			}
-			res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
+		if (update_str.length != 0) {
+			let update_result = await db.query(
+				`UPDATE USERS \
+				SET ${update_str}\
+				WHERE USERS.username=?;`,
+				req.username)
+				if (update_mail == true) {
+					await handle_new_mail_for_user(req.username, update_result.insertId, req.body.update.mail)
+				}
+		}
+		else {
+			update_result = {}
+		}
+		res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
 	}
 	catch (e) {
 		// TODO ER_BAD_FIELD_ERROR
-		console.log("signup error:\n", e, "\nend signup error")
+		console.log("update user error:\n", e, "\nend update user error")
 		res.status(500).send({message: 'error in update test user', error: e, code: 'FAILURE'})
 		throw(e)
 

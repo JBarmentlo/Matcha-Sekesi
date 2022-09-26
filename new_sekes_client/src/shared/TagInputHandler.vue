@@ -55,13 +55,23 @@ export default {
 
     onTagAdded() {
       this.$emit('change_selected_tags', this.rawSelectedTagList)
-      updateUserTags(this.$cookies.get('sekes_tokens'), this.rawSelectedTagList)
+      // updateUserTags(this.$cookies.get('sekes_tokens'), this.rawSelectedTagList)
     },
 
     onTagRemoved() {
-
       this.$emit('change_selected_tags', this.rawSelectedTagList)
     },
+
+    async uploadTags() {
+      console.log("Updloading tags")
+      try {
+        await updateUserTags(this.$cookies.get('sekes_tokens'), this.rawSelectedTagList)
+      }
+      catch (e) {
+        console.log("ERROR in upload tags: ", e)
+      }
+
+    }
 
     // async UpdateUserTags() {
       // try {
