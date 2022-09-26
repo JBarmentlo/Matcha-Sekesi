@@ -13,7 +13,6 @@ export const getAllTags = async (sekes_tokens) => {
 		},
 	};
 	let response = await axios(request)
-	console.log("Get all tags : ", response)
 
 	return response
 }

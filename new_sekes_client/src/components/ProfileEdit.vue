@@ -7,7 +7,7 @@
             <div class="account-settings">
                 <div class="user-profile">
                     <div class="user-avatar">
-                        <img :src="profile_pic" :alt="user.username">
+                        <ProfilePicUpload v-model="user.profilePic"/>
                     </div>
 
                     <h5 class="user-name">{{ user.username }}</h5>
@@ -171,6 +171,7 @@ import {updateUser, getMyUser} from '../services/user'
 import FileUpload from '../shared/FileUpload.vue'
 import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
+import ProfilePicUpload from '../shared/ProfilePicUpload.vue'
 import { diff } from '../services/utils'
 
 import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
@@ -180,14 +181,16 @@ export default {
 		ProfileImageCarousel,
         BIconEye,
         BIconHandThumbsUp,
-        TagInputHandler
+        TagInputHandler,
+        ProfilePicUpload
     },
 
     data() {
         return {
             existingTags : [],
             selectedTags : [],
-            user : {...this.$cookies.get('user')}
+            user : {...this.$cookies.get('user')},
+            test: 'lol'
         };
     },
 
@@ -341,13 +344,7 @@ body {
 .account-settings .user-profile .user-avatar {
     margin: 0 0 1rem 0;
 }
-.account-settings .user-profile .user-avatar img {
-    width: 90px;
-    height: 90px;
-    -webkit-border-radius: 100px;
-    -moz-border-radius: 100px;
-    border-radius: 100px;
-}
+
 .account-settings .user-profile h5.user-name {
     margin: 0 0 0.5rem 0;
 }

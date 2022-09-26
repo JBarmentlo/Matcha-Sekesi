@@ -30,7 +30,6 @@ export default {
 		async getTags() {
 			try {
 				let res = await getAllTags(this.$cookies.get('sekes_tokens'))
-				console.log("ERS: ", res.data.data)
 				this.existingTags = res.data.data.map(o => {return {'key': o.tag, 'value': o.tag}})
 			}
 			catch (e) {
@@ -40,7 +39,6 @@ export default {
   },
 
 	mounted() {
-		console.log("mooun")
 		this.getTags()
 	}
 }

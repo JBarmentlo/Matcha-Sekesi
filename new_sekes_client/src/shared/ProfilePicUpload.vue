@@ -1,14 +1,14 @@
 <template>
   <div>
-		<img :src="profile_pic" :alt="user.username">
-			
+		<img :src="profile_pic" :alt="profile_pic">
+			<br/>
 			<input
 				hidden
 				id="fileUpload"
 				type="file"
 				@change="UploadAndAddImage"
 			>
-			<button @click="chooseFiles()">Add Image</button>
+			<button @click="chooseFiles()">Change Profile Pic</button>
 
   </div>
 </template>
@@ -19,6 +19,12 @@ import { uploadImage }from '../services/upload'
 
 export default {
   props: ['url'],
+  
+  model: {
+    prop: 'url',
+    event: 'upload_profile_pic'
+  },
+
   data() {
     return {
     }
@@ -39,14 +45,7 @@ export default {
     },
 
     EmitUpdateProfilePic(image_url) {
-        console.log("adding image: ", image_url)
-        for (let i = 0; i < 4; i++) {
-            if (this.images[i] == null) {
-              this.$emit("AddImage", image_url, i)
-              return
-            }
-        }
-        console.log("EROOOOR IN ADDIMAGES")
+        this.$emit("upload_profile_pic", image_url)
     },
 
     async UploadAndAddImage(e) {
@@ -58,8 +57,7 @@ export default {
         else {
           try {
             let upload_res = await uploadImage(this.$cookies.get('sekes_tokens'), file)
-            // this.$emit("AddImage", upload_res.data.url)
-            this.EmitAddImage(upload_res.data.url)
+            this.$emit("upload_profile_pic", upload_res.data.url)
           }
           catch {
             console.log("ERR")
@@ -68,8 +66,19 @@ export default {
     },
 
     mounted() {
-      console.log("IM", this.user_images)
     }
   }
 }
 </script>
+
+<style scoped>
+
+img {
+    width: 90px;
+    height: 90px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+}
+
+</style>
