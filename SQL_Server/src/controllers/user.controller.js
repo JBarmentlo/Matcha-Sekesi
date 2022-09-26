@@ -135,8 +135,9 @@ exports.update_user_test = async (req, res) => {
 			update_str += `${key} = '${value}'`
 		}
 		console.log("Updating user %s with str: %s", req.username, update_str)
+		let update_result
 		if (update_str.length != 0) {
-			let update_result = await db.query(
+			update_result = await db.query(
 				`UPDATE USERS \
 				SET ${update_str}\
 				WHERE USERS.username=?;`,

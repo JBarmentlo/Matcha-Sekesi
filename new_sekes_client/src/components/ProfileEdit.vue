@@ -1,38 +1,37 @@
 <template>
     <div class="container">
     <div class="row gutters">
-    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-    <div class="card h-100">
-        <div class="card-body d-flex flex-column">
-            <div class="account-settings">
-                <div class="user-profile">
-                    <div class="user-avatar">
-                        <ProfilePicUpload v-model="user.profilePic"/>
-                    </div>
+        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+            <div class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="account-settings">
+                        <div class="user-profile">
+                            <div class="user-avatar">
+                                <ProfilePicUpload v-model="user.profilePic"/>
+                            </div>
 
-                    <h5 class="user-name">{{ user.username }}</h5>
-                    <h6 class="user-email">{{ user.mail }}</h6>
-                </div>
-                <div class = "popularity">
-                    <div class = "d-flex justify-content-center align-items-center text-center">
-                        <div class = "views p-3">
-                            <b-icon-eye />  {{ user.consult_list.length }}
+                            <h5 class="user-name">{{ user.username }}</h5>
+                            <h6 class="user-email">{{ user.mail }}</h6>
                         </div>
-                        <div class = "likes p-3">
-                            <b-icon-hand-thumbs-up />  {{ user.like_list.length }}
+                        <div class = "popularity">
+                            <div class = "d-flex justify-content-center align-items-center text-center">
+                                <div class = "views p-3">
+                                    <b-icon-eye />  {{ user.consult_list.length }}
+                                </div>
+                                <div class = "likes p-3">
+                                    <b-icon-hand-thumbs-up />  {{ user.like_list.length }}
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="user.bio && user.bio.length != 0" class="about">
+                            <h5>About</h5>
+                            <p>{{ user.bio }}</p>
                         </div>
                     </div>
-                </div>
-                <div v-if="user.bio && user.bio.length != 0" class="about">
-                    <h5>About</h5>
-                    <p>{{ user.bio }}</p>
+                    <ProfileImageCarousel :images="user_images" @AddImage="AddImage" @DeleteImage="RemoveImage"/>
                 </div>
             </div>
-		<ProfileImageCarousel :images="user_images" @AddImage="AddImage" @DeleteImage="RemoveImage"/>
-            
         </div>
-    </div>
-    </div>
     <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
     <div class="card h-100">
         <div class="card-body">
@@ -142,10 +141,9 @@
                         rows="6"
                     />
                 </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                </div>
-                <div class="col">
-                    <file-upload />
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+                    <label class="labels">Date of Birth</label>
+                    <b-datepicker v-bind:value="user.DOB" @input="DOBSelected"/>
                 </div>
             </div>
             <div class="row gutters">
@@ -165,31 +163,26 @@
 </template>
 
 <script>
-
+import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
 
 import {updateUser, getMyUser} from '../services/user'
-import FileUpload from '../shared/FileUpload.vue'
 import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
 import ProfilePicUpload from '../shared/ProfilePicUpload.vue'
 import { diff } from '../services/utils'
 
-import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
 export default {
     components: {
-        FileUpload,
 		ProfileImageCarousel,
         BIconEye,
         BIconHandThumbsUp,
         TagInputHandler,
-        ProfilePicUpload
+        ProfilePicUpload,
     },
 
     data() {
         return {
-            existingTags : [],
             user : {...this.$cookies.get('user')},
-            test: 'lol'
         };
     },
 
@@ -234,7 +227,6 @@ export default {
                 await updateUser(this.$cookies.get('sekes_tokens'), user_diffy)
                 await tagUploadRes
                 let user_response = await getMyUser(this.$cookies.get('sekes_tokens'))
-                // console.log("res: ",user_response.data.data)
                 this.$cookies.set('user', user_response.data.data)
                 this.user = user_response.data.data
             }
@@ -252,8 +244,20 @@ export default {
             this.user.sekesualOri = val;
             console.log("sekesualOri %s", this.user.sekesualOri);
         },
+
         onSelectImage(val) {
             console.log("selected: ", val)
+        },
+
+        calculateAge(birthday) {
+            var ageDifMs = Date.now() - birthday.getTime();
+            var ageDate = new Date(ageDifMs);
+            return Math.abs(ageDate.getUTCFullYear() - 1970);
+        },
+        DOBSelected(e) {
+            this.user.DOB = e
+            // this.user.age = this.calculateAge(new Date(e.replace(/-/g,'/')))
+            // console.log(this.user.age)
         }
     },
 
