@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <label class="labels">Interests</label>
-                    <tag-input-handler/>
+                    <TagInputHandler :user_tags="user.tag_list"/>
                 </div>
                 <div class="col">
                     <label class="labels">Sekesual Orientation</label>
@@ -188,7 +188,6 @@ export default {
     data() {
         return {
             existingTags : [],
-            selectedTags : [],
             user : {...this.$cookies.get('user')},
             test: 'lol'
         };
@@ -267,6 +266,7 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://cdn.jsdelivr.net/npm/@voerro/vue-tagsinput@2.7.1/dist/style.css");
 
 .row {
   display: flex;

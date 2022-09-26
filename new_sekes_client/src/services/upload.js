@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 export const uploadImage = async (sekes_tokens, image_file) => {
-	console.log("Upload Image: ", image_file)
+	// console.log("Upload Image: ", image_file)
 	const formData = new FormData()
 	formData.append('file', image_file)
 	let request = {
@@ -16,7 +16,7 @@ export const uploadImage = async (sekes_tokens, image_file) => {
 		data: formData
 	};
 	let response = await axios(request)
-	console.log("UPLOad response : ", response)
+	// console.log("UPLOad response : ", response)
 
 	return response
 }

@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 export const getAllTags = async (sekes_tokens) => {
-	console.log("Get all tags")
+	// console.log("Get all tags")
 	let request = {
 		url: "http://localhost:8081/api/tags/getall", // should be replaced after going to production with domain url
 		method: "get",
