@@ -85,15 +85,27 @@ exports.create_user_test = async (req, res) => {
 	isCompleteProfile = req.body.isCompleteProfile
 	longitude         = req.body.longitude
 	latitude          = req.body.latitude
+	DOB               = req.body.DOB
+	image0            = req.body.image0
+	profilePic        = req.body.profilePic
 
 	try {
-		let query_result = await db.query(
+		await db.query(
 			'INSERT INTO USERS \
-			(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude) \
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude]
+			(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic) \
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic]
 			)
-		res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS', id: query_result.insertId})
+		let keri_string ="INSERT INTO TAGS (tag, user) VALUES "
+		for (const tag of req.body.tag_list) {
+			keri_string += ` ('${tag}', '${username}'),`
+		}
+		keri_string = keri_string.slice(0, -1)
+		if (req.body.tag_list.length != 0) {
+			await db.query(keri_string)
+		}
+		console.log("Created user: ", username)
+		res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
@@ -110,7 +122,7 @@ exports.create_user_test = async (req, res) => {
 			res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
-			console.log("signup error:\n", e, "\nend signup error")
+			console.log("create user test error:\n", e, "\nend signup error")
 			res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
 			throw(e)
 		}

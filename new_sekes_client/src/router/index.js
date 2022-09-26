@@ -1,12 +1,12 @@
 import Vue            from 'vue'
 import VueRouter      from 'vue-router'
-import HomeView       from '../views/HomeView.vue'
 import SignIn         from '../components/SignIn'
 import ForgotPassword from '../components/ForgotPassword'
 import VerifyMail     from '../components/VerifyMail.vue'
 import ResetPassword  from '../components/ResetPassword.vue'
 import ProfileEdit    from '../components/ProfileEdit.vue'
 import SearchUsers    from '../components/SearchUsers.vue'
+import PopulateDb     from '../components/PopulateDb.vue'
 
 Vue.use(VueRouter)
 
@@ -14,7 +14,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: SignIn
   },
   {
     path: '/signup',
@@ -53,6 +53,11 @@ const routes = [
     path: '/getallusers',
     name: 'See Users',
     component: SearchUsers
+  },
+  {
+    path: '/populate',
+    name: 'Populate for testing',
+    component: PopulateDb
   }
 ]
 
