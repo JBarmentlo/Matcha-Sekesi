@@ -1,6 +1,6 @@
 const { assert }                  = require('chai');
 
-const BlockController           = require('../src/controllers/block.controller')
+const BlockController             = require('../src/controllers/block.controller')
 const UserController              = require('../src/controllers/user.controller')
 const test_con		              = require('../src/controllers/test.controller')
 const users                       = require('./data/users.mock')
@@ -37,12 +37,12 @@ describe('Test blocks', () => {
 		})
 		step('Missing blocked: Code LIKE_MISS', async () => {
 			await BlockController.block_user(mockRequest({blocked: 'lol'}, users.Mark.username), res)
-			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
+			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW_2")
 			return Promise.resolve()
 		})
 		step('Missing blocker: Code LIKE_MISS', async () => {
 			await BlockController.block_user(mockRequest({blocked: users.Jhonny.username}, 'lol'), res)
-			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW")
+			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW_2")
 			return Promise.resolve()
 		})
 	})

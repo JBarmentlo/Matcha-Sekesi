@@ -3,7 +3,6 @@ create table USERS
     username          varchar(100)             not null,
     firstName         varchar(100)             null,
     lastName          varchar(100)             null,
-    age               int                      null,
     bio               varchar(100)             null,
     mail              varchar(100)             not null,
     password          varchar(100)             not null,
@@ -18,6 +17,11 @@ create table USERS
     latitude          float                    null,
     id                mediumint auto_increment
         primary key,
+    image1            varchar(100)             null,
+    image2            varchar(100)             null,
+    image3            varchar(100)             null,
+    image0            varchar(100)             null,
+    profilePic        varchar(100)             null,
     constraint USERS_mail_uindex
         unique (mail),
     constraint USERS_username_uindex
@@ -71,28 +75,18 @@ create table LIKES
 
 create table NOTIFS
 (
-    id          int auto_increment
+    id           int auto_increment
         primary key,
-    type        varchar(10)          not null,
-    source_user varchar(100)         not null,
-    target_user varchar(100)         not null,
-    seen        tinyint(1) default 0 null,
-    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    type         varchar(10)                          not null,
+    source_user  varchar(100)                         not null,
+    target_user  varchar(100)                         not null,
+    seen         tinyint(1) default 0                 null,
+    last_updated timestamp  default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint source_user_notif_fk
         foreign key (source_user) references USERS (username)
-                        on delete cascade,
+            on delete cascade,
     constraint target_user_notif_fk
         foreign key (target_user) references USERS (username)
-            on delete cascade
-);
-
-create table PICTURES
-(
-    url          varchar(100)                        null,
-    user         varchar(100)                        null,
-    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
-    constraint PICTURES_USERS_username_fk
-        foreign key (user) references USERS (username)
             on delete cascade
 );
 
@@ -132,6 +126,7 @@ create table TAGS
         foreign key (user) references USERS (username)
             on delete cascade
 );
+
 
 create table VERIFY
 (

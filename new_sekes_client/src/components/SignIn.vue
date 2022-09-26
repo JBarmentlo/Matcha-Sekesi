@@ -63,9 +63,9 @@ export default {
 					password: this.password
 				})
 				this.status = signin_res.data.code
-				console.log("signin_res: ", signin_res.data)
-				console.log("signin_res_use: ", signin_res.data.user)
 				if (signin_res.data.code == 'SUCCESS') {
+					console.log("sekes_tokens_cookie set to : ", (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
+					console.log("user cookie set to: ", signin_res.data.user)
 					this.$cookies.set("user", {...signin_res.data.user})
 					this.$cookies.set("sekes_tokens",  (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
 
@@ -100,22 +100,22 @@ export default {
 <style scoped>
 
 .center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  /* border: 3px solid green; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	/* border: 3px solid green; */
 }
 .forgot-password,
 .forgot-password a {
-  text-align: right;
-  font-size: 13px;
-  padding-top: 10px;
-  color: #7a7a7a;
-  margin: 0;
+	text-align: right;
+	font-size: 13px;
+	padding-top: 10px;
+	color: #7a7a7a;
+	margin: 0;
 }
 .forgot-password a {
-  color: #2554FF;
+	color: #2554FF;
 }
 </style>

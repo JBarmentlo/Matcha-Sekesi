@@ -2,47 +2,6 @@ const db = require("../db/sql.conn");
 const NotifController = require('./notif.controller')
 
 
-exports.like_user_by_id = async (req, res) => {
-	let liked_id = req.body.liked_id
-	let liker_id = req.body.liker_id
-
-
-	let [liked_query, ] = await db.query('select * from USERS where id=?', liked_id)
-	let [liker_query, ] = await db.query('select * from USERS where id=?', liker_id)
-	try {
-		if (typeof liked_query !== 'undefined' && liked_query !== null && typeof liker_query !== 'undefined' && liker_query !== null){
-			let like_query_result = await db.query(
-				'INSERT INTO LIKES \
-				(liker, liked) \
-				VALUES (?, ?)',
-				[liker_query.username, liked_query.username]
-				)
-			return res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
-			// console.log(like_query_result)
-		}
-		else {
-			return res.status(200).send({message: "One of the users does not exist", code:"LIKE_MISS"})
-		}
-	}
-	catch (e) {
-		if (e.code == 'ER_NO_REFERENCED_ROW') {
-			return res.status(200).send({message: "User name not existing", code: e.code})
-		}
-		else if (e.code == 'ER_DUP_ENTRY') {
-			return res.status(200).send({message: "Already Liked", code: e.code})
-		}
-		else if (e.code == 'ER_PARSE_ERROR') {
-			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
-			throw (e)
-		}
-		else {
-			console.log("EROOL: ", e)
-			return res.status(500).send({message: "Error in like user ", error: e})
-			throw(e)
-		}
-	}
-}
-
 exports.like_user = async (req, res) => {
 	try {
 		let like_query_result = await db.query(
@@ -58,6 +17,9 @@ exports.like_user = async (req, res) => {
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			return res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_NO_REFERENCED_ROW_2') {
+			res.status(200).send({message: "User name not existing", code: e.code})
 		}
 		else if (e.code == 'ER_DUP_ENTRY') {
 			return res.status(200).send({message: "Already Liked", code: e.code})

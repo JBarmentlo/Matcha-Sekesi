@@ -1,7 +1,8 @@
-const db	 	= require("../db/sql.conn");
-var bcrypt 		= require("bcryptjs");
-const sendMail  = require('../services/mailgun');
+const db       = require("../db/sql.conn");
+var bcrypt     = require("bcryptjs");
+const sendMail = require('../services/mailgun');
 const searches = require("./user.request.js")
+const tagController = require("./tag.controller")
 
 
 // function check_create_user_input(req) {
@@ -117,10 +118,8 @@ exports.create_user_test = async (req, res) => {
 };
 
 
-exports.update_user_test = async (req, res) => {
-	// TODO: Upload tag on user creation
-	// * req.body.tags.forEach(tag => tag = completeAndUploadTag(tag))
 
+exports.update_user_test = async (req, res) => {
 	try {
 		let update_str  = ""
 		let first       = true
@@ -136,19 +135,25 @@ exports.update_user_test = async (req, res) => {
 			update_str += `${key} = '${value}'`
 		}
 		console.log("Updating user %s with str: %s", req.username, update_str)
-		let update_result = await db.query(
-			`UPDATE USERS \
-			SET ${update_str}\
-			WHERE USERS.username=?;`,
-			req.username)
-			if (update_mail == true) {
-				await handle_new_mail_for_user(req.username, update_result.insertId, req.body.update.mail)
-			}
-			res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
+		if (update_str.length != 0) {
+			let update_result = await db.query(
+				`UPDATE USERS \
+				SET ${update_str}\
+				WHERE USERS.username=?;`,
+				req.username)
+				if (update_mail == true) {
+					await handle_new_mail_for_user(req.username, update_result.insertId, req.body.update.mail)
+				}
+		}
+		else {
+			update_result = {}
+		}
+		res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
 	}
 	catch (e) {
-		console.log("signup error:\n", e, "\nend signup error")
-		res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
+		// TODO ER_BAD_FIELD_ERROR
+		console.log("update user error:\n", e, "\nend update user error")
+		res.status(500).send({message: 'error in update test user', error: e, code: 'FAILURE'})
 		throw(e)
 
 	}	
@@ -169,5 +174,15 @@ exports.get_user_by_username = async (req, res) => {
 }
 
 
-
-
+exports.get_my_user = async (req, res) => {
+	try {
+		let user_query = await searches.get_my_user(req.username)
+		console.log("USERSE: ", user_query)
+		res.status(200).send({message: 'Successfully queried user for username.', data: user_query})
+	}
+	catch (e) {
+		console.log("get user by name error:\n", e, "\nend error")
+		res.status(500).send({message: 'error in get user by username', error: e})
+		throw(e)
+	}	
+}

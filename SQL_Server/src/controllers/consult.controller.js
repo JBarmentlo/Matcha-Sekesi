@@ -2,47 +2,6 @@ const db              = require("../db/sql.conn");
 const NotifController = require('./notif.controller')
 
 
-exports.consult_user_by_id = async (req, res) => {
-	let consulted_id = req.body.consulted_id
-	let consulter_id = req.body.consulter_id
-
-
-	let [consulted_query, ] = await db.query('select * from USERS where id=?', consulted_id)
-	let [consulter_query, ] = await db.query('select * from USERS where id=?', consulter_id)
-	try {
-		if (typeof consulted_query !== 'undefined' && consulted_query !== null && typeof consulter_query !== 'undefined' && consulter_query !== null){
-			let consult_query_result = await db.query(
-				'INSERT INTO CONSULTS \
-				(consulter, consulted) \
-				VALUES (?, ?)',
-				[consulter_query.username, consulted_query.username]
-				)
-			res.status(200).send({message: 'Succesfully consulted user', code: "SUCCESS"})
-			// console.log(consult_query_result)
-		}
-		else {
-			res.status(200).send({message: "One of the users does not exist", code:"consult_MISS"})
-		}
-	}
-	catch (e) {
-		if (e.code == 'ER_NO_REFERENCED_ROW') {
-			res.status(200).send({message: "User name not existing", code: e.code})
-		}
-		else if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: "Already consulted", code: e.code})
-		}
-		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
-			throw (e)
-		}
-		else {
-			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in consult user ", error: e})
-			throw(e)
-		}
-	}
-}
-
 // async function update_consult_timestamp()
 exports.consult_user = async (req, res) => {
 	try {
@@ -58,6 +17,9 @@ exports.consult_user = async (req, res) => {
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
 			return res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_NO_REFERENCED_ROW_2') {
+			res.status(200).send({message: "User name not existing", code: e.code})
 		}
 		else if (e.code == 'ER_DUP_ENTRY') {
 			return res.status(200).send({message: "Already Liked", code: e.code})

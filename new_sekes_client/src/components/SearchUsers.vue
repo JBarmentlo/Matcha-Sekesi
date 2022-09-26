@@ -55,7 +55,7 @@
 
 <script>
 import { getAllUsers } from "../services/search";
-import ProfileList from './ProfileList.vue'
+import ProfileList from '../shared/ProfileList.vue'
 
 export default {
 	components: { ProfileList },
