@@ -10,7 +10,7 @@
 						v-model="username"
 						class="form-control form-control-lg"
 					/>
-					<div v-if="status == 'MISSING_USERNAME'" class="login_error">User doesn't exist</div>
+					<div v-if="wrongUser" class="login_error">User doesn't exist</div>
 
 				</div>
 				<div class="form-group pb-3">
@@ -20,7 +20,7 @@
 						v-model="password"
 						class="form-control form-control-lg"
 					/>
-					<div v-if="status == 'WRONG_PASSWORD'" class="login_error">Wrong Password</div>
+					<div v-if="wrongPass" class="login_error">Wrong Password</div>
 				</div>
 				<button type="submit" class="btn btn-dark btn-lg btn-block">
 					Sign In
@@ -51,7 +51,14 @@ export default {
 		};
 	},
 
-
+	computed: {
+		wrongPass() {
+			return this.status == 'WRONG_PASSWORD'
+		},
+		wrongUser() {
+			return this.status == 'MISSING_USERNAME'
+		}
+	},
 
 	methods: {
 		async submitLoginForm(e) {
@@ -62,6 +69,7 @@ export default {
 					username: this.username,
 					password: this.password
 				})
+				console.log("data: ",signin_res.data)
 				this.status = signin_res.data.code
 				if (signin_res.data.code == 'SUCCESS') {
 					console.log("sekes_tokens_cookie set to : ", (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
