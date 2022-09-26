@@ -88,7 +88,13 @@ exports.create_user_test = async (req, res) => {
 	DOB               = req.body.DOB
 	image0            = req.body.image0
 	profilePic        = req.body.profilePic
+	tag_list          = req.body.tag_list
 
+	if (tag_list == undefined || tag_list == null) {
+		tag_list = []
+	}
+
+	console.log("\n\n\n\n\n\n\nusername: ", username, "\nfirstName: ", firstName, "\nlastName: ", lastName, "\nmail: ", mail, "\npassword: ", "\npopScore: ", popScore, "\nzipCode: ", zipCode, "\ncity: ", city, "\nisCompleteProfile: ", isCompleteProfile, "\nlongitude: ", longitude, "\nlatitude: ", latitude, "\nDOB: ", DOB, "\nimage0: ", image0, "\nprofilePic: ", profilePic)
 	try {
 		await db.query(
 			'INSERT INTO USERS \
@@ -97,11 +103,11 @@ exports.create_user_test = async (req, res) => {
 			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic]
 			)
 		let keri_string ="INSERT INTO TAGS (tag, user) VALUES "
-		for (const tag of req.body.tag_list) {
+		for (const tag of tag_list) {
 			keri_string += ` ('${tag}', '${username}'),`
 		}
 		keri_string = keri_string.slice(0, -1)
-		if (req.body.tag_list.length != 0) {
+		if (tag_list.length != 0) {
 			await db.query(keri_string)
 		}
 		console.log("Created user: ", username)
@@ -122,7 +128,8 @@ exports.create_user_test = async (req, res) => {
 			res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
-			console.log("create user test error:\n", e, "\nend signup error")
+			console.log("create user test error:\n", e, "\n\nend signup error")
+			// res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
 			res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
 			throw(e)
 		}

@@ -1,7 +1,7 @@
 <template>
 <div class="center">
 		<div class="inner-block">
-				<form @submit="createRandomUser">
+				<form @submit.prevent="submitForm">
 					<h3>PopulateDb</h3>
 					<div class="form-group">
 						<label>Number of users to generate</label>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { createRandomUser } from "../services/user.js";
+import { createRandomUsers } from "../services/user.js";
 
 
 export default {
@@ -33,23 +33,19 @@ export default {
 		};
 	},
 	methods: {
-		createRandomUser(e) {
+		async submitForm() {
 			// console.log(e)
-			e.preventDefault()
-			for (let index = 0; index < this.n; index++) {
-				try {
-					createRandomUser()
-				}
-				catch(err) {
-					console.log("create user error: %o" , err)
-				}
+			try {
+				let returns = await createRandomUsers(this.n)
+				console.log(returns)
+			}
+			catch(err) {
+				console.log("create user error: %o" , err)
 			}
 
 		}
 	},
 	created() {
-		console.log("Created");
-		// fetch('https://randomuser.me/api/?nat=FR&results=3').then(res => {res.json().then(r => {console.log(r)})});
 	},
 };
 </script>
