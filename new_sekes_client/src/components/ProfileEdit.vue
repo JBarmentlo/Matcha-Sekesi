@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <label class="labels">Interests</label>
-                    <TagInputHandler :user_tags="user.tag_list"/>
+                    <TagInputHandler v-model="user.tag_list"/>
                 </div>
                 <div class="col">
                     <label class="labels">Sekesual Orientation</label>

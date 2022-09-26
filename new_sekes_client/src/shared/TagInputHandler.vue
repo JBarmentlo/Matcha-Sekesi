@@ -21,13 +21,14 @@ export default {
 
   model: {
     prop: 'user_tags',
-    event: 'select_tag'
+    event: 'change_selected_tags'
   },
 
   data() {
     return {
       selectedTags: this.tagTransform(this.user_tags),
-      existingTags: []
+      existingTags: [],
+      currentUserTags: this.$cookies.get('user').tag_list
     }
   },
 
@@ -52,13 +53,19 @@ export default {
       return tags.map(o => {return {'key': o, 'value': o}})
     },
 
-    onTagAdded(slug) {
-      console.log(`Tag added: ${slug}`);
+    onTagAdded() {
+      this.$emit('change_selected_tags', this.rawSelectedTagList)
     },
 
-    onTagRemoved(slug) {
-      console.log(`Tag removed: ${slug}`);
+    onTagRemoved() {
+      this.$emit('change_selected_tags', this.rawSelectedTagList)
     },
+
+    // async UpdateUserTags() {
+      // try {
+        // let res = await 
+      // }
+    // }
   },
 
   mounted() {
