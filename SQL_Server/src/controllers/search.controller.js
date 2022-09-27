@@ -17,6 +17,18 @@ exports.get_all_users = async (req, res) => {
 	}	
 }
 
-
-
-
+exports.search_users = async (req, res) => {
+	console.log("searching users : ", req.body.min_age, req.body.max_age, req.body.required_tags, req.body.min_rating, req.body.zipcode)
+	console.log("criteria: ", "min_age :", req.body.min_age,"max_age :", req.body.max_age,"interest_tags :", req.body.interest_tags,"min_rating :", req.body.min_rating,"zipcodes :", req.body.zipcodes)
+	try {
+		let user_query = await searches.search_users(req.username, req.body.min_age, req.body.max_age, req.body.required_tags, req.body.min_rating, req.body.zipcodes)
+		// console.log(user_query)
+		console.log("Rows: ", user_query.map(user => {return {name: user.username, age: user.age, score: user.popScore, zip: user.zipCode}}))
+		res.status(200).send({message: 'Successfully queried users.', data: user_query})
+	}
+	catch (e) {
+		console.log("get user by name error:\n", e, "\nend error")
+		res.status(500).send({message: 'error in get users', error: e})
+		throw(e)
+	}	
+}

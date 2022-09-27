@@ -11,7 +11,7 @@
 			<input v-model="min_rating" type="number"/>
 
 			<label for="">Zipcode</label>
-			<input v-model="zipcodes" type="text"/>
+			<input v-model="zipcode" type="text"/>
 
 			<label>Required Tags</label>
 			<TagInputHandler v-model="required_tags"/>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { getAllUsers } from "../services/search";
+import { getAllUsers, searchUsers } from "../services/search";
 import ProfileList from '../shared/ProfileList.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
 
@@ -41,13 +41,17 @@ export default {
 		}
 	},
 	methods: {
-		search() {
-			console.log(this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcodes)
+		async search() {
+			console.log(this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode)
+			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode)
+			console.log("serchress: ", rese.data.data)
+			this.users = rese.data.data
+			
 		}
 	},
 	created() {
 		console.log("hey");
-		getAllUsers(this.$cookies.get("sekes_tokens"), this.min_age, this.max_age, this.interest_tags, this.min_rating, this.zipcodes)
+		getAllUsers(this.$cookies.get("sekes_tokens"), this.min_age, this.max_age, this.interest_tags, this.min_rating, this.zipcode)
 		.then(users => {
 			console.log("YUSERS: ", users.data.data)
 			this.users = users.data.data;
