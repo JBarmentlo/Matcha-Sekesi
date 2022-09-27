@@ -42,7 +42,7 @@ exports.get_all_users = async (searcher_username) => {
                     longitude,                       \
                     latitude,                        \
                     id,                              \
-                    age,                             \
+                    TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                             \
                     DOB,                             \
                     IF(                              \
                         (username IN(SELECT liked    \
@@ -101,7 +101,7 @@ exports.get_user = async (searcher_username, searched_username) => {
 };
 
 exports.get_my_user = async (searched_username) => {
-    // console.log("Getting my profile: ", searched_username)
+    console.log("Getting my profile: ", searched_username)
     let user_query = await db.query(
         "WITH TAGLIST as (                                           \
             SELECT                                                   \
@@ -109,7 +109,6 @@ exports.get_my_user = async (searched_username) => {
                 firstName,                                           \
                 lastName,                                            \
                 bio,                                                 \
-                age,                                                 \
                 DOB,                             \
                 mail,                                                \
                 password,                                            \
@@ -141,7 +140,6 @@ exports.get_my_user = async (searched_username) => {
                     firstName,                                       \
                     lastName,                                        \
                     bio,                                             \
-                    age,                                             \
                     DOB,                             \
                     mail,                                            \
                     password,                                        \
@@ -209,6 +207,59 @@ exports.get_my_user = async (searched_username) => {
             password, tag_list, like_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
     , )
 
-    // console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+    console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
     return transform_csv_lists_to_arrays(user_query[0])
 };
+
+
+
+WITH USERLIST as (
+    SELECT
+        user
+    FROM USERS
+    INNER JOIN TAGS T
+        on USERS.username = T.user
+        AND T.tag in ('Music')
+    GROUP BY user
+    ),
+
+    TAGLIST as (
+        SELECT
+            USERLIST.user,
+            GROUP_CONCAT(tag) as tag_list
+        FROM USERLIST
+        LEFT JOIN TAGS
+            ON USERLIST.user = TAGS.user
+        GROUP BY user
+    )
+
+SELECT
+    username,
+    firstName,
+    lastName,
+    bio,
+    gender,
+    TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,
+    DOB,
+    sekesualOri,
+    popScore,
+    zipCode,
+    city,
+    isCompleteProfile,
+    image0,
+    image1,
+    image2,
+    image3,
+    longitude,
+    latitude,
+    mailVerified,
+    tag_list,
+    IF((username IN(SELECT liked
+                    FROM LIKES
+                    WHERE liker='searcher_username')
+                    ), 1 , 0)
+                    AS did_i_like_him
+
+    FROM USERS INNER JOIN TAGLIST
+        ON USERS.username = TAGLIST.user;
+#     AND T.tag IN ('Music', 'Sunshine')

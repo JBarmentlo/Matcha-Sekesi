@@ -23,7 +23,6 @@ create table USERS
     image0            varchar(100)             null,
     profilePic        varchar(100)             null,
     DOB               date                     null,
-    age               int                      null,
     constraint USERS_mail_uindex
         unique (mail),
     constraint USERS_username_uindex

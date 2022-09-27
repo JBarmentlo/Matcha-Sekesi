@@ -15,8 +15,7 @@ const { createDeflate } = require('zlib');
 // const default_profile_pic = "../assets/empty_profile.png"
 
 exports.signup = (req, res) => {
-    // console.log("signup")
-    // console.log(req.ip)
+    console.log("signup")
     const user = {
         username        : req.body.username,
         firstName       : '',
