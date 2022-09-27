@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in"/>
-    <router-view/>
+    <router-view @setLoggedIn="setLoggedIn"/>
   </div>
 </template>
 

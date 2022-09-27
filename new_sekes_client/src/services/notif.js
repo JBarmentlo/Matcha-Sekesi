@@ -13,8 +13,7 @@ export const getMyNotifs = async (access_token, offset, limit) => {
 		},
 		data: JSON.stringify({limit: limit, offset: offset})
 	};
-	console.log({limit: limit, offset: offset})
-	
 	const response = await axios(request);
+	console.log("Notifs res: ", response)
 	return response;
 }

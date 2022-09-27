@@ -76,7 +76,7 @@ export default {
 					console.log("user cookie set to: ", signin_res.data.user)
 					this.$cookies.set("user", {...signin_res.data.user})
 					this.$cookies.set("sekes_tokens",  (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
-
+					this.$emit('setLoggedIn', true)
 					this.$router.push('/editprofile')
 				}
 			}
