@@ -31,20 +31,7 @@
                         <router-link class = "pr-3" to="/"><img src = "../assets/message.png" height = "32"/></router-link>
                     </li>
 					<li class="nav-item px-1">
-                        <!-- <router-link class = "pr-3" to="/"><img src = "../assets/notification.png" height = "32"/></router-link> -->
-                        <div>
-                            <b-dropdown
-                                class="dropdown-1"
-                                text="Nootifs"
-                            >
-
-                                <div v-for="(notif, index) in notifs" :key="notif.id" @click='setNotifViewedWrap(index, notif._id)'>
-                                    <b-dropdown-item>
-                                        {{notif.type}} {{notif.viewed}}
-                                    </b-dropdown-item>
-                                </div>
-                            </b-dropdown>
-                        </div>
+                        <NotifHandler/>
                     </li>
                     <li @click="logout" class="nav-item px-1">
                         <img  src = "../assets/logout.png" height = "32"/>
@@ -57,9 +44,14 @@
 
 <script>
 import router from '@/router'
+import NotifHandler from "./NotifHandler.vue"
 
 export default {
     name    : "NavBar",
+
+    components: {
+        NotifHandler
+    },
 
     props   : {
         logged_in: Boolean
@@ -76,8 +68,8 @@ export default {
             if (this.$cookies.isKey("user"))
                 this.$cookies.remove("user")
             this.$emit("setLoggedIn", false)
-            if (this.$route.path != "/login")
-                router.push("/login")
+            if (this.$route.path != "/signin")
+                router.push("/signin")
         },
     },
 

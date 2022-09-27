@@ -61,7 +61,7 @@ exports.get_my_notifs = async (req, res) => {
 			NOT EXISTS (SELECT 1 FROM BLOCKS \
 				WHERE NOTIFS.source_user = BLOCKS.blocked AND NOTIFS.target_user = BLOCKS.blocker OR \
 				NOTIFS.source_user = BLOCKS.blocker AND NOTIFS.target_user = BLOCKS.blocked) \
-				LIMIT ? OFFSET ?;",
+			ORDER BY last_updated DESC LIMIT ? OFFSET ?;",
 			[req.username, req.body.limit, req.body.offset],)
 		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
 	}
@@ -72,19 +72,48 @@ exports.get_my_notifs = async (req, res) => {
 	}
 }
 
-exports.set_seen_notif = async (req, res) => {
+exports.set_seen_notifs = async (req, res) => {
 	try {
+		let id_list_str = '('
+		let first = true
+		for (const id of req.body.id_list) {
+			if (first) {
+				id_list_str += `'${id}'`
+				first = false
+			}
+			else {
+				id_list_str += ','
+				id_list_str += `'${id}'`
+			}
+		}
+		id_list_str += ')'
 		notif_query = await db.query(
 			"UPDATE NOTIFS\
 			set seen=1 \
-			WHERE id=? and target_user=?;",
-			[req.body.id, req.username],)
+			WHERE id IN id_list and target_user=?;".replace('id_list',  id_list_str),
+			[req.username],)
 		return res.status(200).send({message: "succesfull notif set seen", data: notif_query, code: "SUCCESS"})
 	}
 	catch (e) {
 		console.log(e)
 		throw (e)
 		return res.status(201).send({message: "failed notif set seen", data: [], code: "FAILURE"})
+	}
+}
+
+
+exports.delete_notif = async (req, res) => {
+	try {
+		notif_query = await db.query(
+			"DELETE FROM NOTIFS\
+			 WHERE target_user = ? AND id = ?;",
+			[req.username, req.body.id],)
+		return res.status(200).send({message: "succesfull notif delete", data: notif_query, code: "SUCCESS"})
+	}
+	catch (e) {
+		console.log(e)
+		throw (e)
+		return res.status(201).send({message: "failed notif delete", data: [], code: "FAILURE"})
 	}
 }
 
