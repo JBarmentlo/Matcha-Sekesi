@@ -123,7 +123,7 @@ exports.get_user_by_username = async (req, res) => {
 exports.get_my_user = async (req, res) => {
 	try {
 		let user_query = await searches.get_my_user(req.username)
-		console.log("USERSE: ", user_query)
+		// console.log("USERSE: ", user_query)
 		res.status(200).send({message: 'Successfully queried user for username.', data: user_query})
 	}
 	catch (e) {
