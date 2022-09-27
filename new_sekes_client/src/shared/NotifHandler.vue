@@ -47,6 +47,11 @@ async mounted() {
 	catch (e) {
 		console.log("error in get notifs: ", e)
 	}
+},
+
+beforeDestroy () {
+	clearInterval(this.polling)
 }
+
 }
 </script>
