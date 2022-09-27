@@ -40,6 +40,7 @@
 
 <script>
 import { signin } from "../services/auth";
+import { getMyUser } from "../services/user";
 // import router from "@/router";
 
 export default {
@@ -87,20 +88,27 @@ export default {
 			
 		},
 	},
-	created() {
-		console.log("cookie signin disabled")
-		// console.log("Signin Created");
-		// if (this.$cookies.isKey("user") && this.$cookies.get("user").user.username != null) {
-		// 	console.log("already logged in by cookie");
-		// 	this.$emit("setLoggedIn", true);
-		// 	this.$router.push('/editprofile')
-		// }
-		// else {
-		// 	console.log("not cookie signed in")
-		// 	console.log(this.$cookies.keys())
-		// 	console.log(this.$cookies.isKey('user'))
 
-		// }
+	async mounted() {
+		// console.log("cookie signin disabled")
+		console.log("Signin Created");
+		if (this.$cookies.isKey("sekes_tokens") && this.$cookies.get("sekes_tokens") != null) {
+			console.log("already logged in by cookie");
+			try {
+				let user = await getMyUser(this.$cookies.get('sekes_tokens'))
+				console.log("AUto login user: ", user.data.data)
+				this.$cookies.set("user", {...user.data.data})
+				this.$emit("setLoggedIn", true);
+				this.$router.push('/editprofile')
+			}
+			catch (e) {
+				console.log("error in auto cookie signin", e)
+				throw (e)
+			}
+		}
+		else {
+			console.log("not cookie signed in")
+		}
 	},
 };
 </script>

@@ -2,6 +2,7 @@
 		<b-dropdown
 				class="dropdown-1"
 				:text="notifText"
+				@show="setSeen"
 		>
 				<div v-for="(notif, index) in notifs" :key="notif.id" @click='F(index)'>
 						<b-dropdown-item>
@@ -12,7 +13,7 @@
 </template>
 
 <script>
-import { getMyNotifs }from '../services/notif'
+import { getMyNotifs, setSeenNotifs }from '../services/notif'
 
 export default {
 
@@ -44,7 +45,6 @@ methods: {
 	pollData () {
 		this.polling = setInterval(async () => {
 			let old_notif_ids = this.notifs.map(n => n.id)
-			console.log(old_notif_ids)
 			this.notifs = (await getMyNotifs(this.$cookies.get('sekes_tokens'), this.offset, this.limit)).data.data
 			let new_notifs = this.notifs.filter(n => !old_notif_ids.includes(n.id))
 			this.notifyUser(new_notifs)
@@ -53,13 +53,20 @@ methods: {
 	},
 
 	notifyUser(notif_list) {
-		console.log("notify: ", notif_list)
+		if (notif_list.length != 0) {
+			console.log("notify: ", notif_list)
+		}
 	},
 
 	notifCardText(notif) {
 		const dic = {'LIKE': 'liked you.', "CONSULT": 'consulted your profile', "MATCH": 'matched you!', "UNMATCH": 'unmatched you.'}
-		console.log("Notif : ", notif, "test: ",notif.source_user + " " + dic[notif.type])
 		return notif.source_user + " " + dic[notif.type]
+	},
+
+	async setSeen() {
+		console.log("setSeen", this.notifs.map(n => n.id))
+		await setSeenNotifs(this.$cookies.get('sekes_tokens') ,this.notifs.map(n => n.id))
+		this.notifs = this.notifs.map(n => {return {...n, seen:1}})
 	},
 
 	F(e) {
@@ -67,6 +74,7 @@ methods: {
 		console.log(e)
 	}
 },
+
 async mounted() {
 	try {
 		let nooti = await getMyNotifs(this.$cookies.get('sekes_tokens'), this.offset, this.limit)
