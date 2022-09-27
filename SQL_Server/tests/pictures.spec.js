@@ -11,9 +11,9 @@ const { step }                    = require('mocha-steps');
 //     step("Init db", () => {
 //         return (Promise.all([
 //             test_con.clear_db(),
-//             UserController.create_user_test(mockRequest(users.Jhonny), res),
-//             UserController.create_user_test(mockRequest(users.Bella), res),
-//             UserController.create_user_test(mockRequest(users.Mark), res)
+//             testController.create_user_test(mockRequest(users.Jhonny), res),
+//             testController.create_user_test(mockRequest(users.Bella), res),
+//             testController.create_user_test(mockRequest(users.Mark), res)
 //         ]))
 //     })
 //     step("Create and add picture", async () => {

@@ -13,16 +13,16 @@ describe('Test users', () => {
 		let res = mockResponse()
 		return (Promise.all([
 			test_con.clear_db(),
-			UserController.create_user_test(mockRequest(users.Jhonny), res),
-			UserController.create_user_test(mockRequest(users.Bella), res),
-			UserController.create_user_test(mockRequest(users.Mark), res)
+			test_con.create_user_test(mockRequest(users.Jhonny), res),
+			test_con.create_user_test(mockRequest(users.Bella), res),
+			test_con.create_user_test(mockRequest(users.Mark), res)
 		]))
 	})
 	describe('User create errors', () => {
 		step('Duplicate username: ER_DUP_ENTRY', async () => {
 			let res = mockResponse()
 			let req = mockRequest(users.JhonnyDupName)
-			await UserController.create_user_test(req, res)
+			await test_con.create_user_test(req, res)
 			assert.isTrue(res.status.lastCall.lastArg == 200)
 			assert.isTrue(res.send.lastCall.firstArg.code == 'ER_DUP_ENTRY')
 			return Promise.resolve()
@@ -32,7 +32,7 @@ describe('Test users', () => {
 			user.username = "LKJHSDFLKJHSDFLKJHSDLFKJHSDFKLJHSDLFKJSD<>FMN>XC<VN><XCMNFV>KJSHDFLKJHSDFGKJHSDFKJHSDLFKJHSDLFKJHSDLKFJHSDLFKJHSLDFKJHSDFLKJHSDLFKLjh"
 			let res = mockResponse()
 			let req = mockRequest(user)
-			await UserController.create_user_test(req, res)
+			await test_con.create_user_test(req, res)
 			assert.equal(res.status.lastCall.lastArg, 200)
 			assert.equal(res.send.lastCall.firstArg.code, 'ER_DATA_TOO_LONG')
 			return Promise.resolve()
@@ -42,7 +42,7 @@ describe('Test users', () => {
 			yuser.username = null
 			let res = mockResponse()
 			let req = mockRequest(yuser)
-			await UserController.create_user_test(req, res)
+			await test_con.create_user_test(req, res)
 			assert.equal(res.status.lastCall.lastArg, 200)
 			assert.equal(res.send.lastCall.firstArg.code, 'ER_BAD_NULL_ERROR')
 			return Promise.resolve()

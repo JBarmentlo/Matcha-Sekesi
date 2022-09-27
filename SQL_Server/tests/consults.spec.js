@@ -1,7 +1,7 @@
 const { assert }                  = require('chai');
 
 const ConsultController           = require('../src/controllers/consult.controller')
-const UserController              = require('../src/controllers/user.controller')
+const testController              = require('../src/controllers/test.controller')
 const test_con		              = require('../src/controllers/test.controller')
 const users                       = require('./data/users.mock')
 const {mockResponse, mockRequest} = require('./data/res.req.mock')
@@ -12,9 +12,9 @@ describe('Test consults', () => {
 		let res = mockResponse()
 		return (Promise.all([
 			test_con.clear_db(),
-			UserController.create_user_test(mockRequest(users.Jhonny), res),
-			UserController.create_user_test(mockRequest(users.Bella), res),
-			UserController.create_user_test(mockRequest(users.Mark), res)
+			testController.create_user_test(mockRequest(users.Jhonny), res),
+			testController.create_user_test(mockRequest(users.Bella), res),
+			testController.create_user_test(mockRequest(users.Mark), res)
 		]))
 	})
 	describe("Create Consults", () => {

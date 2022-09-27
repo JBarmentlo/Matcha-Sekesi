@@ -10,11 +10,11 @@ exports.mochaHooks = {
 		// await test_con.clear_db()
 		// let res = mockResponse()
 		// let req = mockRequest(users.Jhonny)
-		// await UserController.create_user_test(req, res)
+		// await testController.create_user_test(req, res)
 		// req = mockRequest(users.Bella)
-		// await UserController.create_user_test(req, res)
+		// await testController.create_user_test(req, res)
 		// req = mockRequest(users.Mark)
-		// await UserController.create_user_test(req, res)
+		// await testController.create_user_test(req, res)
 	},
 	
 	async afterAll() {

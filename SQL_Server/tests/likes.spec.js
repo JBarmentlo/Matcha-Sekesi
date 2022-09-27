@@ -2,7 +2,6 @@ const { assert }                  = require('chai');
 
 const BlockController           = require('../src/controllers/block.controller')
 const LikeController              = require('../src/controllers/like.controller')
-const UserController              = require('../src/controllers/user.controller')
 const test_con		              = require('../src/controllers/test.controller')
 const users                       = require('./data/users.mock')
 const {mockResponse, mockRequest} = require('./data/res.req.mock');
@@ -20,9 +19,9 @@ describe('Test likes', () => {
 		let res = mockResponse()
 		return (Promise.all([
 			test_con.clear_db(),
-			UserController.create_user_test(mockRequest(users.Jhonny), res),
-			UserController.create_user_test(mockRequest(users.Bella), res),
-			UserController.create_user_test(mockRequest(users.Mark), res)
+			test_con.create_user_test(mockRequest(users.Jhonny), res),
+			test_con.create_user_test(mockRequest(users.Bella), res),
+			test_con.create_user_test(mockRequest(users.Mark), res)
 		]))
 	})
 	describe("Create Lonely Mark", () => {
