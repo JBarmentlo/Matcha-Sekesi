@@ -223,19 +223,3 @@ exports.verifyToken = (req, res, next) => {
     }
 
 };
-
-exports.verifyTestModeOn = (req, res, next) => {
-    try {
-        if (process.env.TEST == 'true') {
-            next();
-        }
-        else {
-            console.error("Tried to access test endpoints")
-            res.status(201).send({"message": "Only avalable for testing"})
-        }
-    }
-    catch (e) {
-        console.log('error in verify test on')
-    }
-
-};
