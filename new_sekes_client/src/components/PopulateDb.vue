@@ -24,6 +24,25 @@
 					class="form-control form-control-lg"
 				/>
 			</div>
+
+			<div class="form-group pt-5">
+				<label>Number of consults per user to generate</label>
+				<input
+					type="text"
+					v-model="n_consults_per_user"
+					class="form-control form-control-lg"
+				/>
+			</div>
+
+			<div class="form-group pt-5">
+				<label>Number of blocks per user to generate</label>
+				<input
+					type="text"
+					v-model="n_blocks_per_user"
+					class="form-control form-control-lg"
+				/>
+			</div>
+
 			<button type="submit" class="btn btn-dark btn-lg btn-block">
 				Genesiiis
 			</button>
@@ -33,7 +52,7 @@
 </template>
 
 <script>
-import { createRandomUsers } from "../services/test.js";
+import { createRandomUsers, createRandomlikes, createRandomConsults, createRandomblocks } from "../services/test.js";
 import TagInputHandler from '../shared/TagInputHandler.vue'
 // import {} from '../services/user/g'
 
@@ -44,9 +63,11 @@ export default {
 
 	data() {
 		return {
-			tags: [],
-			n_user: 1,
-			n_likes_per_user: 1,
+			tags: ["Music","Sekes","Travel","Web Dev","Alcoolic","Laughing","Gourmet","Cofee","Sunshine"],
+			n_user: 1000,
+			n_likes_per_user: 5,
+			n_blocks_per_user: 2,
+			n_consults_per_user: 10,
 		};
 	},
 	methods: {
@@ -54,7 +75,13 @@ export default {
 			console.log("generating users")
 			try {
 				let returns = await createRandomUsers(this.n_user, this.tags)
-				console.log(returns)
+				console.log("Users Created: ", returns)
+				let rets = await createRandomlikes(1, this.n_likes_per_user)
+				console.log("Likes created: ", rets)
+				await createRandomConsults(1, this.n_consults_per_user)
+				console.log("Consults created")
+				await createRandomblocks(1, this.n_blocks_per_user)
+				console.log("Blocks created: ", rets)
 			}
 			catch(err) {
 				console.log("create user error: %o" , err)

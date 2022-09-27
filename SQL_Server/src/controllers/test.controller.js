@@ -1,5 +1,27 @@
-const db   = require("../db/sql.conn");
-var bcrypt = require("bcryptjs");
+const db                = require("../db/sql.conn");
+const bcrypt            = require("bcryptjs");
+const sinon             = require('sinon');
+const cliProgress       = require('cli-progress');
+const bar1              = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+const likeController    = require("../controllers/like.controller")
+const consultController = require("../controllers/consult.controller")
+const blockController   = require("../controllers/block.controller")
+
+const mockResponse = () => {
+	const res = {};
+	res.status = sinon.stub().returns(res);
+	res.json = sinon.stub().returns(res);
+	res.send = sinon.stub()
+	return res;
+};
+
+const mockRequest = (body, username) => {
+	return {
+		username: username,
+		body: body
+	};
+};
+
 
 exports.clear_db = () => {
 	let promise_BLOCKS   = db.query('DELETE FROM BLOCKS;')
@@ -14,7 +36,7 @@ exports.clear_db = () => {
 
 exports.verifyTestModeOn = (req, res, next) => {
     try {
-        if (process.env.TEST == 'true') {
+        if (process.env.ENVIRONMENT == 'TEST') {
             next();
         }
         else {
@@ -96,21 +118,12 @@ exports.create_user_test = async (req, res) => {
 };
 
 
-exports.create_user_tags= async (req, res) => {
-	let username = req.body.username
-	let tag_list = req.body.tag_list
-
+exports.get_user_list = async (req, res) => {
 	try {
-		let keri_string ="INSERT INTO TAGS (tag, user) VALUES "
-		for (const tag of tag_list) {
-			keri_string += ` ('${tag}', '${username}'),`
-		}
-		keri_string = keri_string.slice(0, -1)
-		console.log("KERI TAG: ", keri_string)
-		if (tag_list.length != 0) {
-			await db.query(keri_string)
-		}
-		res.status(200).send({message: 'Succesfully added tag to user', code: "SUCCESS"})
+		let user_list = await db.query(
+			"SELECT username from USERS;"
+		)
+		res.status(200).send({message: 'Succesfully added tag to user', code: "SUCCESS", data: user_list})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
@@ -138,5 +151,127 @@ exports.create_user_tags= async (req, res) => {
 			throw(e)
 		}
 	}
-}
+};
 
+
+exports.create_likes = async (req, res) => {
+	console.log("Creating likes")
+	let like_list = req.body.like_list
+	bar1.start(like_list.length, 0);
+	let i = 0
+	let mock_res = mockResponse()
+	try {
+		for (const like of like_list) {
+			bar1.update(i)
+			i += 1
+			req.username = like.liker.username
+			req.body.liked = like.liked.username
+			let like_res = await likeController.like_user(req, mock_res)
+		}
+		bar1.stop();
+		console.log("Created likes")
+		return res.status(200).send({message: 'Succesfully created likes', code: 'SUCCESS'})
+	}
+	catch (e) {
+		if (e.code == 'ER_DUP_ENTRY') {
+			return res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else if (e.code == 'ER_PARSE_ERROR') {
+			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
+			// throw(e)
+		}
+		else if (e.code == 'ER_DATA_TOO_LONG') {
+			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else if (e.code == 'ER_BAD_NULL_ERROR') {
+			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else {
+			console.log("create user likes test error:\n", e, "\n\nend error")
+			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
+			throw(e)
+		}
+	}	
+};
+
+
+exports.create_consults = async (req, res) => {
+	console.log("Creating consults")
+	let consult_list = req.body.consult_list
+	bar1.start(consult_list.length, 0);
+	let mock_res = mockResponse()
+	let i = 0
+	try {
+		for (const consult of consult_list) {
+			bar1.update(i)
+			i += 1
+			req.username = consult.consulter.username
+			req.body.consulted = consult.consulted.username
+			let consult_res = await consultController.consult_user(req, mock_res)
+		}
+		bar1.stop();
+		console.log("Created consults")
+		return res.status(200).send({message: 'Succesfully created consults', code: 'SUCCESS'})
+	}
+	catch (e) {
+		if (e.code == 'ER_DUP_ENTRY') {
+			return res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else if (e.code == 'ER_PARSE_ERROR') {
+			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
+			// throw(e)
+		}
+		else if (e.code == 'ER_DATA_TOO_LONG') {
+			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else if (e.code == 'ER_BAD_NULL_ERROR') {
+			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else {
+			console.log("create user consults test error:\n", e, "\n\nend error")
+			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
+			throw(e)
+		}
+	}	
+};
+
+
+exports.create_blocks = async (req, res) => {
+	console.log("Creating blocks")
+	let block_list = req.body.block_list
+	bar1.start(block_list.length, 0);
+	let i = 0
+	try {
+		for (const block of block_list) {
+			bar1.update(i)
+			i += 1
+			req.username = block.blocker.username
+			req.body.blocked = block.blocked.username
+			let mock_res = mockResponse()
+			let block_res = await blockController.block_user(req, mock_res)
+		}
+		bar1.stop();
+		console.log("Created blocks")
+		return res.status(200).send({message: 'Succesfully created blocks', code: 'SUCCESS'})
+	}
+	catch (e) {
+		if (e.code == 'ER_DUP_ENTRY') {
+			return res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else if (e.code == 'ER_PARSE_ERROR') {
+			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
+			// throw(e)
+		}
+		else if (e.code == 'ER_DATA_TOO_LONG') {
+			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else if (e.code == 'ER_BAD_NULL_ERROR') {
+			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
+		}
+		else {
+			console.log("create user blocks test error:\n", e, "\n\nend error")
+			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
+			throw(e)
+		}
+	}	
+};

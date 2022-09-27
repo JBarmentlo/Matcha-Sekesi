@@ -43,7 +43,7 @@ exports.block_user_by_id = async (req, res) => {
 }
 
 exports.block_user = async (req, res) => {
-	console.log('blocking ', req.username, req.body.blocked)
+	// console.log('blocking ', req.username, req.body.blocked)
 	try {
 		let block_query_result = await db.query(
 			'INSERT INTO BLOCKS \

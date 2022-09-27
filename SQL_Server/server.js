@@ -12,7 +12,7 @@ var corsOptions = {
 };
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
@@ -61,7 +61,7 @@ app.use('/api/tags', tagRouter, function(req, res, next){
 
 testRouter = require('./src/routes/test.routes')
 
-if (process.env.TEST == 'true') {
+if (process.env.ENVIRONMENT == 'TEST') {
   console.log("Setting up test routes")
   app.use('/api/test', testRouter, function(req, res, next){
     res.header(
@@ -71,12 +71,6 @@ if (process.env.TEST == 'true') {
     next();
   }) // auth authentication
 }
-
-
-
-
-
-
 
 
 // #######################   IMAGE ROUTES   ########################

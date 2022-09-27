@@ -55,6 +55,123 @@ export const createRandomUsers = async (amount, tags) => {
 };
 
 
+export const createRandomlikes = async (min, max) => {
+	console.log("Creating ", min, "-", max, " likes per user.")
+
+	let request = {
+		url: "http://localhost:8081/api/test/getuserlist",  // should be replaced after going to production with domain url
+		method: "get",
+		headers: {
+			"Content-type": "application/json",
+		},
+	};
+
+	const user_list = await (await axios(request)).data.data;
+	let like_list = []
+
+	for (const user of user_list){
+		let n_likes = Math.floor(Math.random() * (max - min)) + min
+
+		for (let i = 0; i < n_likes; i++) {
+			let random_user = user_list[Math.floor(Math.random() * user_list.length)]
+			let like = {"liker": user, "liked": random_user}
+			like_list.push(like)
+		}
+	}
+
+	let request_like = {
+		url: "http://localhost:8081/api/test/createlikes",  // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type": "application/json",
+		},
+		data: JSON.stringify({'like_list': like_list})
+	};
+	console.log("LIKELIST: ", request_like.length)
+	let like_res = await axios(request_like)
+	console.log("LIKE RESL ", like_res)
+	
+};
+
+
+export const createRandomConsults = async (min, max) => {
+	console.log("Creating ", min, "-", max, " consults per user.")
+
+	let request = {
+		url: "http://localhost:8081/api/test/getuserlist",  // should be replaced after going to production with domain url
+		method: "get",
+		headers: {
+			"Content-type": "application/json",
+		},
+	};
+
+	const user_list = await (await axios(request)).data.data;
+	let consult_list = []
+
+	for (const user of user_list){
+		let n_consults = Math.floor(Math.random() * (max - min)) + min
+
+		for (let i = 0; i < n_consults; i++) {
+			let random_user = user_list[Math.floor(Math.random() * user_list.length)]
+			let consult = {"consulter": user, "consulted": random_user}
+			consult_list.push(consult)
+		}
+	}
+
+	let request_consult = {
+		url: "http://localhost:8081/api/test/createconsults",  // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type": "application/json",
+		},
+		data: JSON.stringify({'consult_list': consult_list})
+	};
+	console.log("consultLIST: ", request_consult)
+	let consult_res = await axios(request_consult)
+	console.log("consult RESL ", consult_res)
+	
+};
+
+
+export const createRandomblocks = async (min, max) => {
+	console.log("Creating ", min, "-", max, " blocks per user.")
+
+	let request = {
+		url: "http://localhost:8081/api/test/getuserlist",  // should be replaced after going to production with domain url
+		method: "get",
+		headers: {
+			"Content-type": "application/json",
+		},
+	};
+
+	const user_list = await (await axios(request)).data.data;
+	let block_list = []
+
+	for (const user of user_list){
+		let n_blocks = Math.floor(Math.random() * (max - min)) + min
+
+		for (let i = 0; i < n_blocks; i++) {
+			let random_user = user_list[Math.floor(Math.random() * user_list.length)]
+			let block = {"blocker": user, "blocked": random_user}
+			block_list.push(block)
+		}
+	}
+
+	let request_block = {
+		url: "http://localhost:8081/api/test/createblocks",  // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type": "application/json",
+		},
+		data: JSON.stringify({'block_list': block_list})
+	};
+	console.log("blockLIST: ", request_block)
+	let block_res = await axios(request_block)
+	console.log("block RESL ", block_res)
+	
+};
+
+
 // export const createRandomlikes = async (amount) => {
 // 	console.log("Creating ", amount, " likes per user.")
 
