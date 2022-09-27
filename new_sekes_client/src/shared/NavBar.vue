@@ -68,8 +68,8 @@ export default {
             if (this.$cookies.isKey("user"))
                 this.$cookies.remove("user")
             this.$emit("setLoggedIn", false)
-            if (this.$route.path != "/login")
-                router.push("/login")
+            if (this.$route.path != "/signin")
+                router.push("/signin")
         },
     },
 

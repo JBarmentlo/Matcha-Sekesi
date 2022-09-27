@@ -1,11 +1,11 @@
 <template>
 		<b-dropdown
 				class="dropdown-1"
-				text="Nootifs"
+				:text="notifText"
 		>
 				<div v-for="(notif, index) in notifs" :key="notif.id" @click='F(index)'>
 						<b-dropdown-item>
-								{{notif.type}} {{notif.viewed}}
+								{{notifCardText(notif)}}
 						</b-dropdown-item>
 				</div>
 		</b-dropdown>
@@ -24,12 +24,42 @@ data () {
 		limit: 10
 	}
 },
+
+computed: {
+	unreadNotifs() {
+		return this.notifs.filter(n => n.seen == 0).length
+	},
+
+	notifText() {
+		if (this.unreadNotifs == 0) {
+			return 'Nootifs'
+		}
+		else {
+			return 'Nootifs (' + this.unreadNotifs + ')'
+		}
+	}
+},
+
 methods: {
 	pollData () {
 		this.polling = setInterval(async () => {
-			console.log("POlling notifs")
+			let old_notif_ids = this.notifs.map(n => n.id)
+			console.log(old_notif_ids)
 			this.notifs = (await getMyNotifs(this.$cookies.get('sekes_tokens'), this.offset, this.limit)).data.data
+			let new_notifs = this.notifs.filter(n => !old_notif_ids.includes(n.id))
+			this.notifyUser(new_notifs)
+
 		}, 3000)
+	},
+
+	notifyUser(notif_list) {
+		console.log("notify: ", notif_list)
+	},
+
+	notifCardText(notif) {
+		const dic = {'LIKE': 'liked you.', "CONSULT": 'consulted your profile', "MATCH": 'matched you!', "UNMATCH": 'unmatched you.'}
+		console.log("Notif : ", notif, "test: ",notif.source_user + " " + dic[notif.type])
+		return notif.source_user + " " + dic[notif.type]
 	},
 
 	F(e) {
@@ -40,7 +70,6 @@ methods: {
 async mounted() {
 	try {
 		let nooti = await getMyNotifs(this.$cookies.get('sekes_tokens'), this.offset, this.limit)
-		console.log("noote: ", nooti)
 		this.notifs = nooti.data.data
 		this.pollData()
 	}
