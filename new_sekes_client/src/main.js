@@ -12,6 +12,9 @@ Vue.component('tags-input', VoerroTagsInput);
 Vue.use(BootstrapVueIcons)
 Vue.config.productionTip = false
 
+import Notifications from 'vue-notification'
+Vue.use(Notifications)
+
 new Vue({
   router,
   render: h => h(App)
