@@ -1,8 +1,5 @@
-const { expect }      = require("chai");
 const { query }       = require("express");
 const db              = require("../db/sql.conn");
-const LikeController  = require('./like.controller')
-const BlockController = require('./like.controller')
 
 // Type: LIKE, UNLIKE, CONSULT, MATCH, UNMATCH, MESSAGE
 exports.create_notif = async (type, source, target) => {

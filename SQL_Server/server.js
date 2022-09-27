@@ -69,8 +69,22 @@ if (process.env.ENVIRONMENT == 'TEST') {
       "x-access-token, Origin, Content-Type, Accept"
     );
     next();
-  }) // auth authentication
+  })
 }
+
+
+// #######################  NOTIF ROUTES   ########################
+
+notifRouter = require('./src/routes/notif.routes')
+
+console.log("Setting up test routes")
+app.use('/api/notif', notifRouter, function(req, res, next){
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+})
 
 
 // #######################   IMAGE ROUTES   ########################
