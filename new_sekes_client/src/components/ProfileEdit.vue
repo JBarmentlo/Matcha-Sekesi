@@ -170,6 +170,7 @@ import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
 import ProfilePicUpload from '../shared/ProfilePicUpload.vue'
 import { diff } from '../services/utils'
+import { getMyNotifs } from '../services/notif'
 
 export default {
     components: {
@@ -261,7 +262,9 @@ export default {
         }
     },
 
-    mounted() {
+    async mounted() {
+        let notifs = await getMyNotifs(this.$cookies.get('sekes_tokens'),0, 10)
+        console.log(notifs)
     },
 };
 </script>
