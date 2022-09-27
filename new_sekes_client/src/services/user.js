@@ -48,3 +48,4 @@ export const getUserTags = async (username) => {
 	const response = await axios(request);
 	return response;
 }
+

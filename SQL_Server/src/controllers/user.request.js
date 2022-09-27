@@ -58,11 +58,10 @@ exports.get_all_users = async (searcher_username) => {
                 GROUP BY username;"
         , searcher_username)
         return query.map(user => transform_csv_lists_to_arrays(user))
-    
 };
 
 exports.get_user = async (searcher_username, searched_username) => {
-    console.log(searcher_username, " is looking for: ", searched_username)
+    // console.log(searcher_username, " is looking for: ", searched_username)
     let user_query = await db.query(
             "SELECT                                              \
                 username,                                        \
@@ -102,7 +101,7 @@ exports.get_user = async (searcher_username, searched_username) => {
 };
 
 exports.get_my_user = async (searched_username) => {
-    console.log("Getting my profile: ", searched_username)
+    // console.log("Getting my profile: ", searched_username)
     let user_query = await db.query(
         "WITH TAGLIST as (                                           \
             SELECT                                                   \
@@ -210,6 +209,6 @@ exports.get_my_user = async (searched_username) => {
             password, tag_list, like_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
     , )
 
-    console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+    // console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
     return transform_csv_lists_to_arrays(user_query[0])
 };

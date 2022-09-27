@@ -28,9 +28,9 @@ describe('Test signup', () => {
 		let res = mockResponse()
 		return (Promise.all([
 			test_con.clear_db(),
-			UserController.create_user_test(mockRequest(users.Jhonny), res),
-			UserController.create_user_test(mockRequest(users.Bella), res),
-			UserController.create_user_test(mockRequest(users.Mark), res)
+			test_con.create_user_test(mockRequest(users.Jhonny), res),
+			test_con.create_user_test(mockRequest(users.Bella), res),
+			test_con.create_user_test(mockRequest(users.Mark), res)
 		]))
 	})
 	describe('Create Jhonny user', () => {

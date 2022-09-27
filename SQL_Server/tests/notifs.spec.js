@@ -3,7 +3,6 @@ const { assert }                  = require('chai');
 const LikeController              = require('../src/controllers/like.controller')
 const ConsultController           = require('../src/controllers/consult.controller')
 const BlockController             = require('../src/controllers/block.controller')
-const UserController              = require('../src/controllers/user.controller')
 const NotifController             = require('../src/controllers/notif.controller')
 const test_con                    = require('../src/controllers/test.controller')
 const users                       = require('./data/users.mock')
@@ -15,9 +14,9 @@ describe('Notifications', () => {
 	step("Init db", () => {
 		return (Promise.all([
 			test_con.clear_db(),
-			UserController.create_user_test(mockRequest(users.Jhonny), res),
-			UserController.create_user_test(mockRequest(users.Bella), res),
-			UserController.create_user_test(mockRequest(users.Mark), res)
+			test_con.create_user_test(mockRequest(users.Jhonny), res),
+			test_con.create_user_test(mockRequest(users.Bella), res),
+			test_con.create_user_test(mockRequest(users.Mark), res)
 		]))
 	})
 	let notif_id

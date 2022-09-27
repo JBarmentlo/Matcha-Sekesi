@@ -267,7 +267,6 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://cdn.jsdelivr.net/npm/@voerro/vue-tagsinput@2.7.1/dist/style.css");
 
 .row {
   display: flex;

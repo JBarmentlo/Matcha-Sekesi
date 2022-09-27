@@ -42,7 +42,8 @@ export default {
     async getTags() {
       try {
         let res = await getAllTags(this.$cookies.get('sekes_tokens'))
-        this.existingTags = res.data.data.map(o => {return {'key': o.tag, 'value': o.tag}})
+        let tags = res.data.data.map(o => {return {'key': o.tag, 'value': o.tag}})
+        this.existingTags = this.existingTags.concat(tags)
       }
       catch (e) {
         console.log("error getting all tags")
@@ -62,6 +63,13 @@ export default {
       this.$emit('change_selected_tags', this.rawSelectedTagList)
     },
 
+    addExistingTags(arr) {
+      console.log(arr)
+      console.log("RRR: ", arr.map(o => {return {'key': o.tag, 'value': o.tag}}))
+      this.existingTags = this.existingTags.concat(arr.map(o => {return {'key': o, 'value': o}}))
+    },
+
+
     async uploadTags() {
       console.log("Updloading tags")
       try {
@@ -70,14 +78,7 @@ export default {
       catch (e) {
         console.log("ERROR in upload tags: ", e)
       }
-
     }
-
-    // async UpdateUserTags() {
-      // try {
-        // let res = await 
-      // }
-    // }
   },
 
   mounted() {
@@ -85,3 +86,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+@import url("https://cdn.jsdelivr.net/npm/@voerro/vue-tagsinput@2.7.1/dist/style.css");
+</style>
