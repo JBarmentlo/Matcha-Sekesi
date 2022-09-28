@@ -224,3 +224,22 @@ exports.verifyToken = (req, res, next) => {
     }
 
 };
+
+exports.updateLastConnected = async (req, res, next) => {
+    try {
+        console.log("Updating last connected: ", req.username)
+        
+       await db.query(
+            "UPDATE USERS\
+            SET last_connected = CURRENT_TIMESTAMP\
+            WHERE username= ?;",
+            req.username)
+        next();
+    }
+    catch (e) {
+        console.log('error in update co')
+        // console.log(e)
+        throw(e)
+    }
+
+};
