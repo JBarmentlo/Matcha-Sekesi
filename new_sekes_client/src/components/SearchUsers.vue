@@ -78,7 +78,7 @@ export default {
 			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc)
 			this.users = rese.data.data
 			this.current_page = 1
-		}
+		},
 	},
 	created() {
 		console.log("hey");

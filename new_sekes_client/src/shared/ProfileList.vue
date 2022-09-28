@@ -3,7 +3,7 @@
 <div class="col-md-12">
 	<div class="pt-4"></div>
 
-	<div class="card b-1 hover-shadow mb-20" v-for="user in users.slice((current_page - 1) * user_per_page, current_page * user_per_page)" :key="user.username">
+	<div class="card b-1 hover-shadow mb-20" v-for="(index, user) in users.slice((current_page - 1) * user_per_page, current_page * user_per_page)" :key="user.username">
 		<div class="media card-body">
 			<div class="media-left pr-12">
 				<img class="avatar-xl round-radius" :src=profile_pic_url(user.profilePic) alt="...">
@@ -28,7 +28,8 @@
 			</div>
 			<div class="card-hover-show">
 				<!-- <router-link :to="{ name: 'profile', params: { userId: user._id } }" class="btn btn-xs fs-10 btn-bold btn-info" href="#">View Profile</router-link> -->
-				<button class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal" data-target="#modal-contact">Like</button>
+				<button v-if="user.did_i_like_him == 0" class="btn btn-xs fs-10 btn-bold btn-primary" @click="like(index, user.username)" data-toggle="modal" data-target="#modal-contact">Like</button>
+				<button v-else class="btn btn-xs fs-10 btn-bold btn-primary" @click="unlike(index, user.username)" data-toggle="modal" data-target="#modal-contact">Unlike</button>
 				<button class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Block</button>
 			</div>
 		</footer>
@@ -50,6 +51,8 @@
 
 
 <script>
+
+import { likeUser, unlikeUser } from "../services/user";
 
 export default {
 	data() {
@@ -74,6 +77,11 @@ export default {
 		},
 	},
 
+	model: {
+    prop: 'users',
+    event: 'users_change'
+  },
+
 	methods: {
 		likeUserButton(id, index) {
 			// likeUser(this.$cookies.get('user'), id)
@@ -93,7 +101,19 @@ export default {
 				key: val,
 				value: val
 			}
-		}
+		},
+
+		like(index, username) {
+			likeUser(this.$cookies.get('sekes_tokens'), username)
+			let new_users = this.users
+			new_users.splice(index, 1, {...this.users[index], did_i_like_him: 1})
+		},
+
+		unlike(index, username) {
+			unlikeUser(this.$cookies.get('sekes_tokens'), username)
+			let new_users = this.users
+			new_users.splice(index, 1, {...this.users[index], did_i_like_him: 0})
+		},
 	},
 
 	created() {

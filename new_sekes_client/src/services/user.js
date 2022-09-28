@@ -67,3 +67,41 @@ export const getUserTags = async (username) => {
 	return response;
 }
 
+
+export const likeUser = async (access_token, username) => {
+	console.log("like: ", username)
+	let request = {
+		url: `http://localhost:8081/api/users/like`, // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+			"x-access-signature" : access_token.signature,
+		},
+		data: JSON.stringify({liked: username})
+	};
+	
+	const response = await axios(request);
+	console.log("like: ", response)
+	return response;
+}
+
+
+export const unlikeUser = async (access_token, username) => {
+	console.log("unlike: ", username)
+	let request = {
+		url: `http://localhost:8081/api/users/unlike`, // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+			"x-access-signature" : access_token.signature,
+		},
+		data: JSON.stringify({unliked: username})
+	};
+	
+	const response = await axios(request);
+	console.log("unlike: ", response)
+	return response;
+}
+
