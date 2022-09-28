@@ -4,7 +4,7 @@
 			<br/>
 			<input
 				hidden
-				id="fileUpload"
+				id="ProfilePicUpload"
 				type="file"
 				@change="UploadAndAddImage"
 			>
@@ -41,7 +41,7 @@ export default {
 
   methods: {
     chooseFiles() {
-        document.getElementById("fileUpload").click()
+        document.getElementById("ProfilePicUpload").click()
     },
 
     EmitUpdateProfilePic(image_url) {

@@ -58,7 +58,13 @@ const routes = [
     path: '/populate',
     name: 'Populate for testing',
     component: PopulateDb
-  }
+  },
+  {
+    path: '/profile/:userName',
+    name: 'profile',
+    props: true,
+    component: () => import('../components/OtherProfile.vue')
+  },
 ]
 
 const router = new VueRouter({

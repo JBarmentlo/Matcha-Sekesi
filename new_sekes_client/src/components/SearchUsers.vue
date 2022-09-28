@@ -82,7 +82,7 @@ export default {
 	},
 	created() {
 		console.log("hey");
-		getAllUsers(this.$cookies.get("sekes_tokens"), this.min_age, this.max_age, this.interest_tags, this.min_rating, this.zipcode)
+		getAllUsers(this.$cookies.get("sekes_tokens"))
 		.then(users => {
 			console.log("YUSERS: ", users.data.data)
 			this.users = users.data.data;

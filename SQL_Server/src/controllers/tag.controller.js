@@ -99,7 +99,6 @@ exports.get_all_tags = async (req, res) => {
 		let rows = await db.query(
 			'SELECT DISTINCT tag from TAGS;'
 		)
-		console.log("ALLTAG: ", rows)
 		res.status(200).send({message: 'Successfully queried all tags.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {

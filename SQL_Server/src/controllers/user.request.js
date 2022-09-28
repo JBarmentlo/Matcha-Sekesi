@@ -78,6 +78,7 @@ exports.get_user = async (searcher_username, searched_username) => {
                 zipCode,                                                        \
                 city,                                                           \
                 isCompleteProfile,                                              \
+                profilePic,\
                 image0,                                                         \
                 image1,                                                         \
                 image2,                                                         \
@@ -234,13 +235,13 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	"order_by: ", orderby, 
 	"asc_or_desc: ", asc_or_desc)
 
-    let tag_list
+    let tag_list = ""
     if (required_tags == undefined || required_tags.length == 0) {
         tag_list = 'T.tag'
     }
     else {
         first = true
-        for (const tag in required_tags) {
+        for (const tag of required_tags) {
             if (first) {
                 tag_list += `'${tag}'`
                 first = false

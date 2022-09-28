@@ -8,6 +8,7 @@
     typeahead-hide-discard
     @tag-added="onTagAdded"
     @tag-removed="onTagRemoved"
+    :disabled="disabled"
     :typeahead="true"></tags-input>
   </div>
 </template>
@@ -17,7 +18,15 @@ import { getAllTags, updateUserTags }from '../services/tags'
 
 
 export default {
-  props: ['user_tags'],
+  props: {
+    user_tags: Array,
+    disabled: {
+      type: Boolean,
+      default: () => {
+        return false
+      }
+    },
+  },
 
   model: {
     prop: 'user_tags',
