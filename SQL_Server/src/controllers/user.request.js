@@ -213,6 +213,16 @@ exports.get_my_user = async (searched_username) => {
 
 exports.search_users = async (searcher_username, min_age, max_age, required_tags, min_rating, zipcode, offset, limit, orderby, asc_or_desc) => {
     console.log("Searching users ")
+	console.log("criteria: ",
+	"min_age :", min_age,
+	"max_age :", max_age,
+	"interest_tags :", required_tags,
+	"min_rating :", min_rating,
+	"zipcodes :", zipcode,
+	"offset: ", offset,
+	"limit: ", limit, 
+	"order_by: ", orderby, 
+	"asc_or_desc: ", asc_or_desc)
 
     let tag_list
     if (required_tags == undefined || required_tags.length == 0) {
@@ -301,7 +311,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
             FROM USERS INNER JOIN TAGLIST                       \
                 ON USERS.username = TAGLIST.user\
             ORDERBYREPLACE\
-            LIMIT 10 OFFSET 0;"
+            LIMIT LIMIT_REPLACE OFFSET OFFSET_REPLACE;"
             .replace("TAG_LIST"         , tag_list         )
             .replace("MIN_AGE"          , min_age          )
             .replace("MAX_AGE"          , max_age          )

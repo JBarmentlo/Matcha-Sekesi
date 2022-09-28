@@ -1,17 +1,17 @@
 <template>
 	<div>
 		<form class="row" @submit.prevent>
-			<label for="">Min Age</label>
-			<input v-model="min_age" type="number"/>
+			<label for="min_age">Min Age</label>
+			<input id="min_age" v-model="min_age" type="number"/>
 			
-			<label for="">Max Age</label>
-			<input v-model="max_age" type="number"/>
+			<label for="max_age">Max Age</label>
+			<input id="max_age" v-model="max_age" type="number"/>
 
-			<label for="">Min Score</label>
-			<input v-model="min_rating" type="number"/>
+			<label for="min_rating">Min Score</label>
+			<input id="min_rating" v-model="min_rating" type="number"/>
 
-			<label for="">Zipcode</label>
-			<input v-model="zipcode" type="text"/>
+			<label for="zipcode">Zipcode</label>
+			<input id="zipcode" v-model="zipcode" type="text"/>
 
 			<label>Required Tags</label>
 			<TagInputHandler v-model="required_tags"/>
@@ -44,7 +44,7 @@
 		</form>
 		<button @click="search">Search</button>
 		<div class="row">
-			<profile-list :users="users"></profile-list>
+			<profile-list :users="users" :current_page="current_page"></profile-list>
 		</div>
 	</div>
 </template>
@@ -67,7 +67,8 @@ export default {
 			order_by     : "popScore",
 			asc_or_desc  : "DESC",
 			offset       : 0,
-			limit        : 10,
+			limit        : 200,
+			current_page : 1
 
 		}
 	},
@@ -75,8 +76,8 @@ export default {
 		async search() {
 			console.log(this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode)
 			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc)
-			console.log("serchress: ", rese.data.data)
 			this.users = rese.data.data
+			this.current_page = 1
 		}
 	},
 	created() {
