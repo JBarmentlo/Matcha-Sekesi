@@ -10,7 +10,7 @@
 			</div>
 			<div class="media-body">
 				<div class="mb-2">
-					<span class="fs-20 pr-16">{{user.username}}</span>
+					<router-link :to="'/profile/' + user.username" class="fs-20 pr-16">{{user.username}}</router-link>
 				</div>
 				<small class="fs-16 ls-1">{{user.bio}}</small>
 			</div>

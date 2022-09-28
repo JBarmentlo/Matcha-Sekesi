@@ -8,5 +8,5 @@ router.post("/getallusers"   , auth.verifyToken      , searchController.get_all_
 router.get ("/getmyuser"     , auth.verifyToken      , userController.get_my_user     );
 router.post("/updateuser"    , auth.verifyToken      , userController.update_user_test);
 router.post("/search_users"    , auth.verifyToken      , searchController.search_users);
-
+router.get("/getprofile/:username", auth.verifyToken, userController.get_user_by_username)
 module.exports = router
