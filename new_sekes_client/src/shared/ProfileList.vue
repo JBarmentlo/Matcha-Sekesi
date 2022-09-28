@@ -3,7 +3,7 @@
 <div class="col-md-12">
 	<div class="pt-4"></div>
 
-	<div class="card b-1 hover-shadow mb-20" v-for="(index, user) in users.slice((current_page - 1) * user_per_page, current_page * user_per_page)" :key="user.username">
+	<div class="card b-1 hover-shadow mb-20" v-for="(user, index) in users.slice((current_page - 1) * user_per_page, current_page * user_per_page)" :key="user.username">
 		<div class="media card-body">
 			<div class="media-left pr-12">
 				<img class="avatar-xl round-radius" :src=profile_pic_url(user.profilePic) alt="...">
@@ -107,12 +107,14 @@ export default {
 			likeUser(this.$cookies.get('sekes_tokens'), username)
 			let new_users = this.users
 			new_users.splice(index, 1, {...this.users[index], did_i_like_him: 1})
+			this.$emit('users_change', new_users)
 		},
 
 		unlike(index, username) {
 			unlikeUser(this.$cookies.get('sekes_tokens'), username)
 			let new_users = this.users
 			new_users.splice(index, 1, {...this.users[index], did_i_like_him: 0})
+			this.$emit('users_change', new_users)
 		},
 	},
 
