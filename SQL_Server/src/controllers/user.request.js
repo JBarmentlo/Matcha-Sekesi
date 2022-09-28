@@ -25,36 +25,38 @@ function transform_csv_lists_to_arrays(user) {
 
 exports.get_all_users = async (searcher_username) => {
         let query = await db.query(
-                "SELECT                              \
-                    username,                        \
-                    firstName,                       \
-                    lastName,                        \
-                    bio,                             \
-                    mail,                            \
-                    password,                        \
-                    mailVerified,                    \
-                    gender,                          \
-                    sekesualOri,                     \
-                    popScore,                        \
-                    zipCode,                         \
-                    city,                            \
-                    isCompleteProfile,               \
-                    longitude,                       \
-                    latitude,                        \
-                    id,                              \
-                    TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                             \
-                    DOB,                             \
-                    IF(                              \
-                        (username IN(SELECT liked    \
-                                     FROM LIKES      \
-                                     where liker = ? \
-                                     )               \
-                        ), 1 , 0)                    \
-                        as did_i_like_him,           \
-                    GROUP_CONCAT(tag) as tag_list    \
-                FROM USERS                           \
-                LEFT JOIN TAGS T                     \
-                    on USERS.username = T.user       \
+                "SELECT                                                             \
+                    username,                                                       \
+                    firstName,                                                      \
+                    lastName,                                                       \
+                    bio,                                                            \
+                    mail,                                                           \
+                    password,                                                       \
+                    mailVerified,                                                   \
+                    gender,                                                         \
+                    sekesualOri,                                                    \
+                    popScore,                                                       \
+                    zipCode,                                                        \
+                    city,                                                           \
+                    isCompleteProfile,                                              \
+                    longitude,                                                      \
+                    latitude,                                                       \
+                    id,                                                             \
+                    last_connected,                                                 \
+                    TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
+                    TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                     \
+                    DOB,                                                            \
+                    IF(                                                             \
+                        (username IN(SELECT liked                                   \
+                                     FROM LIKES                                     \
+                                     where liker = ?                                \
+                                     )                                              \
+                        ), 1 , 0)                                                   \
+                        as did_i_like_him,                                          \
+                    GROUP_CONCAT(tag) as tag_list                                   \
+                FROM USERS                                                          \
+                LEFT JOIN TAGS T                                                    \
+                    on USERS.username = T.user                                      \
                 GROUP BY username;"
         , searcher_username)
         return query.map(user => transform_csv_lists_to_arrays(user))
@@ -63,36 +65,38 @@ exports.get_all_users = async (searcher_username) => {
 exports.get_user = async (searcher_username, searched_username) => {
     // console.log(searcher_username, " is looking for: ", searched_username)
     let user_query = await db.query(
-            "SELECT                                              \
-                username,                                        \
-                firstName,                                       \
-                lastName,                                        \
-                bio,                                             \
-                gender,                                          \
-                TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                             \
-                DOB,                             \
-                sekesualOri,                                     \
-                popScore,                                        \
-                zipCode,                                         \
-                city,                                            \
-                isCompleteProfile,                               \
-                image0,                                          \
-                image1,                                          \
-                image2,                                          \
-                image3,                                          \
-                longitude,                                       \
-                latitude,                                        \
-                mailVerified,                                    \
-                GROUP_CONCAT(tag) as tag_list,                   \
-                IF((username IN(SELECT liked                     \
-                                FROM LIKES                       \
-                                WHERE liker='searcher_username') \
-                                ), 1 , 0)                        \
-                                AS did_i_like_him                \
-            FROM USERS                                           \
-            LEFT JOIN TAGS T                                     \
-                on USERS.username = T.user                       \
-                WHERE username='searched_username'               \
+            "SELECT                                                             \
+                username,                                                       \
+                firstName,                                                      \
+                lastName,                                                       \
+                bio,                                                            \
+                gender,                                                         \
+                TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                     \
+                DOB,                                                            \
+                sekesualOri,                                                    \
+                popScore,                                                       \
+                zipCode,                                                        \
+                city,                                                           \
+                isCompleteProfile,                                              \
+                image0,                                                         \
+                image1,                                                         \
+                image2,                                                         \
+                image3,                                                         \
+                longitude,                                                      \
+                latitude,                                                       \
+                last_connected,                                                 \
+                TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
+                mailVerified,                                                   \
+                GROUP_CONCAT(tag) as tag_list,                                  \
+                IF((username IN(SELECT liked                                    \
+                                FROM LIKES                                      \
+                                WHERE liker='searcher_username')                \
+                                ), 1 , 0)                                       \
+                                AS did_i_like_him                               \
+            FROM USERS                                                          \
+            LEFT JOIN TAGS T                                                    \
+                on USERS.username = T.user                                      \
+                WHERE username='searched_username'                              \
             GROUP BY username;".replace('searcher_username', searcher_username).replace('searched_username', searched_username)
     , )
 
@@ -127,6 +131,8 @@ exports.get_my_user = async (searched_username) => {
                 image2,                                              \
                 image3,                                              \
                 profilePic,                                          \
+                last_connected, \
+                TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
                 GROUP_CONCAT(tag) as tag_list                        \
             FROM USERS                                               \
             LEFT JOIN TAGS T                                         \
@@ -158,6 +164,8 @@ exports.get_my_user = async (searched_username) => {
                     image2,                                          \
                     image3,                                          \
                     profilePic,                                      \
+                    last_connected, \
+                    TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
                     GROUP_CONCAT(liker) as like_list,                \
                     tag_list                                         \
             FROM TAGLIST                                             \
@@ -179,7 +187,7 @@ exports.get_my_user = async (searched_username) => {
                     as did_i_like_him,                               \
                 bio,                                                 \
                 DOB,                             \
-                TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                             \
+                TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age, \
                 mail,                                                \
                 password,                                            \
                 mailVerified,                                        \
@@ -199,6 +207,8 @@ exports.get_my_user = async (searched_username) => {
                 profilePic,                                          \
                 like_list,                                           \
                 tag_list,                                            \
+                last_connected, \
+                TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
                 GROUP_CONCAT(consulter) as consult_list              \
             FROM LIKELIST                                            \
             LEFT JOIN CONSULTS                                       \
@@ -329,5 +339,6 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
     // console.log("KERIIIIIIII: ", user_query.map(user => transform_csv_lists_to_arrays(user)))
     return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
+
 
 
