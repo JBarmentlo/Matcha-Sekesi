@@ -5,8 +5,9 @@
 				<form @submit="onSubmit">
 					<h3>Forgot Password</h3>
 					<div class="form-group pb-3">
-						<label>Email address</label>
+						<label for="mail">Email address</label>
 						<input
+							id="mail"
 							type="email"
 							v-model="mail"
 							class="form-control form-control-lg"

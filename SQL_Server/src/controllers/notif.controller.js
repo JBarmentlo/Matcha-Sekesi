@@ -74,6 +74,9 @@ exports.get_my_notifs = async (req, res) => {
 
 exports.set_seen_notifs = async (req, res) => {
 	try {
+		if (req.body.id_list.length == 0) {
+			return res.status(200).send({message: "succesfull notif set seen", data: notif_query, code: "SUCCESS"})
+		}
 		let id_list_str = '('
 		let first = true
 		for (const id of req.body.id_list) {
@@ -101,6 +104,22 @@ exports.set_seen_notifs = async (req, res) => {
 	}
 }
 
+
+exports.set_seen_notif = async (req, res) => {
+	try {
+		notif_query = await db.query(
+			"UPDATE NOTIFS\
+			set seen=1 \
+			WHERE id=? and target_user=?;",
+			[req.body.id, req.username],)
+		return res.status(200).send({message: "succesfull notif set seen", data: notif_query, code: "SUCCESS"})
+	}
+	catch (e) {
+		console.log(e)
+		throw (e)
+		return res.status(201).send({message: "failed notif set seen", data: [], code: "FAILURE"})
+	}
+}
 
 exports.delete_notif = async (req, res) => {
 	try {

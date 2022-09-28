@@ -96,10 +96,17 @@ export default {
 			console.log("already logged in by cookie");
 			try {
 				let user = await getMyUser(this.$cookies.get('sekes_tokens'))
-				console.log("AUto login user: ", user.data.data)
-				this.$cookies.set("user", {...user.data.data})
-				this.$emit("setLoggedIn", true);
-				this.$router.push('/editprofile')
+				if (user.code == "SUCCESS") {
+					console.log("AUto login user: ", user.data.data)
+					this.$cookies.set("user", {...user.data.data})
+					this.$emit("setLoggedIn", true);
+					this.$router.push('/editprofile')
+				}
+				else {
+					this.$cookies.remove('sekes_tokens')
+					this.$cookies.remove('user')
+				}
+				
 			}
 			catch (e) {
 				console.log("error in auto cookie signin", e)

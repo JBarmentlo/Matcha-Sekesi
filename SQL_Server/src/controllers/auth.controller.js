@@ -154,10 +154,11 @@ exports.signin = async (req, res) => {
     try {
         console.log("signing in %o", req.body)
         let user = await searches.get_my_user(req.body.username)
+        // console.log("userreq",user)
         if (user == undefined) {
             return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
         }
-
+        console.log("USER for signing: ", user)
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) {
             return res.status(201).send({ accessToken: null, message: "Invalid Password!", code: "WRONG_PASSWORD" });
@@ -199,7 +200,7 @@ exports.verifyToken = (req, res, next) => {
         let token = req.headers["x-access-token"];
         let secret = req.headers["x-access-signature"];
         // console.log("Verifying tokens")
-        console.log("Verifying token: ", token == undefined," ,secret: ", secret == undefined)
+        // console.log("Verifying token: ", token == undefined," ,secret: ", secret == undefined)
         if (!token) {
             return res.status(403).send({ message: "No token provided!" });
         }
@@ -212,7 +213,7 @@ exports.verifyToken = (req, res, next) => {
             }
             // console.log("Identified user %s from token", decoded.username)
             req.username = decoded.username;
-            console.log("Identified: ", decoded.username)
+            // console.log("Identified: ", decoded.username)
             next();
         });
     }

@@ -3,49 +3,46 @@
 <div class="col-md-12">
 	<div class="pt-4"></div>
 
-    <div class="card b-1 hover-shadow mb-20" v-for="user in users" :key="user.username">
-        <div class="media card-body">
-            <div class="media-left pr-12">
-                <img class="avatar-xl round-radius" :src=user.profilePic alt="...">
-            </div>
-            <div class="media-body">
-                <div class="mb-2">
-                    <span class="fs-20 pr-16">{{user.username}}</span>
-                </div>
-                <small class="fs-16 ls-1">{{user.bio}}</small>
-            </div>
-            <div class="media-right text-right d-none d-md-block">
-                <p class="fs-14 text-fade mb-12"><i class="fa fa-map-marker pr-1"></i>{{user.zipCode}}, {{user.city}}</p>
-                <span class="text-fade">
-                    <i class="fa  pr-1"> {{user.gender}},  {{user.sekesualOri}}
-                    </i>
-                </span>
-            </div>
-        </div>
-        <footer class="card-footer flexbox align-items-center">
-            <div>
+	<div class="card b-1 hover-shadow mb-20" v-for="user in users.slice((current_page - 1) * user_per_page, current_page * user_per_page)" :key="user.username">
+		<div class="media card-body">
+			<div class="media-left pr-12">
+				<img class="avatar-xl round-radius" :src=profile_pic_url(user.profilePic) alt="...">
+			</div>
+			<div class="media-body">
+				<div class="mb-2">
+					<span class="fs-20 pr-16">{{user.username}}</span>
+				</div>
+				<small class="fs-16 ls-1">{{user.bio}}</small>
+			</div>
+			<div class="media-right text-right d-none d-md-block">
+				<p class="fs-14 text-fade mb-12"><i class="fa fa-map-marker pr-1"></i>{{user.city}}<br/> {{user.zipCode}}</p>
+				<span class="text-fade">
+					<i class="fa  pr-1"> {{user.age}}, {{user.gender}},  {{user.sekesualOri}}
+					</i>
+				</span>
+			</div>
+		</div>
+		<footer class="card-footer flexbox align-items-center">
+			<div>
 
-            </div>
-            <div class="card-hover-show">
-                <!-- <router-link :to="{ name: 'profile', params: { userId: user._id } }" class="btn btn-xs fs-10 btn-bold btn-info" href="#">View Profile</router-link> -->
-                <a class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal" data-target="#modal-contact">Like</a>
-                <a class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Block</a>
-            </div>
-        </footer>
-    </div>
+			</div>
+			<div class="card-hover-show">
+				<!-- <router-link :to="{ name: 'profile', params: { userId: user._id } }" class="btn btn-xs fs-10 btn-bold btn-info" href="#">View Profile</router-link> -->
+				<button class="btn btn-xs fs-10 btn-bold btn-primary" href="#" data-toggle="modal" data-target="#modal-contact">Like</button>
+				<button class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Block</button>
+			</div>
+		</footer>
+	</div>
 
-    <nav>
-        <ul class="pagination justify-content-center">
-            <li class="page-item active">
-                <a class="page-link" href="#">1</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#">5</a></li>
-        </ul>
-    </nav>
-    <br>
+	<nav>
+		<ul class="pagination justify-content-center">
+			<div v-for="page_num in total_pages" :key="page_num">
+				<li v-if="page_num == current_page" class="page-item active"><a class="page-link" >{{page_num}}</a></li>
+				<li v-else                          class="page-item">       <a class="page-link" @click="current_page = page_num">{{page_num}}</a></li>
+			</div>
+		</ul>
+	</nav>
+	<br>
 </div>
 </div>
 	
@@ -55,24 +52,53 @@
 <script>
 
 export default {
-    data() {
-        return {
+	data() {
+		return {
+			current_page: 1
+		}
+	},
 
-        }
-    },
-    props: {
-        users: Array
-    },
-    methods: {
-        likeUserButton(id, index) {
-            // likeUser(this.$cookies.get('user'), id)
-            console.log("Like user: ", id, index)
-            // .then(console.log("liked user CHECK WHY SPLICEEEEE"))
-        }
-    },
-    created() {
-        console.log("user list: ",this.users)
-    }
+	computed: {
+		total_pages() {
+			return Math.ceil(this.users.length / this.user_per_page)
+		}
+	},
+
+	props: {
+		users: Array,
+		user_per_page: {
+			type: Number,
+			default: () => {
+			return 10
+		}
+		},
+	},
+
+	methods: {
+		likeUserButton(id, index) {
+			// likeUser(this.$cookies.get('user'), id)
+			console.log("Like user: ", id, index)
+			// .then(console.log("liked user CHECK WHY SPLICEEEEE"))
+		},
+
+		profile_pic_url(url) {
+			if (url != null) {
+					return url
+			}
+			return require("../assets/empty_profile.png")
+		},
+
+		val_to_tag(val) {
+			return {
+				key: val,
+				value: val
+			}
+		}
+	},
+
+	created() {
+		console.log("user list: ",this.users)
+	}
 }
 </script>
 
@@ -80,192 +106,192 @@ export default {
 
 <style scoped>
 body{
-    background:#FCFCFC;    
+	background:#FCFCFC;    
 }
 .pr-12 {
-    padding-right: 12px !important;
+	padding-right: 12px !important;
 }
 
 .mb-20 {
-    margin-bottom: 20px !important;
+	margin-bottom: 20px !important;
 }
 
 .b-1 {
-    border: 1px solid #ebebeb !important;
+	border: 1px solid #ebebeb !important;
 }
 
 .card {
-    border: 0;
-    border-radius: 0;
-    margin-bottom: 30px;
-    -webkit-transition: .5s;
-    transition: .5s;
+	border: 0;
+	border-radius: 0;
+	margin-bottom: 30px;
+	-webkit-transition: .5s;
+	transition: .5s;
 }
 
 .card {
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0,0,0,.125);
-    border-radius: .25rem;
+	position: relative;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	min-width: 0;
+	word-wrap: break-word;
+	background-color: #fff;
+	background-clip: border-box;
+	border: 1px solid rgba(0,0,0,.125);
+	border-radius: .25rem;
 }
 
 .media {
-    padding: 16px 12px;
-    -webkit-transition: background-color .2s linear;
-    transition: background-color .2s linear;
+	padding: 16px 12px;
+	-webkit-transition: background-color .2s linear;
+	transition: background-color .2s linear;
 }
 
 .media {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-align: start;
-    align-items: flex-start;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: start;
+	align-items: flex-start;
 }
 
 .card-body {
-    -ms-flex: 1 1 auto;
-    flex: 1 1 auto;
-    padding: 1.25rem;
+	-ms-flex: 1 1 auto;
+	flex: 1 1 auto;
+	padding: 1.25rem;
 }
 
 .media .avatar {
-    flex-shrink: 0;
+	flex-shrink: 0;
 }
 
 .no-radius {
-    border-radius: 0 !important;
+	border-radius: 0 !important;
 }
 
 .avatar-xl {
-    width: 64px;
-    height: 64px;
-    line-height: 64px;
-    font-size: 1.25rem;
+	width: 64px;
+	height: 64px;
+	line-height: 64px;
+	font-size: 1.25rem;
 }
 
 .avatar {
-    position: relative;
-    display: inline-block;
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    text-align: center;
-    border-radius: 100%;
-    background-color: #f5f6f7;
-    color: #8b95a5;
-    text-transform: uppercase;
+	position: relative;
+	display: inline-block;
+	width: 36px;
+	height: 36px;
+	line-height: 36px;
+	text-align: center;
+	border-radius: 100%;
+	background-color: #f5f6f7;
+	color: #8b95a5;
+	text-transform: uppercase;
 }
 
 img {
-    max-width: 100%;
+	max-width: 100%;
 }
 
 img {
-    vertical-align: middle;
-    border-style: none;
+	vertical-align: middle;
+	border-style: none;
 }
 
 .mb-2 {
-    margin-bottom: .5rem!important;
+	margin-bottom: .5rem!important;
 }
 
 .fs-20 {
-    font-size: 20px !important;
+	font-size: 20px !important;
 }
 
 .pr-16 {
-    padding-right: 16px !important;
+	padding-right: 16px !important;
 }
 
 .ls-1 {
-    letter-spacing: 1px !important;
+	letter-spacing: 1px !important;
 }
 
 .fw-300 {
-    font-weight: 300 !important;
+	font-weight: 300 !important;
 }
 
 .fs-16 {
-    font-size: 16px !important;
+	font-size: 16px !important;
 }
 
 .media-body>* {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 small, time, .small {
-    font-family: Roboto,sans-serif;
-    font-weight: 400;
-    font-size: 11px;
-    color: #8b95a5;
+	font-family: Roboto,sans-serif;
+	font-weight: 400;
+	font-size: 11px;
+	color: #8b95a5;
 }
 
 .fs-14 {
-    font-size: 14px !important;
+	font-size: 14px !important;
 }
 
 .mb-12 {
-    margin-bottom: 12px !important;
+	margin-bottom: 12px !important;
 }
 
 .text-fade {
-    color: rgba(77,82,89,0.7) !important;
+	color: rgba(77,82,89,0.7) !important;
 }
 
 .card-footer:last-child {
-    border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
+	border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
 }
 
 .card-footer {
-    background-color: #fcfdfe;
-    border-top: 1px solid rgba(77,82,89,0.07);
-    color: #8b95a5;
-    padding: 10px 20px;
+	background-color: #fcfdfe;
+	border-top: 1px solid rgba(77,82,89,0.07);
+	color: #8b95a5;
+	padding: 10px 20px;
 }
 
 .flexbox {
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
+	display: -webkit-box;
+	display: flex;
+	-webkit-box-pack: justify;
+	justify-content: space-between;
 }
 
 .align-items-center {
-    -ms-flex-align: center!important;
-    align-items: center!important;
+	-ms-flex-align: center!important;
+	align-items: center!important;
 }
 
 .card-footer {
-    padding: .75rem 1.25rem;
-    background-color: rgba(0,0,0,.03);
-    border-top: 1px solid rgba(0,0,0,.125);
+	padding: .75rem 1.25rem;
+	background-color: rgba(0,0,0,.03);
+	border-top: 1px solid rgba(0,0,0,.125);
 }
 
 
 .card-footer {
-    background-color: #fcfdfe;
-    border-top: 1px solid rgba(77, 82, 89, 0.07);
-    color: #8b95a5;
-    padding: 10px 20px
+	background-color: #fcfdfe;
+	border-top: 1px solid rgba(77, 82, 89, 0.07);
+	color: #8b95a5;
+	padding: 10px 20px
 }
 
 .card-footer>*:last-child {
-    margin-bottom: 0
+	margin-bottom: 0
 }
 
 .hover-shadow {
-    -webkit-box-shadow: 0 0 35px rgba(0, 0, 0, 0.11);
-    box-shadow: 0 0 35px rgba(0, 0, 0, 0.11)
+	-webkit-box-shadow: 0 0 35px rgba(0, 0, 0, 0.11);
+	box-shadow: 0 0 35px rgba(0, 0, 0, 0.11)
 }
 
 .fs-10 {
-    font-size: 10px !important;
+	font-size: 10px !important;
 }
 </style>
