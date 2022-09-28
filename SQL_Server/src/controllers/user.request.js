@@ -207,7 +207,7 @@ exports.get_my_user = async (searched_username) => {
             password, tag_list, like_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
     , )
 
-    console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+    // console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
     return transform_csv_lists_to_arrays(user_query[0])
 };
 
@@ -251,6 +251,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
                 AND popScore >= MIN_POP_SCORE                               \
                 AND zipCode in (ZIPCODE)                        \
             GROUP BY user                                       \
+            LIMIT 10 \
             ),                                                  \
                                                                 \
             TAGLIST as (                                        \

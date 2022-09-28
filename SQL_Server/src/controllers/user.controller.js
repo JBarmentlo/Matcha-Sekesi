@@ -124,11 +124,14 @@ exports.get_my_user = async (req, res) => {
 	try {
 		let user_query = await searches.get_my_user(req.username)
 		// console.log("USERSE: ", user_query)
-		res.status(200).send({message: 'Successfully queried user for username.', data: user_query})
+		if (user_query == undefined) {
+			return res.status(204).send({message: "No user found", code: 'FAILURE'})
+		}
+		res.status(200).send({message: 'Successfully queried user for username.', code: 'SUCCESS', data: user_query})
 	}
 	catch (e) {
 		console.log("get user by name error:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get user by username', error: e})
 		throw(e)
-	}	
+	}
 }

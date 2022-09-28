@@ -154,6 +154,7 @@ exports.signin = async (req, res) => {
     try {
         console.log("signing in %o", req.body)
         let user = await searches.get_my_user(req.body.username)
+        // console.log("userreq",user)
         if (user == undefined) {
             return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
         }
@@ -199,7 +200,7 @@ exports.verifyToken = (req, res, next) => {
         let token = req.headers["x-access-token"];
         let secret = req.headers["x-access-signature"];
         // console.log("Verifying tokens")
-        console.log("Verifying token: ", token == undefined," ,secret: ", secret == undefined)
+        // console.log("Verifying token: ", token == undefined," ,secret: ", secret == undefined)
         if (!token) {
             return res.status(403).send({ message: "No token provided!" });
         }
@@ -212,7 +213,7 @@ exports.verifyToken = (req, res, next) => {
             }
             // console.log("Identified user %s from token", decoded.username)
             req.username = decoded.username;
-            console.log("Identified: ", decoded.username)
+            // console.log("Identified: ", decoded.username)
             next();
         });
     }
