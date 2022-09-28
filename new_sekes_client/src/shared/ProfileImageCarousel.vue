@@ -88,6 +88,8 @@ export default {
 
     async UploadAndAddImage(e) {
         const file = e.target.files[0]
+        console.log("UPAAA; ", file)
+
         if (file == null) {
           console.log("WIERD SELECT NO FILE BUT CHANGE")
           return
