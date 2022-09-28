@@ -211,8 +211,9 @@ exports.get_my_user = async (searched_username) => {
     return transform_csv_lists_to_arrays(user_query[0])
 };
 
-exports.search_users = async (searcher_username, min_age, max_age, required_tags, min_rating, zipcode) => {
+exports.search_users = async (searcher_username, min_age, max_age, required_tags, min_rating, zipcode, offset, limit, orderby, asc_or_desc) => {
     console.log("Searching users ")
+
     let tag_list
     if (required_tags == undefined || required_tags.length == 0) {
         tag_list = 'T.tag'
@@ -236,6 +237,13 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
     else {
         zipcode = `'${zipcode}'`
     }
+    let orderby_str
+    if (orderby != null && orderby != undefined) {
+        orderby_str = `ORDER BY ${orderby} ${asc_or_desc}`
+    }
+    else {
+        orderby_str = ""
+    }
     console.log("taglist: ", tag_list)
     console.log("zipcode: ", zipcode)
     
@@ -251,7 +259,6 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
                 AND popScore >= MIN_POP_SCORE                               \
                 AND zipCode in (ZIPCODE)                        \
             GROUP BY user                                       \
-            LIMIT 10 \
             ),                                                  \
                                                                 \
             TAGLIST as (                                        \
@@ -292,9 +299,20 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
                             AS did_i_like_him                   \
                                                                 \
             FROM USERS INNER JOIN TAGLIST                       \
-                ON USERS.username = TAGLIST.user;".replace("TAG_LIST", tag_list).replace("MIN_AGE", min_age).replace("MAX_AGE", max_age).replace("MIN_POP_SCORE", min_rating).replace("ZIPCODE", zipcode).replace("searcher_username", searcher_username)
+                ON USERS.username = TAGLIST.user\
+            ORDERBYREPLACE\
+            LIMIT 10 OFFSET 0;"
+            .replace("TAG_LIST"         , tag_list         )
+            .replace("MIN_AGE"          , min_age          )
+            .replace("MAX_AGE"          , max_age          )
+            .replace("MIN_POP_SCORE"    , min_rating       )
+            .replace("ZIPCODE"          , zipcode          )
+            .replace("searcher_username", searcher_username)
+            .replace('ORDERBYREPLACE'   , orderby_str)
+            .replace('OFFSET_REPLACE'   , offset)
+            .replace('LIMIT_REPLACE'    , limit)
 
-    
+
     // console.log("quyeriro: ", keri_string)
     let user_query = await db.query(keri_string)
 
