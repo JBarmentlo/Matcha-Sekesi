@@ -26,7 +26,8 @@
 						<ProfileImageCarousel :images="user_images" :disabled="true" />
                         <button v-if="user.did_i_like_him == 0" class="btn btn-xs fs-10 btn-bold btn-primary" @click="like(user.username)" data-toggle="modal" data-target="#modal-contact">Like</button>
                         <button v-else class="btn btn-xs fs-10 btn-bold btn-primary" @click="unlike(user.username)" data-toggle="modal" data-target="#modal-contact">Unlike</button>
-                        <button class="btn btn-xs fs-10 btn-bold btn-warning" @click="block(user.username)">Block</button>
+                        <button v-if="user.did_i_block_him == 0" class="btn btn-xs fs-10 btn-bold btn-warning" @click="block(user.username)">Block</button>
+                        <button v-else class="btn btn-xs fs-10 btn-bold btn-warning" @click="unblock(user.username)">Unblock</button>
 					</div>
 				</div>
 			</div>
@@ -163,7 +164,10 @@
 </template>
 
 <script>
+import { likeUser, unlikeUser } from "../services/user";
+import { blockUser, unblockUser } from "../services/user";
 import { getUserProfile } from "../services/user";
+
 import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
 import TagInputHandler from "../shared/TagInputHandler.vue";
 
@@ -209,7 +213,27 @@ export default {
 		},
 	},
 
-	methods: {},
+	methods: {
+        like(username) {
+			likeUser(this.$cookies.get('sekes_tokens'), username)
+			this.user.did_i_like_him = 1
+		},
+
+		unlike(username) {
+			unlikeUser(this.$cookies.get('sekes_tokens'), username)
+			this.user.did_i_like_him = 0
+		},
+
+		block(username) {
+			blockUser(this.$cookies.get('sekes_tokens'), username)
+			this.user.did_i_block_him = 1
+		},
+
+		unblock(username) {
+			unblockUser(this.$cookies.get('sekes_tokens'), username)
+			this.user.did_i_block_him = 0
+		},
+    },
 
 	async mounted() {
 		console.log("SLKDJHFLKSJDHFLKJSHDFLKJHSDFKLJHSDFLKjh");

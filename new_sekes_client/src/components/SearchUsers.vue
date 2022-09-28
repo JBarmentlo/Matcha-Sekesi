@@ -80,6 +80,7 @@ export default {
 			this.current_page = 1
 		},
 	},
+
 	created() {
 		console.log("hey");
 		getAllUsers(this.$cookies.get("sekes_tokens"))
