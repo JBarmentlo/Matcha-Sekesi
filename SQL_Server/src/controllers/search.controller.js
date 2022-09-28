@@ -32,7 +32,7 @@ exports.search_users = async (req, res) => {
 	try {
 		let user_query = await searches.search_users(req.username, req.body.min_age, req.body.max_age, req.body.required_tags, req.body.min_rating, req.body.zipcodes, req.body.offset, req.body.limit, req.body.order_by, req.body.asc_or_desc)
 		// console.log(user_query)
-		console.log("Rows: ", user_query.map(user => {return {name: user.username, age: user.age, score: user.popScore, zip: user.zipCode}}))
+		// console.log("Rows: ", user_query.map(user => {return {name: user.username, age: user.age, score: user.popScore, zip: user.zipCode}}))
 		res.status(200).send({message: 'Successfully queried users.', data: user_query})
 	}
 	catch (e) {

@@ -235,13 +235,13 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	"order_by: ", orderby, 
 	"asc_or_desc: ", asc_or_desc)
 
-    let tag_list
+    let tag_list = ""
     if (required_tags == undefined || required_tags.length == 0) {
         tag_list = 'T.tag'
     }
     else {
         first = true
-        for (const tag in required_tags) {
+        for (const tag of required_tags) {
             if (first) {
                 tag_list += `'${tag}'`
                 first = false
@@ -337,7 +337,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
     // console.log("quyeriro: ", keri_string)
     let user_query = await db.query(keri_string)
 
-    console.log("KERIIIIIIII: ", user_query.map(user => transform_csv_lists_to_arrays(user)))
+    // console.log("KERIIIIIIII: ", user_query.map(user => transform_csv_lists_to_arrays(user)))
     return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
 

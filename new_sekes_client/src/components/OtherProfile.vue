@@ -14,14 +14,20 @@
                             <h6 class="user-email">{{ user.mail }}</h6>
                         </div>
                         <div class = "popularity">
-													{{user.popScore}}
+													Popularity score: {{user.popScore}}
                         </div>
+												<div v-if="user.connected == 1">
+													Connected
+												</div>
+												<div v-else>
+													Last connected {{user.last_connected}}
+												</div>
                         <div v-if="user.bio && user.bio.length != 0" class="about">
                             <h5>About</h5>
                             <p>{{ user.bio }}</p>
                         </div>
                     </div>
-                    <ProfileImageCarousel :images="user_images"/>
+                    <ProfileImageCarousel :images="user_images" :disabled="true"/>
                 </div>
             </div>
         </div>
@@ -156,182 +162,183 @@
 </template>
 
 <script>
-import {getUserProfile} from '../services/user'
-import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
-import TagInputHandler from '../shared/TagInputHandler.vue'
+import { getUserProfile } from "../services/user";
+import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
+import TagInputHandler from "../shared/TagInputHandler.vue";
 
 export default {
-    components: {
-			ProfileImageCarousel,
-			TagInputHandler,
-    },
+	components: {
+		ProfileImageCarousel,
+		TagInputHandler,
+	},
 
-		props: {
-			userName: String
+	props: {
+		userName: String,
+	},
+
+	data() {
+		return {
+			user: null,
+		};
+	},
+
+	computed: {
+		accessTokens: function () {
+			if (this.$cookies.isKey("sekes_tokens")) {
+				return this.$cookies.get("sekes_tokens");
+			} else {
+				return null;
+			}
 		},
 
-    data() {
-        return {
-            user : null,
-        };
-    },
+		user_images: function () {
+			return [
+				this.user.image0,
+				this.user.image1,
+				this.user.image2,
+				this.user.image3,
+			];
+		},
 
-    computed: {
-      accessTokens: function() {
-            if (this.$cookies.isKey('sekes_tokens')) {
-                return this.$cookies.get('sekes_tokens')
-            }
-            else {
-                return null
-            }
-        },
+		profile_pic: function () {
+			if (this.user.profilePic != null) {
+				return this.user.profilePic;
+			}
+			return require("../assets/empty_profile.png");
+		},
+	},
 
-			user_images: function() {
-				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3]
-      },
+	methods: {},
 
-			profile_pic: function() {
-					if (this.user.profilePic != null) {
-							return this.user.profilePic
-					}
-					return require("../assets/empty_profile.png")
-			},
-    },
-
-    methods: {
-
-    },
-
-    async mounted() {
-			console.log("SLKDJHFLKSJDHFLKJSHDFLKJHSDFKLJHSDFLKjh")
-			let res = await getUserProfile(this.$cookies.get('sekes_tokens'), this.userName)
-			console.log(res)
-			this.user = res.data.data
-    },
+	async mounted() {
+		console.log("SLKDJHFLKSJDHFLKJSHDFLKJHSDFKLJHSDFLKjh");
+		let res = await getUserProfile(
+			this.$cookies.get("sekes_tokens"),
+			this.userName
+		);
+		console.log(res);
+		this.user = res.data.data;
+	},
 };
 </script>
 
 <style scoped>
-
 .row {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0 4px;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 0 4px;
 }
 
 /* Create four equal columns that sits next to each other */
 .column {
-  flex: 33%;
-  max-width: 33%;
-  padding: 0 4px;
+	flex: 33%;
+	max-width: 33%;
+	padding: 0 4px;
 }
 
 .column > label > img {
-  margin-top: 8px;
-  vertical-align: middle;
-  background-color: rgb(229, 225, 225);
-  width: 100%;
+	margin-top: 8px;
+	vertical-align: middle;
+	background-color: rgb(229, 225, 225);
+	width: 100%;
 }
 
 .next > img:hover {
-    background-color: rgb(240, 236, 236);
-    cursor: pointer;
+	background-color: rgb(240, 236, 236);
+	cursor: pointer;
 }
 
-input[type = "file"] {
-    display: none
+input[type="file"] {
+	display: none;
 }
 
 .img-overlay {
-  position: absolute;
-  top: 7%;
-  bottom: 0;
-  left: 12%;
-  right: 0;
-  text-align: center;
+	position: absolute;
+	top: 7%;
+	bottom: 0;
+	left: 12%;
+	right: 0;
+	text-align: center;
 }
-
 
 /* Responsive layout - makes a three column-layout instead of four columns */
 @media screen and (max-width: 800px) {
-  .column {
-    flex: 33%;
-    max-width: 33%;
-  }
+	.column {
+		flex: 33%;
+		max-width: 33%;
+	}
 }
 
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
-  .column {
-    flex: 100%;
-    max-width: 100%;
-  }
+	.column {
+		flex: 100%;
+		max-width: 100%;
+	}
 }
 
 .popularity {
-    /* background-color:rgba(11, 244, 189, 0.568); */
-    color: rgb(56, 56, 56);
+	/* background-color:rgba(11, 244, 189, 0.568); */
+	color: rgb(56, 56, 56);
 }
 
 body {
-    margin: 0;
-    padding-top: 40px;
-    color: #2e323c;
-    background: #f5f6fa;
-    position: relative;
-    height: 100%;
+	margin: 0;
+	padding-top: 40px;
+	color: #2e323c;
+	background: #f5f6fa;
+	position: relative;
+	height: 100%;
 }
 .account-settings .user-profile {
-    margin: 0 0 1rem 0;
-    padding-bottom: 1rem;
-    text-align: center;
+	margin: 0 0 1rem 0;
+	padding-bottom: 1rem;
+	text-align: center;
 }
 .account-settings .user-profile .user-avatar {
-    margin: 0 0 1rem 0;
+	margin: 0 0 1rem 0;
 }
 
 .account-settings .user-profile h5.user-name {
-    margin: 0 0 0.5rem 0;
+	margin: 0 0 0.5rem 0;
 }
 .account-settings .user-profile h6.user-email {
-    margin: 0;
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #9fa8b9;
+	margin: 0;
+	font-size: 0.8rem;
+	font-weight: 400;
+	color: #9fa8b9;
 }
 .account-settings .about {
-    margin: 2rem 0 0 0;
-    text-align: center;
+	margin: 2rem 0 0 0;
+	text-align: center;
 }
 .account-settings .about h5 {
-    margin: 0 0 15px 0;
-    color: #007ae1;
+	margin: 0 0 15px 0;
+	color: #007ae1;
 }
 .account-settings .about p {
-    font-size: 0.825rem;
+	font-size: 0.825rem;
 }
 .form-control {
-    border: 1px solid #cfd1d8;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    font-size: .825rem;
-    background: #ffffff;
-    color: #2e323c;
+	border: 1px solid #cfd1d8;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	font-size: 0.825rem;
+	background: #ffffff;
+	color: #2e323c;
 }
 
 .card {
-    background: #ffffff;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    border: 0;
-    margin-bottom: 1rem;
+	background: #ffffff;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: 0;
+	margin-bottom: 1rem;
 }
 
 .container {
-    margin-top: 5%;
+	margin-top: 5%;
 }
-
-
 </style>
