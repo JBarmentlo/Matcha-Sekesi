@@ -1,164 +1,165 @@
 <template>
-    <div v-if="user != null" class="container">
-    <div class="row gutters">
-        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-            <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                    <div class="account-settings">
-                        <div class="user-profile">
-                            <div class="user-avatar">
-                                <img :src="user.profilePic"/>
-                            </div>
+	<div v-if="user != null" class="container">
+		<div class="row gutters">
+			<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+				<div class="card h-100">
+					<div class="card-body d-flex flex-column">
+						<div class="account-settings">
+							<div class="user-profile">
+								<div class="user-avatar">
+									<img :src="user.profilePic" />
+								</div>
 
-                            <h5 class="user-name">{{ user.username }}</h5>
-                            <h6 class="user-email">{{ user.mail }}</h6>
-                        </div>
-                        <div class = "popularity">
-													Popularity score: {{user.popScore}}
-                        </div>
-												<div v-if="user.connected == 1">
-													Connected
-												</div>
-												<div v-else>
-													Last connected {{user.last_connected}}
-												</div>
-                        <div v-if="user.bio && user.bio.length != 0" class="about">
-                            <h5>About</h5>
-                            <p>{{ user.bio }}</p>
-                        </div>
-                    </div>
-                    <ProfileImageCarousel :images="user_images" :disabled="true"/>
-                </div>
-            </div>
-        </div>
-    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-    <div class="card h-100">
-        <div class="card-body">
-            <div class="row gutters pt-2">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <h6 class="mb-2 text-primary">Account Details</h6>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label class="labels">Name</label>
-                        <input
-														disabled
-                            type="text"
-                            v-model="user.firstName"
-                            class="form-control"
-                            placeholder="Enter first name"
-                            value=""
-                        />
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label class="labels">Last Name</label>
-                        <input
-														disabled
-                            type="text"
-                            v-model="user.lastName"
-                            class="form-control"
-                            value=""
-                            placeholder="Enter last name"
-                        />
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label class="labels">Email</label>
-                        <input
-														disabled
-                            type="text"
-                            v-model="user.mail"
-                            class="form-control"
-                            placeholder="Enter email adress"
-                            value=""
-                        />
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <label class="labels">ZIP Code</label>
-                    <input
-												disabled
-                        type="text"
-                        v-model="user.zipCode"
-                        class="form-control"
-                        placeholder="zip"
-                        value=""
-                    />
-                </div>
-            </div>
-            <div class="row gutters pt-5">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <h6 class="mt-3 mb-2 text-primary">Personal details</h6>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <label class="labels">Interests</label>
-                    <TagInputHandler v-model="user.tag_list" :disabled="true"/>
-                </div>
-                <div class="col">
-                    <label class="labels">Sekesual Orientation</label>
-                    <div>
-                        <b-dropdown
-														disabled
-                            class="dropdown-1"
-                            v-bind:text="user.sekesualOri"
-                        >
-                            <b-dropdown-item @click="setSekesual('Hetero')">
-                                Hetero
-                            </b-dropdown-item>
-                            <b-dropdown-item @click="setSekesual('Gay')">
-                                Gay
-                            </b-dropdown-item>
-                            <b-dropdown-item @click="setSekesual('Bi')">
-                                Bi
-                            </b-dropdown-item>
-                        </b-dropdown>
-                    </div>
-                </div>
-                <div class="col">
-                    <label class="labels"> Gender </label>
-                    <div>
-                        <b-dropdown class="dropdown-2" v-bind:text="user.gender" disabled>
-                            <b-dropdown-item @click="setGender('Male')">
-                                Male
-                            </b-dropdown-item>
-                            <b-dropdown-item @click="setGender('Female')">
-                                Female
-                            </b-dropdown-item>
-                            <b-dropdown-item @click="setGender('NonBinary')">
-                                NonBinary
-                            </b-dropdown-item>
-                        </b-dropdown>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
-                    <label class="labels">Bio</label>
-                    <textarea
-                        type="text"
-                        v-model="user.bio"
-                        class="form-control"
-                        placeholder="Tell us a few words about you"
-                        value=""
-                        maxlength="255"
-                        rows="6"
-												disabled
-                    />
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
-                    <label class="labels">Date of Birth</label>
-                    <b-datepicker disabled v-bind:value="user.DOB"/>
-                </div>
-            </div>
-            <div class="row gutters">
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-
-    </div>
+								<h5 class="user-name">{{ user.username }}</h5>
+								<h6 class="user-email">{{ user.mail }}</h6>
+							</div>
+							<div class="popularity">
+								Popularity score: {{ user.popScore }}
+							</div>
+							<div v-if="user.connected == 1">Connected</div>
+							<div v-else>Last connected {{ user.last_connected }}</div>
+							<div v-if="user.bio && user.bio.length != 0" class="about">
+								<h5>About</h5>
+								<p>{{ user.bio }}</p>
+							</div>
+						</div>
+						<ProfileImageCarousel :images="user_images" :disabled="true" />
+                        <button v-if="user.did_i_like_him == 0" class="btn btn-xs fs-10 btn-bold btn-primary" @click="like(user.username)" data-toggle="modal" data-target="#modal-contact">Like</button>
+                        <button v-else class="btn btn-xs fs-10 btn-bold btn-primary" @click="unlike(user.username)" data-toggle="modal" data-target="#modal-contact">Unlike</button>
+                        <button class="btn btn-xs fs-10 btn-bold btn-warning" @click="block(user.username)">Block</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+				<div class="card h-100">
+					<div class="card-body">
+						<div class="row gutters pt-2">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<h6 class="mb-2 text-primary">Account Details</h6>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label class="labels">Name</label>
+									<input
+										disabled
+										type="text"
+										v-model="user.firstName"
+										class="form-control"
+										placeholder="Enter first name"
+										value=""
+									/>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label class="labels">Last Name</label>
+									<input
+										disabled
+										type="text"
+										v-model="user.lastName"
+										class="form-control"
+										value=""
+										placeholder="Enter last name"
+									/>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label class="labels">Email</label>
+									<input
+										disabled
+										type="text"
+										v-model="user.mail"
+										class="form-control"
+										placeholder="Enter email adress"
+										value=""
+									/>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<label class="labels">ZIP Code</label>
+								<input
+									disabled
+									type="text"
+									v-model="user.zipCode"
+									class="form-control"
+									placeholder="zip"
+									value=""
+								/>
+							</div>
+						</div>
+						<div class="row gutters pt-5">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<h6 class="mt-3 mb-2 text-primary">Personal details</h6>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<label class="labels">Interests</label>
+								<TagInputHandler v-model="user.tag_list" :disabled="true" />
+							</div>
+							<div class="col">
+								<label class="labels">Sekesual Orientation</label>
+								<div>
+									<b-dropdown
+										disabled
+										class="dropdown-1"
+										v-bind:text="user.sekesualOri"
+									>
+										<b-dropdown-item @click="setSekesual('Hetero')">
+											Hetero
+										</b-dropdown-item>
+										<b-dropdown-item @click="setSekesual('Gay')">
+											Gay
+										</b-dropdown-item>
+										<b-dropdown-item @click="setSekesual('Bi')">
+											Bi
+										</b-dropdown-item>
+									</b-dropdown>
+								</div>
+							</div>
+							<div class="col">
+								<label class="labels"> Gender </label>
+								<div>
+									<b-dropdown
+										class="dropdown-2"
+										v-bind:text="user.gender"
+										disabled
+									>
+										<b-dropdown-item @click="setGender('Male')">
+											Male
+										</b-dropdown-item>
+										<b-dropdown-item @click="setGender('Female')">
+											Female
+										</b-dropdown-item>
+										<b-dropdown-item @click="setGender('NonBinary')">
+											NonBinary
+										</b-dropdown-item>
+									</b-dropdown>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+								<label class="labels">Bio</label>
+								<textarea
+									type="text"
+									v-model="user.bio"
+									class="form-control"
+									placeholder="Tell us a few words about you"
+									value=""
+									maxlength="255"
+									rows="6"
+									disabled
+								/>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+								<label class="labels">Date of Birth</label>
+								<b-datepicker disabled v-bind:value="user.DOB" />
+							</div>
+						</div>
+						<div class="row gutters"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>

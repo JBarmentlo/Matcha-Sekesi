@@ -86,6 +86,7 @@ exports.get_user = async (searcher_username, searched_username) => {
                 longitude,                                                      \
                 latitude,                                                       \
                 last_connected,                                                 \
+                mailVerified,\
                 TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
                 mailVerified,                                                   \
                 GROUP_CONCAT(tag) as tag_list,                                  \
