@@ -30,7 +30,7 @@
 				<!-- <router-link :to="{ name: 'profile', params: { userId: user._id } }" class="btn btn-xs fs-10 btn-bold btn-info" href="#">View Profile</router-link> -->
 				<button v-if="user.did_i_like_him == 0" class="btn btn-xs fs-10 btn-bold btn-primary" @click="like(index, user.username)" data-toggle="modal" data-target="#modal-contact">Like</button>
 				<button v-else class="btn btn-xs fs-10 btn-bold btn-primary" @click="unlike(index, user.username)" data-toggle="modal" data-target="#modal-contact">Unlike</button>
-				<button class="btn btn-xs fs-10 btn-bold btn-warning" href="#">Block</button>
+				<button class="btn btn-xs fs-10 btn-bold btn-warning" @click="block(index, user.username)">Block</button>
 			</div>
 		</footer>
 	</div>
@@ -53,6 +53,7 @@
 <script>
 
 import { likeUser, unlikeUser } from "../services/user";
+import { blockUser, unblockUser } from "../services/user";
 
 export default {
 	data() {
@@ -114,6 +115,20 @@ export default {
 			unlikeUser(this.$cookies.get('sekes_tokens'), username)
 			let new_users = this.users
 			new_users.splice(index, 1, {...this.users[index], did_i_like_him: 0})
+			this.$emit('users_change', new_users)
+		},
+
+		block(index, username) {
+			blockUser(this.$cookies.get('sekes_tokens'), username)
+			let new_users = this.users
+			new_users.splice(index, 1)
+			this.$emit('users_change', new_users)
+		},
+
+		unblock(index, username) {
+			unblockUser(this.$cookies.get('sekes_tokens'), username)
+			let new_users = this.users
+			new_users.splice(index, 1)
 			this.$emit('users_change', new_users)
 		},
 	},

@@ -105,3 +105,40 @@ export const unlikeUser = async (access_token, username) => {
 	return response;
 }
 
+
+export const blockUser = async (access_token, username) => {
+	console.log("block: ", username)
+	let request = {
+		url: `http://localhost:8081/api/users/block`, // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+			"x-access-signature" : access_token.signature,
+		},
+		data: JSON.stringify({blocked: username})
+	};
+	
+	const response = await axios(request);
+	console.log("block: ", response)
+	return response;
+}
+
+
+export const unblockUser = async (access_token, username) => {
+	console.log("unblock: ", username)
+	let request = {
+		url: `http://localhost:8081/api/users/unblock`, // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+			"x-access-signature" : access_token.signature,
+		},
+		data: JSON.stringify({unblocked: username})
+	};
+	
+	const response = await axios(request);
+	console.log("unblock: ", response)
+	return response;
+}
