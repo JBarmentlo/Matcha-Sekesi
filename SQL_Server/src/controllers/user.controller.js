@@ -108,7 +108,6 @@ exports.update_user_test = async (req, res) => {
 
 
 exports.get_user_by_username = async (req, res) => {
-	console.log("KJLSHDFKLJHSDFKLJh")
 	console.log("gettin user by username")
 	try {
 		let user_query = await searches.get_user(req.username, req.params.username)

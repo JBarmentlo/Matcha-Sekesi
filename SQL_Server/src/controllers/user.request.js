@@ -22,7 +22,6 @@ function transform_csv_lists_to_arrays(user) {
     return user
 }
 
-
 exports.get_all_users = async (searcher_username) => {
         let query = await db.query(
                 "SELECT                                                             \
@@ -52,13 +51,14 @@ exports.get_all_users = async (searcher_username) => {
                                      where liker = ?                                \
                                      )                                              \
                         ), 1 , 0)                                                   \
-                        as did_i_like_him,                                          \
+                    as did_i_like_him,                                              \
                     GROUP_CONCAT(tag) as tag_list                                   \
                 FROM USERS                                                          \
                 LEFT JOIN TAGS T                                                    \
                     on USERS.username = T.user                                      \
+                WHERE USERS.username NOT IN (select blocked FROM BLOCKS WHERE blocker = ?)\
                 GROUP BY username;"
-        , searcher_username)
+        , [searcher_username, searcher_username])
         return query.map(user => transform_csv_lists_to_arrays(user))
 };
 
@@ -78,7 +78,7 @@ exports.get_user = async (searcher_username, searched_username) => {
                 zipCode,                                                        \
                 city,                                                           \
                 isCompleteProfile,                                              \
-                profilePic,\
+                profilePic,                                                     \
                 image0,                                                         \
                 image1,                                                         \
                 image2,                                                         \
@@ -86,7 +86,7 @@ exports.get_user = async (searcher_username, searched_username) => {
                 longitude,                                                      \
                 latitude,                                                       \
                 last_connected,                                                 \
-                mailVerified,\
+                mailVerified,                                                   \
                 TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
                 mailVerified,                                                   \
                 GROUP_CONCAT(tag) as tag_list,                                  \
@@ -94,7 +94,12 @@ exports.get_user = async (searcher_username, searched_username) => {
                                 FROM LIKES                                      \
                                 WHERE liker='searcher_username')                \
                                 ), 1 , 0)                                       \
-                                AS did_i_like_him                               \
+                                AS did_i_like_him,                              \
+                IF((username IN(SELECT blocked                                  \
+                    FROM BLOCKS                                                 \
+                    WHERE blocker='searcher_username')                          \
+                    ), 1 , 0)                                                   \
+                    AS did_i_block_him                                          \
             FROM USERS                                                          \
             LEFT JOIN TAGS T                                                    \
                 on USERS.username = T.user                                      \
@@ -269,25 +274,29 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
     console.log("taglist: ", tag_list)
     console.log("zipcode: ", zipcode)
     
-    let keri_string =  "WITH USERLIST as (                                     \
-            SELECT                                              \
-                user                                            \
-            FROM USERS                                          \
-            INNER JOIN TAGS T                                   \
-                on USERS.username = T.user                      \
-                AND T.tag in (TAG_LIST)                          \
-                AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE    \
+    let keri_string =  "WITH USERLIST as (                         \
+            SELECT                                                 \
+                user                                               \
+            FROM USERS                                             \
+            INNER JOIN TAGS T                                      \
+                on USERS.username = T.user                         \
+                AND T.tag in (TAG_LIST)                            \
+                AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE \
                 AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE \
-                AND popScore >= MIN_POP_SCORE                               \
-                AND zipCode in (ZIPCODE)                        \
-            GROUP BY user                                       \
-            ),                                                  \
-                                                                \
-            TAGLIST as (                                        \
-                SELECT                                          \
-                    USERLIST.user,                              \
-                    GROUP_CONCAT(tag) as tag_list               \
-                FROM USERLIST                                   \
+                AND popScore >= MIN_POP_SCORE                      \
+                AND zipCode in (ZIPCODE)                           \
+                AND IF((username IN(SELECT blocked                     \
+                    FROM BLOCKS                                    \
+                    WHERE blocker='searcher_username')             \
+                    ), 1 , 0) = 0                                    \
+            GROUP BY user                                          \
+            ),                                                     \
+                                                                   \
+            TAGLIST as (                                           \
+                SELECT                                             \
+                    USERLIST.user,                                 \
+                    GROUP_CONCAT(tag) as tag_list                  \
+                FROM USERLIST                                      \
                 LEFT JOIN TAGS                                  \
                     ON USERLIST.user = TAGS.user                \
                 GROUP BY user                                   \
