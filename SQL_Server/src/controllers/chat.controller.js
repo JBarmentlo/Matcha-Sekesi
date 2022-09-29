@@ -16,10 +16,10 @@ exports.get_messages = async (req, res) => {
 																							\
 		SELECT * FROM MATCHES INNER JOIN MSG                                                \
 			ON (MSG.receiver IN (@searcher, matchee)                                        \
-			AND MSG.receiver IN (@searcher, matchee));".replace(new RegExp("@searcher", "g"), `'${req.username}'`)
+			AND MSG.sender IN (@searcher, matchee));".replace(new RegExp("@searcher", "g"), `'${req.username}'`)
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
-		// console.log("got : ", message_keri)
+		console.log("got : ", message_keri)
 		return res.status(200).send({message: 'Successfully queried your messages.', data: message_keri, code:'SUCCESS'})
 	}
 	catch (e) {

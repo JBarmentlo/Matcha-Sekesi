@@ -223,7 +223,7 @@ exports.get_my_user = async (searched_username) => {
 			GROUP BY username,                                       \
 			password, tag_list, like_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
 	
-	console.log("get my user str: ", keri_string.replace(new RegExp("\\s{2,100}", "g"), "\n"))
+	// console.log("get my user str: ", keri_string.replace(new RegExp("\\s{2,100}", "g"), "\n"))
 	let user_query = await db.query(keri_string)
 	// console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
 	return transform_csv_lists_to_arrays(user_query[0])
