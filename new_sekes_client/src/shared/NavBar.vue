@@ -34,10 +34,6 @@
                         <NotifHandler/>
                     </li>
                     <li class="nav-item px-1">
-                        <b-dd text="LOL">
-                            <ChatEx/>
-                        </b-dd>
-                    </li>
                     <li @click="logout" class="nav-item px-1">
                         <img  src = "../assets/logout.png" height = "32"/>
                     </li>
@@ -50,14 +46,12 @@
 <script>
 import router from '@/router'
 import NotifHandler from "./NotifHandler.vue"
-import ChatEx from "../components/ChatEx.vue"
 
 export default {
     name    : "NavBar",
 
     components: {
         NotifHandler,
-        ChatEx
     },
 
     props   : {

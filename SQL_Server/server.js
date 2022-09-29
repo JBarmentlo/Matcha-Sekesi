@@ -87,6 +87,20 @@ app.use('/api/notif', notifRouter, function(req, res, next){
 })
 
 
+// #######################  CHAT ROUTES   ########################
+
+chatRouter = require('./src/routes/chat.routes')
+
+console.log("Setting up test routes")
+app.use('/api/chat', chatRouter, function(req, res, next){
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+})
+
+
 // #######################   IMAGE ROUTES   ########################
 
 

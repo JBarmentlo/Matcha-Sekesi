@@ -166,10 +166,12 @@
 import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
 
 import {updateUser, getMyUser} from '../services/user'
+import {getMyMessages} from '../services/chat'
+import { diff } from '../services/utils'
+
 import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
 import ProfilePicUpload from '../shared/ProfilePicUpload.vue'
-import { diff } from '../services/utils'
 
 export default {
     components: {
@@ -262,6 +264,8 @@ export default {
     },
 
     async mounted() {
+        let r = await getMyMessages(this.$cookies.get('sekes_tokens'))
+        console.log("got r: ", r)
     },
 };
 </script>

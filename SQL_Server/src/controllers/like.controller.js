@@ -120,7 +120,6 @@ exports.get_users_that_liked_me = async (req, res) => {
 	}	
 }
 
-
 exports.get_matches = async (req, res) => {
 	try {
 		let rows = await db.query(
@@ -164,3 +163,4 @@ WHERE \
     NOT EXISTS (SELECT 1 FROM block b \
                 WHERE b.user_who = c.user_one AND b.blocked = c.user_two OR \
                       b.user_who = c.user_two AND b.blocked = c.user_one);"
+

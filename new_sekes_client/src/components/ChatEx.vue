@@ -8,7 +8,7 @@
 			:messages="JSON.stringify(messages)"
 			:messages-loaded="messagesLoaded"
 			@send-message="sendMessage($event.detail)"
-			@fetch-messages="fetchMessages($event.detail[0])"
+			@fetch-messages="fetchMessages($event.detail)"
 			ref="gato"
 		/>
 </template>
@@ -52,7 +52,6 @@ export default {
 		fetchMessages({ room, options = {}}) {
 			console.log("fetch")
 			// console.log(this.$refs.gato)
-			this.room = room
 			console.log(room, options)
 			this.messagesLoaded = false
 			setTimeout(() => {
@@ -79,32 +78,19 @@ export default {
 			}
 			return messages
 		},
-
-		async sendMessage({ content, roomId, files, replyMessage }) {
-			const message = {
-				sender_id: '4321',
-				content,
-				timestamp: new Date()
-			}
-			if (files) {
-				message.files = this.formattedFiles(files)
-			}
-			if (replyMessage) {
-				message.replyMessage = {
-					_id: replyMessage._id,
-					content: replyMessage.content,
-					sender_id: replyMessage.senderId
+		sendMessage( {content, roomId, files, replyMessage }) {
+			console.log("MES: ", content, roomId, replyMessage)
+			this.messages = [
+				...this.messages,
+				{
+					_id: this.messages.length,
+					content: content,
+					senderId: this.currentUserId,
+					timestamp: new Date().toString().substring(16, 21),
+					date: new Date().toDateString(),
+					files: files
 				}
-				if (replyMessage.files) {
-					message.replyMessage.files = replyMessage.files
-				}
-			}
-			const { id } = await this.messages.length
-			if (files) {
-				for (let index = 0; index < files.length; index++) {
-					await this.uploadFile({ file: files[index], messageId: id, roomId })
-				}
-			}
+			]
 		},
 		addNewMessage() {
 			setTimeout(() => {
