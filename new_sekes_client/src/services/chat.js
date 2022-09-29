@@ -19,7 +19,10 @@ export const getMyMessages = async (access_token) => {
 
 
 export const getConvo = async (access_token, username, offset, limit, polling = false) => {
-	console.log("get messages ", polling)
+	// console.log("get messages ", polling)
+	if (polling == true) {
+		polling = false
+	}
 	let request = {
 		url: "http://localhost:8081/api/chat/get_conversation", // should be replaced after going to production with domain url
 		method: "post",
@@ -35,7 +38,7 @@ export const getConvo = async (access_token, username, offset, limit, polling = 
 		})
 	};
 	const response = await axios(request);
-	console.log("MSG res: ", response)
+	// console.log("MSG res: ", response)
 	return response;
 }
 

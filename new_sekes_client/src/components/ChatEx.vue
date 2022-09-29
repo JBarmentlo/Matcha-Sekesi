@@ -42,6 +42,7 @@ export default {
 				}
 				else {
 					if (this.polling != null) {
+						// console.log("stop poll: ", this.polling)
 						clearInterval(this.polling)
 					}
 					this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
@@ -120,6 +121,7 @@ export default {
 			this.polling = setInterval(async () => {
 				this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100, true)).data.data.reverse().map(this.formatMsg)
 			}, 1000)
+			// console.log("start poll: ", this.polling)
 		},
 
 		formatMsg(msg) {
@@ -133,14 +135,20 @@ export default {
 			}
 		}
 	},
-		async mounted() {
-				this.rawMessages = (await getMyMessages(this.$cookies.get('sekes_tokens'))).data.data.reverse()
-				let matches = (await getMatches(this.$cookies.get('sekes_tokens'))).data.data
-				console.log(matches)
-				let new_rooms = matches.map(m => this.matchToRoom(m))
-				this.rooms = new_rooms
-				this.currentUserId = this.$cookies.get('user').username
-		},
+	async mounted() {
+			this.rawMessages = (await getMyMessages(this.$cookies.get('sekes_tokens'))).data.data.reverse()
+			let matches = (await getMatches(this.$cookies.get('sekes_tokens'))).data.data
+			// console.log(matches)
+			let new_rooms = matches.map(m => this.matchToRoom(m))
+			this.rooms = new_rooms
+			this.currentUserId = this.$cookies.get('user').username
+	},
+
+	beforeDestroy () {
+		if (this.polling != null) {
+			clearInterval(this.polling)
+		}
+	}
 }
 </script>
 
