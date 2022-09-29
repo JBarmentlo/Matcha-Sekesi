@@ -80,7 +80,7 @@ export default {
 					date: new Date().toDateString()
 				}
 			]
-			sendMsg(this.$cookies.get('sekes_tokens'), this.currentUserId , message.content)
+			sendMsg(this.$cookies.get('sekes_tokens'), this.currentUserId , message.content.replace(new RegExp("'", "g"), "''"))
 		},
 
 		addNewMessage() {
