@@ -49,7 +49,27 @@ exports.get_conversation = async (req, res) => {
 		return res.status(200).send({message: 'Successfully queried your messages.', data: message_keri, code:'SUCCESS'})
 	}
 	catch (e) {
-		console.log("get messages error:\n", e, "\nend error")
+		console.log("get convo error:\n", e, "\nend error")
+		throw(e)
+	}
+}
+
+exports.send_message = async (req, res) => {
+	console.log("sending ", 'username: ',  req.username,  'username: ', req.body.username,  'message: ', req.body.message)
+	try {
+		let keri_string =
+			"INSERT INTO MSG (sender, receiver, msg)  \
+				VALUES (@sender, @receiver, @msg);"
+			.replace(new RegExp("@sender"   , "g"), `'${req.username}'`     )
+			.replace(new RegExp("@receiver"   , "g"), `'${req.body.username}'`)
+			.replace(new RegExp("@msg", "g"), `'${req.body.msg}'`  )
+		// console.log(keri_string)
+		let message_keri = await db.query(keri_string)
+		// console.log("got convo : ", message_keri)
+		return res.status(200).send({message: 'Successfully inserted message.', data: message_keri, code:'SUCCESS'})
+	}
+	catch (e) {
+		console.log("send message error:\n", e, "\nend error")
 		throw(e)
 	}
 }	

@@ -15,7 +15,7 @@
 
 <script>
 import { register } from 'vue-advanced-chat'
-import { getMyMessages, getConvo } from '../services/chat'
+import { getMyMessages, getConvo, sendMsg } from '../services/chat'
 import { getMatches } from '../services/user'
 register()
 export default {
@@ -67,18 +67,22 @@ export default {
 			}
 			return messages
 		},
+
 		sendMessage(message) {
+			console.log("sending: ",message)
 			this.messages = [
 				...this.messages,
 				{
-					_id: this.messages.length,
+					_id: -1,
 					content: message.content,
 					senderId: this.currentUserId,
 					timestamp: new Date().toString().substring(16, 21),
 					date: new Date().toDateString()
 				}
 			]
+			sendMsg(this.$cookies.get('sekes_tokens'), this.currentUserId , message.content)
 		},
+
 		addNewMessage() {
 			setTimeout(() => {
 				this.messages = [
@@ -107,7 +111,8 @@ export default {
 				long = match.liker
 			}
 			return {
-				roomId: `${short}${long.length}${long}`,
+				// roomId: `${short}${long.length}${long}`,
+				roomId: match.matchee,
 				roomName: match.matchee,
 				avatar: match.profilePic,
 				users: [
@@ -119,7 +124,7 @@ export default {
 
 		pollRoom (room) {
 			this.polling = setInterval(async () => {
-				this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100, true)).data.data.reverse().map(this.formatMsg)
+				this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
 			}, 1000)
 			// console.log("start poll: ", this.polling)
 		},

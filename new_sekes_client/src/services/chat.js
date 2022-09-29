@@ -18,11 +18,7 @@ export const getMyMessages = async (access_token) => {
 }
 
 
-export const getConvo = async (access_token, username, offset, limit, polling = false) => {
-	// console.log("get messages ", polling)
-	if (polling == true) {
-		polling = false
-	}
+export const getConvo = async (access_token, username, offset, limit) => {
 	let request = {
 		url: "http://localhost:8081/api/chat/get_conversation", // should be replaced after going to production with domain url
 		method: "post",
@@ -42,3 +38,21 @@ export const getConvo = async (access_token, username, offset, limit, polling = 
 	return response;
 }
 
+export const sendMsg = async (access_token, username, msg) => {
+	let request = {
+		url: "http://localhost:8081/api/chat/send_message", // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+			"x-access-signature" : access_token.signature,
+		},
+		data: JSON.stringify({
+			username : username,
+			msg   : msg,
+		})
+	};
+	const response = await axios(request);
+	// console.log("MSG res: ", response)
+	return response;
+}
