@@ -7,7 +7,7 @@
 			:room_id="JSON.stringify('2')"
 			:messages="JSON.stringify(messages)"
 			:messages-loaded="messagesLoaded"
-			@send-message="sendMessage($event.detail[0])"
+			@send-message="sendMessage($event.detail)"
 			@fetch-messages="fetchMessages($event.detail[0])"
 			ref="gato"
 		/>
@@ -23,6 +23,7 @@ export default {
 			currentUserId: '1234',
 			rooms: [
 				{
+					index: 2,
 					roomId: '1',
 					roomName: 'Room 1',
 					avatar: 'https://66.media.tumblr.com/avatar_c6a8eae4303e_512.pnj',
@@ -32,6 +33,7 @@ export default {
 					]
 				},
 				{
+					index: 1,
 					roomId: '2',
 					roomName: 'Room 2',
 					avatar: 'https://66.media.tumblr.com/avatar_c6a8eae4303e_512.pnj',
@@ -42,18 +44,23 @@ export default {
 				}
 			],
 			messages: [],
-			messagesLoaded: false
+			messagesLoaded: false,
+			room: null
 		}
 	},
 	methods: {
-		fetchMessages({ room, options }) {
+		fetchMessages({ room, options = {}}) {
 			console.log("fetch")
 			// console.log(this.$refs.gato)
+			this.room = room
 			console.log(room, options)
 			this.messagesLoaded = false
 			setTimeout(() => {
-				this.messages = this.addMessages(true, room)
-				this.messagesLoaded = true
+				this.messages = [...this.messages, ...this.addMessages(true, room.roomId)]
+				if (!options.reset) {
+					console.log("loaded true")
+					this.messagesLoaded = true
+				}
 				console.log("done")
 				// console.log(this.$refs.gato)
 			})
@@ -72,17 +79,32 @@ export default {
 			}
 			return messages
 		},
-		sendMessage(message) {
-			this.messages = [
-				...this.messages,
-				{
-					_id: this.messages.length,
-					content: message.content,
-					senderId: this.currentUserId,
-					timestamp: new Date().toString().substring(16, 21),
-					date: new Date().toDateString()
+
+		async sendMessage({ content, roomId, files, replyMessage }) {
+			const message = {
+				sender_id: '4321',
+				content,
+				timestamp: new Date()
+			}
+			if (files) {
+				message.files = this.formattedFiles(files)
+			}
+			if (replyMessage) {
+				message.replyMessage = {
+					_id: replyMessage._id,
+					content: replyMessage.content,
+					sender_id: replyMessage.senderId
 				}
-			]
+				if (replyMessage.files) {
+					message.replyMessage.files = replyMessage.files
+				}
+			}
+			const { id } = await this.messages.length
+			if (files) {
+				for (let index = 0; index < files.length; index++) {
+					await this.uploadFile({ file: files[index], messageId: id, roomId })
+				}
+			}
 		},
 		addNewMessage() {
 			setTimeout(() => {

@@ -79,6 +79,7 @@ exports.update_user_test = async (req, res) => {
 			first = false
 			update_str += `${key} = '${value}'`
 		}
+		update_str = update_str.replace("'null'", "NULL")
 		console.log("Updating user %s with str: %s", req.username, update_str)
 		let update_result
 		if (update_str.length != 0) {
