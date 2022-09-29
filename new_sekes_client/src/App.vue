@@ -52,9 +52,7 @@ export default {
 			console.log("already logged in by cookie");
 			try {
 				let user = await getMyUser(this.$cookies.get('sekes_tokens'))
-				console.log("Got user in app mounted: ", user)
 				if (user.data.code == "SUCCESS") {
-					console.log("AUto login user: ", user.data.data)
 					this.$cookies.set("user", {...user.data.data})
 					this.setLoggedIn(true);
 					if (this.$route.path != "/cat") {
@@ -62,8 +60,8 @@ export default {
 					}
 				}
 				else {
-					// this.$cookies.remove('sekes_tokens')
-					// this.$cookies.remove('user')
+					this.$cookies.remove('sekes_tokens')
+					this.$cookies.remove('user')
 					this.$router.push('/signin')
 				}
 			}

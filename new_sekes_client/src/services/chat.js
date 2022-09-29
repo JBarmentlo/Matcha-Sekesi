@@ -13,7 +13,7 @@ export const getMyMessages = async (access_token) => {
 		},
 	};
 	const response = await axios(request);
-	console.log("MSG res: ", response)
+	// console.log("MSG res: ", response)
 	return response;
 }
 

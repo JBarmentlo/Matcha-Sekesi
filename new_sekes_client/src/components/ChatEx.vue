@@ -16,14 +16,14 @@
 <script>
 import { register } from 'vue-advanced-chat'
 import { getMyMessages } from '../services/chat'
-
+import { getMatches } from '../services/user'
 register()
 export default {
 	data() {
 		return {
 			currentUserId: '1234',
 			rooms: [
-				{
+								{
 					roomId: '1',
 					roomName: 'Room 1',
 					avatar: 'https://66.media.tumblr.com/avatar_c6a8eae4303e_512.pnj',
@@ -43,7 +43,8 @@ export default {
 				}
 			],
 			messages: [],
-			messagesLoaded: false
+			messagesLoaded: false,
+			rawMessages: []
 		}
 	},
 	methods: {
@@ -104,14 +105,45 @@ export default {
 					}
 				]
 			}, 2000)
+		},
+
+		matchToRoom(match) {
+			let short
+			let long
+
+			if (match.liker.length <= match.matchee.length) {
+				short = match.liker
+				long = match.matchee
+			}
+			else {
+				short = match.matchee
+				long = match.liker
+			}
+			return {
+				roomId: `${short}${long.length}${long}`,
+				roomName: match.matchee,
+				avatar: match.profilePic,
+				users: [
+						{ _id: short, username: short },
+						{ _id: long, username: long }
+				]
+			}
 		}
 	},
     async mounted() {
-        let r = await getMyMessages(this.$cookies.get('sekes_tokens'))
-        console.log("got r: ", r)
+        let r = (await getMyMessages(this.$cookies.get('sekes_tokens'))).data.data
+        let matches = (await getMatches(this.$cookies.get('sekes_tokens'))).data.data
+				console.log(matches)
+				let new_rooms = matches.map(m => this.matchToRoom(m))
+				this.rooms = new_rooms
+				console.log("new_rooms: ",new_rooms)
+
+				this.rawMessages = r
     },
 }
 </script>
+
+
 
 <style lang="scss">
 body {
