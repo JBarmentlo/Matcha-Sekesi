@@ -48,22 +48,20 @@ export default {
 		}
 	},
 	methods: {
-		fetchMessages({ room, options }) {
+		fetchMessages({ room }) {
 			console.log("fetch")
-			// console.log(this.$refs.gato)
-			if (room == undefined) {
-				console.log("No ROOOOM")
-				room = {
-					roomId: 1
-				}
-			}
-			console.log(room, options)
 			this.messagesLoaded = false
 			setTimeout(() => {
-				this.messages = this.addMessages(true, room)
-				this.messagesLoaded = true
-				console.log("done")
-				// console.log(this.$refs.gato)
+				if (room == undefined) {
+					this.messages = []
+					this.messagesLoaded = true
+					return
+				}
+				else {
+					this.messages = this.rawMessages.filter(m => (m.sender == room.roomName || m.receiver == room.roomName)).map(this.formatMsg)
+					this.messagesLoaded = true
+					return
+				}
 			})
 		},
 		addMessages(reset, room_id) {
@@ -128,17 +126,26 @@ export default {
 						{ _id: long, username: long }
 				]
 			}
+		},
+
+		formatMsg(msg) {
+			return {
+					_id: msg.id,
+					content: msg.msg,
+					senderId: msg.sender,
+					username: msg.sender,
+					date: msg.last_updated.slice(0, 10),
+					timestamp: msg.last_updated.slice(11, 19)
+				}
 		}
 	},
     async mounted() {
-        let r = (await getMyMessages(this.$cookies.get('sekes_tokens'))).data.data
+        this.rawMessages = (await getMyMessages(this.$cookies.get('sekes_tokens'))).data.data.reverse()
         let matches = (await getMatches(this.$cookies.get('sekes_tokens'))).data.data
 				console.log(matches)
 				let new_rooms = matches.map(m => this.matchToRoom(m))
 				this.rooms = new_rooms
-				console.log("new_rooms: ",new_rooms)
-
-				this.rawMessages = r
+				this.currentUserId = this.$cookies.get('user').username
     },
 }
 </script>
