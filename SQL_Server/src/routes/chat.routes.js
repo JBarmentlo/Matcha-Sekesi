@@ -4,6 +4,7 @@ const chatController = require("../controllers/chat.controller");
 
 var router				= require("express").Router();
 
-router.get("/getall", auth.verifyToken, chatController.get_messages)
+router.get("/getall", auth.verifyToken, chatController.get_all_messages)
+router.post("/get_conversation", auth.verifyToken, chatController.get_conversation)
 
 module.exports = router

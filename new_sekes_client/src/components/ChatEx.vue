@@ -15,7 +15,7 @@
 
 <script>
 import { register } from 'vue-advanced-chat'
-import { getMyMessages } from '../services/chat'
+import { getMyMessages, getConvo } from '../services/chat'
 import { getMatches } from '../services/user'
 register()
 export default {
@@ -23,47 +23,35 @@ export default {
 		return {
 			currentUserId: '1234',
 			rooms: [
-								{
-					roomId: '1',
-					roomName: 'Room 1',
-					avatar: 'https://66.media.tumblr.com/avatar_c6a8eae4303e_512.pnj',
-					users: [
-						{ _id: '1234', username: 'John Doe' },
-						{ _id: '4321', username: 'John Snow' }
-					]
-				},
-				{
-					roomId: '2',
-					roomName: 'Room 2',
-					avatar: 'https://66.media.tumblr.com/avatar_c6a8eae4303e_512.pnj',
-					users: [
-						{ _id: '12342', username: 'John Doe2' },
-						{ _id: '43212', username: 'John Snow2' }
-					]
-				}
 			],
 			messages: [],
 			messagesLoaded: false,
-			rawMessages: []
+			rawMessages: [],
+			polling: null
 		}
 	},
 	methods: {
 		fetchMessages({ room }) {
 			console.log("fetch")
 			this.messagesLoaded = false
-			setTimeout(() => {
+			setTimeout(async () => {
 				if (room == undefined) {
 					this.messages = []
 					this.messagesLoaded = true
 					return
 				}
 				else {
-					this.messages = this.rawMessages.filter(m => (m.sender == room.roomName || m.receiver == room.roomName)).map(this.formatMsg)
+					if (this.polling != null) {
+						clearInterval(this.polling)
+					}
+					this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
 					this.messagesLoaded = true
+					this.pollRoom(room)
 					return
 				}
 			})
 		},
+		
 		addMessages(reset, room_id) {
 			const messages = []
 			for (let i = 0; i < 30; i++) {
@@ -128,6 +116,12 @@ export default {
 			}
 		},
 
+		pollRoom (room) {
+			this.polling = setInterval(async () => {
+				this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100, true)).data.data.reverse().map(this.formatMsg)
+			}, 1000)
+		},
+
 		formatMsg(msg) {
 			return {
 					_id: msg.id,
@@ -135,18 +129,18 @@ export default {
 					senderId: msg.sender,
 					username: msg.sender,
 					date: msg.last_updated.slice(0, 10),
-					timestamp: msg.last_updated.slice(11, 19)
-				}
+					timestamp: msg.last_updated.slice(11, 16)
+			}
 		}
 	},
-    async mounted() {
-        this.rawMessages = (await getMyMessages(this.$cookies.get('sekes_tokens'))).data.data.reverse()
-        let matches = (await getMatches(this.$cookies.get('sekes_tokens'))).data.data
+		async mounted() {
+				this.rawMessages = (await getMyMessages(this.$cookies.get('sekes_tokens'))).data.data.reverse()
+				let matches = (await getMatches(this.$cookies.get('sekes_tokens'))).data.data
 				console.log(matches)
 				let new_rooms = matches.map(m => this.matchToRoom(m))
 				this.rooms = new_rooms
 				this.currentUserId = this.$cookies.get('user').username
-    },
+		},
 }
 </script>
 
