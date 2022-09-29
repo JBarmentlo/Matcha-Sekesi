@@ -28,7 +28,7 @@
                         <router-link class = "pr-3" to="/editprofile"><img src = "../assets/profile.png" height = "32"/></router-link>
                     </li>
 					<li class="nav-item px-1">
-                        <router-link class = "pr-3" to="/"><img src = "../assets/message.png" height = "32"/></router-link>
+                        <router-link class = "pr-3" to="/cat"><img src = "../assets/message.png" height = "32"/></router-link>
                     </li>
 					<li class="nav-item px-1">
                         <NotifHandler/>

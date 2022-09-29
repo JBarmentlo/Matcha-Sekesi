@@ -10,6 +10,8 @@
 
 
 <script>
+// import { getMyUser } from "./services/user";
+
 import NavBar from "./shared/NavBar.vue"
 
 // process.env.USER_ID; // "239482"
@@ -43,6 +45,35 @@ export default {
   created() {
     console.log("Created App");
 	},
+  // async mounted() {
+	// 	// console.log("cookie signin disabled")
+	// 	console.log("Signin Created");
+	// 	if (this.$cookies.isKey("sekes_tokens") && this.$cookies.get("sekes_tokens") != null) {
+	// 		console.log("already logged in by cookie");
+	// 		try {
+	// 			let user = await getMyUser(this.$cookies.get('sekes_tokens'))
+	// 			if (user.code == "SUCCESS") {
+	// 				console.log("AUto login user: ", user.data.data)
+	// 				this.$cookies.set("user", {...user.data.data})
+	// 				this.setLoggedIn(true);
+	// 				this.$router.push('/cat')
+	// 			}
+	// 			else {
+	// 				// this.$cookies.remove('sekes_tokens')
+	// 				// this.$cookies.remove('user')
+	// 				this.$router.push('/signin')
+	// 			}
+	// 		}
+	// 		catch (e) {
+	// 			console.log("error in auto cookie signin", e)
+	// 			throw (e)
+	// 		}
+	// 	}
+	// 	else {
+	// 		console.log("not cookie signed in")
+  //     this.$router.push('/signin')
+	// 	}
+	// },
 }
 </script>
 
