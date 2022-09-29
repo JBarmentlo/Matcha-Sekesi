@@ -7,15 +7,16 @@
 			:room_id="JSON.stringify('2')"
 			:messages="JSON.stringify(messages)"
 			:messages-loaded="messagesLoaded"
-			@send-message="sendMessage($event.detail)"
-			@fetch-messages="fetchMessages($event.detail)"
+			@send-message="sendMessage($event.detail[0])"
+			@fetch-messages="fetchMessages($event.detail[0])"
 			ref="gato"
 		/>
 </template>
 
 <script>
 import { register } from 'vue-advanced-chat'
-// import { register } from '../../vue-advanced-chat/dist/vue-advanced-chat.es.js'
+import { getMyMessages } from '../services/chat'
+
 register()
 export default {
 	data() {
@@ -23,7 +24,6 @@ export default {
 			currentUserId: '1234',
 			rooms: [
 				{
-					index: 2,
 					roomId: '1',
 					roomName: 'Room 1',
 					avatar: 'https://66.media.tumblr.com/avatar_c6a8eae4303e_512.pnj',
@@ -33,7 +33,6 @@ export default {
 					]
 				},
 				{
-					index: 1,
 					roomId: '2',
 					roomName: 'Room 2',
 					avatar: 'https://66.media.tumblr.com/avatar_c6a8eae4303e_512.pnj',
@@ -44,22 +43,24 @@ export default {
 				}
 			],
 			messages: [],
-			messagesLoaded: false,
-			room: null
+			messagesLoaded: false
 		}
 	},
 	methods: {
-		fetchMessages({ room, options = {}}) {
+		fetchMessages({ room, options }) {
 			console.log("fetch")
 			// console.log(this.$refs.gato)
+			if (room == undefined) {
+				console.log("No ROOOOM")
+				room = {
+					roomId: 1
+				}
+			}
 			console.log(room, options)
 			this.messagesLoaded = false
 			setTimeout(() => {
-				this.messages = [...this.messages, ...this.addMessages(true, room.roomId)]
-				if (!options.reset) {
-					console.log("loaded true")
-					this.messagesLoaded = true
-				}
+				this.messages = this.addMessages(true, room)
+				this.messagesLoaded = true
 				console.log("done")
 				// console.log(this.$refs.gato)
 			})
@@ -78,17 +79,15 @@ export default {
 			}
 			return messages
 		},
-		sendMessage( {content, roomId, files, replyMessage }) {
-			console.log("MES: ", content, roomId, replyMessage)
+		sendMessage(message) {
 			this.messages = [
 				...this.messages,
 				{
 					_id: this.messages.length,
-					content: content,
+					content: message.content,
 					senderId: this.currentUserId,
 					timestamp: new Date().toString().substring(16, 21),
-					date: new Date().toDateString(),
-					files: files
+					date: new Date().toDateString()
 				}
 			]
 		},
@@ -107,9 +106,10 @@ export default {
 			}, 2000)
 		}
 	},
-	mounted() {
-		// this.messages = this.addMessages(true)
-	}
+    async mounted() {
+        let r = await getMyMessages(this.$cookies.get('sekes_tokens'))
+        console.log("got r: ", r)
+    },
 }
 </script>
 

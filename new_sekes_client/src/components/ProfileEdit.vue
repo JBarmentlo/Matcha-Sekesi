@@ -166,7 +166,6 @@
 import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
 
 import {updateUser, getMyUser} from '../services/user'
-import {getMyMessages} from '../services/chat'
 import { diff } from '../services/utils'
 
 import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
@@ -261,11 +260,6 @@ export default {
             // this.user.age = this.calculateAge(new Date(e.replace(/-/g,'/')))
             // console.log(this.user.age)
         }
-    },
-
-    async mounted() {
-        let r = await getMyMessages(this.$cookies.get('sekes_tokens'))
-        console.log("got r: ", r)
     },
 };
 </script>
