@@ -214,7 +214,7 @@ export default {
 	},
 
 	methods: {
-        like(username) {
+		like(username) {
 			likeUser(this.$cookies.get('sekes_tokens'), username)
 			this.user.did_i_like_him = 1
 		},

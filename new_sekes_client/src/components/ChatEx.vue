@@ -130,7 +130,7 @@ export default {
 				// roomId: `${short}${long.length}${long}`,
 				roomId: match.matchee,
 				roomName: match.matchee,
-				avatar: match.profilePic,
+				avatar: this.profilePicNull(match.profilePic),
 				users: [
 						{ _id: short, username: short },
 						{ _id: long, username: long }
@@ -139,21 +139,31 @@ export default {
 		},
 		pollRoom (room) {
 			this.polling = setInterval(async () => {
-				this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
+				let new_mesg = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
+				if (new_mesg.length > this.messages.length) {
+					this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
+				}
 			}, 1000)
 		},
 
 
-  notifyUser(notif_list) {
-    if (notif_list.length != 0) {
-      console.log("notify: ", notif_list)
-      for (const notif of notif_list) {
-        this.$notify({
-          text: notif.senderId + " sent you a message!"
-        });
-      }
-    }
-	},
+		notifyUser(notif_list) {
+			if (notif_list.length != 0) {
+				console.log("notify: ", notif_list)
+				for (const notif of notif_list) {
+					this.$notify({
+						text: notif.senderId + " sent you a message!"
+					});
+				}
+			}
+		},
+
+		profilePicNull(url) {
+			if (url != null) {
+				return url;
+			}
+			return require("../assets/empty_profile.png");
+		},
 
 		formatMsg(msg) {
 			return {

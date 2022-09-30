@@ -69,7 +69,7 @@ export const getUserTags = async (username) => {
 
 
 export const likeUser = async (access_token, username) => {
-	console.log("like: ", username)
+	// console.log("like: ", username)
 	let request = {
 		url: `http://localhost:8081/api/users/like`, // should be replaced after going to production with domain url
 		method: "post",

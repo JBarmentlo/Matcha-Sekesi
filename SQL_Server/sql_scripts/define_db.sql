@@ -83,6 +83,7 @@ create table MSG
     receiver     varchar(100)                        not null,
     msg          varchar(1000)                       null,
     last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    ConvoId      varchar(250)                        not null,
     constraint MSG_USERS_username_fk
         foreign key (sender) references USERS (username)
             on delete cascade,
