@@ -1,18 +1,37 @@
 <template>
-    <b-dropdown
-        class="dropdown-1"
-        :text="notifText"
-        @hide="setSeen"
+  <b-dropdown
+    style="position: static"
+    variant="link"
+    toggle-class="text-decoration-none"
+    no-caret
+    @hide="setSeen"
     >
-        <div v-for="notif in notifs" :key="notif.id">
-            <b-dropdown-item v-if="notif.seen == 1" variant="secondary" @click="deleteNoot(notif.id)">
-                {{notifCardText(notif)}}
-            </b-dropdown-item>
-                <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)">
-                {{notifCardText(notif)}}
-            </b-dropdown-item>
-        </div>
-    </b-dropdown>
+    <template #button-content>
+    <span class="nav-item">Notifs<b-icon-bell-fill/><b-icon-circle-fill v-show="unreadNotifs > 0" class = "active_notif"/><b-icon-caret-down-fill class="caret"/></span>
+    </template>
+    <div v-for="notif in notifs" :key="notif.id">
+      <b-dropdown-item  v-if="notif.seen == 1" variant="secondary" @click="deleteNoot(notif.id)"><p>
+          {{notifCardText(notif)}}</p>
+      </b-dropdown-item>
+          <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)"><p>
+          {{notifCardText(notif)}}</p>
+      </b-dropdown-item>
+    </div>
+  </b-dropdown>
+  <!-- <b-dropdown
+      class="dropdown-1"
+      :text="notifText"
+      @hide="setSeen"
+  >
+      <div v-for="notif in notifs" :key="notif.id">
+          <b-dropdown-item v-if="notif.seen == 1" variant="secondary" @click="deleteNoot(notif.id)">
+              {{notifCardText(notif)}}
+          </b-dropdown-item>
+              <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)">
+              {{notifCardText(notif)}}
+          </b-dropdown-item>
+      </div>
+  </b-dropdown> -->
 </template>
 
 <script>
@@ -97,3 +116,31 @@ beforeDestroy () {
 
 }
 </script>
+
+<style scoped>
+
+.dropdown-menu {
+  position: static;
+  left: 50%;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: white
+}
+
+.caret {
+  max-height: 10px;
+  margin-bottom: 3%;
+}
+
+
+
+.active_notif {
+  color: red;
+  width: 5%;
+  margin-bottom: 3%;
+  margin-right: 3%;
+}
+
+</style>

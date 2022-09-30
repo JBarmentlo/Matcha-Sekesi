@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import './plugins/bootstrap-vue'
-import { BootstrapVueIcons } from 'bootstrap-vue'
+import { BootstrapVueIcons } from 'bootstrap-vue';
+
 import App from './App.vue'
 import router from './router'
 import VueCookies from 'vue-cookies-reactive'
