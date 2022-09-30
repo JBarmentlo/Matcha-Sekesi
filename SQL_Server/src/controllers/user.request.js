@@ -293,7 +293,7 @@ exports.get_my_user = async (searched_username) => {
 	return transform_csv_lists_to_arrays(user_query[0])
 };
 
-exports.search_users = async (searcher_username, min_age, max_age, required_tags, min_rating, zipcode, offset, limit, orderby, asc_or_desc) => {
+exports.search_users = async (searcher_username, min_age, max_age, required_tags, min_rating, zipcode, offset, limit, orderby, asc_or_desc, desires) => {
 	console.log("Searching users ")
 	console.log("criteria: ",
 	"min_age :", min_age,
@@ -304,6 +304,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	"offset: ", offset,
 	"limit: ", limit, 
 	"order_by: ", orderby, 
+	"desires: ", desires, 
 	"asc_or_desc: ", asc_or_desc)
 
 	let tag_list = ""
@@ -329,6 +330,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	else {
 		zipcode = `'${zipcode}'`
 	}
+
 	let orderby_str
 	if (orderby != null && orderby != undefined) {
 		orderby_str = `ORDER BY ${orderby} ${asc_or_desc}`
@@ -336,7 +338,19 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	else {
 		orderby_str = ""
 	}
+
+	let desire_str = ""
+	first = true
+	for (const d of desires) {
+		desire_str += first ? "AND (" : " OR "
+		desire_str += `(gender = '${d.gender}' AND sekesualOri = '${d.sekesualOri}')`
+		first = false
+	}
+	if (desire_str != "") {
+		desire_str += ')'
+	}
 	console.log("taglist: ", tag_list)
+	console.log("desire_ste: ", desire_str)
 	console.log("zipcode: ", zipcode)
 	console.log("orderby_str: ", orderby_str)
 	
@@ -376,6 +390,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
 				AND ((Select COUNT(*) from MATCHES AS M where M.liker = username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username)) >= MIN_POP_SCORE                                               \
 				AND zipCode in (ZIPCODE)                                                    \
+				@desires                                           \
 				AND IF((username IN(SELECT blocked                                          \
 					FROM BLOCKS                                                             \
 					WHERE blocker='searcher_username')                                      \
@@ -430,12 +445,13 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			.replace("MAX_AGE"          , max_age          )
 			.replace("MIN_POP_SCORE"    , min_rating       )
 			.replace("ZIPCODE"          , zipcode          )
-			.replace("searcher_username", searcher_username)
+			.replace(new RegExp("searcher_username", "g"), searcher_username)
+			.replace(new RegExp("@desires", "g"), desire_str)
 			.replace('ORDERBYREPLACE'   , orderby_str)
 			.replace('OFFSET_REPLACE'   , offset)
 			.replace('LIMIT_REPLACE'    , limit)
 
-	// console.log("search str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
+	console.log("search str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
 
 	// console.log("quyeriro: ", keri_string)
 	let user_query = await db.query(keri_string)
@@ -443,31 +459,3 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	// console.log("KERIIIIIIII: ", user_query.map(user => transform_csv_lists_to_arrays(user)))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
-
-
-
-
-// WITH MATCHES AS (
-//     SELECT l1.liker, l1.liked
-//         FROM LIKES l1 INNER JOIN LIKES l2
-//             ON l1.liked = l2.liker
-//             AND l1.liker = l2.liked
-//             AND l1.liker != l1.liked)
-
-// Select
-//     U.username,
-//     (Select COUNT(M.liker) from MATCHES AS M where M.liker = U.username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = U.username)
-// From USERS AS U;
-
-
-// SELECT
-//     *
-// FROM
-//     MSG AS m1
-// WHERE
-//     m1.last_updated =
-//         (SELECT
-//              MIN(m2.last_updated)
-//          FROM
-//              MSG m2
-//          WHERE m1.ConvoId = m2.ConvoId)

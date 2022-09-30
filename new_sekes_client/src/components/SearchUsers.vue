@@ -76,9 +76,38 @@ export default {
 	methods: {
 		async search() {
 			console.log(this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode)
+			let desire = this.determineAppropriateSekes(this.user.gender, this.user.sekesualOri)
+			console.log("DESIIIIRE: ", desire)
 			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc)
 			this.users = rese.data.data
 			this.current_page = 1
+		},
+
+		compatible(one, two) {
+			if (one.gender == two.gender) {
+				return (["Gay", "Bi"].includes(one.sekesualOri) && ["Gay", "Bi"].includes(two.sekesualOri))
+			}
+			else {
+				return (["Hetero", "Bi"].includes(one.sekesualOri) && ["Hetero", "Bi"].includes(two.sekesualOri))
+			}
+		},
+
+		allCompatible(one) {
+			let genders = ["Male", "Female", "NonBinary"]
+			let sekesuals = ["Hetero", "Bi", "Gay"]
+			let pairs = []
+			for (const g of genders) {
+				for (const s of sekesuals) {
+					// console.log(one.gender, one.sekesualOri)
+					// console.log(g, s)
+					// console.log(this.compatible(one, {gender: g, sekesualOri: s}))
+					// console.log("----")
+					if (this.compatible(one, {gender: g, sekesualOri: s})) {
+						pairs.push({gender: g, sekesualOri: s})
+					}
+				}
+			}
+			return pairs
 		},
 
 		addScoreBlend(user) {
@@ -93,8 +122,9 @@ export default {
 	},
 
 	async created() {
-		console.log(this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode)
-		let rese = await searchUsers(this.$cookies.get('sekes_tokens'), this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, null, this.offset, this.limit, this.order_by, this.asc_or_desc)
+		let desires = this.allCompatible({gender: this.user.gender, sekesualOri: this.user.sekesualOri})
+		console.log("DESIIIIRE: ", desires)
+		let rese = await searchUsers(this.$cookies.get('sekes_tokens'), this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
 		this.users = rese.data.data.map(this.addScoreBlend).sort((a,b) => {a.score < b.score})
 		this.current_page = 1
 	}
