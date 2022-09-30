@@ -68,6 +68,21 @@ export default {
 			return messages
 		},
 
+		usersToConvoId(one, two) {
+			let short
+			let long
+
+			if (one.length <= two.length) {
+				short = one
+				long = two
+			}
+			else {
+				short = two
+				long = one
+			}
+			return `${short}${long.length}${long}`
+		},
+
 		sendMessage(message) {
 			console.log("sending: ",message)
 			this.messages = [
@@ -81,7 +96,7 @@ export default {
 				}
 			]
 			console.log(message.content.replace(new RegExp("'", "g"), "''"))
-			sendMsg(this.$cookies.get('sekes_tokens'), message.roomId , message.content.replace(new RegExp("'", "g"), "''"))
+			sendMsg(this.$cookies.get('sekes_tokens'), message.roomId , message.content.replace(new RegExp("'", "g"), "''"), this.usersToConvoId(this.currentUserId, message.roomId))
 		},
 
 		addNewMessage() {
@@ -124,12 +139,8 @@ export default {
 		},
 		pollRoom (room) {
 			this.polling = setInterval(async () => {
-				// let old_ids = this.messages.map(n => n._id)
 				this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
-				// let new_notifs = this.messages.filter(n => !old_ids.includes(n._id))
-				// this.notifyUser(new_notifs)
 			}, 1000)
-			// console.log("start poll: ", this.polling)
 		},
 
 

@@ -301,64 +301,90 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	console.log("zipcode: ", zipcode)
 	console.log("orderby_str: ", orderby_str)
 	
-	let keri_string =  "WITH USERLIST as (                         \
-			SELECT                                                 \
-				user                                               \
-			FROM USERS                                             \
-			INNER JOIN TAGS T                                      \
-				on USERS.username = T.user                         \
-				AND T.tag in (TAG_LIST)                            \
-				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE \
-				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE \
-				AND popScore >= MIN_POP_SCORE                      \
-				AND zipCode in (ZIPCODE)                           \
-				AND IF((username IN(SELECT blocked                     \
-					FROM BLOCKS                                    \
-					WHERE blocker='searcher_username')             \
-					), 1 , 0) = 0                                    \
-			GROUP BY user                                          \
-			),                                                     \
-																   \
-			TAGLIST as (                                           \
-				SELECT                                             \
-					USERLIST.user,                                 \
-					GROUP_CONCAT(tag) as tag_list                  \
-				FROM USERLIST                                      \
-				LEFT JOIN TAGS                                  \
-					ON USERLIST.user = TAGS.user                \
-				GROUP BY user                                   \
-			)                                                   \
-																\
-		SELECT                                                  \
-			username,                                           \
-			firstName,                                          \
-			lastName,                                           \
-			bio,                                                \
-			gender,                                             \
-			TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,         \
-			DOB,                                                \
-			sekesualOri,                                        \
-			popScore,                                           \
-			zipCode,                                            \
-			city,                                               \
-			isCompleteProfile,                                  \
-			image0,                                             \
-			image1,                                             \
-			image2,                                             \
-			image3,                                             \
-			longitude,                                          \
-			latitude,                                           \
-			mailVerified,                                       \
-			tag_list,                                           \
-			IF((username IN(SELECT liked                        \
-							FROM LIKES                          \
-							WHERE liker='searcher_username')    \
-							), 1 , 0)                           \
-							AS did_i_like_him                   \
-																\
-			FROM USERS INNER JOIN TAGLIST                       \
-				ON USERS.username = TAGLIST.user\
-			ORDERBYREPLACE\
+	let keri_string =  
+		"WITH                                                                               \
+		                                                                                    \
+		USERLIST as (                                                                       \
+			SELECT                                                                          \
+				user                                                                        \
+			FROM USERS                                                                      \
+			INNER JOIN TAGS T                                                               \
+				on USERS.username = T.user                                                  \
+				AND T.tag in (TAG_LIST)                                                     \
+				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
+				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
+				AND popScore >= MIN_POP_SCORE                                               \
+				AND zipCode in (ZIPCODE)                                                    \
+				AND IF((username IN(SELECT blocked                                          \
+					FROM BLOCKS                                                             \
+					WHERE blocker='searcher_username')                                      \
+					), 1 , 0) = 0                                                           \
+			GROUP BY user                                                                   \
+			),                                                                              \
+																                            \
+		TAGLIST as (                                                                        \
+			SELECT                                                                          \
+				USERLIST.user,                                                              \
+				GROUP_CONCAT(tag) as tag_list                                               \
+			FROM USERLIST                                                                   \
+			LEFT JOIN TAGS                                                                  \
+				ON USERLIST.user = TAGS.user                                                \
+			GROUP BY user                                                                   \
+		),                                                                                  \
+		                                                                                    \
+		MATCHES AS (                                                                        \
+			SELECT l1.liker, l1.liked                                                       \
+				FROM LIKES l1 INNER JOIN LIKES l2                                           \
+					ON l1.liked = l2.liker                                                  \
+					AND l1.liker = l2.liked                                                 \
+					AND l1.liker != l1.liked                                                \
+		),                                                                                  \
+																							\
+		CONVO_START AS (                                                                    \
+			SELECT                                                                          \
+				m1.sender, m1.receiver                                                      \
+			FROM                                                                            \
+				MSG AS m1                                                                   \
+			WHERE                                                                           \
+				m1.last_updated =                                                           \
+					(SELECT                                                                 \
+						MIN(m2.last_updated)                                            \
+					FROM                                                                \
+						MSG m2                                                          \
+					WHERE m1.ConvoId = m2.ConvoId)\
+		)                                     \
+																                            \
+		SELECT                                                                              \
+			username,                                                                       \
+			firstName,                                                                      \
+			lastName,                                                                       \
+			bio,                                                                            \
+			gender,                                                                         \
+			TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                     \
+			DOB,                                                                            \
+			sekesualOri,                                                                    \
+			popScore,                                                                       \
+			zipCode,                                                                        \
+			city,                                                                           \
+			isCompleteProfile,                                                              \
+			image0,                                                                         \
+			image1,                                                                         \
+			image2,                                                                         \
+			image3,                                                                         \
+			longitude,                                                                      \
+			latitude,                                                                       \
+			mailVerified,                                                                   \
+			tag_list,                                                                       \
+			((Select COUNT(*) from MATCHES AS M where M.liker = username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username)) as popScoreDos,\
+			IF((username IN(SELECT liked                                                    \
+							FROM LIKES                                                      \
+							WHERE liker='searcher_username')                                \
+							), 1 , 0)                                                       \
+							AS did_i_like_him                                               \
+																                            \
+			FROM USERS INNER JOIN TAGLIST                                                   \
+				ON USERS.username = TAGLIST.user                                            \
+			ORDERBYREPLACE                                                                  \
 			LIMIT LIMIT_REPLACE OFFSET OFFSET_REPLACE;"
 			.replace("TAG_LIST"         , tag_list         )
 			.replace("MIN_AGE"          , min_age          )
@@ -370,6 +396,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			.replace('OFFSET_REPLACE'   , offset)
 			.replace('LIMIT_REPLACE'    , limit)
 
+	// console.log("search str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
 
 	// console.log("quyeriro: ", keri_string)
 	let user_query = await db.query(keri_string)

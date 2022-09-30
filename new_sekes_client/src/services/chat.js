@@ -38,7 +38,7 @@ export const getConvo = async (access_token, username, offset, limit) => {
 	return response;
 }
 
-export const sendMsg = async (access_token, username, msg) => {
+export const sendMsg = async (access_token, username, msg, convoId) => {
 	console.log("sending msg: ", 'username: ', username, 'msg: ', msg)
 	let request = {
 		url: "http://localhost:8081/api/chat/send_message", // should be replaced after going to production with domain url
@@ -51,6 +51,7 @@ export const sendMsg = async (access_token, username, msg) => {
 		data: JSON.stringify({
 			username : username,
 			msg      : msg,
+			convoId  : convoId
 		})
 	};
 	console.log("MSG data:", request.data)
