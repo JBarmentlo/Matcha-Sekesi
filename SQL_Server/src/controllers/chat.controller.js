@@ -55,16 +55,15 @@ exports.get_conversation = async (req, res) => {
 }
 
 exports.send_message = async (req, res) => {
-	console.log("sending ", 'username: ',  req.username,  'username: ', req.body.username,  'message: ', req.body.msg)
+	console.log("sending ", 'username: ',  req.username,  'username: ', req.body.username,  'message: ', req.body.msg, req.body.convoId)
 	try {
-		let test_id = 'loool'
 		let keri_string =
 			"INSERT INTO MSG (sender, receiver, msg, convoId)  \
 				VALUES (@sender, @receiver, @msg, @convoId);"
 			.replace(new RegExp("@sender"   , "g"), `'${req.username}'`     )
 			.replace(new RegExp("@receiver"   , "g"), `'${req.body.username}'`)
 			.replace(new RegExp("@msg"   , "g"), `'${req.body.msg}'`     )
-			.replace(new RegExp("@convoId", "g"), `'${test_id}'`  )
+			.replace(new RegExp("@convoId", "g"), `'${req.body.convoId}'`  )
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
 		// console.log("got convo : ", message_keri)
