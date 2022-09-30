@@ -142,3 +142,25 @@ export const unblockUser = async (access_token, username) => {
 	console.log("unblock: ", response)
 	return response;
 }
+
+
+export const getMatches = async (access_token) => {
+	console.log("get matches: ")
+	let request = {
+		url: `http://localhost:8081/api/users/getmatches`, // should be replaced after going to production with domain url
+		method: "get",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+			"x-access-signature" : access_token.signature,
+		},
+	};
+	
+	const response = await axios(request);
+	// console.log("matches: ", response)
+	return response;
+}
+
+
+
+

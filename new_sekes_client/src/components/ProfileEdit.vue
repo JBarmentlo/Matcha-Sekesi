@@ -166,10 +166,11 @@
 import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
 
 import {updateUser, getMyUser} from '../services/user'
+import { diff } from '../services/utils'
+
 import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
 import ProfilePicUpload from '../shared/ProfilePicUpload.vue'
-import { diff } from '../services/utils'
 
 export default {
     components: {
@@ -259,9 +260,6 @@ export default {
             // this.user.age = this.calculateAge(new Date(e.replace(/-/g,'/')))
             // console.log(this.user.age)
         }
-    },
-
-    async mounted() {
     },
 };
 </script>

@@ -14,7 +14,10 @@ router.get ("/getprofile/:username", auth.verifyToken , userController.get_user_
 
 router.post("/like"                , auth.verifyToken , likeController.like_user           );
 router.post("/unlike"              , auth.verifyToken , likeController.un_like_user        );
+router.get("/getmatches"           , auth.verifyToken , likeController.get_matches        );
 
 router.post("/block"               , auth.verifyToken , blockController.block_user         );
 router.post("/unblock"             , auth.verifyToken , blockController.un_block_user      );
+
+
 module.exports = router

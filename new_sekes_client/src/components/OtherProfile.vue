@@ -236,7 +236,6 @@ export default {
     },
 
 	async mounted() {
-		console.log("SLKDJHFLKSJDHFLKJSHDFLKJHSDFKLJHSDFLKjh");
 		let res = await getUserProfile(
 			this.$cookies.get("sekes_tokens"),
 			this.userName
@@ -244,6 +243,16 @@ export default {
 		console.log(res);
 		this.user = res.data.data;
 	},
+
+	async beforeRouteUpdate(to, from, next) {
+    // Call the API query method when the URL changes
+		let res = await getUserProfile(
+			this.$cookies.get("sekes_tokens"),
+			to.params.userName
+		);
+		this.user = res.data.data
+    next()
+  }
 };
 </script>
 

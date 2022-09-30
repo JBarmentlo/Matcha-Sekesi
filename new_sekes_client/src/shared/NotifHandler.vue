@@ -62,7 +62,6 @@ methods: {
           text: this.notifCardText(notif)
         });
       }
-      
     }
   },
 

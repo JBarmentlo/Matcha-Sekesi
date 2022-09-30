@@ -120,26 +120,28 @@ exports.get_users_that_liked_me = async (req, res) => {
 	}	
 }
 
-
 exports.get_matches = async (req, res) => {
 	try {
 		let rows = await db.query(
-			"SELECT LIKES.liker, LIKES.liked, \
-				IF(( SELECT COUNT(*)  \
-					FROM   LIKES r2  \
-					WHERE  r2.liker = LIKES.liked AND r2.liked = LIKES.liker \
-				) > 0, 1, 0) AS reciprocal \
-			FROM   LIKES \
-			WHERE  LIKES.liker = ? AND \
-			NOT EXISTS (SELECT 1 FROM BLOCKS  \
-				WHERE LIKES.liker = BLOCKS.blocked AND LIKES.liked = BLOCKS.blocker OR \
-				LIKES.liker = BLOCKS.blocker AND LIKES.liked = BLOCKS.blocked);"
+			"WITH MATCHES AS (                                                                  \
+				SELECT l1.liker, l1.liked as matchee                                            \
+				FROM LIKES l1 INNER JOIN LIKES l2                                               \
+					ON l1.liked = l2.liker                                                      \
+					AND l1.liker = l2.liked                                                     \
+					AND l1.liker != l1.liked                                                    \
+					AND l1.liker = @searcher                                                    \
+					AND l1.liker NOT IN (select blocked FROM BLOCKS WHERE blocker = @searcher)  \
+					AND l1.liker NOT IN (select blocker FROM BLOCKS WHERE blocked = @searcher)) \
+			                                                                                    \
+			SELECT                                                                              \
+				liker,                                                                           \
+				matchee,                                                                        \
+				profilePic                                                                      \
+				FROM MATCHES INNER JOIN USERS                                                   \
+					ON USERS.username = matchee".replace(new RegExp("@searcher", "g"), `'${req.username}'`)
 			, req.username)
-		// console.log("ROOOS:", rows)
-		matches = rows.filter(a =>  a.reciprocal == 1)
-		matches = matches.map(function(a) {return a.liked})
-		// console.log("ROOOS:", matches)
-		return res.status(200).send({message: 'Successfully queried liked you users.', data: matches, code:'SUCCESS'})
+		console.log("ROOOS:", rows)
+		return res.status(200).send({message: 'Successfully queried matches users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
@@ -164,3 +166,4 @@ WHERE \
     NOT EXISTS (SELECT 1 FROM block b \
                 WHERE b.user_who = c.user_one AND b.blocked = c.user_two OR \
                       b.user_who = c.user_two AND b.blocked = c.user_one);"
+

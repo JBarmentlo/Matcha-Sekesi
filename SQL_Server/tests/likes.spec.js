@@ -81,9 +81,9 @@ describe('Test likes', () => {
 	describe("Get Matches", () => {
 		step("Bella's matches: jhonny", async () => {
 			await LikeController.get_matches(mockRequest({}, users.Bella.username), res)
-			assert.isTrue(res.send.lastCall.firstArg.data.includes(users.Jhonny.username))
+			assert.isTrue(res.send.lastCall.firstArg.data.map(o => o.matchee).includes(users.Jhonny.username))
 			await LikeController.get_matches(mockRequest({}, users.Jhonny.username), res)
-			assert.isTrue(res.send.lastCall.firstArg.data.includes(users.Bella.username))
+			assert.isTrue(res.send.lastCall.firstArg.data.map(o => o.matchee).includes(users.Bella.username))
 		})
 		step("Marks's matches: All Alone HAHA", async () => {
 			await LikeController.get_matches(mockRequest({}, users.Mark.username), res)

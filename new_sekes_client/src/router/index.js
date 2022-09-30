@@ -7,6 +7,7 @@ import ResetPassword  from '../components/ResetPassword.vue'
 import ProfileEdit    from '../components/ProfileEdit.vue'
 import SearchUsers    from '../components/SearchUsers.vue'
 import PopulateDb     from '../components/PopulateDb.vue'
+import ChatEx         from '../components/ChatEx.vue'
 
 Vue.use(VueRouter)
 
@@ -58,6 +59,11 @@ const routes = [
     path: '/populate',
     name: 'Populate for testing',
     component: PopulateDb
+  },
+  {
+    path: '/cat',
+    name: 'pussy',
+    component: ChatEx
   },
   {
     path: '/profile/:userName',

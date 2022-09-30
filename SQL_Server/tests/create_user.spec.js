@@ -58,7 +58,6 @@ describe('Test users', () => {
 		})
 		step("modified mail is unverified", async () => {
 			await UserController.get_user_by_username(mockRequest(body = {username: users.Jhonny.username}, username = 'bella', params = {username: users.Jhonny.username}), res)
-			console.log(res.send.lastCall.firstArg)
 			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 0)
 			return Promise.resolve()
 		})
