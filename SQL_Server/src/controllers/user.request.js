@@ -35,7 +35,6 @@ exports.get_all_users = async (searcher_username) => {
 			mailVerified,                                                                     \
 			gender,                                                                           \
 			sekesualOri,                                                                      \
-			popScore,                                                                         \
 			zipCode,                                                                          \
 			city,                                                                             \
 			isCompleteProfile,                                                                \
@@ -82,7 +81,7 @@ exports.get_all_users = async (searcher_username) => {
 																								\
 			Select                                                                            \
 				*,                                                                            \
-				((Select COUNT(*) from MATCHES AS M where M.liker = U.username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = U.username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = U.username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = U.username)) as popScoreDos \
+				((Select COUNT(*) from MATCHES AS M where M.liker = U.username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = U.username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = U.username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = U.username)) as popScore \
 			From MAIN AS U;".replace(new RegExp('@searcher_username', "g"), searcher_username), )
 	return query.map(user => transform_csv_lists_to_arrays(user))
 };
@@ -101,7 +100,6 @@ exports.get_user = async (searcher_username, searched_username) => {
 				mailVerified,                                                                     \
 				gender,                                                                           \
 				sekesualOri,                                                                      \
-				popScore,                                                                         \
 				zipCode,                                                                          \
 				city,                                                                             \
 				isCompleteProfile,                                                                \
@@ -148,7 +146,7 @@ exports.get_user = async (searcher_username, searched_username) => {
 																								\
 			Select                                                                            \
 				*,                                                                            \
-				((Select COUNT(*) from MATCHES AS M where M.liker = U.username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = U.username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = U.username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = U.username)) as popScoreDos \
+				((Select COUNT(*) from MATCHES AS M where M.liker = U.username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = U.username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = U.username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = U.username)) as popScore \
 			From MAIN AS U;".replace(new RegExp('@searcher_username', "g"), searcher_username).replace('searched_username', searched_username), )
 
 	// console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
@@ -170,7 +168,6 @@ exports.get_my_user = async (searched_username) => {
 				mailVerified,                                        \
 				gender,                                              \
 				sekesualOri,                                         \
-				popScore,                                            \
 				zipCode,                                             \
 				city,                                                \
 				isCompleteProfile,                                   \
@@ -203,7 +200,6 @@ exports.get_my_user = async (searched_username) => {
 					mailVerified,                                    \
 					gender,                                          \
 					sekesualOri,                                     \
-					popScore,                                        \
 					zipCode,                                         \
 					city,                                            \
 					isCompleteProfile,                               \
@@ -264,7 +260,6 @@ exports.get_my_user = async (searched_username) => {
 				mailVerified,                                        \
 				gender,                                              \
 				sekesualOri,                                         \
-				popScore,                                            \
 				zipCode,                                             \
 				city,                                                \
 				isCompleteProfile,                                   \
@@ -280,7 +275,7 @@ exports.get_my_user = async (searched_username) => {
 				tag_list,                                            \
 				last_connected, \
 				TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
-				((Select COUNT(*) from MATCHES AS M where M.liker = username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username)) as popScoreDos, \
+				((Select COUNT(*) from MATCHES AS M where M.liker = username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username)) as popScore, \
 				GROUP_CONCAT(consulter) as consult_list              \
 			FROM LIKELIST                                            \
 			LEFT JOIN CONSULTS                                       \
@@ -343,35 +338,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	
 	let keri_string =  
 		"WITH                                                                               \
-		                                                                                    \
-		USERLIST as (                                                                       \
-			SELECT                                                                          \
-				user                                                                        \
-			FROM USERS                                                                      \
-			INNER JOIN TAGS T                                                               \
-				on USERS.username = T.user                                                  \
-				AND T.tag in (TAG_LIST)                                                     \
-				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
-				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
-				AND popScore >= MIN_POP_SCORE                                               \
-				AND zipCode in (ZIPCODE)                                                    \
-				AND IF((username IN(SELECT blocked                                          \
-					FROM BLOCKS                                                             \
-					WHERE blocker='searcher_username')                                      \
-					), 1 , 0) = 0                                                           \
-			GROUP BY user                                                                   \
-			),                                                                              \
-																                            \
-		TAGLIST as (                                                                        \
-			SELECT                                                                          \
-				USERLIST.user,                                                              \
-				GROUP_CONCAT(tag) as tag_list                                               \
-			FROM USERLIST                                                                   \
-			LEFT JOIN TAGS                                                                  \
-				ON USERLIST.user = TAGS.user                                                \
-			GROUP BY user                                                                   \
-		),                                                                                  \
-		                                                                                    \
+		\
 		MATCHES AS (                                                                        \
 			SELECT l1.liker, l1.liked                                                       \
 				FROM LIKES l1 INNER JOIN LIKES l2                                           \
@@ -392,7 +359,35 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 					FROM                                                                \
 						MSG m2                                                          \
 					WHERE m1.ConvoId = m2.ConvoId)\
-		)                                     \
+		),                                     \
+		                                                                                    \
+		USERLIST as (                                                                       \
+			SELECT                                                                          \
+				user                                                                        \
+			FROM USERS                                                                      \
+			INNER JOIN TAGS T                                                               \
+				on USERS.username = T.user                                                  \
+				AND T.tag in (TAG_LIST)                                                     \
+				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
+				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
+				AND ((Select COUNT(*) from MATCHES AS M where M.liker = username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username)) >= MIN_POP_SCORE                                               \
+				AND zipCode in (ZIPCODE)                                                    \
+				AND IF((username IN(SELECT blocked                                          \
+					FROM BLOCKS                                                             \
+					WHERE blocker='searcher_username')                                      \
+					), 1 , 0) = 0                                                           \
+			GROUP BY user                                                                   \
+			),                                                                              \
+																                            \
+		TAGLIST as (                                                                        \
+			SELECT                                                                          \
+				USERLIST.user,                                                              \
+				GROUP_CONCAT(tag) as tag_list                                               \
+			FROM USERLIST                                                                   \
+			LEFT JOIN TAGS                                                                  \
+				ON USERLIST.user = TAGS.user                                                \
+			GROUP BY user                                                                   \
+		)                                                                                  \
 																                            \
 		SELECT                                                                              \
 			username,                                                                       \
@@ -403,7 +398,6 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                     \
 			DOB,                                                                            \
 			sekesualOri,                                                                    \
-			popScore,                                                                       \
 			zipCode,                                                                        \
 			city,                                                                           \
 			isCompleteProfile,                                                              \
@@ -415,7 +409,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			latitude,                                                                       \
 			mailVerified,                                                                   \
 			tag_list,                                                                       \
-			((Select COUNT(*) from MATCHES AS M where M.liker = username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username)) as popScoreDos,\
+			((Select COUNT(*) from MATCHES AS M where M.liker = username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username)) as popScore,\
 			IF((username IN(SELECT liked                                                    \
 							FROM LIKES                                                      \
 							WHERE liker='searcher_username')                                \
