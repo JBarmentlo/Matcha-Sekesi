@@ -140,7 +140,7 @@ exports.get_matches = async (req, res) => {
 				FROM MATCHES INNER JOIN USERS                                                   \
 					ON USERS.username = matchee".replace(new RegExp("@searcher", "g"), `'${req.username}'`)
 			, req.username)
-		console.log("ROOOS:", rows)
+		// console.log("ROOOS:", rows)
 		return res.status(200).send({message: 'Successfully queried matches users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {

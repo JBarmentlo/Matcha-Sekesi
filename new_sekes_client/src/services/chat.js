@@ -34,11 +34,12 @@ export const getConvo = async (access_token, username, offset, limit) => {
 		})
 	};
 	const response = await axios(request);
-	// console.log("MSG res: ", response)
+	console.log("convo res: ", response)
 	return response;
 }
 
 export const sendMsg = async (access_token, username, msg) => {
+	console.log("sending msg: ", 'username: ', username, 'msg: ', msg)
 	let request = {
 		url: "http://localhost:8081/api/chat/send_message", // should be replaced after going to production with domain url
 		method: "post",
@@ -49,9 +50,10 @@ export const sendMsg = async (access_token, username, msg) => {
 		},
 		data: JSON.stringify({
 			username : username,
-			msg   : msg,
+			msg      : msg,
 		})
 	};
+	console.log("MSG data:", request.data)
 	const response = await axios(request);
 	// console.log("MSG res: ", response)
 	return response;

@@ -227,7 +227,7 @@ exports.verifyToken = (req, res, next) => {
 
 exports.updateLastConnected = async (req, res, next) => {
     try {
-        console.log("Updating last connected: ", req.username)
+        // console.log("Updating last connected: ", req.username)
         
        await db.query(
             "UPDATE USERS\

@@ -42,7 +42,7 @@ export default {
 				}
 				else {
 					if (this.polling != null) {
-						// console.log("stop poll: ", this.polling)
+						console.log("stop poll: ", this.polling)
 						clearInterval(this.polling)
 					}
 					this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
@@ -80,7 +80,8 @@ export default {
 					date: new Date().toDateString()
 				}
 			]
-			sendMsg(this.$cookies.get('sekes_tokens'), this.currentUserId , message.content.replace(new RegExp("'", "g"), "''"))
+			console.log(message.content.replace(new RegExp("'", "g"), "''"))
+			sendMsg(this.$cookies.get('sekes_tokens'), message.roomId , message.content.replace(new RegExp("'", "g"), "''"))
 		},
 
 		addNewMessage() {

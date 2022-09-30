@@ -63,6 +63,7 @@ export default {
 				}
 				
 			}, freq)
+			console.log(freq)
 		},
 
 		notifyUser(notif_list) {

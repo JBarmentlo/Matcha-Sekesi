@@ -2,7 +2,7 @@ const db              = require("../db/sql.conn");
 
 
 exports.get_all_messages = async (req, res) => {
-	console.log("gettin messages")
+	// console.log("gettin messages")
 	try {
 		let keri_string =
 			"WITH MATCHES AS ( \
@@ -31,7 +31,7 @@ exports.get_all_messages = async (req, res) => {
 }	
 
 exports.get_conversation = async (req, res) => {
-	console.log("gettin convo ", 'username: ',  req.username,  'username: ', req.body.username,  'offset: ', req.body.offset,  'limi: ', req.body.limit)
+	// console.log("gettin convo ", 'username: ',  req.username,  'username: ', req.body.username,  'offset: ', req.body.offset,  'limi: ', req.body.limit)
 	try {
 		let keri_string =
 			"SELECT id, sender, receiver, msg, last_updated FROM MSG  \
@@ -55,14 +55,16 @@ exports.get_conversation = async (req, res) => {
 }
 
 exports.send_message = async (req, res) => {
-	console.log("sending ", 'username: ',  req.username,  'username: ', req.body.username,  'message: ', req.body.message)
+	console.log("sending ", 'username: ',  req.username,  'username: ', req.body.username,  'message: ', req.body.msg)
 	try {
+		let test_id = 'loool'
 		let keri_string =
-			"INSERT INTO MSG (sender, receiver, msg)  \
-				VALUES (@sender, @receiver, @msg);"
+			"INSERT INTO MSG (sender, receiver, msg, convoId)  \
+				VALUES (@sender, @receiver, @msg, @convoId);"
 			.replace(new RegExp("@sender"   , "g"), `'${req.username}'`     )
 			.replace(new RegExp("@receiver"   , "g"), `'${req.body.username}'`)
-			.replace(new RegExp("@msg", "g"), `'${req.body.msg}'`  )
+			.replace(new RegExp("@msg"   , "g"), `'${req.body.msg}'`     )
+			.replace(new RegExp("@convoId", "g"), `'${test_id}'`  )
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
 		// console.log("got convo : ", message_keri)
