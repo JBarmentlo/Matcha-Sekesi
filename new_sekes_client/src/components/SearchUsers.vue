@@ -80,14 +80,24 @@ export default {
 			this.users = rese.data.data
 			this.current_page = 1
 		},
+
+		addScoreBlend(user) {
+			let score = user.popScore
+			if ((user.zipCode != null) && (user.zipCode == this.$cookies.get('user').zipCode)) {
+				score += 2
+			}
+			score += user.tag_list.filter(t => this.$cookies.get('user').tag_list.includes(t)).length
+			return {...user, score: score}
+		}
+
 	},
 
 	async created() {
 		console.log(this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode)
-		let rese = await searchUsers(this.$cookies.get('sekes_tokens'), this.user.age - 10, this.user.age + 10, this.user.tag_list, 0, null, this.offset, this.limit, this.order_by, this.asc_or_desc)
-		this.users = rese.data.data
+		let rese = await searchUsers(this.$cookies.get('sekes_tokens'), this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, null, this.offset, this.limit, this.order_by, this.asc_or_desc)
+		this.users = rese.data.data.map(this.addScoreBlend).sort((a,b) => {a.score < b.score})
 		this.current_page = 1
-	},
+	}
 
 }
 </script>

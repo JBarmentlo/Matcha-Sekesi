@@ -274,6 +274,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	}
 	console.log("taglist: ", tag_list)
 	console.log("zipcode: ", zipcode)
+	console.log("orderby_str: ", orderby_str)
 	
 	let keri_string =  "WITH USERLIST as (                         \
 			SELECT                                                 \
