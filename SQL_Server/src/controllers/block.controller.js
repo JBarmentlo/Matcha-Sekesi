@@ -75,6 +75,40 @@ exports.block_user = async (req, res) => {
 	}
 }
 
+exports.report_user = async (req, res) => {
+	// console.log('reporting ', req.username, req.body.reported)
+	try {
+		let report_query_result = await db.query(
+			'INSERT INTO REPORTS \
+			(reporter, reported) \
+			VALUES (?, ?)',
+			[req.username, req.body.reported]
+			)
+		res.status(200).send({message: 'Succesfully reported user', code: "SUCCESS"})
+	}
+	catch (e) {
+		if (e.code == 'ER_NO_REFERENCED_ROW') {
+			res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_DUP_ENTRY') {
+			res.status(200).send({message: "Already reported", code: e.code})
+		}
+		else if (e.code == 'ER_NO_REFERENCED_ROW_2') {
+			res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_PARSE_ERROR') {
+			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			throw (e)
+		}
+		else {
+			console.log("EROOL: ", e)
+			res.status(500).send({message: "Error in report user ", error: e})
+			throw(e)
+		}
+	}
+}
+
+
 
 exports.un_block_user = async (req, res) => {
 	try {
@@ -96,6 +130,8 @@ exports.un_block_user = async (req, res) => {
 		}
 	}
 }
+
+
 
 exports.get_users_that_i_blocked = async (req, res) => {
 	try {
