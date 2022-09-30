@@ -123,10 +123,10 @@ export default {
 		},
 		pollRoom (room) {
 			this.polling = setInterval(async () => {
-				let old_ids = this.messages.map(n => n._id)
+				// let old_ids = this.messages.map(n => n._id)
 				this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
-				let new_notifs = this.messages.filter(n => !old_ids.includes(n._id))
-				this.notifyUser(new_notifs)
+				// let new_notifs = this.messages.filter(n => !old_ids.includes(n._id))
+				// this.notifyUser(new_notifs)
 			}, 1000)
 			// console.log("start poll: ", this.polling)
 		},

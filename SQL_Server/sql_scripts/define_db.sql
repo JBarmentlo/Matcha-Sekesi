@@ -1,29 +1,29 @@
 create table USERS
 (
-    username          varchar(100)                          not null,
-    firstName         varchar(100)                          null,
-    lastName          varchar(100)                          null,
-    bio               varchar(300)                          null,
-    mail              varchar(100)                          not null,
-    password          varchar(100)                          not null,
-    mailVerified      tinyint(1)  default 0                 not null,
-    gender            varchar(10)                           null,
-    sekesualOri       varchar(10) default 'bi'              null,
-    popScore          float       default 0                 not null,
-    zipCode           varchar(10)                           null,
-    city              varchar(100)                          null,
-    isCompleteProfile tinyint(1)  default 0                 not null,
-    longitude         float                                 null,
-    latitude          float                                 null,
+    username          varchar(100)                              not null,
+    firstName         varchar(100)                              null,
+    lastName          varchar(100)                              null,
+    bio               varchar(300)                              null,
+    mail              varchar(100)                              not null,
+    password          varchar(100)                              not null,
+    mailVerified      tinyint(1)  default 0                     not null,
+    gender            varchar(10)                               null,
+    sekesualOri       varchar(10) default 'bi'                  null,
+    popScore          float       default 0                     not null,
+    zipCode           varchar(10)                               null,
+    city              varchar(100)                              null,
+    isCompleteProfile tinyint(1)  default 0                     not null,
+    longitude         float                                     null,
+    latitude          float                                     null,
     id                mediumint auto_increment
         primary key,
-    image1            varchar(100)                          null,
-    image2            varchar(100)                          null,
-    image3            varchar(100)                          null,
-    image0            varchar(100)                          null,
-    profilePic        varchar(100)                          null,
-    DOB               date                                  null,
-    last_connected    timestamp   default CURRENT_TIMESTAMP null,
+    image1            varchar(100)                              null,
+    image2            varchar(100)                              null,
+    image3            varchar(100)                              null,
+    image0            varchar(100)                              null,
+    profilePic        varchar(100)                              null,
+    DOB               date                                      null,
+    last_connected    timestamp   default '2022-09-28 11:54:54' null,
     constraint USERS_mail_uindex
         unique (mail),
     constraint USERS_username_uindex
@@ -72,6 +72,22 @@ create table LIKES
             on delete cascade,
     constraint liker_username_fk
         foreign key (liker) references USERS (username)
+            on delete cascade
+);
+
+create table MSG
+(
+    id           int auto_increment
+        primary key,
+    sender       varchar(100)                        not null,
+    receiver     varchar(100)                        not null,
+    msg          varchar(1000)                       null,
+    last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    constraint MSG_USERS_username_fk
+        foreign key (sender) references USERS (username)
+            on delete cascade,
+    constraint MSG_USERS_username_fk_2
+        foreign key (receiver) references USERS (username)
             on delete cascade
 );
 

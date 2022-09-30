@@ -11,6 +11,7 @@
 
 <script>
 import { getMyUser } from "./services/user";
+import { getMyMessages } from './services/chat'
 
 import NavBar from "./shared/NavBar.vue"
 
@@ -29,6 +30,8 @@ export default {
 		return {
 			logged_in       : false,
 			currentUser     : Object,
+			messages        : null,
+			polling         : null
 		}
 	},
 
@@ -39,12 +42,45 @@ export default {
 		async setLoggedIn(val) {
 			this.logged_in = val;
 			console.log("logged in set to: %s", val)
+			if (this.logged_in == true) {
+				this.startPollingMsg(1000)
+			}
+			else if (this.logged_in == false && this.polling != null) {
+				clearInterval(this.polling)
+			}
+		},
+
+		startPollingMsg(freq) {
+			this.polling = setInterval(async () => {
+				if (this.messages == null) {
+					this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data
+				}
+				else {
+					let old_ids = this.messages.map(n => n.id)
+					this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data.reverse()
+					let new_notifs = this.messages.filter(n => !old_ids.includes(n.id))
+					this.notifyUser(new_notifs)
+				}
+				
+			}, freq)
+		},
+
+		notifyUser(notif_list) {
+			if (notif_list.length != 0) {
+				console.log("notify: ", notif_list)
+				for (const notif of notif_list) {
+					this.$notify({
+						text: notif.sender + " sent you a message!"
+					});
+				}
+			}
 		},
 	},
 
 	created() {
 		console.log("Created App");
 	},
+
 	async mounted() {
 		// console.log("cookie signin disabled")
 		console.log("Signin Created");
@@ -75,6 +111,12 @@ export default {
 			this.$router.push('/signin')
 		}
 	},
+
+	beforeDestroy () {
+		if (this.polling != null) {
+			clearInterval(this.polling)
+		}
+	}
 }
 </script>
 

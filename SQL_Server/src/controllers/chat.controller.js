@@ -21,7 +21,7 @@ exports.get_all_messages = async (req, res) => {
 				ORDER BY last_updated DESC;".replace(new RegExp("@searcher", "g"), `'${req.username}'`)
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
-		console.log("got : ", message_keri)
+		// console.log("got : ", message_keri)
 		return res.status(200).send({message: 'Successfully queried your messages.', data: message_keri, code:'SUCCESS'})
 	}
 	catch (e) {
