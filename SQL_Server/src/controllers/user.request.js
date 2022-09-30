@@ -405,6 +405,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			zipCode,                                                                        \
 			city,                                                                           \
 			isCompleteProfile,                                                              \
+			0 as did_i_block_him,\
 			image0,                                                                         \
 			image1,                                                                         \
 			image2,                                                                         \
