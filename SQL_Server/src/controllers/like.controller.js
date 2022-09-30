@@ -141,8 +141,7 @@ exports.get_matches = async (req, res) => {
 					ON USERS.username = matchee".replace(new RegExp("@searcher", "g"), `'${req.username}'`)
 			, req.username)
 		console.log("ROOOS:", rows)
-		// console.log("ROOOS:", matches)
-		return res.status(200).send({message: 'Successfully queried liked you users.', data: rows, code:'SUCCESS'})
+		return res.status(200).send({message: 'Successfully queried matches users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
 		if (e.code == 'ER_NO_REFERENCED_ROW') {
