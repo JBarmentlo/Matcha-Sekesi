@@ -17,6 +17,7 @@ router.post("/unlike"              , auth.verifyToken , likeController.un_like_u
 router.get("/getmatches"           , auth.verifyToken , likeController.get_matches        );
 
 router.post("/block"               , auth.verifyToken , blockController.block_user         );
+router.post("/report"               , auth.verifyToken , blockController.report_user         );
 router.post("/unblock"             , auth.verifyToken , blockController.un_block_user      );
 
 
