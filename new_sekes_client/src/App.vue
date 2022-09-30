@@ -58,7 +58,7 @@ export default {
 				else {
 					let old_ids = this.messages.map(n => n.id)
 					this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data.reverse()
-					let new_notifs = this.messages.filter(n => !old_ids.includes(n.id))
+					let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.$cookies.get('user').username))
 					this.notifyUser(new_notifs)
 				}
 				
@@ -91,9 +91,9 @@ export default {
 				if (user.data.code == "SUCCESS") {
 					this.$cookies.set("user", {...user.data.data})
 					this.setLoggedIn(true);
-					if (this.$route.path != "/cat") {
-						this.$router.push('/cat')
-					}
+					// if (this.$route.path != "/get") {
+					// 	this.$router.push('/get')
+					// }
 				}
 				else {
 					this.$cookies.remove('sekes_tokens')

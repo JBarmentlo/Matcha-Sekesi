@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 export const getMyMessages = async (access_token) => {
-	console.log("get messages ")
+	// console.log("get messages ")
 	let request = {
 		url: "http://localhost:8081/api/chat/getall", // should be replaced after going to production with domain url
 		method: "get",
