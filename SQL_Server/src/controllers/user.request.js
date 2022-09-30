@@ -115,13 +115,17 @@ exports.get_user = async (searcher_username, searched_username) => {
 									FROM LIKES                                                       \
 									where liker = '@searcher_username'                                           \
 									)                                                                \
-					), 1 , 0)                                                                     \
-				as did_i_like_him,                                                                \
+					), 1 , 0) as did_i_like_him,                                                                \
+				IF(                                                                               \
+					(username IN(SELECT blocked                                                     \
+									FROM BLOCKS                                                       \
+									where blocker = '@searcher_username'                                           \
+									)), 1 , 0) as did_i_block_him,                                                                \
 				GROUP_CONCAT(tag) as tag_list                                                     \
 			FROM USERS                                                                        \
 				LEFT JOIN TAGS T                                                                  \
 				on USERS.username = T.user                                                        \
-				WHERE USERS.username = 'searched_username' AND USERS.username NOT IN (select blocked FROM BLOCKS WHERE blocker = '@searcher_username') \
+				WHERE USERS.username = 'searched_username' \
 			GROUP BY username),                                                               \
 																								\
 			MATCHES AS (                                                                      \
@@ -401,6 +405,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			zipCode,                                                                        \
 			city,                                                                           \
 			isCompleteProfile,                                                              \
+			0 as did_i_block_him,\
 			image0,                                                                         \
 			image1,                                                                         \
 			image2,                                                                         \
