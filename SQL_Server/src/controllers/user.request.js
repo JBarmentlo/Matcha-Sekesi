@@ -356,3 +356,14 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 
 
 
+// WITH MATCHES AS (
+//     SELECT l1.liker, l1.liked
+//         FROM LIKES l1 INNER JOIN LIKES l2
+//             ON l1.liked = l2.liker
+//             AND l1.liker = l2.liked
+//             AND l1.liker != l1.liked)
+
+// Select
+//     U.username,
+//     (Select COUNT(M.liker) from MATCHES AS M where M.liker = U.username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = U.username)
+// From USERS AS U;
