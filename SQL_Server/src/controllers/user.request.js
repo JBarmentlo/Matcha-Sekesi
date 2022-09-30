@@ -90,47 +90,66 @@ exports.get_all_users = async (searcher_username) => {
 exports.get_user = async (searcher_username, searched_username) => {
 	// console.log(searcher_username, " is looking for: ", searched_username)
 	let user_query = await db.query(
-			"SELECT                                                             \
-				username,                                                       \
-				firstName,                                                      \
-				lastName,                                                       \
-				bio,                                                            \
-				gender,                                                         \
-				TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                     \
-				DOB,                                                            \
-				sekesualOri,                                                    \
-				popScore,                                                       \
-				zipCode,                                                        \
-				city,                                                           \
-				isCompleteProfile,                                              \
-				profilePic,                                                     \
-				image0,                                                         \
-				image1,                                                         \
-				image2,                                                         \
-				image3,                                                         \
-				longitude,                                                      \
-				latitude,                                                       \
-				last_connected,                                                 \
-				mailVerified,                                                   \
-				TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
-				mailVerified,                                                   \
-				GROUP_CONCAT(tag) as tag_list,                                  \
-				IF((username IN(SELECT liked                                    \
-								FROM LIKES                                      \
-								WHERE liker='searcher_username')                \
-								), 1 , 0)                                       \
-								AS did_i_like_him,                              \
-				IF((username IN(SELECT blocked                                  \
-					FROM BLOCKS                                                 \
-					WHERE blocker='searcher_username')                          \
-					), 1 , 0)                                                   \
-					AS did_i_block_him                                          \
-			FROM USERS                                                          \
-			LEFT JOIN TAGS T                                                    \
-				on USERS.username = T.user                                      \
-				WHERE username='searched_username'                              \
-			GROUP BY username;".replace(new RegExp('searcher_username', "g"), searcher_username).replace('searched_username', searched_username)
-	, )
+		"WITH MAIN AS (                                                                       \
+			SELECT                                                                            \
+				username,                                                                         \
+				firstName,                                                                        \
+				lastName,                                                                         \
+				bio,                                                                              \
+				mail,                                                                             \
+				password,                                                                         \
+				mailVerified,                                                                     \
+				gender,                                                                           \
+				sekesualOri,                                                                      \
+				popScore,                                                                         \
+				zipCode,                                                                          \
+				city,                                                                             \
+				isCompleteProfile,                                                                \
+				longitude,                                                                        \
+				latitude,                                                                         \
+				id,                                                                               \
+				last_connected,                                                                   \
+				TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,                  \
+				TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                       \
+				DOB,                                                                              \
+				IF(                                                                               \
+					(username IN(SELECT liked                                                     \
+									FROM LIKES                                                       \
+									where liker = '@searcher_username'                                           \
+									)                                                                \
+					), 1 , 0)                                                                     \
+				as did_i_like_him,                                                                \
+				GROUP_CONCAT(tag) as tag_list                                                     \
+			FROM USERS                                                                        \
+				LEFT JOIN TAGS T                                                                  \
+				on USERS.username = T.user                                                        \
+				WHERE USERS.username = 'searched_username' AND USERS.username NOT IN (select blocked FROM BLOCKS WHERE blocker = '@searcher_username') \
+			GROUP BY username),                                                               \
+																								\
+			MATCHES AS (                                                                      \
+				SELECT l1.liker, l1.liked                                                     \
+					FROM LIKES l1 INNER JOIN LIKES l2                                         \
+						ON l1.liked = l2.liker                                                \
+						AND l1.liker = l2.liked                                               \
+						AND l1.liker != l1.liked),                                            \
+																								\
+			CONVO_START AS (                                                                  \
+				SELECT                                                                        \
+					m1.sender, m1.receiver                                                    \
+				FROM                                                                          \
+					MSG AS m1                                                                 \
+				WHERE                                                                         \
+					m1.last_updated =                                                         \
+						(SELECT                                                               \
+								MIN(m2.last_updated)                                             \
+							FROM                                                                 \
+								MSG m2                                                           \
+							WHERE m1.ConvoId = m2.ConvoId))                                      \
+																								\
+			Select                                                                            \
+				*,                                                                            \
+				((Select COUNT(*) from MATCHES AS M where M.liker = U.username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = U.username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = U.username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = U.username)) as popScoreDos \
+			From MAIN AS U;".replace(new RegExp('@searcher_username', "g"), searcher_username).replace('searched_username', searched_username), )
 
 	// console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
 	return transform_csv_lists_to_arrays(user_query[0])
@@ -204,7 +223,27 @@ exports.get_my_user = async (searched_username) => {
 			LEFT JOIN LIKES L                                        \
 				on TAGLIST.username = L.liked                        \
 			GROUP BY username,                                       \
-			password, tag_list)                                      \
+			password, tag_list),                                      \
+\
+			MATCHES AS (                                                                      \
+				SELECT l1.liker, l1.liked                                                     \
+					FROM LIKES l1 INNER JOIN LIKES l2                                         \
+						ON l1.liked = l2.liker                                                \
+						AND l1.liker = l2.liked                                               \
+						AND l1.liker != l1.liked),                                            \
+																								\
+			CONVO_START AS (                                                                  \
+				SELECT                                                                        \
+					m1.sender, m1.receiver                                                    \
+				FROM                                                                          \
+					MSG AS m1                                                                 \
+				WHERE                                                                         \
+					m1.last_updated =                                                         \
+						(SELECT                                                               \
+								MIN(m2.last_updated)                                             \
+							FROM                                                                 \
+								MSG m2                                                           \
+							WHERE m1.ConvoId = m2.ConvoId))                                      \
 																	 \
 			SELECT                                                   \
 				username,                                            \
@@ -241,6 +280,7 @@ exports.get_my_user = async (searched_username) => {
 				tag_list,                                            \
 				last_connected, \
 				TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
+				((Select COUNT(*) from MATCHES AS M where M.liker = username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username)) as popScoreDos, \
 				GROUP_CONCAT(consulter) as consult_list              \
 			FROM LIKELIST                                            \
 			LEFT JOIN CONSULTS                                       \
