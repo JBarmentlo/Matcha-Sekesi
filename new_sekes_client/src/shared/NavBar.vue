@@ -73,8 +73,14 @@ export default {
 .navbar {
     font-size: 120%;
     padding: 10px;
-    background-color: rgb(34, 35, 40);
+    /* background-color: #f9cdc3; */
+	background-image: linear-gradient(#f6c0ba, #facefb)
 }
+
+.navbar * {
+    color : #2f62c9c2
+}
+
 
 .navbar-brand {
     font-family: 'Michroma', sans-serif;
@@ -87,9 +93,7 @@ export default {
 	text-transform: uppercase;
 	font-size: 15px;
 }
-.nav-link {
-    color: white
-}
+
 
 
 </style>

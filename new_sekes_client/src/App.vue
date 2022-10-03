@@ -137,16 +137,16 @@ export default {
 
 :root {
   --font: Roboto, sans-serif;
-  /* --textColor: #f6f8fc; */
+  --textColor: #2f62c9c2;
   /* --linkActiveColor: #41b783; */
-  /* background-color : #112d66; */
-	/* background-color: black; */
+	background-color: #fbd2fc
 }
 
 #app {
-  font-family: var(--font);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--textColor);
+	font-family: var(--font);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: var(--textColor);
+	background-color: #fbd2fc;
 }
 </style>

@@ -2,7 +2,7 @@
 	<div class="center pt-5">
 			<!-- <div class="vue-template"> -->
 				<form @submit="signupFormSubmit">
-					<h3>Sign Up</h3>
+					<h3>SIGN UP</h3>
 					<div v-if="status_not_200" class="login_error">There was an error handling your request</div>
 					<div class="form-group">
 						<label>Username</label>
@@ -60,7 +60,7 @@
 						<div v-if="!is_valid_password" class="login_error">Error: 5 characters minimum are required</div>
 					</div>
 
-					<button type="submit" class="btn btn-dark btn-lg btn-block">
+					<button type="submit" class = "button_submit">
 						Sign Up
 					</button>
 
@@ -161,14 +161,8 @@ export default {
 
 
 <style scoped>
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  /* border: 3px solid green; */
-}
+@import url("../assets/login.css");
+
 .login_error {
 	color : red;
 	font-size: 80%;

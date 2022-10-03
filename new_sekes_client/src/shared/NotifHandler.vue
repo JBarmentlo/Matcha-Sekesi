@@ -18,20 +18,6 @@
       </b-dropdown-item>
     </div>
   </b-dropdown>
-  <!-- <b-dropdown
-      class="dropdown-1"
-      :text="notifText"
-      @hide="setSeen"
-  >
-      <div v-for="notif in notifs" :key="notif.id">
-          <b-dropdown-item v-if="notif.seen == 1" variant="secondary" @click="deleteNoot(notif.id)">
-              {{notifCardText(notif)}}
-          </b-dropdown-item>
-              <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)">
-              {{notifCardText(notif)}}
-          </b-dropdown-item>
-      </div>
-  </b-dropdown> -->
 </template>
 
 <script>
@@ -119,10 +105,6 @@ beforeDestroy () {
 
 <style scoped>
 
-.dropdown-menu {
-  position: static;
-  left: 50%;
-}
 
 .nav-item {
   text-decoration: none;

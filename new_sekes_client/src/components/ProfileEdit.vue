@@ -326,14 +326,6 @@ input[type = "file"] {
     color: rgb(56, 56, 56);
 }
 
-body {
-    margin: 0;
-    padding-top: 40px;
-    color: #2e323c;
-    background: #f5f6fa;
-    position: relative;
-    height: 100%;
-}
 .account-settings .user-profile {
     margin: 0 0 1rem 0;
     padding-bottom: 1rem;
@@ -383,7 +375,7 @@ body {
 }
 
 .container {
-    margin-top: 5%;
+    margin: 5%;
 }
 
 
