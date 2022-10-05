@@ -50,14 +50,22 @@
 
 					<div class="form-group pb-2">
 						<label>Password</label>
+						<div class = "input-group">
 						<input
 							autocomplete="current-password"
-							type="password"
+							:type="visible ? 'text' : 'password'"
 							v-model="password"
 							class="form-control form-control-lg"
 							@keyup="validate_password"
 						/>
+						<span class="input-group-btn form-control">
+							<button class="btn" v-on:click="password_visibility" type="button">
+							<b-icon-eye-fill v-if="!visible"></b-icon-eye-fill>
+							<b-icon-eye-slash-fill v-else></b-icon-eye-slash-fill>
+							</button>
+						</span>
 						<div v-if="!is_valid_password" class="login_error">Error: 5 characters minimum are required</div>
+						</div>
 					</div>
 
 					<button type="submit" class = "button_submit">
@@ -96,10 +104,15 @@ export default {
 
 			mail_already_used: false,
 			username_taken   : false,
-			status_not_200   : false
+			status_not_200   : false,
+
+			visible: false
 		};
 	},
 	methods: {
+		password_visibility() {
+			this.visible = !this.visible
+		},
 		validate_user_name(e) {
 			console.log(e)
 			this.is_valid_username = true

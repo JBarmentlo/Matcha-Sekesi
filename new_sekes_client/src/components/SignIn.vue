@@ -17,7 +17,7 @@
 					<label>Password</label>
 					<div class = "input-group">
 					<input
-						type="password"
+						:type="visible ? 'text' : 'password'"
 						v-model="password"
 						class="form-control form-control-lg"
 					/>
@@ -56,7 +56,8 @@ export default {
 		return {
 			username: "",
 			password: "",
-			status: ""
+			status: "",
+			visible: false
 		};
 	},
 
@@ -94,6 +95,9 @@ export default {
 				throw(e)
 			}
 			
+		},
+		password_visibility() {
+			this.visible = !this.visible
 		},
 	},
 
