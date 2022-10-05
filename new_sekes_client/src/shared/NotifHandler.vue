@@ -108,14 +108,12 @@ beforeDestroy () {
 
 .nav-item {
   text-decoration: none;
-  color: white
 }
 
 .caret {
   max-height: 10px;
   margin-bottom: 3%;
 }
-
 
 
 .active_notif {

@@ -148,5 +148,6 @@ export default {
 	-moz-osx-font-smoothing: grayscale;
 	color: var(--textColor);
 	background-color: #fbd2fc;
+	letter-spacing: 2px;
 }
 </style>

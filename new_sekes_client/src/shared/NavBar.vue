@@ -17,11 +17,9 @@
             <router-link to="/editprofile" class="nav-link">Profile <b-icon-person-circle/></router-link>
         </li>
         <li class="nav-item">
-            <router-link to="/cat" class="nav-link">Chat <b-icon-chat-text-fill/></router-link>
+            <router-link to="/cat" class="nav-link">Chat <b-icon-chat-text-fill /></router-link>
         </li>
-        <!-- <li class="nav-item"> -->
-            <NotifHandler/>
-        <!-- </li> -->
+        <NotifHandler />
 		<li class="nav-item">
             <router-link @click="logout"  to="/" class="nav-link">Exit <b-icon-arrow-bar-right /></router-link>
         </li>
@@ -85,6 +83,7 @@ export default {
 .navbar-brand {
     font-family: 'Michroma', sans-serif;
 }
+
 
 .nav-item {
     margin: 0 0 0 30px;

@@ -1,6 +1,6 @@
 <template>
   <div>
-		<img :src="profile_pic" :alt="profile_pic">
+    <img :src="profile_pic" :alt="profile_pic">
 			<br/>
 			<input
 				hidden
@@ -8,8 +8,13 @@
 				type="file"
 				@change="UploadAndAddImage"
 			>
-			<button @click="chooseFiles()">Change Profile Pic</button>
-
+      <span class="hovertext" @click="chooseFiles()" data-hover="Change Profile Pic">
+      <b-iconstack class = "camera_container" font-scale="2">
+        <b-icon stacked icon="circle" class="circle"></b-icon>
+        <b-icon stacked icon="camera-fill" scale="0.67" class="camera"></b-icon>
+      </b-iconstack>
+      </span>
+			<!-- <button class="button_profile" @click="chooseFiles()">Change Profile Pic</button> -->
   </div>
 </template>
 
@@ -72,13 +77,54 @@ export default {
 </script>
 
 <style scoped>
+@import url("../assets/profile.css");
 
 img {
-    width: 90px;
-    height: 90px;
+    width: 150px;
+    height: 150px;
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
     border-radius: 100px;
 }
+
+.camera_container {
+  position: absolute;
+  top: -50%;
+  left: 25px;
+}
+
+.camera_container > * {
+  color: rgb(53, 53, 53);
+}
+
+.hovertext {
+  position: relative;
+  border-bottom: 1px dotted black;
+  cursor: pointer;
+}
+
+.hovertext:before {
+  content: attr(data-hover);
+  visibility: hidden;
+  opacity: 0;
+  width: 200px;
+  background-color: rgb(67, 67, 71);
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+  padding: 2px 0;
+  transition: opacity 0.5s ease-in-out;
+
+  position: absolute;
+  z-index: 1;
+  left: 10px;
+  top: 110%;
+}
+
+.hovertext:hover:before {
+  opacity: 1;
+  visibility: visible;
+}
+
 
 </style>

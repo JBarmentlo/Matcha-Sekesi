@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
+
+button:active {
+	box-shadow: 0px 0px 0px 0px;
+	top: 5px;
+	left: 5px;
+	
+}
+
+button:hover{
+	background-color: #2f62c9;
+}
+
+@media (min-width: 768px) {
+button{
+    padding: 0.25em 0.75em;
+  }
+}
+
+button {
+	margin: 5px;
+	font-size: 15px;
+    letter-spacing: 1.5px;
+	text-decoration: none;
+	text-transform: uppercase;
+	color: white;
+	background-color: #2f62c9c2;
+	cursor: pointer;
+	position: relative;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+
+}
+
+.button_caroussel {
+	border-radius: 10px;
+	font-size: 12px;
+}
+
+.cancel_button {
+	color: white;
+	background-color: rgb(96, 98, 110);
+}
+
+.cancel_button:hover{
+	background-color: rgb(52, 53, 61);
+
+}
