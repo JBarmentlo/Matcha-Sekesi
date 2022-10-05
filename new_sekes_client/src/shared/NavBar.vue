@@ -19,7 +19,9 @@
         <li class="nav-item">
             <router-link to="/cat" class="nav-link">Chat <b-icon-chat-text-fill /></router-link>
         </li>
-        <NotifHandler />
+        <li class="nav-item notifhandler">
+            <NotifHandler />
+        </li>
 		<li class="nav-item">
             <router-link @click="logout"  to="/" class="nav-link">Exit <b-icon-arrow-bar-right /></router-link>
         </li>
@@ -92,6 +94,11 @@ export default {
 	text-transform: uppercase;
 	font-size: 15px;
 }
+
+.notifhandler {
+    margin: -5px -20px 0 20px;
+}
+
 
 
 

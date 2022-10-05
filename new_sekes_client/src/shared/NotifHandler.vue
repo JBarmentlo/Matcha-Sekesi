@@ -7,7 +7,7 @@
     @hide="setSeen"
     >
     <template #button-content>
-    <span class="nav-item">Notifs<b-icon-bell-fill/><b-icon-circle-fill v-show="unreadNotifs > 0" class = "active_notif"/><b-icon-caret-down-fill class="caret"/></span>
+    <span class = "notifs">Notifs<b-icon-bell-fill/><b-icon-circle-fill v-show="unreadNotifs > 0" class = "active_notif"/><b-icon-caret-down-fill class="caret"/></span>
     </template>
     <div v-for="notif in notifs" :key="notif.id">
       <b-dropdown-item  v-if="notif.seen == 1" variant="secondary" @click="deleteNoot(notif.id)"><p>
@@ -105,9 +105,8 @@ beforeDestroy () {
 
 <style scoped>
 
-
-.nav-item {
-  text-decoration: none;
+.notifs:hover {
+  color: white;
 }
 
 .caret {
