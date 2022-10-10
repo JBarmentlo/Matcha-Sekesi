@@ -451,7 +451,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			.replace('OFFSET_REPLACE'   , offset)
 			.replace('LIMIT_REPLACE'    , limit)
 
-	console.log("search str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
+	// console.log("search str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
 
 	// console.log("quyeriro: ", keri_string)
 	let user_query = await db.query(keri_string)

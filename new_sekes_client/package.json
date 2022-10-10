@@ -26,7 +26,8 @@
     "vue-cookies": "^1.8.1",
     "vue-cookies-reactive": "^2.1.1",
     "vue-notification": "^1.3.20",
-    "vue-router": "^3.5.1"
+    "vue-router": "^3.5.1",
+    "vue-sweetalert2": "^5.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
