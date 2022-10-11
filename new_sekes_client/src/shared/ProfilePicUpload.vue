@@ -89,7 +89,7 @@ img {
 
 .camera_container {
   position: absolute;
-  top: -50%;
+  top: -25px;
   left: 25px;
 }
 

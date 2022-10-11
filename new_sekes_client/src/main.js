@@ -16,6 +16,10 @@ Vue.config.productionTip = false
 import Notifications from 'vue-notification'
 Vue.use(Notifications)
 
+import bFormSlider from 'vue-bootstrap-slider';
+Vue.use(bFormSlider)
+
+
 new Vue({
   router,
   render: h => h(App)

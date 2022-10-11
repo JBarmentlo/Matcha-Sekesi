@@ -1,20 +1,32 @@
 <template>
-	<div>
-		<form class="row" @submit.prevent>
-			<label for="min_age">Min Age</label>
-			<input id="min_age" v-model="min_age" type="number"/>
-			
-			<label for="max_age">Max Age</label>
-			<input id="max_age" v-model="max_age" type="number"/>
-
-			<label for="min_rating">Min Score</label>
-			<input id="min_rating" v-model="min_rating" type="number"/>
-
-			<label for="zipcode">Zipcode</label>
-			<input id="zipcode" v-model="zipcode" type="text"/>
-
-			<label>Required Tags</label>
-			<TagInputHandler v-model="required_tags"/>
+	<div class="container">
+		<form @submit.prevent>
+			<div class="row">
+			<div class="col filter_item">
+				<label for="min_age">Min Age: {{ min_age }}</label>
+				<div class = "row">
+					<input class="slider" id="min_age" v-model="min_age" type="range" min=18 :max="max_age">
+				</div>
+			</div>
+			<div class="col filter_item">
+				<label for="max_age">Max Age: {{ max_age }}</label>
+				<div class = "row">
+					<input class="slider" id="max_age" v-model="max_age" type="range" :min="min_age" max=69>
+				</div>
+			</div>
+			<div class="col filter_item">
+				<label for="min_rating">Min Score:</label>
+				<input id="min_rating" class = "simple_input" v-model="min_rating" type="number"/>
+			</div>
+			<div class="col filter_item">
+				<label for="zipcode">Zipcode:</label>
+				<input id="zipcode" class = "simple_input" v-model="zipcode" type="text"/>
+			</div>
+			<div class="col filter_item">
+				<label>Required Tags:</label>
+				<TagInputHandler v-model="required_tags"/>
+			</div>
+			</div>
 			<fieldset>
 				<legend>Order By</legend>
 				<div>
@@ -53,13 +65,16 @@
 import { searchUsers } from "../services/search";
 import ProfileList from '../shared/ProfileList.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
+import 'bootstrap-slider/dist/css/bootstrap-slider.css'
+
+
 
 export default {
 	components: { ProfileList, TagInputHandler },
 	data() {
 		return {
 			users        : [],
-			min_age      : 0,
+			min_age      : 18,
 			max_age      : 50,
 			required_tags: [],
 			min_rating   : 0,
@@ -79,6 +94,14 @@ export default {
 			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc)
 			this.users = rese.data.data
 			this.current_page = 1
+		},
+
+			slideStart () {
+		console.log('slideStarted')
+		},
+		slideStop (value) {
+			this.min_age = value
+			console.log(value)
 		},
 
 		addScoreBlend(user) {
@@ -104,5 +127,21 @@ export default {
 
 <style scoped>
 
+.simple_input {
+	font-family: 'Roboto', sans-serif;
+	color: rgba(0, 0, 0, 0.600);
+	border-radius: 0.2rem;
+	border: 0.05rem solid rgba(0, 0, 0, 0.205);
+	padding: 4%;
+	background-color: rgb(255, 255, 255);
+	width: 70%;
+	display: block;
+	transition: all 0.3s;
+}
+
+.slider {
+	padding: 5%;
+	width : 70%;
+}
 
 </style>
