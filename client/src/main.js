@@ -24,6 +24,24 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.use(VueSweetalert2);
 
+import { extend } from 'vee-validate';
+import { required, email, regex } from 'vee-validate/dist/rules';
+
+extend('required', {
+  ...required,
+  message: 'This field is required'
+});
+
+extend('email', {
+  ...email,
+  message: 'Please enter a valid email'
+});
+
+extend('passewordo', {
+  ...regex,
+  message: 'Please enter a valid password'
+});
+
 Vue.config.productionTip = false
 
 new Vue({
