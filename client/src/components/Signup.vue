@@ -1,9 +1,9 @@
 <template>
-	<div class="center">
-		<div class="inner-block">
+	<div class="center pt-5">
 			<!-- <div class="vue-template"> -->
 				<form @submit="signupFormSubmit">
-					<h3>Sign Up</h3>
+					<h3>SIGN UP</h3>
+					<div v-if="status_not_200" class="login_error">There was an error handling your request</div>
 					<div class="form-group">
 						<label>Username</label>
 						<input
@@ -14,6 +14,8 @@
 							@keyup="validate_user_name"
 						/>
 						<div v-if="!is_valid_username" class="login_error">Error: 5 characters minimum are required</div>
+						<div v-if="username_taken" class="login_error">Username not available</div>
+
 					</div>
 
 					<div class="form-group">
@@ -43,116 +45,120 @@
 							@keyup="validate_email"
 						/>
 						<div v-if="!is_valid_email" class="login_error">Error: An email should contain a "@" and "."</div>
+						<div v-if="mail_already_used" class="login_error">Mail already in use</div>
 					</div>
 
 					<div class="form-group pb-2">
 						<label>Password</label>
+						<div class = "input-group">
 						<input
 							autocomplete="current-password"
-							type="password"
+							:type="visible ? 'text' : 'password'"
 							v-model="password"
 							class="form-control form-control-lg"
 							@keyup="validate_password"
 						/>
+						<span class="input-group-btn form-control">
+							<button class="btn" v-on:click="password_visibility" type="button">
+							<b-icon-eye-fill v-if="!visible"></b-icon-eye-fill>
+							<b-icon-eye-slash-fill v-else></b-icon-eye-slash-fill>
+							</button>
+						</span>
 						<div v-if="!is_valid_password" class="login_error">Error: 5 characters minimum are required</div>
+						</div>
 					</div>
 
-					<button type="submit" class="btn btn-dark btn-lg btn-block">
+					<button type="submit" class = "button_submit">
 						Sign Up
 					</button>
 
 					<p class="forgot-password text-right">
 						Already registered
-						<router-link :to="{ name: 'login' }">sign in?</router-link>
+						<router-link :to="{ name: 'Sign In' }">sign in?</router-link>
 					</p>
 				</form>
 			<!-- </div> -->
-		</div>
 	</div>
 </template>
 <script>
-import inputValidate from "../services/formValidate";
-import { signup } from "../services/auth.script";
+// import inputValidate from "../services/formValidate";
+import { signup } from "../services/auth";
 import router from "@/router";
 
 export default {
 	data() {
 		return {
-			username: "jhonny",
-			mail: "joepbarmentlo@gmail.com",
-			password: "qwertasd",
-			firstName: "useless",
-			lastName: "useless",
-			ip: null,
+			username         : "jhonny",
+			mail             : "joepbarmentlo@gmail.com",
+			password         : "qwertasd",
+			firstName        : "useless",
+			lastName         : "useless",
+			zipCode          : null,
+			city             : null,
+			latitude         : null,
+			longitude        : null,
+			ip               : null,
 			is_valid_username: true,
-			is_valid_email: true,
+			is_valid_email   : true,
 			is_valid_password: true,
+
+			mail_already_used: false,
+			username_taken   : false,
+			status_not_200   : false,
+
+			visible: false
 		};
 	},
 	methods: {
+		password_visibility() {
+			this.visible = !this.visible
+		},
 		validate_user_name(e) {
-			this.is_valid_username = inputValidate.validateUserName(this.username)
+			console.log(e)
+			this.is_valid_username = true
 		},
 		validate_email(e) {
-			this.is_valid_email = inputValidate.validateMail(this.mail)
+			console.log(e)
+			this.is_valid_email = true
 		},
 		validate_password(e) {
-			this.is_valid_password = inputValidate.validatePassword(this.password)
+			console.log(e)
+			this.is_valid_password = true
 		},
-		signupFormSubmit(e) {
-			console.log("lilolilo")
-			console.log("LOCALISATION:", this.locate())
-			// console.log("lol")
+		async signupFormSubmit(e) {
+			// console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
 			if (this.is_valid_username == false || this.is_valid_email == false || this.is_valid_password == false) {
 				return false;
 			}
-			signup({
-				username: this.username,
+			let signup_res = await signup({
+				username : this.username,
 				firstName: this.firstName,
-				lastName: this.lastName,
-				mail: this.mail,
-				password: this.password,
+				lastName : this.lastName,
+				mail     : this.mail,
+				password : this.password,
 			})
-			.then((data) => {
-				if (data.data.message == "User was registered successfully!") {
-					console.log("signed up");
-					router.push("/login");
-				} else console.log("wtf signup");
-				console.log(data.data.message);
-			})
-			.catch((err) => {
-				console.log("error at signup %o", err.response.data);
-				alert(err.response.data.message);
-			});
-		},
-
-		locate() {
-			return {
-				geoplugin_city: geoplugin_city(),
-
-				geoplugin_region: geoplugin_region(),
-
-				geoplugin_areaCode: geoplugin_areaCode(),
-
-				geoplugin_dmaCode: geoplugin_dmaCode(),
-
-				geoplugin_countryCode: geoplugin_countryCode(),
-
-				geoplugin_countryName: geoplugin_countryName(),
-
-				geoplugin_continentCode: geoplugin_continentCode(),
-
-				geoplugin_latitude: geoplugin_latitude(),
-
-				geoplugin_longitude: geoplugin_longitude(),
-
-				geoplugin_currencyCode: geoplugin_currencyCode(),
-
-				geoplugin_currencySymbol: geoplugin_currencySymbol(),
-
-				geoplugin_currencyConverter: geoplugin_currencyConverter(),
-			};
+			// console.log("SIGnup RES: ", signup_res)
+			this.username_taken    = false
+			this.mail_already_used = false
+			if (signup_res.status != 200) {
+				this.status_not_200 = true
+				return
+			}
+			if (signup_res.data.code == 'ER_DUP_ENTRY') {
+				console.log("err dup entry on signup")
+				console.log(signup_res.data.message)
+				if (signup_res.data.message.includes("key 'USERS.USERS_mail_uindex'")) {
+					this.mail_already_used = true
+				}
+				if (signup_res.data.message.includes("key 'USERS.USERS_username_uindex'")) {
+					this.username_taken = true
+				}
+			}
+			if (signup_res.data.code == "SUCCESS") {
+				console.log("sign up success");
+				router.push("/signin");
+			}
 		},
 	},
 	created() {
@@ -162,19 +168,14 @@ export default {
 				this.ip = ip;
 				console.log(this.ip);
 			});
-
-		var scripts = ["http://www.geoplugin.net/javascript.gp"];
-		scripts.forEach((script) => {
-			let tag = document.createElement("script");
-			tag.setAttribute("src", script);
-			document.head.appendChild(tag);
-		});
 	},
 };
 </script>
 
 
 <style scoped>
+@import url("../assets/login.css");
+
 .login_error {
 	color : red;
 	font-size: 80%;
