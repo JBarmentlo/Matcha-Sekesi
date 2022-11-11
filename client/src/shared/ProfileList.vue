@@ -6,13 +6,13 @@
 	<div class="card b-1 hover-shadow mb-20" v-for="(user, index) in users.slice((current_page - 1) * user_per_page, current_page * user_per_page)" :key="user.username">
 		<div class="media card-body">
 			<div class="media-left pr-12">
-				<img class="avatar-xl round-radius" :src=profile_pic_url(user.profilePic) alt="...">
+				<img class="avatar round-radius" :src=profile_pic_url(user.image0) alt="...">
 			</div>
 			<div class="media-body">
 				<div class="mb-2">
 					<router-link :to="'/profile/' + user.username" class="fs-20 pr-16">{{user.username}}</router-link>
 				</div>
-				<small class="fs-16 ls-1">{{user.bio}}</small>
+				<p class="bio fs-16 ls-1">{{user.bio}}</p>
 			</div>
 			<div class="media-right text-right d-none d-md-block">
 				<p class="fs-14 text-fade mb-12"><i class="fa fa-map-marker pr-1"></i>{{user.city}}<br/> {{user.zipCode}}</p>
@@ -46,7 +46,7 @@
 	<br>
 </div>
 </div>
-	
+
 </template>
 
 
@@ -92,7 +92,7 @@ export default {
 
 		profile_pic_url(url) {
 			if (url != null) {
-					return url
+				return url
 			}
 			return require("../assets/empty_profile.png")
 		},
@@ -147,7 +147,7 @@ export default {
 
 <style scoped>
 body{
-	background:#FCFCFC;    
+	background:#FCFCFC;
 }
 .pr-12 {
 	padding-right: 12px !important;
@@ -210,25 +210,13 @@ body{
 	border-radius: 0 !important;
 }
 
-.avatar-xl {
-	width: 64px;
-	height: 64px;
-	line-height: 64px;
-	font-size: 1.25rem;
+.avatar {
+	border-radius: 50%;
+	height       : 160px;
+	width        : 220px;
+	object-fit   : cover;
 }
 
-.avatar {
-	position: relative;
-	display: inline-block;
-	width: 36px;
-	height: 36px;
-	line-height: 36px;
-	text-align: center;
-	border-radius: 100%;
-	background-color: #f5f6f7;
-	color: #8b95a5;
-	text-transform: uppercase;
-}
 
 img {
 	max-width: 100%;
@@ -263,11 +251,12 @@ img {
 	font-size: 16px !important;
 }
 
-.media-body>* {
+.media-body {
+	padding: 20px;
 	margin-bottom: 0;
 }
 
-small, time, .small {
+.bio, time {
 	font-family: Roboto,sans-serif;
 	font-weight: 400;
 	font-size: 11px;
