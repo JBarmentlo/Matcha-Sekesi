@@ -21,10 +21,10 @@
       <div class="fields">
         <!-- <label>Add Image</label> <br /> -->
         <input hidden id="fileUpload" type="file" @change="UploadAndAddImage" />
-        <button @click="chooseFiles()">Add Image</button>
+        <button class = "button_caroussel" @click="chooseFiles()"><b-icon-plus/>  Add Image</button>
       </div>
 
-      <button @click="emitDeleteCurrentSlide">Remove Image</button>
+      <button class= "button_caroussel" @click="emitDeleteCurrentSlide"><b-icon-trash/>  Remove Image</button>
     </div>
 	</div>
 </template>
@@ -114,3 +114,8 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+@import url("../assets/profile.css")
+
+</style>

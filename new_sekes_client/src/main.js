@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import './plugins/bootstrap-vue'
+
 import App from './App.vue'
 import router from './router'
 
@@ -14,6 +15,9 @@ Vue.use(BootstrapVueIcons)
 
 import Notifications from 'vue-notification'
 Vue.use(Notifications)
+
+import bFormSlider from 'vue-bootstrap-slider';
+Vue.use(bFormSlider)
 
 
 import VueSweetalert2 from 'vue-sweetalert2';

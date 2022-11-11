@@ -1,47 +1,35 @@
 <template>
-    <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row static-top">
-        <div class="container">
-			<!-- <router-link class = "navbar-brand float-left" to="/">Sekesi.io</router-link> -->
-			<!-- Image and text -->
-			<nav class="navbar navbar-light bg-light">
-			<a class="navbar-brand" href="#">
-				<img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-				Sekesi.io
-			</a>
-			</nav>
-            <div v-if="!logged_in">
-                <ul class="nav navbar-nav flex-row float-right">
-                    <li class="nav-item px-1">
-                        <router-link class="btn btn-outline-primary" to="/signin">Sign in</router-link>
-                    </li>
-                    <li class="nav-item px-1">
-                        <router-link class="btn btn-outline-primary" to="/signup">Sign up</router-link>
-                    </li>
-                </ul>
-            </div>
-            <div v-if="logged_in">
-                <ul class="nav navbar-nav flex-row float-right">
-					<li class="nav-item px-1">
-                        <router-link class = "pr-3" to="/getallusers"><img src = "../assets/search.png" height = "32"/></router-link>
-                    </li>
-                    <li class="nav-item px-1">
-                        <router-link class = "pr-3" to="/editprofile"><img src = "../assets/profile.png" height = "32"/></router-link>
-                    </li>
-					<li class="nav-item px-1">
-                        <router-link class = "pr-3" to="/cat"><img src = "../assets/message.png" height = "32"/></router-link>
-                    </li>
-					<li class="nav-item px-1">
-                        <NotifHandler/>
-                    </li>
-                    <li class="nav-item px-1">
-                    <li @click="logout" class="nav-item px-1">
-                        <img  src = "../assets/logout.png" height = "32"/>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav> 
+	<nav class="navbar navbar-expand-sm navbar-dark">
+    <routerLink to="/" class="navbar-brand">SEKESI</routerLink>
+    <ul class="navbar-nav ms-auto" v-if="!logged_in">
+        <li class="nav-item">
+			<router-link to="/signin" class="nav-link">Sign in</router-link>
+        </li>
+        <li class="nav-item">
+            <router-link to="/signup" class="nav-link" >Sign up</router-link>
+        </li>
+    </ul>
+	<ul class="navbar-nav ms-auto" v-if="logged_in">
+        <li class="nav-item">
+            <router-link to="/getallusers" class="nav-link">Search <b-icon-search/></router-link>
+        </li>
+        <li class="nav-item">
+            <router-link to="/editprofile" class="nav-link">Profile <b-icon-person-circle/></router-link>
+        </li>
+        <li class="nav-item">
+            <router-link to="/cat" class="nav-link">Chat <b-icon-chat-text-fill /></router-link>
+        </li>
+        <li class="nav-item notifhandler">
+            <NotifHandler />
+        </li>
+		<li class="nav-item">
+            <router-link @click="logout"  to="/" class="nav-link">Exit <b-icon-arrow-bar-right /></router-link>
+        </li>
+    </ul>
+</nav>
+
 </template>
+
 
 <script>
 import router from '@/router'
@@ -78,6 +66,40 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
+
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+
+.navbar {
+    font-size: 120%;
+    padding: 10px;
+    /* background-color: #f9cdc3; */
+	background-image: linear-gradient(#f6c0ba, #facefb)
+}
+
+.navbar * {
+    color : #2f62c9c2
+}
+
+
+.navbar-brand {
+    font-family: 'Michroma', sans-serif;
+}
+
+
+.nav-item {
+    margin: 0 0 0 30px;
+    letter-spacing: 2.5px;
+	font-family: 'Roboto', sans-serif;
+	text-transform: uppercase;
+	font-size: 15px;
+}
+
+.notifhandler {
+    margin: -5px -20px 0 20px;
+}
+
+
+
 
 </style>

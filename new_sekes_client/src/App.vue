@@ -129,4 +129,22 @@ export default {
 	text-align: center;
 	color: #2c3e50;
 } */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
+
+
+:root {
+  --font: Roboto, sans-serif;
+  --textColor: #2f62c9c2;
+  /* --linkActiveColor: #41b783; */
+	background-color: #fbd2fc
+}
+
+#app {
+	font-family: var(--font);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: var(--textColor);
+	background-color: #fbd2fc;
+	letter-spacing: 2px;
+}
 </style>

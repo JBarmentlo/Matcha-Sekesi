@@ -2,7 +2,7 @@
 	<div class="center pt-5">
 		<div v-if="status != 'SUCCESS'">
 			<form @submit="submitLoginForm">
-				<h3>Sign In</h3>
+				<h3>SIGN IN</h3>
 				<div class="form-group">
 					<label>Username</label>
 					<input
@@ -15,14 +15,22 @@
 				</div>
 				<div class="form-group pb-3">
 					<label>Password</label>
+					<div class = "input-group">
 					<input
-						type="password"
+						:type="visible ? 'text' : 'password'"
 						v-model="password"
 						class="form-control form-control-lg"
 					/>
+					<span class="input-group-btn form-control">
+						<button class="btn" v-on:click="password_visibility" type="button">
+						<b-icon-eye-fill v-if="!visible"></b-icon-eye-fill>
+						<b-icon-eye-slash-fill v-else></b-icon-eye-slash-fill>
+						</button>
+					</span>
+					</div>
 					<div v-if="wrongPass" class="login_error">Wrong Password</div>
 				</div>
-				<button type="submit" class="btn btn-dark btn-lg btn-block">
+				<button type="submit" class = "button_submit">
 					Sign In
 				</button>
 				<p class="forgot-password text-right mt-2 mb-4">
@@ -48,7 +56,8 @@ export default {
 		return {
 			username: "",
 			password: "",
-			status: ""
+			status: "",
+			visible: false
 		};
 	},
 
@@ -87,6 +96,9 @@ export default {
 			}
 			
 		},
+		password_visibility() {
+			this.visible = !this.visible
+		},
 	},
 
 	// async mounted() {
@@ -121,24 +133,10 @@ export default {
 </script>
 
 <style scoped>
+@import url("../assets/login.css");
 
-.center {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-	width: 100%;
-	/* border: 3px solid green; */
+.password > input {
+	width: 80%;
 }
-.forgot-password,
-.forgot-password a {
-	text-align: right;
-	font-size: 13px;
-	padding-top: 10px;
-	color: #7a7a7a;
-	margin: 0;
-}
-.forgot-password a {
-	color: #2554FF;
-}
+	
 </style>

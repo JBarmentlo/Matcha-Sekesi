@@ -14,13 +14,13 @@ export TEST='false'
 ```
 ### Mysql Setup
 
-Create the databases (sekesidb and sekesitest)   
-Define the tables for the databases.   
+Create the databases (sekesidb and sekesitest)
+Define the tables for the databases.
 Create the Mysql user Sammy.
 
 ```bash
 cd SQL_Server/sql_scripts
-bash here_create_user_table.hs
+bash here_create_user_table.sh
 ```
 
 ### NPM setup

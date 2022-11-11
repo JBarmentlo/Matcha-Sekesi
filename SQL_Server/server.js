@@ -77,7 +77,7 @@ if (process.env.ENVIRONMENT == 'TEST') {
 
 notifRouter = require('./src/routes/notif.routes')
 
-console.log("Setting up test routes")
+
 app.use('/api/notif', notifRouter, function(req, res, next){
   res.header(
     "Access-Control-Allow-Headers",
@@ -91,7 +91,7 @@ app.use('/api/notif', notifRouter, function(req, res, next){
 
 chatRouter = require('./src/routes/chat.routes')
 
-console.log("Setting up test routes")
+
 app.use('/api/chat', chatRouter, function(req, res, next){
   res.header(
     "Access-Control-Allow-Headers",

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-    <div class="row gutters">
+    <div class="row">
         <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
             <div class="card h-100">
                 <div class="card-body d-flex flex-column">
@@ -41,9 +41,9 @@
     <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
     <div class="card h-100">
         <div class="card-body">
-            <div class="row gutters pt-2">
+            <div class="row pt-2">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <h6 class="mb-2 text-primary">Account Details</h6>
+                    <h6 class="mb-2 section">Account Details</h6>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
@@ -82,6 +82,7 @@
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
                     <label class="labels">ZIP Code</label>
                     <input
                         type="text"
@@ -91,22 +92,30 @@
                         value=""
                     />
                 </div>
+                </div>
             </div>
-            <div class="row gutters pt-5">
+            <div class="row pt-5">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <h6 class="mt-3 mb-2 text-primary">Personal details</h6>
+                    <h6 class="mt-3 mb-2 section">Personal details</h6>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
                     <label class="labels">Interests</label>
                     <TagInputHandler v-model="user.tag_list" ref="tagHandler"/>
+                </div>
                 </div>
                 <div class="col">
                     <label class="labels">Sekesual Orientation</label>
                     <div>
                         <b-dropdown
+                            variant="link"
+                            toggle-class="text-decoration-none"
                             class="dropdown-1"
                             v-bind:text="user.sekesualOri"
                         >
+                        <template #button-content>
+                            <span class="nav-item">{{user.sekesualOri}}</span>
+                        </template>
                             <b-dropdown-item @click="setSekesual('Hetero')">
                                 Hetero
                             </b-dropdown-item>
@@ -122,7 +131,15 @@
                 <div class="col">
                     <label class="labels"> Gender </label>
                     <div>
-                        <b-dropdown class="dropdown-2" v-bind:text="user.gender">
+                        <b-dropdown
+                            variant="link"
+                            toggle-class="text-decoration-none"
+                            class="dropdown-2"
+                            v-bind:text="user.gender"
+                        >
+                        <template #button-content>
+                            <span class="nav-item">{{user.gender}}</span>
+                        </template>
                             <b-dropdown-item @click="setGender('Male')">
                                 Male
                             </b-dropdown-item>
@@ -136,6 +153,7 @@
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+                <div class="form-group">
                     <label class="labels">Bio</label>
                     <textarea
                         type="text"
@@ -147,16 +165,19 @@
                         rows="6"
                     />
                 </div>
+                </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+                <div class="form-group">
                     <label class="labels">Date of Birth</label>
                     <b-datepicker v-bind:value="user.DOB" @input="DOBSelected"/>
                 </div>
             </div>
-            <div class="row gutters">
+                </div>
+            <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="text-right">
-                        <button type="button" id="submit" name="submit" class="btn btn-secondary btn-rounded m-2">Cancel</button>
-                        <button type="button" id="submit" name="submit" class="btn btn-primary btn-rounded m-2" @click="updateProfile">Update</button>
+                        <button class = "update_button" type="button" id="submit" name="submit"  @click="updateProfile"><b-icon-check-square/>  Update</button>
+                        <button class = "cancel_button" type="button" id="submit" name="submit" ><b-icon-x-circle/>  Cancel</button>
                     </div>
                 </div>
             </div>
@@ -272,11 +293,45 @@ export default {
 
 <style scoped>
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0 4px;
+@import url("../assets/profile.css");
+
+.container {
+    left: 50%;
+    margin-top: 10%;
 }
+
+.account-settings * {
+    text-align: center;
+    margin-top: 5%;
+}
+
+h6.user-email {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #9fa8b9;
+}
+
+.popularity {
+    color: rgb(56, 56, 56);
+}
+
+.section {
+	text-transform: uppercase;
+}
+
+.dropdown-1, .dropdown-2{
+    position: static;
+    border : 0.5px solid;
+    background-color: white;
+}
+
+.nav-item {
+    margin: 0;
+    color: inherit;
+    color : #2f62c9c2;
+}
+
 
 /* Create four equal columns that sits next to each other */
 .column {
@@ -327,44 +382,16 @@ input[type = "file"] {
   }
 }
 
-.popularity {
-    /* background-color:rgba(11, 244, 189, 0.568); */
-    color: rgb(56, 56, 56);
-}
 
-body {
-    margin: 0;
-    padding-top: 40px;
-    color: #2e323c;
-    background: #f5f6fa;
-    position: relative;
-    height: 100%;
-}
-.account-settings .user-profile {
-    margin: 0 0 1rem 0;
-    padding-bottom: 1rem;
-    text-align: center;
-}
-.account-settings .user-profile .user-avatar {
-    margin: 0 0 1rem 0;
-}
 
-.account-settings .user-profile h5.user-name {
-    margin: 0 0 0.5rem 0;
-}
-.account-settings .user-profile h6.user-email {
-    margin: 0;
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #9fa8b9;
-}
+
+
 .account-settings .about {
     margin: 2rem 0 0 0;
     text-align: center;
 }
 .account-settings .about h5 {
     margin: 0 0 15px 0;
-    color: #007ae1;
 }
 .account-settings .about p {
     font-size: 0.825rem;
@@ -380,7 +407,7 @@ body {
 }
 
 .card {
-    background: #ffffff;
+    background: #ffffffcb;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -388,9 +415,7 @@ body {
     margin-bottom: 1rem;
 }
 
-.container {
-    margin-top: 5%;
-}
+
 
 
 </style>
