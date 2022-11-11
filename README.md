@@ -6,6 +6,12 @@ A basic NEVM crud
 - node 16.13.2
 - mysql 8
 
+```
+export MATCHA_DB='sekesidb'
+export MATCHA_TEST_DB='sekesitest'
+export TEST='false'
+
+```
 ### Mysql Setup
 
 Create the databases (sekesidb and sekesitest)   
