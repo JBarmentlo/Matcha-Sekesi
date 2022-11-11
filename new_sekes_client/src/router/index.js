@@ -48,11 +48,13 @@ const routes = [
   {
     path: '/editprofile',
     name: 'Edit Profile',
+    meta: {requiresAuth: true},
     component: ProfileEdit
   },
   {
     path: '/getallusers',
     name: 'See Users',
+    meta: {requiresAuth: true},
     component: SearchUsers
   },
   {
@@ -63,18 +65,34 @@ const routes = [
   {
     path: '/cat',
     name: 'pussy',
+    meta: {requiresAuth: true},
     component: ChatEx
   },
   {
     path: '/profile/:userName',
     name: 'profile',
     props: true,
+    meta: {requiresAuth: true},
     component: () => import('../components/OtherProfile.vue')
   },
 ]
 
+
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if (Vue.$cookies.isKey('user') && Vue.$cookies.isKey('sekes_tokens')) {
+      next()
+      return
+    }
+    console.log("GO SINGING")
+    next('/signin')
+  } else {
+    next()
+  }
 })
 
 export default router

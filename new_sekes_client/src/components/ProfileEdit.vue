@@ -29,6 +29,12 @@
                         </div>
                     </div>
                     <ProfileImageCarousel :images="user_images" @AddImage="AddImage" @DeleteImage="RemoveImage"/>
+                    <div v-for="liker in user.like_list" :key="liker">
+                        <li><a :href="'?#/profile/' + liker">{{liker}}</a> liked you</li>
+                    </div>
+                    <div v-for="consulter in user.consult_list" :key="consulter">
+                        <li><a :href="'?#/profile/' + consulter">{{consulter}}</a> consulted your profile</li>
+                    </div>
                 </div>
             </div>
         </div>

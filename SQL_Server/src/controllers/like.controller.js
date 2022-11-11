@@ -3,7 +3,7 @@ const NotifController = require('./notif.controller')
 
 
 exports.like_user = async (req, res) => {
-	console.log("liking: ", req.body.liked)
+	// console.log("liking: ", req.body.liked)
 	try {
 		let like_query_result = await db.query(
 			'INSERT INTO LIKES \
@@ -11,7 +11,7 @@ exports.like_user = async (req, res) => {
 			VALUES (?, ?)',
 			[req.username, req.body.liked]
 			)
-		console.log(like_query_result)
+		// console.log(like_query_result)
 		await NotifController.create_notif("LIKE", req.username, req.body.liked)
 		return res.status(200).send({message: 'Succesfully liked user', code: "SUCCESS"})
 	}

@@ -105,6 +105,10 @@ export default {
 		},
 
 		like(index, username) {
+			if (this.$cookies.get('user').profilePic == null) {
+				this.$swal('Please complete your profile with a profile picture to be able to like users.')
+				return
+			}
 			likeUser(this.$cookies.get('sekes_tokens'), username)
 			let new_users = this.users
 			new_users.splice(index, 1, {...this.users[index], did_i_like_him: 1})

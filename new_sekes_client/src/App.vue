@@ -92,14 +92,11 @@ export default {
 				if (user.data.code == "SUCCESS") {
 					this.$cookies.set("user", {...user.data.data})
 					this.setLoggedIn(true);
-					// if (this.$route.path != "/get") {
-					// 	this.$router.push('/get')
-					// }
 				}
 				else {
 					this.$cookies.remove('sekes_tokens')
 					this.$cookies.remove('user')
-					this.$router.push('/signin')
+					// this.$router.push('/signin')
 				}
 			}
 			catch (e) {
@@ -109,7 +106,7 @@ export default {
 		}
 		else {
 			console.log("not cookie signed in")
-			this.$router.push('/signin')
+			// this.$router.push('/signin')
 		}
 	},
 

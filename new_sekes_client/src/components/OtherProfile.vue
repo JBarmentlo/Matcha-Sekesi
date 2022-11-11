@@ -28,6 +28,7 @@
                         <button v-else class="btn btn-xs fs-10 btn-bold btn-primary" @click="unlike(user.username)" data-toggle="modal" data-target="#modal-contact">Unlike</button>
                         <button v-if="user.did_i_block_him == 0" class="btn btn-xs fs-10 btn-bold btn-warning" @click="block(user.username)">Block</button>
                         <button v-else class="btn btn-xs fs-10 btn-bold btn-warning" @click="unblock(user.username)">Unblock</button>
+												<button class="btn btn-xs fs-10 btn-bold btn-warning" @click="report(user.username)">Report</button>
 					</div>
 				</div>
 			</div>
@@ -165,7 +166,7 @@
 
 <script>
 import { likeUser, unlikeUser } from "../services/user";
-import { blockUser, unblockUser } from "../services/user";
+import { blockUser, unblockUser, reportUser } from "../services/user";
 import { getUserProfile } from "../services/user";
 
 import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
@@ -233,7 +234,12 @@ export default {
 			unblockUser(this.$cookies.get('sekes_tokens'), username)
 			this.user.did_i_block_him = 0
 		},
-    },
+
+		report(username) {
+			reportUser(this.$cookies.get('sekes_tokens'), username)
+		},
+
+	},
 
 	async mounted() {
 		let res = await getUserProfile(
