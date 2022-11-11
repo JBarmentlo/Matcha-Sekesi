@@ -1,5 +1,5 @@
 <template>
-	<div class="center">
+	<div class="center pt-5">
 		<div class="inner-block">
 			<div class="vue-tempalte">
 				<form v-if="!sent" @submit="submitResetForm">
@@ -45,23 +45,24 @@
 
 
 <script>
-import inputValidate from "../services/formValidate";
-import { resetPassword } from "../services/auth.script";
-// import router from "@/router";
-// import Vue from "vue";
+// import inputValidate from "../services/formValidate";
+import { resetPassword } from "../services/auth";
 
 export default {
 	data() {
 		return {
-			password: "",
+			password   : "",
 			passwordRep: "",
-			success: false,
-			sent: false,
-			expired: false,
-		};
+			success    : false,
+			sent       : false,
+			expired    : false,
+			res_reset  : null,
+			error      : false,
+			hash       : this.$route.params.hash
+			};
 	},
 	methods: {
-		submitResetForm(e) {
+		async submitResetForm(e) {
 			e.preventDefault();
 			console.log("reset pass");
 			if (this.password != this.passwordRep) {
@@ -70,24 +71,22 @@ export default {
 				alert("Passwords do not match");
 				return;
 			}
-			if (!inputValidate.validatePassword(this.password)) {
-				alert("Password invalid");
-				return;
-			}
-			resetPassword(this.$route.params.hashId, this.password)
-				.then((data) => {
-					console.log(data.data);
-					console.log("Reset pass");
+			try {
+				this.res_reset = await resetPassword(this.hash, this.password)
+				this.sent = true;
+				if (this.res_reset.data.code == 'SUCCESS') {
 					this.success = true;
-					this.sent = true;
-				})
-				.catch((err) => {
-					console.log("error at reset %o", err.response.data);
-					this.success = false;
-					this.sent = true;
-					if (err.response.data.message == "Code expired")
-						this.expired = true;
-				});
+				}
+				else if (this.res_reset.data.code == 'TIMEOUT_RESET') {
+					this.expired = true
+				}
+				else {
+					this.error = true
+				}
+			}
+			catch (e) {
+				console.log("error in reset pass form: ", e)
+			}
 		},
 	},
 	created() {
@@ -105,6 +104,12 @@ export default {
 </script>
 
 <style scoped>
-
-
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  /* border: 3px solid green; */
+}
 </style>

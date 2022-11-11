@@ -1,20 +1,31 @@
-import '@babel/polyfill'
-import 'mutationobserver-shim'
 import Vue from 'vue'
 import './plugins/bootstrap-vue'
-import { BootstrapVueIcons } from 'bootstrap-vue'
+
 import App from './App.vue'
 import router from './router'
-// import 'bootstrap/dist/css/bootstrap.min.css'
-import '@/assets/css/main.css'
-import VoerroTagsInput from '@voerro/vue-tagsinput';
 
+import VueCookies from 'vue-cookies-reactive'
+Vue.use(VueCookies)
+
+import VoerroTagsInput from '@voerro/vue-tagsinput';
 Vue.component('tags-input', VoerroTagsInput);
 
-Vue.use(require('vue-cookies'))
+import { BootstrapVueIcons } from 'bootstrap-vue'
 Vue.use(BootstrapVueIcons)
 
+import Notifications from 'vue-notification'
+Vue.use(Notifications)
+
+import bFormSlider from 'vue-bootstrap-slider';
+Vue.use(bFormSlider)
+
+
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+Vue.use(VueSweetalert2);
+
 Vue.config.productionTip = false
+
 new Vue({
   router,
   render: h => h(App)

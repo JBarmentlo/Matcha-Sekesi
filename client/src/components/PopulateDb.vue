@@ -1,75 +1,96 @@
 <template>
 <div class="center">
-		<div class="inner-block">
-				<form @submit="createRandomUser">
-					<h3>PopulateDb</h3>
-					<div class="form-group">
-						<label>Number of users to generate</label>
-						<input
-							type="text"
-							v-model="n"
-							class="form-control form-control-lg"
-						/>
-					</div>
-					<button type="submit" class="btn btn-dark btn-lg btn-block">
-						Sign In
-					</button>
-					<p class="forgot-password text-right mt-2 mb-4">
-						<router-link to="/forgot-password">Forgot password ?</router-link>
-					</p>
-				</form>
+	<div class="inner-block">
+		<form @submit.prevent="generateUsers">
+			<h3>PopulateDb</h3>
+			<div class="form-group">
+				<label>Number of users to generate</label>
+				<input
+					type="text"
+					v-model="n_user"
+					class="form-control form-control-lg"
+				/>
 			</div>
-      </div>
+		<div class="pt-5">
+			<label>Tags to pick from</label>
+			<TagInputHandler ref="tagger" v-model="tags"/>
+		</div>
+		
+			<div class="form-group pt-5">
+				<label>Number of likes per user to generate</label>
+				<input
+					type="text"
+					v-model="n_likes_per_user"
+					class="form-control form-control-lg"
+				/>
+			</div>
+
+			<div class="form-group pt-5">
+				<label>Number of consults per user to generate</label>
+				<input
+					type="text"
+					v-model="n_consults_per_user"
+					class="form-control form-control-lg"
+				/>
+			</div>
+
+			<div class="form-group pt-5">
+				<label>Number of blocks per user to generate</label>
+				<input
+					type="text"
+					v-model="n_blocks_per_user"
+					class="form-control form-control-lg"
+				/>
+			</div>
+
+			<button type="submit" class="btn btn-dark btn-lg btn-block">
+				Genesiiis
+			</button>
+		</form>
+	</div>
+</div>
 </template>
 
 <script>
-import inputValidate from "../services/formValidate";
-import { login } from "../services/auth.script";
-import { createRandomUser } from "../services/user.script";
-
-import router from "@/router";
-import Vue from "vue";
+import { createRandomUsers, createRandomlikes, createRandomConsults, createRandomblocks } from "../services/test.js";
+import TagInputHandler from '../shared/TagInputHandler.vue'
+// import {} from '../services/user/g'
 
 export default {
+	components: {
+		TagInputHandler
+	},
+
 	data() {
 		return {
-			n: 1,
+			tags: ["Music","Sekes","Travel","Web Dev","Alcoolic","Laughing","Gourmet","Cofee","Sunshine"],
+			n_user: 1000,
+			n_likes_per_user: 5,
+			n_blocks_per_user: 2,
+			n_consults_per_user: 10,
 		};
 	},
 	methods: {
-		createRandomUser(e) {
-			// console.log(e)
-			e.preventDefault()
-			for (let index = 0; index < this.n; index++) {
-				try {
-					createRandomUser()
-				}
-				catch(err) {
-					console.log("create user error: %o" , err)
-				}
+		async generateUsers() {
+			console.log("generating users")
+			try {
+				let returns = await createRandomUsers(this.n_user, this.tags)
+				console.log("Users Created: ", returns)
+				let rets = await createRandomlikes(1, this.n_likes_per_user)
+				console.log("Likes created: ", rets)
+				await createRandomConsults(1, this.n_consults_per_user)
+				console.log("Consults created")
+				await createRandomblocks(1, this.n_blocks_per_user)
+				console.log("Blocks created: ", rets)
 			}
-
-		}
+			catch(err) {
+				console.log("create user error: %o" , err)
+			}
+		},
 	},
-	created() {
-		console.log("Created");
-		// fetch('https://randomuser.me/api/?nat=FR&results=3').then(res => {res.json().then(r => {console.log(r)})});
+	mounted() {
+		this.$refs.tagger.addExistingTags(["Music","Sekes","Travel","Web Dev","Alcoolic","Laughing","Gourmet","Cofee","Sunshine"])
 	},
 };
 </script>
 
-<style scoped>
-
-
-.forgot-password,
-.forgot-password a {
-  text-align: right;
-  font-size: 13px;
-  padding-top: 10px;
-  color: #7a7a7a;
-  margin: 0;
-}
-.forgot-password a {
-  color: #2554FF;
-}
-</style>

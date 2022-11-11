@@ -1,4 +1,4 @@
-# client
+# new_sekes_client
 
 ## Project setup
 ```

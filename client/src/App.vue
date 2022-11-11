@@ -1,167 +1,150 @@
 <template>
-  <div class="main-container">
-    <div>
-      <NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in"/>
-    </div>
-    <div class="App">
-      <router-view 
-        @setLoggedIn="setLoggedIn"
-      />
-    </div>
-    <SideBar />
-  </div>
+	<div id="app">
+		<NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in"/>
+		<notifications/>
+		<router-view @setLoggedIn="setLoggedIn"/>
+	</div>
 </template>
 
+
+
+
 <script>
-import NavBar from "./components/NavBar.vue"
-import { likesOfMe, likesByMe } from "./services/like.script"
-import { blocksOfMe, blocksByMe } from "./services/block.script"
-import { getMyUserDetails, getCometToken} from "./services/user.script"
-import { CometChat } from "@cometchat-pro/chat";
-import SideBar from "./components/SideBar";
+import { getMyUser } from "./services/user";
+import { getMyMessages } from './services/chat'
+
+import NavBar from "./shared/NavBar.vue"
 
 // process.env.USER_ID; // "239482"
 // process.env.USER_KEY; // "foobar"
 // process.env.NODE_ENV; // "development"
 
 export default {
-  name: 'App',
-  
-  components: {
-    NavBar,
-    SideBar
-  },
-
-  data() {
-    return {
-      logged_in       : false,
-      comet_logged_in : false,
-      comet_init      : false,
-      currentUser     : Object,
-      likesOfMe       : Array,
-      likesByMe       : [],
-      blocksByMe      : Array,
-    }
-  },
-
-  computed: {
-    likes: function() {
-      return(this.likesOfMe.concat(this.likesByMe))
-    }
-  },
-
-  methods: {
-    async CometInit() {
-      const appID = process.env.VUE_APP_COMET_ID;
-      const region = process.env.VUE_APP_COMET_REGION;
-      console.log("APID REGION: ", appID, region)
-      const appSetting = new CometChat.AppSettingsBuilder()
-        .subscribePresenceForAllUsers()
-        .setRegion(region)
-        .build();
-      await CometChat.init(appID, appSetting)
-    },
-
-    async cometToken() {
-      console.log("Getting Comet token")
-      var cometo = await getCometToken(this.$cookies.get('user'))
-      this.$cookies.set('comet', cometo.data)
-      console.log("Got Comet token")
-    },
-
-    async cometLogIn() {
-        // await CometChat.login(this.$cookies.get('comet').authToken)
-        await CometChat.login(this.$cookies.get('user').data.id, process.env.VUE_APP_COMET_REGION)
-        .then( user => {
-          console.log("COMET Login Successful:", { user });    
-        })
-        .catch(error => {
-          console.log("COMET  Login failed with exception:", { error });    
-        })
-    },
-
-    async CometFullShebang() {
-      try {
-        await this.CometInit()
-        this.comet_init = true
-        await this.cometToken()
-        await this.cometLogIn()
-        this.comet_logged_in = true
-      }
-      catch {
-        console.log("COMETO IS KAPUUUUT")
-      }
-    },
-
-    async setLoggedIn(val) {
-      this.logged_in = val;
-      console.log("logged in set to: %s", val)
-      this.CometFullShebang()
-    },
-
-    async updateLikes() {
-      this.likesByMe = await likesByMe(this.$cookies.get('user'))
-      this.likesOfMe = await likesOfMe(this.$cookies.get('user'))
-    },
-
-    async updateBlocks() {
-      this.blocksByMe = await blocksByMe(this.$cookies.get('user'))
-    },
-
-    async getCurrentUser() {
-      this.currentUser = await getMyUserDetails(this.$cookies.get('user'))
-    }
-
-  },
-
-  created() {
-    console.log("Created");
-    console.log(this.likesOfMe);
-    if (
-      this.$cookies.isKey("user") &&
-      this.$cookies.get("user").data.id != null
-    ) {
-      console.log("already logged in by cookie");
-      this.setLoggedIn(true)
-
-    }
-    if (this.$cookies.isKey('user'))
-    {
-      this.updateLikes()
-      this.updateBlocks()
-      this.getCurrentUser()
-    }
+	name: 'App',
+	
+	components: {
+		NavBar
 	},
+
+	data() {
+		return {
+			logged_in       : false,
+			currentUser     : Object,
+			messages        : null,
+			polling         : null
+		}
+	},
+
+	computed: {
+	},
+
+	methods: {
+		async setLoggedIn(val) {
+			this.logged_in = val;
+			console.log("logged in set to: %s", val)
+			if (this.logged_in == true) {
+				this.startPollingMsg(1000)
+			}
+			else if (this.logged_in == false && this.polling != null) {
+				clearInterval(this.polling)
+			}
+		},
+
+		startPollingMsg(freq) {
+			this.polling = setInterval(async () => {
+				if (this.messages == null) {
+					this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data
+				}
+				else {
+					let old_ids = this.messages.map(n => n.id)
+					this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data.reverse()
+					let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.$cookies.get('user').username))
+					this.notifyUser(new_notifs)
+				}
+				
+			}, freq)
+			console.log(freq)
+		},
+
+		notifyUser(notif_list) {
+			if (notif_list.length != 0) {
+				console.log("notify: ", notif_list)
+				for (const notif of notif_list) {
+					this.$notify({
+						text: notif.sender + " sent you a message!"
+					});
+				}
+			}
+		},
+	},
+
+	created() {
+		console.log("Created App");
+	},
+
+	async mounted() {
+		// console.log("cookie signin disabled")
+		console.log("Signin Created");
+		if (this.$cookies.isKey("sekes_tokens") && this.$cookies.get("sekes_tokens") != null) {
+			console.log("already logged in by cookie");
+			try {
+				let user = await getMyUser(this.$cookies.get('sekes_tokens'))
+				if (user.data.code == "SUCCESS") {
+					this.$cookies.set("user", {...user.data.data})
+					this.setLoggedIn(true);
+				}
+				else {
+					this.$cookies.remove('sekes_tokens')
+					this.$cookies.remove('user')
+					// this.$router.push('/signin')
+				}
+			}
+			catch (e) {
+				console.log("error in auto cookie signin", e)
+				throw (e)
+			}
+		}
+		else {
+			console.log("not cookie signed in")
+			// this.$router.push('/signin')
+		}
+	},
+
+	beforeDestroy () {
+		if (this.polling != null) {
+			clearInterval(this.polling)
+		}
+	}
 }
 </script>
 
 
-<style >
 
-/* .App,
-.main-container {
-  width: 100%;
-  height: 100%;
+
+<style>
+/* #app {
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	color: #2c3e50;
 } */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
 
-.center {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-	width: 100%;
-	/* border: 3px solid green; */
+
+:root {
+  --font: Roboto, sans-serif;
+  --textColor: #2f62c9c2;
+  /* --linkActiveColor: #41b783; */
+	background-color: #fbd2fc
 }
 
-.inner-block {
-	background: #ffffff;
-	box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-	padding: 40px 55px 45px 55px;
-	border-radius: 15px;
-	transition: all 0.3s;
-  max-width: 80%;
-  /* max-height: 100%; */
-  margin-top: 5%;
+#app {
+	font-family: var(--font);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: var(--textColor);
+	background-color: #fbd2fc;
+	letter-spacing: 2px;
 }
-
 </style>
