@@ -19,6 +19,7 @@ exports.signup = async (req, res) => {
     let city      = req.body.city;
     let latitude  = req.body.latitude;
     let longitude = req.body.longitude;
+    // console.log("IP: ", req.socket.remoteAddress )
 
     try {
         let query_result = await db.query(

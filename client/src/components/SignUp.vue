@@ -98,7 +98,7 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { signup } from "../services/auth";
 import router from "@/router";
-
+import { getLoc } from '../services/user.js'
 export default {
 	components: {
 		ValidationProvider,
@@ -130,8 +130,9 @@ export default {
 		password_visibility() {
 			this.visible = !this.visible
 		},
+
 		async signupFormSubmit(e) {
-			// console.log("LOCALISATION:", this.locate())
+			console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
 			if (this.$refs.formObserver.flags.invalid) {
 				return false;
@@ -165,15 +166,39 @@ export default {
 				router.push("/signin");
 			}
 		},
+
+		locate() {
+			return {
+
+			}
+		}
 	},
+
 	created() {
-		fetch("https://api.ipify.org?format=json")
-			.then((x) => x.json())
-			.then(({ ip }) => {
-				this.ip = ip;
-				console.log(this.ip);
-			});
+		// fetch('https://api.ipify.org?format=json')
+		// .then(x => x.json())
+		// .then(({ ip }) => {
+		// 	this.ip = ip;
+		// 	console.log(this.ip)
+		// });
+		// var scripts = ["http://www.geoplugin.net/javascript.gp"];
+		// scripts.forEach(script => {
+		// 	let tag = document.createElement("script");
+		// 	tag.setAttribute("src", script);
+		// 	document.head.appendChild(tag);
+		// });
+		// this.$getLocation({
+		// 	enableHighAccuracy: false, //defaults to false
+		// }
+		// )
+		// .then(coordinates => {
+		// 	console.log("LKJSDFLKJSDF",coordinates);
+		// 	// rqn7iVtcLmJS0ufpw3-AX2t3V_VxyDS4Ys6nb5gOwjQ
+		// });
 	},
+    mounted() {
+		console.log(getLoc())
+	}
 };
 </script>
 
