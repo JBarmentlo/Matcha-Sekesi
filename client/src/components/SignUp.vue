@@ -6,7 +6,7 @@
 					<div v-if="status_not_200" class="login_error">There was an error handling your request</div>
 					<div class="form-group">
 						<label>Username</label>
-						<ValidationProvider rules="required" v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha_num" v-slot="{ errors }">
 							<input
 								autocomplete="username"
 								type="username"
@@ -22,7 +22,7 @@
 
 					<div class="form-group">
 						<label>First Name</label>
-						<ValidationProvider rules="required" v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha|length:5" v-slot="{ errors }">
 							<input
 								type="text"
 								v-model="firstName"
@@ -34,7 +34,7 @@
 
 					<div class="form-group">
 						<label>Last Name</label>
-						<ValidationProvider rules="required" v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha|length:5" v-slot="{ errors }">
 							<input
 								type="text"
 								v-model="lastName"
