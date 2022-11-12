@@ -20,28 +20,28 @@
             <div class="buttons">
               <div class="row justify-content-md-center">
                 <div class="col-md-auto">
-                  <b-button v-if="user.did_i_like_him == 0" @click="like(user.username)" variant="outline-info" class="mb-2">
+                  <b-button size="sm" v-if="user.did_i_like_him == 0" @click="like(user.username)" variant="outline-info" class="mb-2">
                     <b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon> Like
                   </b-button>
-                  <b-button v-else @click="unlike(user.username)" id="unlike" variant="info" class="mb-2">
+                  <b-button size="sm" v-else @click="unlike(user.username)" id="unlike" variant="info" class="mb-2">
                     <b-icon icon="hand-thumbs-up-fill" aria-hidden="true"></b-icon> Liked
                     <b-tooltip target="unlike" placement="top" triggers="hover">Unlike</b-tooltip>
                   </b-button>
                 </div>
                 <div class="col-md-auto">
-                  <b-button v-if="user.did_i_block_him == 0" @click="block(user.username)" variant="outline-secondary" class="mb-2">
+                  <b-button size="sm" v-if="user.did_i_block_him == 0" @click="block(user.username)" variant="outline-secondary" class="mb-2">
                     <b-icon icon="x-circle" aria-hidden="true"></b-icon> Block
                   </b-button>
-                  <b-button v-else @click="unblock(user.username)" id="unblock" variant="danger" class="mb-2">
+                  <b-button size="sm" v-else @click="unblock(user.username)" id="unblock" variant="danger" class="mb-2">
                     <b-icon icon="x-circle-fill" aria-hidden="true"></b-icon> Blocked
                     <b-tooltip target="unblock" placement="top" triggers="hover">Unblock</b-tooltip>
                   </b-button>
                 </div>
                 <div class="col-md-auto">
-                  <b-button v-if="reported == false" variant="outline-warning" @click="report(user.username)">
+                  <b-button size="sm" v-if="reported == false" variant="outline-warning" @click="report(user.username)">
                     <b-icon icon="exclamation-triangle"></b-icon> Report
                   </b-button>
-                  <b-button v-else disabled>
+                  <b-button size="sm" v-else disabled>
                     <b-icon icon="exclamation-triangle-fill"></b-icon> Reported
                   </b-button>
                 </div>
@@ -50,13 +50,12 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 container_col">
+      <div class="col-md-7 container_col">
         <div class="card h-100">
           <div class="d-flex flex-column justify-content-center align-items-center">
-            <div class="carroussel">
-              Carroussel to be added:
-              <img src="https://shorturl.at/fpTW9" />
-            </div>
+			<div class="carroussel">
+				<ProfileImageCarousel :images="user_images" :disabled="true" />
+			</div>
             <div class="row infos justify-content-md-center">
               <div class="col-md-auto">
                 <p class="title">Popularity:</p>
@@ -94,12 +93,12 @@ import { likeUser, unlikeUser } from "../services/user";
 import { blockUser, unblockUser, reportUser } from "../services/user";
 import { getUserProfile } from "../services/user";
 
-// import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
+import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
 import TagInputHandler from "../shared/TagInputHandler.vue";
 
 export default {
   components: {
-    // ProfileImageCarousel,
+    ProfileImageCarousel,
     TagInputHandler,
   },
 
@@ -228,12 +227,16 @@ export default {
 }
 
 .buttons {
-  margin-top: 100px;
-  margin-bottom: 0px;
+	position: absolute;
+	bottom: 10px;
+	margin-bottom: 0px;
+}
+
+.profile_pic, .carroussel {
+  margin-top: 20px;
 }
 
 .profile_pic {
-  margin-top: 20px;
   width: 300px;
   height: 300px;
   object-fit: cover;
@@ -274,14 +277,6 @@ export default {
   font-size: 120%;
 }
 
-.carroussel {
-  max-width: 100%;
-}
-
-.carroussel > img {
-  max-width: 100%;
-  object-fit: cover;
-}
 
 .bio {
   text-align: center;

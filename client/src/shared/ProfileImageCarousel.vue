@@ -4,7 +4,7 @@
 			v-if="user_images.length != 0"
 			id="carousel-1"
 			v-model="slide"
-			:interval="4000"
+			:interval="0"
 			controls
 			indicators
 			background="#ababab"
@@ -14,7 +14,7 @@
 			style="text-shadow: 1px 1px 2px #333"
 		>
 			<div v-for="url in user_images" :key="url">
-				<b-carousel-slide :img-src="url"> </b-carousel-slide>
+				<b-carousel-slide class="carroussel_images" :img-src="url"> </b-carousel-slide>
 			</div>
 		</b-carousel>
     <div v-if="!disabled">
@@ -116,6 +116,13 @@ export default {
 </script>
 
 <style scoped>
-@import url("../assets/profile.css")
+@import url("../assets/profile.css");
+
+.carroussel_images {
+	min-width: 300px;
+	max-width: 600px;
+	max-height: 500px;
+	object-fit: cover;
+}
 
 </style>
