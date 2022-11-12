@@ -250,6 +250,12 @@ export default {
         async updateProfile() {
             let user_diffy = diff(this.$cookies.get('user'), this.user)
             try {
+                delete user_diffy.last_connected
+            }
+            catch {
+                console.log("No last con in diffy del")
+            }
+            try {
                 let tagUploadRes = this.$refs.tagHandler.uploadTags()
                 delete user_diffy.tag_list
                 await updateUser(this.$cookies.get('sekes_tokens'), user_diffy)

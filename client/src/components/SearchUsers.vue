@@ -24,11 +24,14 @@
 			</div>
 			<div class="col filter_item">
 				<label class="filter_title" for="zipcode">Zipcode:</label>
-				<input id="zipcode" class = "simple_input" v-model="zipcode" type="text"/>
+				<ValidationProvider ref="zipcode_valid" rules="zipcode|zipcodeNum" immediate v-slot="{ errors }">
+					<input id="zipcode" class = "simple_input" v-model="zipcode" type="text"/>
+					<span class="login_error">{{ errors[0] }}</span>
+				</ValidationProvider>
 			</div>
 			<div class="col filter_item">
 				<label class="filter_title">Required Tags:</label>
-				<TagInputHandler v-model="required_tags"/>
+				<TagInputHandler v-model="required_tags" :only_existing_tags="true"/>
 			</div>
 			<div class="col filter_item">
 			<fieldset>
@@ -42,11 +45,11 @@
 					<label for="age">Age</label>
 				</div>
 				<div>
-					<input type="radio" id="zip" name="order_by" value="zipcode" v-model="order_by">
+					<input type="radio" id="zip" name="order_by" value="zipCode" v-model="order_by">
 					<label for="zip">Zipcode</label>
 				</div>
 				<div>
-					<input type="radio" id="tags" name="order_by" value="tags" v-model="order_by">
+					<input type="radio" id="tags" name="order_by" value="tag_list" v-model="order_by">
 					<label for="tags">Tags</label>
 				</div>
 			</fieldset>
@@ -74,16 +77,17 @@ import ProfileList from '../shared/ProfileList.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
 import 'bootstrap-slider/dist/css/bootstrap-slider.css'
 import Slider from '@vueform/slider/dist/slider.vue2.js'
+import { ValidationProvider } from 'vee-validate';
 
 
 export default {
-	components: { ProfileList, TagInputHandler, Slider },
+	components: { ProfileList, TagInputHandler, Slider, ValidationProvider},
 	data() {
 		return {
 			users        : [],
 			age			 : [25, 40],
 			required_tags: [],
-			rating		 : [1, 5],
+			rating		 : [0, 5],
 			zipcode      : null,
 			order_by     : "popScore",
 			asc_or_desc  : "DESC",
@@ -96,12 +100,15 @@ export default {
 	},
 	methods: {
 		async search() {
+			if (this.$refs.zipcode_valid.flags.invalid) {
+				return
+			}
 			console.log(this.age, this.required_tags, this.rating, this.zipcode)
 			let desires = this.allCompatible({gender: this.user.gender, sekesualOri: this.user.sekesualOri})
 			// let desire = this.determineAppropriateSekes(this.user.gender, this.user.sekesualOri)
 			console.log("DESIIIIRE: ", desires)
 			this.zipcode = this.zipcode == "" ? null : this.zipcode
-			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.age[0], this.age[1], this.required_tags, this.rating[0], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
+			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.age[0], this.age[1], this.required_tags, this.rating[0], this.rating[1], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
 			this.users = rese.data.data
 			this.current_page = 1
 		},
@@ -156,7 +163,7 @@ export default {
 	async created() {
 		let desires = this.allCompatible({gender: this.user.gender, sekesualOri: this.user.sekesualOri})
 		console.log("DESIIIIRE: ", desires)
-		let rese = await searchUsers(this.$cookies.get('sekes_tokens'), this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
+		let rese = await searchUsers(this.$cookies.get('sekes_tokens'), this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, 5, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
 		this.users = rese.data.data.map(this.addScoreBlend).sort((a,b) => {a.score < b.score})
 		this.current_page = 1
 	}

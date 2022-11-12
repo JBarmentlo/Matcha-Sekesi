@@ -1,12 +1,13 @@
 <template>
 	<div class="center pt-5">
 			<!-- <div class="vue-template"> -->
+				<ValidationObserver tag="form" ref="formObserver">
 				<form @submit="signupFormSubmit">
 					<h3>SIGN UP</h3>
 					<div v-if="status_not_200" class="login_error">There was an error handling your request</div>
 					<div class="form-group">
 						<label>Username</label>
-						<ValidationProvider rules="required|alpha_num|length:5" v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha_num|length:5" immediate v-slot="{ errors }">
 							<input
 								autocomplete="username"
 								type="username"
@@ -22,7 +23,7 @@
 
 					<div class="form-group">
 						<label>First Name</label>
-						<ValidationProvider rules="required|alpha|length:5" v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha|length:5" immediate v-slot="{ errors }">
 							<input
 								type="text"
 								v-model="firstName"
@@ -34,7 +35,7 @@
 
 					<div class="form-group">
 						<label>Last Name</label>
-						<ValidationProvider rules="required|alpha|length:5" v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha|length:5" immediate v-slot="{ errors }">
 							<input
 								type="text"
 								v-model="lastName"
@@ -46,7 +47,7 @@
 
 					<div class="form-group">
 						<label>Email address</label>
-						<ValidationProvider rules="email" v-slot="{ errors }">
+						<ValidationProvider rules="email" immediate v-slot="{ errors }">
 							<input
 								type="email"
 								v-model="mail"
@@ -60,7 +61,7 @@
 
 					<div class="form-group pb-2">
 						<label>Password</label>
-						<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" v-slot="{ errors }">
+						<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" :skipIfEmpty="false" immediate v-slot="{ errors }">
 							<div class = "input-group">
 								<input
 									autocomplete="current-password"
@@ -88,18 +89,20 @@
 						<router-link :to="{ name: 'Sign In' }">sign in?</router-link>
 					</p>
 				</form>
+				</ValidationObserver>
 			<!-- </div> -->
 	</div>
 </template>
 <script>
 // import inputValidate from "../services/formValidate";
-import { ValidationProvider } from 'vee-validate';
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { signup } from "../services/auth";
 import router from "@/router";
-
+import { getLoc } from '../services/user.js'
 export default {
 	components: {
-		ValidationProvider
+		ValidationProvider,
+		ValidationObserver
 	},
 
 	data() {
@@ -127,18 +130,23 @@ export default {
 		password_visibility() {
 			this.visible = !this.visible
 		},
+
 		async signupFormSubmit(e) {
-			// console.log("LOCALISATION:", this.locate())
+			console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
-			if (this.is_valid_username == false || this.is_valid_email == false || this.is_valid_password == false) {
+			if (this.$refs.formObserver.flags.invalid) {
 				return false;
 			}
 			let signup_res = await signup({
-				username : this.username,
-				firstName: this.firstName,
-				lastName : this.lastName,
-				mail     : this.mail,
-				password : this.password,
+				username  : this.username,
+				firstName : this.firstName,
+				lastName  : this.lastName,
+				mail      : this.mail,
+				password  : this.password,
+				city      : this.city,
+				latitude  : this.latitude,
+				longitude : this.longitude,
+				zipCode   : this.zipCode,
 			})
 			// console.log("SIGnup RES: ", signup_res)
 			this.username_taken    = false
@@ -162,15 +170,48 @@ export default {
 				router.push("/signin");
 			}
 		},
+
+		locate() {
+			return {
+
+			}
+		}
 	},
+
 	created() {
-		fetch("https://api.ipify.org?format=json")
-			.then((x) => x.json())
-			.then(({ ip }) => {
-				this.ip = ip;
-				console.log(this.ip);
-			});
+		// fetch('https://api.ipify.org?format=json')
+		// .then(x => x.json())
+		// .then(({ ip }) => {
+		// 	this.ip = ip;
+		// 	console.log(this.ip)
+		// });
+		// var scripts = ["http://www.geoplugin.net/javascript.gp"];
+		// scripts.forEach(script => {
+		// 	let tag = document.createElement("script");
+		// 	tag.setAttribute("src", script);
+		// 	document.head.appendChild(tag);
+		// });
+		// this.$getLocation({
+		// 	enableHighAccuracy: false, //defaults to false
+		// }
+		// )
+		// .then(coordinates => {
+		// 	console.log("LKJSDFLKJSDF",coordinates);
+		// 	// rqn7iVtcLmJS0ufpw3-AX2t3V_VxyDS4Ys6nb5gOwjQ
+		// });
 	},
+    async mounted() {
+		try {
+			let res        = (await getLoc()).data
+			this.city      = res.city
+			this.longitude = res.loc.split(",")[0]
+			this.latitude  = res.loc.split(",")[1]
+			this.zipCode   = res.postal
+		}
+		catch {
+			console.log("No loc")
+		}
+	}
 };
 </script>
 

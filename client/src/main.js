@@ -24,8 +24,13 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.use(VueSweetalert2);
 
+
+import VueGeolocation from 'vue-browser-geolocation';
+Vue.use(VueGeolocation);
+
+
 import { extend } from 'vee-validate';
-import { required, email, regex, alpha_num, alpha } from 'vee-validate/dist/rules';
+import { required, email, regex, alpha_num, alpha, numeric } from 'vee-validate/dist/rules';
 
 extend('required', {
   ...required,
@@ -39,7 +44,7 @@ extend('email', {
 
 extend('passewordo', {
   ...regex,
-  message: 'Please enter a valid password'
+  message: '12 characters, a symbol and a number pls.'
 });
 
 extend('alpha_num', {
@@ -58,6 +63,25 @@ extend('length', {
   },
   params: ['length'],
   message: 'At least 5 characters.'
+});
+
+extend('rating05', {
+  validate(value) {
+    return value[0] >= 0 && value[1] <= 5;
+  },
+});
+
+extend('zipcodeNum', {
+  ...numeric,
+  message: 'Please enter a valid zipcode.'
+});
+
+extend('zipcode', {
+  validate(value) {
+    return value.length == 5;
+  },
+  params: ['length'],
+  message: 'Please enter a valid zipcode.'
 });
 
 Vue.config.productionTip = false

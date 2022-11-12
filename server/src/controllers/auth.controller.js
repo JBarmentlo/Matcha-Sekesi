@@ -20,6 +20,17 @@ exports.signup = async (req, res) => {
     let latitude  = req.body.latitude;
     let longitude = req.body.longitude;
 
+    console.log({
+        username: req.body.username,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        mail: req.body.mail,
+        zipCode: req.body.zipCode,
+        city: req.body.city,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+    })
+
     try {
         let query_result = await db.query(
             'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
