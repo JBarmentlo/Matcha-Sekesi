@@ -1,5 +1,39 @@
 <template>
-	<div v-if="user != null" class="container">
+	<div class="container d-flex justify-content-center">
+		<div class="card p-4">
+			<div class="d-flex flex-column justify-content-center align-items-center">
+				<ProfileImageCarousel :images="user_images" :disabled="true" />
+				<!-- <button class="btn btn-secondary">
+					<img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100" />
+				</button> -->
+				<span class="name mt-3">Eleanor Pena</span>
+				<span class="idd">@eleanorpena</span>
+				<div class="d-flex flex-row justify-content-center align-items-center gap-2">
+					<span class="idd1">Oxc4c16a645_b21a</span>
+					<span><i class="fa fa-copy"></i></span>
+				</div>
+				<div class="d-flex flex-row justify-content-center align-items-center mt-3">
+					<span class="number">1069 <span class="follow">Followers</span></span>
+				</div>
+				<div class=" d-flex mt-2">
+					<button class="btn1 btn-dark">Edit Profile</button>
+				</div>
+				<div class="text mt-3">
+					<span>Eleanor Pena is a creator of minimalistic x bold graphics and digital artwork.<br><br> Artist/ Creative Director by Day #NFT minting@ with FND night. </span>
+				</div>
+				<div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center">
+					<span><i class="fa fa-twitter"></i></span>
+					<span><i class="fa fa-facebook-f"></i></span>
+					<span><i class="fa fa-instagram"></i></span>
+					<span><i class="fa fa-linkedin"></i></span>
+				</div>
+				<div class=" px-2 rounded mt-4 date ">
+					<span class="join">Joined May,2021</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div v-if="user != null" class="container">
 		<div class="row gutters">
 			<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
 				<div class="card h-100">
@@ -161,7 +195,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 </template>
 
 <script>
@@ -169,13 +203,13 @@ import { likeUser, unlikeUser } from "../services/user";
 import { blockUser, unblockUser, reportUser } from "../services/user";
 import { getUserProfile } from "../services/user";
 
-import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
-import TagInputHandler from "../shared/TagInputHandler.vue";
+// import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
+// import TagInputHandler from "../shared/TagInputHandler.vue";
 
 export default {
 	components: {
-		ProfileImageCarousel,
-		TagInputHandler,
+		// ProfileImageCarousel,
+		// TagInputHandler,
 	},
 
 	props: {
@@ -263,122 +297,5 @@ export default {
 </script>
 
 <style scoped>
-.row {
-	display: flex;
-	flex-wrap: wrap;
-	padding: 0 4px;
-}
 
-/* Create four equal columns that sits next to each other */
-.column {
-	flex: 33%;
-	max-width: 33%;
-	padding: 0 4px;
-}
-
-.column > label > img {
-	margin-top: 8px;
-	vertical-align: middle;
-	background-color: rgb(229, 225, 225);
-	width: 100%;
-}
-
-.next > img:hover {
-	background-color: rgb(240, 236, 236);
-	cursor: pointer;
-}
-
-input[type="file"] {
-	display: none;
-}
-
-.img-overlay {
-	position: absolute;
-	top: 7%;
-	bottom: 0;
-	left: 12%;
-	right: 0;
-	text-align: center;
-}
-
-/* Responsive layout - makes a three column-layout instead of four columns */
-@media screen and (max-width: 800px) {
-	.column {
-		flex: 33%;
-		max-width: 33%;
-	}
-}
-
-/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-	.column {
-		flex: 100%;
-		max-width: 100%;
-	}
-}
-
-.popularity {
-	/* background-color:rgba(11, 244, 189, 0.568); */
-	color: rgb(56, 56, 56);
-}
-
-body {
-	margin: 0;
-	padding-top: 40px;
-	color: #2e323c;
-	background: #f5f6fa;
-	position: relative;
-	height: 100%;
-}
-.account-settings .user-profile {
-	margin: 0 0 1rem 0;
-	padding-bottom: 1rem;
-	text-align: center;
-}
-.account-settings .user-profile .user-avatar {
-	margin: 0 0 1rem 0;
-}
-
-.account-settings .user-profile h5.user-name {
-	margin: 0 0 0.5rem 0;
-}
-.account-settings .user-profile h6.user-email {
-	margin: 0;
-	font-size: 0.8rem;
-	font-weight: 400;
-	color: #9fa8b9;
-}
-.account-settings .about {
-	margin: 2rem 0 0 0;
-	text-align: center;
-}
-.account-settings .about h5 {
-	margin: 0 0 15px 0;
-	color: #007ae1;
-}
-.account-settings .about p {
-	font-size: 0.825rem;
-}
-.form-control {
-	border: 1px solid #cfd1d8;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
-	font-size: 0.825rem;
-	background: #ffffff;
-	color: #2e323c;
-}
-
-.card {
-	background: #ffffff;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	border: 0;
-	margin-bottom: 1rem;
-}
-
-.container {
-	margin-top: 5%;
-}
 </style>
