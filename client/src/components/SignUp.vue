@@ -6,7 +6,7 @@
 					<div v-if="status_not_200" class="login_error">There was an error handling your request</div>
 					<div class="form-group">
 						<label>Username</label>
-						<ValidationProvider rules="required|alpha_num" v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha_num|length:5" v-slot="{ errors }">
 							<input
 								autocomplete="username"
 								type="username"

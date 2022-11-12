@@ -8,6 +8,7 @@ import ProfileEdit    from '../components/ProfileEdit.vue'
 import SearchUsers    from '../components/SearchUsers.vue'
 import PopulateDb     from '../components/PopulateDb.vue'
 import ChatEx         from '../components/ChatEx.vue'
+import SignUp         from '../components/SignUp.vue'
 
 Vue.use(VueRouter)
 
@@ -20,10 +21,7 @@ const routes = [
   {
     path: '/signup',
     name: 'Sign Up',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "signup" */ '../components/SignUp.vue')
+    component: SignUp
   },
   {
     path: '/signin',

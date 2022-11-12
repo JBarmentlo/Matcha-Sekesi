@@ -53,7 +53,10 @@ extend('alpha', {
 });
 
 extend('length', {
-  ...length,
+  validate(value, args) {
+    return value.length >= args.length;
+  },
+  params: ['length'],
   message: 'At least 5 characters.'
 });
 
