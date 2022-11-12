@@ -117,12 +117,10 @@ export default {
 			is_valid_username: true,
 			is_valid_email   : true,
 			is_valid_password: true,
-
 			mail_already_used: false,
 			username_taken   : false,
 			status_not_200   : false,
-
-			visible: false
+			visible          : false
 		};
 	},
 	methods: {
