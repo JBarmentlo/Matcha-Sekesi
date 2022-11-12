@@ -53,8 +53,13 @@
 	<div class="col-md-6 container_col">
 		<div class="card h-100">
 			<div class="d-flex flex-column justify-content-center align-items-center">
+			<div class="carroussel">
+				Carroussel to be added:
+				<img src="https://shorturl.at/fpTW9"/>
+			</div>
 			<span class="popularity"><span class="score">{{ popScore }}</span><span class="ratiote">/5</span> Popularity</span>
 			<span class="zipcode"><b-icon icon="pin-map-fill"></b-icon><span class="zip"> {{ user.zipCode }}</span></span>
+			<TagInputHandler v-model="user.tag_list" :disabled="true" />
 			<div class="about" v-if="user.bio && user.bio.length != 0">
 				<p class="bio text mt-5">"{{user.bio}}"</p>
 			</div>
@@ -234,12 +239,12 @@ import { blockUser, unblockUser, reportUser } from "../services/user";
 import { getUserProfile } from "../services/user";
 
 // import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
-// import TagInputHandler from "../shared/TagInputHandler.vue";
+import TagInputHandler from "../shared/TagInputHandler.vue";
 
 export default {
 	components: {
 		// ProfileImageCarousel,
-		// TagInputHandler,
+		TagInputHandler,
 	},
 
 	props: {
@@ -394,6 +399,11 @@ export default {
 	color      : black
 }
 
+.zipcode {
+	margin-top: 0px;
+	margin-bottom: 20px;
+}
+
 .score, .zip {
 	font-weight: bold;
 	font-size  : 30px;
@@ -401,6 +411,14 @@ export default {
 
 .ratiote {
 	font-size  : 15px;
+}
+.carroussel {
+	max-width: 100%;
+}
+
+.carroussel > img {
+	max-width : 100%;
+	object-fit: cover;
 }
 
 .bio {
