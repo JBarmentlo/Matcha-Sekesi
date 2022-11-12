@@ -24,11 +24,14 @@
 			</div>
 			<div class="col filter_item">
 				<label class="filter_title" for="zipcode">Zipcode:</label>
-				<input id="zipcode" class = "simple_input" v-model="zipcode" type="text"/>
+				<ValidationProvider ref="zipcode_valid" rules="zipcode|zipcodeNum" immediate v-slot="{ errors }">
+					<input id="zipcode" class = "simple_input" v-model="zipcode" type="text"/>
+					<span class="login_error">{{ errors[0] }}</span>
+				</ValidationProvider>
 			</div>
 			<div class="col filter_item">
 				<label class="filter_title">Required Tags:</label>
-				<TagInputHandler v-model="required_tags"/>
+				<TagInputHandler v-model="required_tags" :only_existing_tags="true"/>
 			</div>
 			<div class="col filter_item">
 			<fieldset>
@@ -74,10 +77,11 @@ import ProfileList from '../shared/ProfileList.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
 import 'bootstrap-slider/dist/css/bootstrap-slider.css'
 import Slider from '@vueform/slider/dist/slider.vue2.js'
+import { ValidationProvider } from 'vee-validate';
 
 
 export default {
-	components: { ProfileList, TagInputHandler, Slider },
+	components: { ProfileList, TagInputHandler, Slider, ValidationProvider},
 	data() {
 		return {
 			users        : [],
@@ -96,6 +100,9 @@ export default {
 	},
 	methods: {
 		async search() {
+			if (this.$refs.zipcode_valid.flags.invalid) {
+				return
+			}
 			console.log(this.age, this.required_tags, this.rating, this.zipcode)
 			let desires = this.allCompatible({gender: this.user.gender, sekesualOri: this.user.sekesualOri})
 			// let desire = this.determineAppropriateSekes(this.user.gender, this.user.sekesualOri)

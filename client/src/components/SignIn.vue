@@ -48,8 +48,6 @@
 
 <script>
 import { signin } from "../services/auth";
-// import { getMyUser } from "../services/user";
-// import router from "@/router";
 
 export default {
 	data() {
