@@ -60,23 +60,23 @@
 
 					<div class="form-group pb-2">
 						<label>Password</label>
-						<div class = "input-group">
 						<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" v-slot="{ errors }">
-							<input
-								autocomplete="current-password"
-								:type="visible ? 'text' : 'password'"
-								v-model="password"
-								class="form-control form-control-lg"
-							/>
-							<span class="input-group-btn form-control">
-								<button class="btn" v-on:click="password_visibility" type="button">
-								<b-icon-eye-fill v-if="!visible"></b-icon-eye-fill>
-								<b-icon-eye-slash-fill v-else></b-icon-eye-slash-fill>
-								</button>
-							</span>
+							<div class = "input-group">
+								<input
+									autocomplete="current-password"
+									:type="visible ? 'text' : 'password'"
+									v-model="password"
+									class="form-control form-control-lg"
+								/>
+								<span class="input-group-btn form-control">
+									<button class="btn" v-on:click="password_visibility" type="button">
+									<b-icon-eye-fill v-if="!visible"></b-icon-eye-fill>
+									<b-icon-eye-slash-fill v-else></b-icon-eye-slash-fill>
+									</button>
+								</span>
+							</div>
 							<span class="login_error">{{ errors[0] }}</span>
-						</ValidationProvider>
-						</div>
+						</ValidationProvider>	
 					</div>
 
 					<button type="submit" class = "button_submit">
