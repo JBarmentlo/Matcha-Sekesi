@@ -148,6 +148,7 @@ export default {
 			else {
 				this.asc_or_desc = "ASC"
 			}
+			this.search()
 		}
 
 	},

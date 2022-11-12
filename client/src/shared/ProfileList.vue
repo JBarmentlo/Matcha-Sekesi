@@ -6,7 +6,7 @@
 	<div class="card b-1 hover-shadow mb-20" v-for="(user, index) in users.slice((current_page - 1) * user_per_page, current_page * user_per_page)" :key="user.username">
 		<div class="media card-body">
 			<div class="media-left pr-12">
-				<img class="avatar round-radius" :src=profile_pic_url(user.image0) alt="...">
+				<img class="avatar round-radius" :src=profile_pic_url(user.profilePic) alt="...">
 			</div>
 			<div class="media-body">
 				<div class="mb-2">
@@ -220,9 +220,6 @@ body{
 
 img {
 	max-width: 100%;
-}
-
-img {
 	vertical-align: middle;
 	border-style: none;
 }
