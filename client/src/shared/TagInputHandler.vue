@@ -20,6 +20,12 @@ import { getAllTags, updateUserTags }from '../services/tags'
 export default {
   props: {
     user_tags: Array,
+    // only_existing_tags: {
+    //   type: Boolean,
+    //   default: () => {
+    //     return false
+    //   }
+    // },
     disabled: {
       type: Boolean,
       default: () => {

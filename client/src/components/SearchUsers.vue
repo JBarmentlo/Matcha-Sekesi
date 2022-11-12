@@ -31,7 +31,7 @@
 			</div>
 			<div class="col filter_item">
 				<label class="filter_title">Required Tags:</label>
-				<TagInputHandler v-model="required_tags"/>
+				<TagInputHandler v-model="required_tags" :only_existing_tags="true"/>
 			</div>
 			<div class="col filter_item">
 			<fieldset>
@@ -68,7 +68,6 @@
 		<div class="row">
 			<profile-list :users="users" :current_page="current_page"></profile-list>
 		</div>
-	<ValidationObserver><ValidationProvider></ValidationProvider></ValidationObserver>
 	</div>
 </template>
 
@@ -78,11 +77,11 @@ import ProfileList from '../shared/ProfileList.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
 import 'bootstrap-slider/dist/css/bootstrap-slider.css'
 import Slider from '@vueform/slider/dist/slider.vue2.js'
-import { ValidationProvider, ValidationObserver } from 'vee-validate';
+import { ValidationProvider } from 'vee-validate';
 
 
 export default {
-	components: { ProfileList, TagInputHandler, Slider, ValidationProvider, ValidationObserver},
+	components: { ProfileList, TagInputHandler, Slider, ValidationProvider},
 	data() {
 		return {
 			users        : [],
