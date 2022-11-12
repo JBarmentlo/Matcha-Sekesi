@@ -45,11 +45,11 @@
 					<label for="age">Age</label>
 				</div>
 				<div>
-					<input type="radio" id="zip" name="order_by" value="zipcode" v-model="order_by">
+					<input type="radio" id="zip" name="order_by" value="zipCode" v-model="order_by">
 					<label for="zip">Zipcode</label>
 				</div>
 				<div>
-					<input type="radio" id="tags" name="order_by" value="tags" v-model="order_by">
+					<input type="radio" id="tags" name="order_by" value="tag_list" v-model="order_by">
 					<label for="tags">Tags</label>
 				</div>
 			</fieldset>
