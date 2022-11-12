@@ -1,24 +1,26 @@
 <template>
 	<div class="container">
 		<form @submit.prevent>
-			<div class="row filter_categories">
+			<div class="row justify-content-md-center filter_categories">
 			<div class="col filter_item">
-				<label class="filter_title" for="min_age">Min Age:</label>
+				<label class="filter_title" for="age">Age:</label>
 				<div class = "row sliders">
-					<input class="slider" id="min_age" v-model="min_age" type="range" min=18 :max="max_age">
-					<div class="age">{{ min_age }}</div>
+					<Slider
+					class="green_slider"
+					v-model="age"
+					:min="18"
+					:max="99"
+					/>
 				</div>
 			</div>
 			<div class="col filter_item">
-				<label class="filter_title" for="max_age">Max Age:</label>
-				<div class = "row sliders">
-					<input class="slider" id="max_age" v-model="max_age" type="range" :min="min_age" max=69>
-					<div class="age">{{ max_age }}</div>
-				</div>
-			</div>
-			<div class="col filter_item">
-				<label class="filter_title" for="min_rating">Min Score:</label>
-				<input id="min_rating" class = "simple_input" v-model="min_rating" type="number"/>
+				<label class="filter_title" for="rating">Score:</label>
+				<Slider
+					class="green_slider"
+					v-model="rating"
+					:min="0"
+					:max="5"
+					/>
 			</div>
 			<div class="col filter_item">
 				<label class="filter_title" for="zipcode">Zipcode:</label>
@@ -35,25 +37,31 @@
 					<input type="radio" id="Popularity" name="order_by" value="popScore" checked v-model="order_by">
 					<label for="Popularity">Popularity</label>
 				</div>
-
 				<div>
 					<input type="radio" id="age" name="order_by" value="age" v-model="order_by">
 					<label for="age">Age</label>
 				</div>
+				<div>
+					<input type="radio" id="zip" name="order_by" value="zipcode" v-model="order_by">
+					<label for="zip">Zipcode</label>
+				</div>
+				<div>
+					<input type="radio" id="tags" name="order_by" value="tags" v-model="order_by">
+					<label for="tags">Tags</label>
+				</div>
 			</fieldset>
 			</div>
-			<div class="col filter_item">
-			<fieldset>
-				<button v-on:click="order_list">
+			<div class="col-md-auto filter_item">
+			<b-button-group>
+				<b-button v-on:click="order_list">
 					<b-icon-arrow-up v-if="asc_or_desc == 'ASC'"></b-icon-arrow-up>
 					<b-icon-arrow-down v-else></b-icon-arrow-down>
-				</button>
-			</fieldset>
+				</b-button>
+				<b-button @click="search">Show results:</b-button>
+			</b-button-group>
 			</div>
 			</div>
-
 		</form>
-		<button @click="search">Show results:</button>
 		<div class="row">
 			<profile-list :users="users" :current_page="current_page"></profile-list>
 		</div>
@@ -65,18 +73,17 @@ import { searchUsers } from "../services/search";
 import ProfileList from '../shared/ProfileList.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
 import 'bootstrap-slider/dist/css/bootstrap-slider.css'
-
+import Slider from '@vueform/slider/dist/slider.vue2.js'
 
 
 export default {
-	components: { ProfileList, TagInputHandler },
+	components: { ProfileList, TagInputHandler, Slider },
 	data() {
 		return {
 			users        : [],
-			min_age      : 18,
-			max_age      : 50,
+			age			 : [25, 40],
 			required_tags: [],
-			min_rating   : 0,
+			rating		 : [1, 5],
 			zipcode      : null,
 			order_by     : "popScore",
 			asc_or_desc  : "DESC",
@@ -89,21 +96,14 @@ export default {
 	},
 	methods: {
 		async search() {
-			console.log(this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode)
-			let desire = this.determineAppropriateSekes(this.user.gender, this.user.sekesualOri)
-			console.log("DESIIIIRE: ", desire)
-			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.min_age, this.max_age, this.required_tags, this.min_rating, this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc)
+			console.log(this.age, this.required_tags, this.rating, this.zipcode)
+			let desires = this.allCompatible({gender: this.user.gender, sekesualOri: this.user.sekesualOri})
+			// let desire = this.determineAppropriateSekes(this.user.gender, this.user.sekesualOri)
+			console.log("DESIIIIRE: ", desires)
+			this.zipcode = this.zipcode == "" ? null : this.zipcode
+			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.age[0], this.age[1], this.required_tags, this.rating[0], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
 			this.users = rese.data.data
 			this.current_page = 1
-		},
-
-		slideStart () {
-		console.log('slideStarted')
-		},
-
-		slideStop (value) {
-			this.min_age = value
-			console.log(value)
 		},
 
 		compatible(one, two) {
@@ -148,6 +148,7 @@ export default {
 			else {
 				this.asc_or_desc = "ASC"
 			}
+			this.search()
 		}
 
 	},
@@ -162,6 +163,8 @@ export default {
 
 }
 </script>
+
+<style src="@vueform/slider/themes/default.css"></style>
 
 <style scoped>
 
@@ -201,6 +204,12 @@ export default {
 
 .age {
 	padding-left: 6%
+}
+
+.green_slider {
+	margin-top: 30px;
+	--slider-tooltip-font-size: 0.775rem;
+	--slider-tooltip-line-height: 0.9rem;
 }
 
 </style>
