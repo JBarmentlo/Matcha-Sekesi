@@ -14,7 +14,7 @@ const createOneUser = async function(rawUser, tags) {
 		mailVerified    : true,
 		gender          : rawUser.gender == "male" ? "Male" : "Female",
 		sekesualOri     : sekesualOri[Math.floor(Math.random() * sekesualOri.length)],
-		popScore        : Math.random() * 10,
+		popScore        : Math.random() * 5,
 		zipCode         : rawUser.location.postcode,
 		city         		: rawUser.location.city,
 		isCompleteProfile : true,

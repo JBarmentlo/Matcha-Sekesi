@@ -110,7 +110,7 @@ exports.create_user_test = async (req, res) => {
 			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
-			console.log("create user test error:\n", e, "\n\nend signup error")
+			// console.log("create user test error:\n", e, "\n\nend signup error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
 			throw(e)
 		}

@@ -87,7 +87,7 @@ export default {
 			users        : [],
 			age			 : [25, 40],
 			required_tags: [],
-			rating		 : [1, 5],
+			rating		 : [0, 5],
 			zipcode      : null,
 			order_by     : "popScore",
 			asc_or_desc  : "DESC",
