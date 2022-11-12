@@ -42,6 +42,11 @@ exports.get_all_users = async (searcher_username) => {
 			latitude,                                                                         \
 			id,                                                                               \
 			last_connected,                                                                   \
+			image0,                                          \
+			image1,                                          \
+			image2,                                          \
+			image3,                                          \
+			profilePic,                                      \
 			TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,                  \
 			TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                       \
 			DOB,                                                                              \
@@ -107,6 +112,11 @@ exports.get_user = async (searcher_username, searched_username) => {
 				latitude,                                                                         \
 				id,                                                                               \
 				last_connected,                                                                   \
+				image0,                                          \
+				image1,                                          \
+				image2,                                          \
+				image3,                                          \
+				profilePic,                                      \
 				TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,                  \
 				TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                       \
 				DOB,                                                                              \
@@ -425,6 +435,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			image1,                                                                         \
 			image2,                                                                         \
 			image3,                                                                         \
+			profilePic,                                                                     \
 			longitude,                                                                      \
 			latitude,                                                                       \
 			mailVerified,                                                                   \
