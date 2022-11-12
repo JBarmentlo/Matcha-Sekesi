@@ -98,7 +98,7 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { signup } from "../services/auth";
 import router from "@/router";
-
+import { getLoc } from '../services/user.js'
 export default {
 	components: {
 		ValidationProvider,
@@ -130,18 +130,23 @@ export default {
 		password_visibility() {
 			this.visible = !this.visible
 		},
+
 		async signupFormSubmit(e) {
-			// console.log("LOCALISATION:", this.locate())
+			console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
 			if (this.$refs.formObserver.flags.invalid) {
 				return false;
 			}
 			let signup_res = await signup({
-				username : this.username,
-				firstName: this.firstName,
-				lastName : this.lastName,
-				mail     : this.mail,
-				password : this.password,
+				username  : this.username,
+				firstName : this.firstName,
+				lastName  : this.lastName,
+				mail      : this.mail,
+				password  : this.password,
+				city      : this.city,
+				latitude  : this.latitude,
+				longitude : this.longitude,
+				zipCode   : this.zipCode,
 			})
 			// console.log("SIGnup RES: ", signup_res)
 			this.username_taken    = false
@@ -165,15 +170,48 @@ export default {
 				router.push("/signin");
 			}
 		},
+
+		locate() {
+			return {
+
+			}
+		}
 	},
+
 	created() {
-		fetch("https://api.ipify.org?format=json")
-			.then((x) => x.json())
-			.then(({ ip }) => {
-				this.ip = ip;
-				console.log(this.ip);
-			});
+		// fetch('https://api.ipify.org?format=json')
+		// .then(x => x.json())
+		// .then(({ ip }) => {
+		// 	this.ip = ip;
+		// 	console.log(this.ip)
+		// });
+		// var scripts = ["http://www.geoplugin.net/javascript.gp"];
+		// scripts.forEach(script => {
+		// 	let tag = document.createElement("script");
+		// 	tag.setAttribute("src", script);
+		// 	document.head.appendChild(tag);
+		// });
+		// this.$getLocation({
+		// 	enableHighAccuracy: false, //defaults to false
+		// }
+		// )
+		// .then(coordinates => {
+		// 	console.log("LKJSDFLKJSDF",coordinates);
+		// 	// rqn7iVtcLmJS0ufpw3-AX2t3V_VxyDS4Ys6nb5gOwjQ
+		// });
 	},
+    async mounted() {
+		try {
+			let res        = (await getLoc()).data
+			this.city      = res.city
+			this.longitude = res.loc.split(",")[0]
+			this.latitude  = res.loc.split(",")[1]
+			this.zipCode   = res.postal
+		}
+		catch {
+			console.log("No loc")
+		}
+	}
 };
 </script>
 

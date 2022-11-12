@@ -25,6 +25,9 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.use(VueSweetalert2);
 
 
+import VueGeolocation from 'vue-browser-geolocation';
+Vue.use(VueGeolocation);
+
 
 import { extend } from 'vee-validate';
 import { required, email, regex, alpha_num, alpha, numeric } from 'vee-validate/dist/rules';
