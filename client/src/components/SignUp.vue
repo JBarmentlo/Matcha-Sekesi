@@ -1,7 +1,7 @@
 <template>
 	<div class="center pt-5">
 			<!-- <div class="vue-template"> -->
-				<ValidationObserver>
+				<ValidationObserver tag="form" ref="formObserver">
 				<form @submit="signupFormSubmit">
 					<h3>SIGN UP</h3>
 					<div v-if="status_not_200" class="login_error">There was an error handling your request</div>
@@ -133,7 +133,7 @@ export default {
 		async signupFormSubmit(e) {
 			// console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
-			if (this.is_valid_username == false || this.is_valid_email == false || this.is_valid_password == false) {
+			if (this.$refs.formObserver.flags.invalid) {
 				return false;
 			}
 			let signup_res = await signup({
