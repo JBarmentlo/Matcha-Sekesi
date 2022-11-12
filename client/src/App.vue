@@ -43,9 +43,11 @@ export default {
 			this.logged_in = val;
 			console.log("logged in set to: %s", val)
 			if (this.logged_in == true) {
+				console.log("Start Polling notifs / messages")
 				this.startPollingMsg(1000)
 			}
 			else if (this.logged_in == false && this.polling != null) {
+				console.log("Stop Polling notifs / messages")
 				clearInterval(this.polling)
 			}
 		},

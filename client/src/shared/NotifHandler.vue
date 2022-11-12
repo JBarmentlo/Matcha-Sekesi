@@ -97,6 +97,7 @@ async mounted() {
 },
 
 beforeDestroy () {
+  console.log("destroy notif handler")
   clearInterval(this.polling)
 }
 

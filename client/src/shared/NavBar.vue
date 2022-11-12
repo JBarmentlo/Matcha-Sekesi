@@ -23,7 +23,7 @@
             <NotifHandler />
         </li>
 		<li class="nav-item">
-            <router-link @click="logout"  to="/" class="nav-link">Exit <b-icon-arrow-bar-right /></router-link>
+            <router-link @click.native="logout"  to="/" class="nav-link">Logout <b-icon-arrow-bar-right /></router-link>
         </li>
     </ul>
 </nav>
@@ -54,8 +54,13 @@ export default {
 
     methods : {
         logout() {
+            console.log("LOGGING OUT")
             if (this.$cookies.isKey("user"))
                 this.$cookies.remove("user")
+                console.log("remo9ve user xookie")
+            if (this.$cookies.isKey("sekes_tokens"))
+                this.$cookies.remove("sekes_tokens")
+                console.log("remo9ve token xookie")
             this.$emit("setLoggedIn", false)
             if (this.$route.path != "/signin")
                 router.push("/signin")
