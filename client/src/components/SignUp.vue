@@ -6,13 +6,15 @@
 					<div v-if="status_not_200" class="login_error">There was an error handling your request</div>
 					<div class="form-group">
 						<label>Username</label>
-						<input
-							autocomplete="username"
-							type="username"
-							v-model="username"
-							class="form-control form-control-lg"
-							@keyup="validate_user_name"
-						/>
+						<ValidationProvider rules="required|alpha_num|length:5" v-slot="{ errors }">
+							<input
+								autocomplete="username"
+								type="username"
+								v-model="username"
+								class="form-control form-control-lg"
+							/>
+							<span class="login_error">{{ errors[0] }}</span>
+						</ValidationProvider>
 						<div v-if="!is_valid_username" class="login_error">Error: 5 characters minimum are required</div>
 						<div v-if="username_taken" class="login_error">Username not available</div>
 
@@ -20,30 +22,38 @@
 
 					<div class="form-group">
 						<label>First Name</label>
-						<input
-							type="text"
-							v-model="firstName"
-							class="form-control form-control-lg"
-						/>
+						<ValidationProvider rules="required|alpha|length:5" v-slot="{ errors }">
+							<input
+								type="text"
+								v-model="firstName"
+								class="form-control form-control-lg"
+							/>
+							<span class="login_error">{{ errors[0] }}</span>
+						</ValidationProvider>
 					</div>
 
 					<div class="form-group">
 						<label>Last Name</label>
-						<input
-							type="text"
-							v-model="lastName"
-							class="form-control form-control-lg"
-						/>
+						<ValidationProvider rules="required|alpha|length:5" v-slot="{ errors }">
+							<input
+								type="text"
+								v-model="lastName"
+								class="form-control form-control-lg"
+							/>
+							<span class="login_error">{{ errors[0] }}</span>
+						</ValidationProvider>
 					</div>
 
 					<div class="form-group">
 						<label>Email address</label>
-						<input
-							type="email"
-							v-model="mail"
-							class="form-control form-control-lg"
-							@keyup="validate_email"
-						/>
+						<ValidationProvider rules="email" v-slot="{ errors }">
+							<input
+								type="email"
+								v-model="mail"
+								class="form-control form-control-lg"
+							/>
+							<span class="login_error">{{ errors[0] }}</span>
+						</ValidationProvider>
 						<div v-if="!is_valid_email" class="login_error">Error: An email should contain a "@" and "."</div>
 						<div v-if="mail_already_used" class="login_error">Mail already in use</div>
 					</div>
@@ -51,20 +61,21 @@
 					<div class="form-group pb-2">
 						<label>Password</label>
 						<div class = "input-group">
-						<input
-							autocomplete="current-password"
-							:type="visible ? 'text' : 'password'"
-							v-model="password"
-							class="form-control form-control-lg"
-							@keyup="validate_password"
-						/>
-						<span class="input-group-btn form-control">
-							<button class="btn" v-on:click="password_visibility" type="button">
-							<b-icon-eye-fill v-if="!visible"></b-icon-eye-fill>
-							<b-icon-eye-slash-fill v-else></b-icon-eye-slash-fill>
-							</button>
-						</span>
-						<div v-if="!is_valid_password" class="login_error">Error: 5 characters minimum are required</div>
+						<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" v-slot="{ errors }">
+							<input
+								autocomplete="current-password"
+								:type="visible ? 'text' : 'password'"
+								v-model="password"
+								class="form-control form-control-lg"
+							/>
+							<span class="input-group-btn form-control">
+								<button class="btn" v-on:click="password_visibility" type="button">
+								<b-icon-eye-fill v-if="!visible"></b-icon-eye-fill>
+								<b-icon-eye-slash-fill v-else></b-icon-eye-slash-fill>
+								</button>
+							</span>
+							<span class="login_error">{{ errors[0] }}</span>
+						</ValidationProvider>
 						</div>
 					</div>
 
@@ -82,10 +93,15 @@
 </template>
 <script>
 // import inputValidate from "../services/formValidate";
+import { ValidationProvider } from 'vee-validate';
 import { signup } from "../services/auth";
 import router from "@/router";
 
 export default {
+	components: {
+		ValidationProvider
+	},
+
 	data() {
 		return {
 			username         : "jhonny",
@@ -101,29 +117,15 @@ export default {
 			is_valid_username: true,
 			is_valid_email   : true,
 			is_valid_password: true,
-
 			mail_already_used: false,
 			username_taken   : false,
 			status_not_200   : false,
-
-			visible: false
+			visible          : false
 		};
 	},
 	methods: {
 		password_visibility() {
 			this.visible = !this.visible
-		},
-		validate_user_name(e) {
-			console.log(e)
-			this.is_valid_username = true
-		},
-		validate_email(e) {
-			console.log(e)
-			this.is_valid_email = true
-		},
-		validate_password(e) {
-			console.log(e)
-			this.is_valid_password = true
 		},
 		async signupFormSubmit(e) {
 			// console.log("LOCALISATION:", this.locate())
