@@ -24,6 +24,8 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.use(VueSweetalert2);
 
+
+
 import { extend } from 'vee-validate';
 import { required, email, regex, alpha_num, alpha } from 'vee-validate/dist/rules';
 
@@ -39,7 +41,7 @@ extend('email', {
 
 extend('passewordo', {
   ...regex,
-  message: 'Please enter a valid password'
+  message: '12 characters, a symbol and a number pls.'
 });
 
 extend('alpha_num', {
@@ -59,6 +61,8 @@ extend('length', {
   params: ['length'],
   message: 'At least 5 characters.'
 });
+
+
 
 Vue.config.productionTip = false
 

@@ -61,7 +61,7 @@
 
 					<div class="form-group pb-2">
 						<label>Password</label>
-						<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" immediate v-slot="{ errors }">
+						<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" :skipIfEmpty="false" immediate v-slot="{ errors }">
 							<div class = "input-group">
 								<input
 									autocomplete="current-password"
