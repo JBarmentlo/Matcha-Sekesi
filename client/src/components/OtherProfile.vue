@@ -2,10 +2,12 @@
 	<div class="container d-flex justify-content-center">
 		<div class="card p-4">
 			<div class="d-flex flex-column justify-content-center align-items-center">
-				<ProfileImageCarousel :images="user_images" :disabled="true" />
-				<!-- <button class="btn btn-secondary">
+				<p>{{user.image0}}</p>
+				<ProfileImageCarousel :images="[]" :disabled="true" />
+
+				<button class="btn btn-secondary">
 					<img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100" />
-				</button> -->
+				</button>
 				<span class="name mt-3">Eleanor Pena</span>
 				<span class="idd">@eleanorpena</span>
 				<div class="d-flex flex-row justify-content-center align-items-center gap-2">
@@ -203,12 +205,12 @@ import { likeUser, unlikeUser } from "../services/user";
 import { blockUser, unblockUser, reportUser } from "../services/user";
 import { getUserProfile } from "../services/user";
 
-// import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
+import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
 // import TagInputHandler from "../shared/TagInputHandler.vue";
 
 export default {
 	components: {
-		// ProfileImageCarousel,
+		ProfileImageCarousel,
 		// TagInputHandler,
 	},
 
