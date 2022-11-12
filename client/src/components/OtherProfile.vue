@@ -1,39 +1,67 @@
 <template>
-	<div class="container d-flex justify-content-center">
-		<div class="card p-4">
+	<div class="container" v-if="user != null">
+		<div class="row">
+			<div class="col-md-auto container_col">
+		<div class="card h-100">
 			<div class="d-flex flex-column justify-content-center align-items-center">
-				<p>{{user.image0}}</p>
-				<ProfileImageCarousel :images="[]" :disabled="true" />
-
-				<button class="btn btn-secondary">
-					<img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100" />
-				</button>
-				<span class="name mt-3">Eleanor Pena</span>
-				<span class="idd">@eleanorpena</span>
-				<div class="d-flex flex-row justify-content-center align-items-center gap-2">
-					<span class="idd1">Oxc4c16a645_b21a</span>
-					<span><i class="fa fa-copy"></i></span>
+				<img class="profile_pic" :src="user.profilePic" />
+				<span class="name mt-3">
+					{{user.firstName}} {{user.lastName}}
+					<b-icon-circle-fill v-if="user.connected == 1" id="disponibility" class="connected" font-scale="0.5"></b-icon-circle-fill>
+					<b-icon-circle v-else id="disponibility" class="disconnected" font-scale="0.5"></b-icon-circle>
+				</span>
+				<span class="username">
+					<p>aka</p>
+					{{user.username}}
+				</span>
+				<span class="connection_info" v-if="user.connected == 1" target="disponibility" placement="right">connected</span>
+				<span class="connection_info" v-else target="disponibility" placement="right">Last connected: {{ last_connected }}</span>
+				<span class="email mt-3"><b-icon-mailbox />  {{user.mail}}</span>
+				<div class="buttons">
+				<div class="row justify-content-md-center">
+					<div class="col-md-auto">
+						<b-button v-if="user.did_i_like_him == 0" @click="like(user.username)" variant="outline-info" class="mb-2">
+							<b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon> Like
+						</b-button>
+						<b-button v-else @click="unlike(user.username)" id="unlike" variant="info" class="mb-2">
+							<b-icon icon="hand-thumbs-up-fill" aria-hidden="true"></b-icon> Liked
+							<b-tooltip target="unlike" placement="top" triggers="hover">Unlike</b-tooltip>
+						</b-button>
+					</div>
+					<div class="col-md-auto">
+						<b-button v-if="user.did_i_block_him == 0" @click="block(user.username)" variant="outline-secondary" class="mb-2">
+							<b-icon icon="x-circle" aria-hidden="true"></b-icon> Block
+						</b-button>
+						<b-button v-else @click="unblock(user.username)" id="unblock" variant="danger" class="mb-2">
+							<b-icon icon="x-circle-fill" aria-hidden="true"></b-icon> Blocked
+							<b-tooltip target="unblock" placement="top" triggers="hover">Unblock</b-tooltip>
+						</b-button>
+					</div>
+					<div class="col-md-auto">
+						<b-button v-if="reported == false" variant="outline-warning" @click="report(user.username)">
+							<b-icon icon="exclamation-triangle"></b-icon> Report
+						</b-button>
+						<b-button v-else disabled>
+							<b-icon icon="exclamation-triangle-fill"></b-icon> Reported
+						</b-button>
+					</div>
 				</div>
-				<div class="d-flex flex-row justify-content-center align-items-center mt-3">
-					<span class="number">1069 <span class="follow">Followers</span></span>
-				</div>
-				<div class=" d-flex mt-2">
-					<button class="btn1 btn-dark">Edit Profile</button>
-				</div>
-				<div class="text mt-3">
-					<span>Eleanor Pena is a creator of minimalistic x bold graphics and digital artwork.<br><br> Artist/ Creative Director by Day #NFT minting@ with FND night. </span>
-				</div>
-				<div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center">
-					<span><i class="fa fa-twitter"></i></span>
-					<span><i class="fa fa-facebook-f"></i></span>
-					<span><i class="fa fa-instagram"></i></span>
-					<span><i class="fa fa-linkedin"></i></span>
-				</div>
-				<div class=" px-2 rounded mt-4 date ">
-					<span class="join">Joined May,2021</span>
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="col-md-6 container_col">
+		<div class="card h-100">
+			<div class="d-flex flex-column justify-content-center align-items-center">
+			<span class="popularity"><span class="score">{{ popScore }}</span><span class="ratiote">/5</span> Popularity</span>
+			<span class="zipcode"><b-icon icon="pin-map-fill"></b-icon><span class="zip"> {{ user.zipCode }}</span></span>
+			<div class="about" v-if="user.bio && user.bio.length != 0">
+				<p class="bio text mt-5">"{{user.bio}}"</p>
+			</div>
+		</div>
+		</div>
+	</div>
+	</div>
 	</div>
 	<!-- <div v-if="user != null" class="container">
 		<div class="row gutters">
@@ -205,12 +233,12 @@ import { likeUser, unlikeUser } from "../services/user";
 import { blockUser, unblockUser, reportUser } from "../services/user";
 import { getUserProfile } from "../services/user";
 
-import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
+// import ProfileImageCarousel from "../shared/ProfileImageCarousel.vue";
 // import TagInputHandler from "../shared/TagInputHandler.vue";
 
 export default {
 	components: {
-		ProfileImageCarousel,
+		// ProfileImageCarousel,
 		// TagInputHandler,
 	},
 
@@ -221,6 +249,7 @@ export default {
 	data() {
 		return {
 			user: null,
+			reported: false,
 		};
 	},
 
@@ -248,6 +277,21 @@ export default {
 			}
 			return require("../assets/empty_profile.png");
 		},
+
+		popScore: function() {
+			return (Math.round(this.user.popScore * 100) / 100)
+		},
+
+		last_connected: function() {
+			const date = new Date(this.user.last_connected)
+			const options = {
+			day: '2-digit',
+			month: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit'
+			}
+			return (new Intl.DateTimeFormat('en-US', options).format(date))
+		}
 	},
 
 	methods: {
@@ -273,6 +317,7 @@ export default {
 
 		report(username) {
 			reportUser(this.$cookies.get('sekes_tokens'), username)
+			this.reported = true
 		},
 
 	},
@@ -299,5 +344,81 @@ export default {
 </script>
 
 <style scoped>
+
+.container {
+	max-width: 90%;
+}
+
+.container_col {
+	display: flex;
+}
+
+.card {
+	padding: 20px;
+	padding-bottom: 0px;
+}
+
+
+.buttons {
+	margin-top: 100px;
+	margin-bottom: 0px;
+}
+
+.profile_pic {
+	width        : 300px;
+	height       : 300px;
+	object-fit   : cover;
+	border-radius: 50%;
+}
+
+.username, .name {
+	font-size  : 30px;
+	color      : black;
+	font-weight: bold;
+	text-align : center;
+}
+
+.username {
+	font-size: 25px;
+}
+
+.username > p {
+	font-size: initial;
+	font-weight: initial;
+	margin-bottom: 0rem;
+}
+
+.popularity, .zipcode {
+	margin-top : 20px;
+	font-size  : 25px;
+	color      : black
+}
+
+.score, .zip {
+	font-weight: bold;
+	font-size  : 30px;
+}
+
+.ratiote {
+	font-size  : 15px;
+}
+
+.bio {
+	text-align : center;
+}
+
+.connected {
+	color : rgb(11, 212, 11);
+}
+
+.disconnected {
+	color : black;
+}
+
+.connection_info {
+	color: rgb(98, 98, 98);
+	text-align: center;
+	max-width: 40%;
+}
 
 </style>

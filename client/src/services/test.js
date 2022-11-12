@@ -18,7 +18,7 @@ const createOneUser = async function(rawUser, tags) {
 		zipCode         : rawUser.location.postcode,
 		city         		: rawUser.location.city,
 		isCompleteProfile : true,
-		image0          : rawUser.picture.medium,
+		image0          : "https://images.unsplash.com/photo-1580421828423-4b36a8ca65fb?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjEzNzYzNn0?utm_source=dictionnaire&utm_medium=referral",
 		profilePic      : rawUser.picture.medium,
 		tag_list        : [tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * sekesualOri.length)]],
 		longitude       : rawUser.location.coordinates.longitude,
@@ -90,7 +90,7 @@ export const createRandomlikes = async (min, max) => {
 	console.log("LIKELIST: ", request_like.length)
 	let like_res = await axios(request_like)
 	console.log("LIKE RESL ", like_res)
-	
+
 };
 
 
@@ -129,7 +129,7 @@ export const createRandomConsults = async (min, max) => {
 	console.log("consultLIST: ", request_consult)
 	let consult_res = await axios(request_consult)
 	console.log("consult RESL ", consult_res)
-	
+
 };
 
 
@@ -168,14 +168,14 @@ export const createRandomblocks = async (min, max) => {
 	console.log("blockLIST: ", request_block)
 	let block_res = await axios(request_block)
 	console.log("block RESL ", block_res)
-	
+
 };
 
 
 // export const createRandomlikes = async (amount) => {
 // 	console.log("Creating ", amount, " likes per user.")
 
-// 	const users = 
+// 	const users =
 // 	const {results} = await res.json()
 // 	console.log("Raw data: ", results)
 // 	let promises = []

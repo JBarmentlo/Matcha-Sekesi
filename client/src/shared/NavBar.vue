@@ -23,7 +23,7 @@
             <NotifHandler />
         </li>
 		<li class="nav-item">
-            <router-link @click="logout"  to="/" class="nav-link">Exit <b-icon-arrow-bar-right /></router-link>
+            <router-link @click="logout"  to="/" class="nav-link">Logout <b-icon-arrow-bar-right /></router-link>
         </li>
     </ul>
 </nav>
