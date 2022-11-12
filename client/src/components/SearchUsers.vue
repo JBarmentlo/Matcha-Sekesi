@@ -108,7 +108,7 @@ export default {
 			// let desire = this.determineAppropriateSekes(this.user.gender, this.user.sekesualOri)
 			console.log("DESIIIIRE: ", desires)
 			this.zipcode = this.zipcode == "" ? null : this.zipcode
-			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.age[0], this.age[1], this.required_tags, this.rating[0], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
+			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.age[0], this.age[1], this.required_tags, this.rating[0], this.rating[1], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
 			this.users = rese.data.data
 			this.current_page = 1
 		},
@@ -163,7 +163,7 @@ export default {
 	async created() {
 		let desires = this.allCompatible({gender: this.user.gender, sekesualOri: this.user.sekesualOri})
 		console.log("DESIIIIRE: ", desires)
-		let rese = await searchUsers(this.$cookies.get('sekes_tokens'), this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
+		let rese = await searchUsers(this.$cookies.get('sekes_tokens'), this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, 5, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
 		this.users = rese.data.data.map(this.addScoreBlend).sort((a,b) => {a.score < b.score})
 		this.current_page = 1
 	}
