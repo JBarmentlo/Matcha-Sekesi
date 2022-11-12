@@ -138,11 +138,15 @@ export default {
 				return false;
 			}
 			let signup_res = await signup({
-				username : this.username,
-				firstName: this.firstName,
-				lastName : this.lastName,
-				mail     : this.mail,
-				password : this.password,
+				username  : this.username,
+				firstName : this.firstName,
+				lastName  : this.lastName,
+				mail      : this.mail,
+				password  : this.password,
+				city      : this.city,
+				latitude  : this.latitude,
+				longitude : this.longitude,
+				zipCode   : this.zipCode,
 			})
 			// console.log("SIGnup RES: ", signup_res)
 			this.username_taken    = false
@@ -196,8 +200,17 @@ export default {
 		// 	// rqn7iVtcLmJS0ufpw3-AX2t3V_VxyDS4Ys6nb5gOwjQ
 		// });
 	},
-    mounted() {
-		console.log(getLoc())
+    async mounted() {
+		try {
+			let res        = (await getLoc()).data
+			this.city      = res.city
+			this.longitude = res.loc.split(",")[0]
+			this.latitude  = res.loc.split(",")[1]
+			this.zipCode   = res.postal
+		}
+		catch {
+			console.log("No loc")
+		}
 	}
 };
 </script>

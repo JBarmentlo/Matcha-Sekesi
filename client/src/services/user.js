@@ -189,7 +189,7 @@ export const getMatches = async (access_token) => {
 
 export const getLoc = async () => {
 	console.log("get Loc: ")
-	let res = await axios.get( 'http://ipinfo.io/json?token=e7f3e2a554658c')
+	const res = await axios.get( 'http://ipinfo.io/json?token=e7f3e2a554658c')
 	console.log("Located at: ", res)
 	return res
 }
