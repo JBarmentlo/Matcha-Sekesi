@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img :src="profile_pic" :alt="profile_pic">
+    <img class="profile_pic" :src="profile_pic" :alt="profile_pic">
 			<br/>
 			<input
 				hidden
@@ -24,7 +24,7 @@ import { uploadImage }from '../services/upload'
 
 export default {
   props: ['url'],
-  
+
   model: {
     prop: 'url',
     event: 'upload_profile_pic'
@@ -85,6 +85,7 @@ img {
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
     border-radius: 100px;
+    object-fit: cover;
 }
 
 .camera_container {
