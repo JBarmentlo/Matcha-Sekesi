@@ -17,12 +17,40 @@
                         </div>
                         <div class = "popularity">
                             <div class = "d-flex justify-content-center align-items-center text-center">
-                                <div class = "views p-3">
+                                <div id="popscore" class = "pop p-3">
+                                    <b-icon-heart />  {{ popScore }}
+                                </div>
+                                <b-tooltip target="popscore" placement="top" triggers="hover">popularity score</b-tooltip>
+                                <div id="views" class = "views p-3">
                                     <b-icon-eye />  {{ user.consult_list.length }}
                                 </div>
-                                <div class = "likes p-3">
+                                <b-tooltip target="views" placement="top" triggers="hover">views</b-tooltip>
+                                <div id="likes" class = "likes p-3">
                                     <b-icon-hand-thumbs-up />  {{ user.like_list.length }}
                                 </div>
+                                <b-tooltip target="likes" placement="top" triggers="hover">likes</b-tooltip>
+                                <b-dropdown
+                                    id="list_people"
+                                    variant="link"
+                                    toggle-class="text-decoration-none"
+                                    no-caret
+                                    @hide="setSeen"
+                                    >
+                                    <template #button-content>
+                                    <span class = "details"><b-icon-caret-down-fill class="caret"/></span>
+                                    </template>
+                                    <div v-for="liker in user.like_list" :key="liker">
+                                    <b-dropdown-item v-for="liker in user.like_list" :key="liker">
+                                        <a :href="'?#/profile/' + liker">{{liker}}</a> liked you
+                                    </b-dropdown-item>
+                                    </div>
+                                    <div v-for="consulter in user.consult_list" :key="consulter">
+                                        <b-dropdown-item>
+                                            <li><a :href="'?#/profile/' + consulter">{{consulter}}</a> consulted your profile</li>
+                                        </b-dropdown-item>
+                                    </div>
+                                </b-dropdown>
+                                <b-tooltip target="list_people" placement="top" triggers="hover">More details</b-tooltip>
                             </div>
                         </div>
                         <div v-if="user.bio && user.bio.length != 0" class="about">
@@ -176,11 +204,17 @@
             </div>
                 </div>
             <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="col">
                     <div class="text-right">
                         <button class = "update_button" type="button" id="submit" name="submit"  @click="updateProfile"><b-icon-check-square/>  Update</button>
                         <button class = "cancel_button" type="button" id="submit" name="submit" ><b-icon-x-circle/>  Cancel</button>
                     </div>
+                </div>
+                <div v-if="isCompleteProfile" class="col-md-auto profile_complete">
+                    Profile complete!
+                </div>
+                <div v-else class="col-md-auto incomplete">
+                    Incomplete profile, please add a profile picture.
                 </div>
             </div>
         </div>
@@ -235,6 +269,14 @@ export default {
                 return this.user.profilePic
             }
             return require("../assets/empty_profile.png")
+        },
+
+        popScore: function () {
+            return Math.round(this.user.popScore * 100) / 100;
+        },
+
+        isCompleteProfile: function() {
+            return (this.user.profilePic != null)
         }
     },
 
@@ -247,8 +289,9 @@ export default {
         AddImage(image_url, index) {
             console.log("Add ", image_url, index)
             this.user['image' + index] = image_url
-            this.$refs.Jaroussel.setSlide(index)
+            // this.$refs.Jaroussel.setSlide(index)
         },
+
 
         async updateProfile() {
             let user_diffy = diff(this.$cookies.get('user'), this.user)
@@ -313,6 +356,14 @@ export default {
 .container {
     left: 50%;
     margin-top: 5%;
+}
+
+.incomplete {
+    color: red;
+}
+
+.details {
+    color: black;
 }
 
 .account-settings * {
@@ -396,8 +447,6 @@ input[type = "file"] {
     max-width: 100%;
   }
 }
-
-
 
 
 
