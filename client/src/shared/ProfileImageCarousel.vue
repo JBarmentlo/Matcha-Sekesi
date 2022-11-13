@@ -6,7 +6,7 @@
       id="carousel-1"
       v-model="slide"
       :interval="0"
-      controls
+      :controls="user_images.length > 1"
       indicators
       background="#ababab"
       img-width="1024"
