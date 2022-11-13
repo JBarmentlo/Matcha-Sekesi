@@ -1,7 +1,6 @@
 const express    = require("express");
 const bodyParser = require("body-parser");
 const cors       = require("cors");
-const multer     = require("multer");
 
 require('dotenv').config()
 
@@ -16,9 +15,35 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+const sanitizer = require("perfect-express-sanitizer");
+
+app.use(sanitizer.clean({
+    xss: true,
+    noSql: true,
+    sql: true,
+    sqlLevel: 5,
+}));
+
+
+const protect = require('@risingstack/protect')
+app.use(protect.express.sqlInjection({
+  body: true,
+  loggerFunction: console.error
+}))
+// app.use((req, res, next) => {
+//   console.log('Time:', Date.now())
+//   console.log("inje: ",sqlinjection(req, res))
+//   console.log("going next")
+//   next()
+// })
+
+
 const userRouter = require("./src/routes/user.routes")
 const authRouter = require("./src/routes/auth.routes")
 const tagRouter  = require("./src/routes/tag.routes")
+
+
+// app.use(sqlinjection);  // add sql-injection middleware here
 
 
 // #######################   USER ROUTES   ########################
