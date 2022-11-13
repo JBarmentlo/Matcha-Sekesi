@@ -8,7 +8,7 @@ const upload = multer({
 })
 
 module.exports = (app) => {
-	app.use('/api/image/get', express.static('/home/yup/Code/Web/NEVM-crud-tutorial/server/uploads'))
+	app.use('/api/image/get', express.static('./uploads'))
 
 	app.post("/api/image/upload", auth.verifyToken, upload.single('file'), imageController.upload_image)
 }

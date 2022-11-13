@@ -10,6 +10,8 @@
                                 <ProfilePicUpload v-model="user.profilePic"/>
                             </div>
 
+                            <h5 class="complete-name">{{ user.firstName }} {{ user.lastName }}</h5>
+                            <h6 class="user-email">aka</h6>
                             <h5 class="user-name">{{ user.username }}</h5>
                             <h6 class="user-email">{{ user.mail }}</h6>
                         </div>
@@ -28,13 +30,13 @@
                             <p>{{ user.bio }}</p>
                         </div>
                     </div>
-                    <ProfileImageCarousel :images="user_images" @AddImage="AddImage" @DeleteImage="RemoveImage"/>
-                    <div v-for="liker in user.like_list" :key="liker">
+                    <ProfileImageCarousel ref="Jaroussel" :images="user_images" @AddImage="AddImage" @DeleteImage="RemoveImage"/>
+                    <!-- <div v-for="liker in user.like_list" :key="liker">
                         <li><a :href="'?#/profile/' + liker">{{liker}}</a> liked you</li>
                     </div>
                     <div v-for="consulter in user.consult_list" :key="consulter">
                         <li><a :href="'?#/profile/' + consulter">{{consulter}}</a> consulted your profile</li>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -245,12 +247,19 @@ export default {
         AddImage(image_url, index) {
             console.log("Add ", image_url, index)
             this.user['image' + index] = image_url
+            this.$refs.Jaroussel.setSlide(index)
         },
 
         async updateProfile() {
             let user_diffy = diff(this.$cookies.get('user'), this.user)
             try {
                 delete user_diffy.last_connected
+            }
+            catch {
+                console.log("No last con in diffy del")
+            }
+            try {
+                delete user_diffy.connected
             }
             catch {
                 console.log("No last con in diffy del")
@@ -303,7 +312,7 @@ export default {
 
 .container {
     left: 50%;
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 .account-settings * {
