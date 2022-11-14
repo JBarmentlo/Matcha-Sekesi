@@ -112,9 +112,10 @@ export default {
             this.$cookies.get("sekes_tokens"),
             file
           );
-            this.EmitAddImage(upload_res.data.url);
+          console.log("received response uploade: ", upload_res.data)
+          this.EmitAddImage(upload_res.data.url);
         } catch (e) {
-          console.log("ERR", e);
+          console.log("ERR Uploading image carousel", e);
         }
       }
     },
