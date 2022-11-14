@@ -21,8 +21,8 @@ app.use(sanitizer.clean({
     xss: true,
     noSql: true,
     sql: true,
-    sqlLevel: 5,
-}));
+    sqlLevel: 4,
+}, whitelist = ["/api/image/upload"]));
 
 
 const protect = require('@risingstack/protect')
