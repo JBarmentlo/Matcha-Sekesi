@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="carroussel_container">
     <b-carousel
       v-if="user_images.length != 0"
       ref="myCarousel"
@@ -132,9 +132,12 @@ export default {
 <style scoped>
 @import url("../assets/profile.css");
 
+.carroussel_container {
+  justify-content: center;
+  max-width: 80%;
+}
 
 .carroussel_images {
-  width: 100%;
   object-fit: cover;
 }
 
