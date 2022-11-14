@@ -10,10 +10,10 @@
                                 <ProfilePicUpload v-model="user.profilePic"/>
                             </div>
 
-                            <h5 class="complete-name">{{ user.firstName }} {{ user.lastName }}</h5>
-                            <h6 class="user-email">aka</h6>
-                            <h5 class="user-name">{{ user.username }}</h5>
-                            <h6 class="user-email">{{ user.mail }}</h6>
+                            <h5 class="important-infos">{{ user.firstName }} {{ user.lastName }}</h5>
+                            <h6 class="not-important">aka</h6>
+                            <h5 class="important-infos">{{ user.username }}</h5>
+                            <h6 class="not-important">{{ user.mail }}</h6>
                         </div>
                         <div class = "popularity">
                             <div class = "d-flex justify-content-center align-items-center text-center">
@@ -34,10 +34,9 @@
                                     variant="link"
                                     toggle-class="text-decoration-none"
                                     no-caret
-                                    @hide="setSeen"
                                     >
                                     <template #button-content>
-                                    <span class = "details"><b-icon-caret-down-fill class="caret"/></span>
+                                    <span class = "black"><b-icon-caret-down-fill class="caret"/></span>
                                     </template>
                                     <div v-for="liker in user.like_list" :key="liker">
                                     <b-dropdown-item v-for="liker in user.like_list" :key="liker">
@@ -213,7 +212,7 @@
                 <div v-if="isCompleteProfile" class="col-md-auto profile_complete">
                     Profile complete!
                 </div>
-                <div v-else class="col-md-auto incomplete">
+                <div v-else class="col-md-auto red">
                     Incomplete profile, please add a profile picture.
                 </div>
             </div>
@@ -352,31 +351,8 @@ export default {
 <style scoped>
 
 @import url("../assets/profile.css");
+@import url("../assets/shared.css");
 
-.container {
-    left: 50%;
-    margin-top: 5%;
-}
-
-.incomplete {
-    color: red;
-}
-
-.details {
-    color: black;
-}
-
-.account-settings * {
-    text-align: center;
-    margin-top: 5%;
-}
-
-h6.user-email {
-    margin: 0;
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #9fa8b9;
-}
 
 .popularity {
     color: rgb(56, 56, 56);
@@ -399,67 +375,6 @@ h6.user-email {
 }
 
 
-/* Create four equal columns that sits next to each other */
-.column {
-  flex: 33%;
-  max-width: 33%;
-  padding: 0 4px;
-}
-
-.column > label > img {
-  margin-top: 8px;
-  vertical-align: middle;
-  background-color: rgb(229, 225, 225);
-  width: 100%;
-}
-
-.next > img:hover {
-    background-color: rgb(240, 236, 236);
-    cursor: pointer;
-}
-
-input[type = "file"] {
-    display: none
-}
-
-.img-overlay {
-  position: absolute;
-  top: 7%;
-  bottom: 0;
-  left: 12%;
-  right: 0;
-  text-align: center;
-}
-
-
-/* Responsive layout - makes a three column-layout instead of four columns */
-@media screen and (max-width: 800px) {
-  .column {
-    flex: 33%;
-    max-width: 33%;
-  }
-}
-
-/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-  .column {
-    flex: 100%;
-    max-width: 100%;
-  }
-}
-
-
-
-.account-settings .about {
-    margin: 2rem 0 0 0;
-    text-align: center;
-}
-.account-settings .about h5 {
-    margin: 0 0 15px 0;
-}
-.account-settings .about p {
-    font-size: 0.825rem;
-}
 .form-control {
     border: 1px solid #cfd1d8;
     -webkit-border-radius: 2px;
@@ -469,17 +384,5 @@ input[type = "file"] {
     background: #ffffff;
     color: #2e323c;
 }
-
-.card {
-    background: #ffffffcb;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    border: 0;
-    margin-bottom: 1rem;
-}
-
-
-
 
 </style>
