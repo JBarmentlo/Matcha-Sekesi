@@ -1,23 +1,19 @@
 <template>
-  <b-dropdown
-    style="position: static"
-    variant="link"
-    toggle-class="text-decoration-none"
-    no-caret
-    @hide="setSeen"
-    >
-    <template #button-content>
-    <span class = "notifs">Notifs<b-icon-bell-fill/><b-icon-circle-fill v-show="unreadNotifs > 0" class = "active_notif"/><b-icon-caret-down-fill class="caret"/></span>
+  <b-nav-item-dropdown right class="nav-link" :disabled="!unreadNotifs">
+    <template slot="button-content">
+        Notifs
+        <b-icon-bell-fill :class="unreadNotifs ? active_notif : unactive_notif"/>
+        <b-icon-circle-fill :class="unreadNotifs ? active_notif : unactive_notif" v-show="unreadNotifs" class = "active_notif"/>
     </template>
     <div v-for="notif in notifs" :key="notif.id">
-      <b-dropdown-item  v-if="notif.seen == 1" variant="secondary" @click="deleteNoot(notif.id)"><p>
+          <b-dropdown-item  v-if="notif.seen == 0" @click="deleteNoot(notif.id)">
+          {{notifCardText(notif)}}<b-icon-x></b-icon-x>
+          </b-dropdown-item>
+          <!-- <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)"><p>
           {{notifCardText(notif)}}</p>
-      </b-dropdown-item>
-          <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)"><p>
-          {{notifCardText(notif)}}</p>
-      </b-dropdown-item>
-    </div>
-  </b-dropdown>
+          </b-dropdown-item> -->
+      </div>
+  </b-nav-item-dropdown>
 </template>
 
 <script>
@@ -106,21 +102,16 @@ beforeDestroy () {
 
 <style scoped>
 
-.notifs:hover {
-  color: white;
-}
-
-.caret {
-  max-height: 10px;
-  margin-bottom: 3%;
-}
-
 
 .active_notif {
   color: red;
   width: 5%;
   margin-bottom: 3%;
   margin-right: 3%;
+}
+
+.unactive_notif {
+  color: grey;
 }
 
 </style>

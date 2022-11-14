@@ -21,7 +21,7 @@ import NavBar from "./shared/NavBar.vue"
 
 export default {
 	name: 'App',
-	
+
 	components: {
 		NavBar
 	},
@@ -63,7 +63,7 @@ export default {
 					let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.$cookies.get('user').username))
 					this.notifyUser(new_notifs)
 				}
-				
+
 			}, freq)
 			console.log(freq)
 		},
@@ -124,13 +124,6 @@ export default {
 
 
 <style>
-/* #app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #2c3e50;
-} */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
 
 
