@@ -133,8 +133,6 @@ export default {
 @import url("../assets/profile.css");
 
 .carroussel_images {
-  /* width: 100%; */
-  /* height: 100%; */
   object-fit: cover;
 }
 
