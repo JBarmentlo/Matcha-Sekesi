@@ -52,8 +52,10 @@
       <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
         <div class="card h-100">
           <div class="card-body">
-            <div class="row justify-content-md-center">
+            <div class="row justify-content-center">
+              <div class="col justify-self-center carroussel">
               <ProfileImageCarousel :images="user_images" :disabled="true" />
+              </div>
             </div>
             <div class="row infos justify-content-md-center">
               <div class="col-md-auto">
@@ -214,6 +216,7 @@ export default {
 <style scoped>
 @import url("../assets/shared.css");
 
+
 .profile_pic {
   width: 200px;
   height: 200px;
@@ -221,6 +224,12 @@ export default {
   max-height: 100%;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.carroussel{
+  max-width: 50%;
+  margin-top: 5%;
+
 }
 
 .infos {

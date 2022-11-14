@@ -30,6 +30,7 @@ app.use(protect.express.sqlInjection({
   body: true,
   loggerFunction: console.error
 }))
+
 // app.use((req, res, next) => {
 //   console.log('Time:', Date.now())
 //   console.log("inje: ",sqlinjection(req, res))

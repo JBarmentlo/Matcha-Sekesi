@@ -132,12 +132,9 @@ export default {
 <style scoped>
 @import url("../assets/profile.css");
 
-.carroussel_container {
-  max-width: 300px;
-  max-height: 300px;
-}
-
 .carroussel_images {
+  /* width: 100%; */
+  /* height: 100%; */
   object-fit: cover;
 }
 
