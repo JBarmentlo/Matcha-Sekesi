@@ -52,9 +52,9 @@
       <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
         <div class="card h-100">
           <div class="card-body">
-            <!-- <div class="carroussel"> -->
+            <div class="row justify-content-md-center">
               <ProfileImageCarousel :images="user_images" :disabled="true" />
-            <!-- </div> -->
+            </div>
             <div class="row infos justify-content-md-center">
               <div class="col-md-auto">
                 <p>Popularity:</p>

@@ -133,8 +133,8 @@ export default {
 @import url("../assets/profile.css");
 
 .carroussel_container {
-  justify-content: center;
-  max-width: 80%;
+  max-width: 300px;
+  max-height: 300px;
 }
 
 .carroussel_images {
