@@ -21,7 +21,7 @@ import NavBar from "./shared/NavBar.vue"
 
 export default {
 	name: 'App',
-	
+
 	components: {
 		NavBar
 	},
@@ -63,7 +63,7 @@ export default {
 					let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.$cookies.get('user').username))
 					this.notifyUser(new_notifs)
 				}
-				
+
 			}, freq)
 			console.log(freq)
 		},
@@ -91,6 +91,7 @@ export default {
 			console.log("already logged in by cookie");
 			try {
 				let user = await getMyUser(this.$cookies.get('sekes_tokens'))
+				console.log("User:" + user.data.code)
 				if (user.data.code == "SUCCESS") {
 					this.$cookies.set("user", {...user.data.data})
 					this.setLoggedIn(true);
@@ -102,6 +103,8 @@ export default {
 				}
 			}
 			catch (e) {
+				this.$cookies.remove('sekes_tokens')
+				this.$cookies.remove('user')
 				console.log("error in auto cookie signin", e)
 				throw (e)
 			}

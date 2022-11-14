@@ -34,7 +34,6 @@
                                     variant="link"
                                     toggle-class="text-decoration-none"
                                     no-caret
-                                    @hide="setSeen"
                                     >
                                     <template #button-content>
                                     <span class = "details"><b-icon-caret-down-fill class="caret"/></span>
