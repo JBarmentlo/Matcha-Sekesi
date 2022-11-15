@@ -4,7 +4,7 @@ button:active {
 	box-shadow: 0px 0px 0px 0px;
 	top: 5px;
 	left: 5px;
-	
+
 }
 
 button:hover{
@@ -47,3 +47,48 @@ button {
 	background-color: rgb(52, 53, 61);
 
 }
+
+.container {
+    left: 50%;
+    margin-top: 5%;
+}
+
+.card {
+    background: #ffffffcb;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 0;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+#app.darkmode .card {
+	background: rgba(0, 0, 0, 0.683);
+}
+
+.account-settings * {
+    text-align: center;
+    margin-top: 5%;
+}
+
+
+.not-important {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #9fa8b9;
+}
+
+#app.darkmode.not-important {
+    color: #d9e2f3;
+}
+
+.black {
+    color: black;
+}
+
+.red {
+    color: red;
+}
+

@@ -36,7 +36,7 @@
                                     no-caret
                                     >
                                     <template #button-content>
-                                    <span class = "black"><b-icon-caret-down-fill class="caret"/></span>
+                                    <span class="caret_down"><b-icon-caret-down-fill class="caret"/></span>
                                     </template>
                                     <div v-for="liker in user.like_list" :key="liker">
                                     <b-dropdown-item v-for="liker in user.like_list" :key="liker">
@@ -342,11 +342,22 @@ export default {
 <style scoped>
 
 @import url("../assets/profile.css");
-@import url("../assets/shared.css");
 
 
 .popularity {
     color: rgb(56, 56, 56);
+}
+
+#app.darkmode .popularity, #app.darkmode #list_people {
+    color: white;
+}
+
+.caret_down {
+    color: black;
+}
+
+#app.darkmode .caret_down {
+    color: white;
 }
 
 .section {

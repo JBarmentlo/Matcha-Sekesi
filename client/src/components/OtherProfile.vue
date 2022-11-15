@@ -214,7 +214,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("../assets/shared.css");
+@import url("../assets/profile.css");
 
 
 .profile_pic {

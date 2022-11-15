@@ -138,8 +138,12 @@ export default {
 :root {
   --font: Roboto, sans-serif;
   --textColor: #2f62c9c2;
-  /* --linkActiveColor: #41b783; */
 	background-color: #fbd2fc;
+}
+
+:root #app.darkmode {
+	--textColor: #f6c0ba;
+	background-color: rgb(13, 13, 138);
 }
 
 #app {
@@ -154,5 +158,7 @@ export default {
 #app.darkmode {
 	background-color: rgb(13, 13, 138);
 }
+
+
 
 </style>

@@ -179,7 +179,11 @@ export default {
 .filter_categories {
 	padding: 20px;
 	border-radius: 5px;
-	background-color : rgba(255, 255, 255, 0.600);
+	background-color : #ffffffcb;
+}
+
+#app.darkmode .filter_categories {
+	background: rgba(0, 0, 0, 0.683);
 }
 
 .filter_title {

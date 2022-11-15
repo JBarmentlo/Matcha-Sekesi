@@ -15,7 +15,7 @@
 				<p class="bio fs-16 ls-1">{{user.bio}}</p>
 			</div>
 			<div class="media-right text-right d-none d-md-block">
-				<p class="fs-14 text-fade mb-12"><i class="fa fa-map-marker pr-1"></i>{{user.city}}<br/> {{user.zipCode}}</p>
+				<p class="fs-14 text-fade mb-30"><i class="fa fa-map-marker pr-1"></i>{{user.city}}<br/> {{user.zipCode}}</p>
 				<span class="text-fade">
 					<i class="fa  pr-1"> {{user.age}}, {{user.gender}},  {{user.sekesualOri}}
 					</i>
@@ -146,6 +146,8 @@ export default {
 
 
 <style scoped>
+@import url("../assets/profile.css");
+/*
 body{
 	background:#FCFCFC;
 }
@@ -159,17 +161,17 @@ body{
 
 .b-1 {
 	border: 1px solid #ebebeb !important;
-}
-
+} */
+/*
 .card {
 	border: 0;
 	border-radius: 0;
 	margin-bottom: 30px;
 	-webkit-transition: .5s;
 	transition: .5s;
-}
+} */
 
-.card {
+/* .card {
 	position: relative;
 	display: -ms-flexbox;
 	display: flex;
@@ -181,12 +183,16 @@ body{
 	background-clip: border-box;
 	border: 1px solid rgba(0,0,0,.125);
 	border-radius: .25rem;
-}
+} */
 
 .media {
 	padding: 16px 12px;
 	-webkit-transition: background-color .2s linear;
 	transition: background-color .2s linear;
+}
+
+.media-right {
+	width: 20%;
 }
 
 .media {
@@ -253,7 +259,7 @@ img {
 	margin-bottom: 0;
 }
 
-.bio, time {
+.bio {
 	font-family: Roboto,sans-serif;
 	font-weight: 400;
 	font-size: 11px;
@@ -264,12 +270,16 @@ img {
 	font-size: 14px !important;
 }
 
-.mb-12 {
-	margin-bottom: 12px !important;
+.mb-30 {
+	margin-bottom: 30% !important;
 }
 
 .text-fade {
 	color: rgba(77,82,89,0.7) !important;
+}
+
+#app.darkmode .text-fade {
+	color: rgba(189, 201, 217, 0.7) !important;
 }
 
 .card-footer:last-child {
@@ -303,7 +313,7 @@ img {
 
 
 .card-footer {
-	background-color: #fcfdfe;
+	background-color: initial;
 	border-top: 1px solid rgba(77, 82, 89, 0.07);
 	color: #8b95a5;
 	padding: 10px 20px
