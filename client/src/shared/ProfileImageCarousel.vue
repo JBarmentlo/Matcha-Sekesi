@@ -1,5 +1,5 @@
 <template>
-  <div class="carroussel-container">
+  <div class="carroussel_container">
     <b-carousel
       v-if="user_images.length != 0"
       ref="myCarousel"
@@ -9,8 +9,6 @@
       :controls="user_images.length > 1"
       indicators
       background="#ababab"
-      img-width="1024"
-      img-height="480"
       no-animation
       style="text-shadow: 1px 1px 2px #333"
     >
@@ -135,18 +133,9 @@ export default {
 <style scoped>
 @import url("../assets/profile.css");
 
-.carroussel-container {
-    position: relative;
-}
-
 .carroussel_images {
-  min-width: 300px;
-  max-width: 600px;
-  max-height: 500px;
   object-fit: cover;
 }
 
-#trash.button_caroussel {
-}
 
 </style>
