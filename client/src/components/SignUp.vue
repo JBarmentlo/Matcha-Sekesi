@@ -70,14 +70,14 @@
 									class="form-control form-control-lg"
 								/>
 								<span class="input-group-btn form-control">
-									<button class="btn" v-on:click="password_visibility" type="button">
+									<button class="btn m-0" v-on:click="password_visibility" type="button">
 									<b-icon-eye-fill v-if="!visible"></b-icon-eye-fill>
 									<b-icon-eye-slash-fill v-else></b-icon-eye-slash-fill>
 									</button>
 								</span>
 							</div>
 							<span class="login_error">{{ errors[0] }}</span>
-						</ValidationProvider>	
+						</ValidationProvider>
 					</div>
 
 					<button type="submit" class = "button_submit">
