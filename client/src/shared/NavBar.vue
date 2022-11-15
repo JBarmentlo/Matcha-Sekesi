@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-navbar toggleable="lg" type="light" variant="info">
+  <b-navbar toggleable="lg" :type="[isActive ? 'dark' : 'light']" variant="info" :class="[isActive ? 'darkk' : 'lightt']">
     <b-navbar-brand href="#"><routerLink to="/" class="navbar-brand">SEKESI</routerLink></b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -17,6 +17,19 @@
         <b-nav-item><router-link to="/editprofile" class="nav-link">Profile <b-icon-person-circle/></router-link></b-nav-item>
         <b-nav-item><router-link to="/cat" class="nav-link">Chat <b-icon-chat-text-fill /></router-link></b-nav-item>
         <NotifHandler />
+        <b-nav-item-dropdown right class="nav-link" >
+          <template slot="button-content">
+              <b-icon-gear-fill/>
+          </template>
+          <div>
+                <b-dropdown-item
+
+                @click="toggle">
+                {{ isActive ? "LightMode" : "DarkMode"}}
+                >
+                </b-dropdown-item>
+            </div>
+        </b-nav-item-dropdown>
         <b-nav-item><router-link to="/" @click.native="logout" class="nav-link">Logout <b-icon-arrow-bar-right /></router-link></b-nav-item>
       </b-navbar-nav>
     </b-collapse>
@@ -42,10 +55,16 @@ export default {
   data() {
     return {
       notifs: [],
+      isActive: false,
     };
   },
 
   methods: {
+    toggle() {
+      this.isActive = !this.isActive;
+      this.$emit('change-mode', this.isActive )
+      console.log('emit child')
+    },
     logout() {
       console.log("LOGGING OUT");
       if (this.$cookies.isKey("user")) this.$cookies.remove("user");
@@ -64,9 +83,12 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Michroma&display=swap");
 
 .navbar {
-  /* font-size: 120%; */
   padding: 10px;
   background-image: linear-gradient(#f6c0ba, #facefb);
+}
+
+.navbar.darkk {
+  background-image: linear-gradient(rgba(110, 110, 251, 0.526), rgb(13, 13, 138));
 }
 
 .nav-link, .navbar-brand {
@@ -74,8 +96,18 @@ export default {
 }
 
 .nav-link:hover, .navbar-brand:hover {
-  color: #324792c2;
+  color: #2f62c9;
 }
+
+
+.navbar.darkk .nav-link, .navbar.darkk .navbar-brand{
+  color: #f6c0ba;
+}
+
+.navbar.darkk .nav-link:hover, .navbar.darkk .navbar-brand:hover{
+  color: #f6c0bab1;
+}
+
 
 .navbar-brand {
   font-family: "Michroma", sans-serif;
