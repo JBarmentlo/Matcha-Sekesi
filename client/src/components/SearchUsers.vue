@@ -193,6 +193,9 @@ export default {
 	background-color: white
 }
 
+#app.darkmode .filter_title {
+	background: rgba(255, 255, 255, 0.14);
+}
 
 .simple_input {
 	font-family: 'Roboto', sans-serif;

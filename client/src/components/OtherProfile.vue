@@ -244,6 +244,10 @@ export default {
   text-align: center;
 }
 
+#app.darkmode .infos {
+	color: #f6c0ba;
+}
+
 .orientation {
   text-align : center;
   color: inherit;
