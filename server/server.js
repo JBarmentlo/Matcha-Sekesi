@@ -22,7 +22,15 @@ app.use(sanitizer.clean({
     noSql: true,
     sql: true,
     sqlLevel: 5,
-}));
+}, whitelist = ["/api/image/upload", "/api/users/updateuser"]));
+
+app.use(sanitizer.clean({
+  xss: true,
+  noSql: true,
+  sql: true,
+  sqlLevel: 4,
+}, whitelist = ["/api/image/upload"]));
+
 
 
 const protect = require('@risingstack/protect')
