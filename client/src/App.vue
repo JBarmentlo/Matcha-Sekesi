@@ -1,6 +1,7 @@
 <template>
-	<div id="app">
-		<NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in"/>
+	<div id="app"
+		:class="[isActive ? 'darkmode' : '']">
+		<NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in" @change-mode="enableDarkMode"/>
 		<notifications/>
 		<router-view @setLoggedIn="setLoggedIn"/>
 	</div>
@@ -31,7 +32,8 @@ export default {
 			logged_in       : false,
 			currentUser     : Object,
 			messages        : null,
-			polling         : null
+			polling         : null,
+			isActive: false,
 		}
 	},
 
@@ -39,6 +41,9 @@ export default {
 	},
 
 	methods: {
+		enableDarkMode(isActive) {
+			this.isActive = isActive;
+		},
 		async setLoggedIn(val) {
 			this.logged_in = val;
 			console.log("logged in set to: %s", val)
@@ -133,8 +138,12 @@ export default {
 :root {
   --font: Roboto, sans-serif;
   --textColor: #2f62c9c2;
-  /* --linkActiveColor: #41b783; */
-	background-color: #fbd2fc
+	background-color: #fbd2fc;
+}
+
+:root #app.darkmode {
+	--textColor: #f6c0ba;
+	background-color: rgb(13, 13, 138);
 }
 
 #app {
@@ -145,4 +154,11 @@ export default {
 	background-color: #fbd2fc;
 	letter-spacing: 2px;
 }
+
+#app.darkmode {
+	background-color: rgb(13, 13, 138);
+}
+
+
+
 </style>

@@ -2,8 +2,8 @@
   <b-nav-item-dropdown right class="nav-link" :disabled="!unreadNotifs">
     <template slot="button-content">
         Notifs
-        <b-icon-bell-fill :class="unreadNotifs ? active_notif : unactive_notif"/>
-        <b-icon-circle-fill :class="unreadNotifs ? active_notif : unactive_notif" v-show="unreadNotifs" class = "active_notif"/>
+        <b-icon-bell-fill :class="unreadNotifs ? 'active_notif' : 'unactive_notif'"/>
+        <b-icon-circle-fill :class="unreadNotifs ? 'active_notif' : 'unactive_notif'" v-show="unreadNotifs" class = "active_notif"/>
     </template>
     <div v-for="notif in notifs" :key="notif.id">
           <b-dropdown-item  v-if="notif.seen == 0" @click="deleteNoot(notif.id)">
