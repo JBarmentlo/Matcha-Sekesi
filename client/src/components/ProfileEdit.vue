@@ -122,6 +122,13 @@
                     />
                 </div>
                 </div>
+                <div class="gif">
+                    <input v-model="searchTerm" type="text">
+                    <button class="button" @click=getGifs()>Search</button>
+                    <div class="gif-container">
+                    <img v-for="gif in gifs" :src="gif" :key="gif.id">
+                </div>
+                </div>
             </div>
             <div class="row pt-5">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -245,7 +252,9 @@ export default {
 
     data() {
         return {
-            user : {...this.$cookies.get('user')},
+            user       : {...this.$cookies.get('user')},
+            searchTerm : "",
+            gifs: []
         };
     },
 
@@ -280,6 +289,34 @@ export default {
     },
 
     methods: {
+        getGifs() {
+            console.log("Search term: " + this.searchTerm);
+            let apiKey = "HFY9lFDhVVSGtPA4tnnFIR0YfPGxzTok";
+            let searchEndPoint = "//api.giphy.com/v1/gifs/search?";
+            let limit = 5;
+
+            let url = `${searchEndPoint}&api_key=${apiKey}&q=${
+            this.searchTerm
+            }&limit=${limit}`;
+            console.log("url: " + url);
+            fetch(url)
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                this.buildGifs(json);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        },
+        buildGifs(json) {
+            this.gifs = json.data
+            .map(gif => gif.id)
+            .map(gifId => {
+            return `https://media.giphy.com/media/${gifId}/giphy.gif`;
+        });
+        },
 		RemoveImage(image_index) {
             console.log("Remov ", image_index)
 			this.user['image' + image_index] = null
@@ -385,6 +422,13 @@ export default {
     font-size: .825rem;
     background: #ffffff;
     color: #2e323c;
+}
+
+.gif-container {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 </style>

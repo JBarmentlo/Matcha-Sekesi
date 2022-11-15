@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-navbar toggleable="lg" :type="[isActive ? 'dark' : 'light']" variant="info" :class="[isActive ? 'darkk' : 'lightt']">
+  <b-navbar toggleable="lg" type="light" variant="info" :class="[isActive ? 'darkk' : 'lightt']">
     <b-navbar-brand href="#"><routerLink to="/" class="navbar-brand">SEKESI</routerLink></b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
