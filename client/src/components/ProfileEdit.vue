@@ -122,13 +122,6 @@
                     />
                 </div>
                 </div>
-                <div class="gif">
-                    <input v-model="searchTerm" type="text">
-                    <button class="button" @click=getGifs()>Search</button>
-                    <div class="gif-container">
-                    <img v-for="gif in gifs" :src="gif" :key="gif.id">
-                </div>
-                </div>
             </div>
             <div class="row pt-5">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -207,7 +200,26 @@
                     <label class="labels">Date of Birth</label>
                     <b-datepicker v-bind:value="user.DOB" @input="DOBSelected"/>
                 </div>
-            </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+                    <div class="form-group">
+                        <label class="labels">Add a gif to your profile</label>
+                        <input
+                            type="text"
+                            v-model="searchTerm"
+                            class="form-control"
+                            placeholder="Enter a word"
+                            value=""
+                        />
+                        <button class="button" @click=getGifs()>Search</button>
+                        <img v-for="gif in gifs" :src="gif" :key="gif.id">
+                <!-- <div class="gif">
+                    <input v-model="searchTerm" type="text">
+                    <button class="button" @click=getGifs()>Search</button>
+                    <div class="gif-container">
+                    <img v-for="gif in gifs" :src="gif" :key="gif.id">
+                </div> -->
+                </div>
                 </div>
             <div class="row">
                 <div class="col">
@@ -224,6 +236,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     </div>
     </div>
