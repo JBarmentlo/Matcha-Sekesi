@@ -94,8 +94,7 @@ export default {
 			offset       : 0,
 			limit        : 200,
 			current_page : 1,
-			user         : this.$cookies.get('user')
-
+			user         : this.$cookies.get('user'),
 		}
 	},
 	methods: {

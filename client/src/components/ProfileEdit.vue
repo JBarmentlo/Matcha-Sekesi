@@ -200,7 +200,32 @@
                     <label class="labels">Date of Birth</label>
                     <b-datepicker v-bind:value="user.DOB" @input="DOBSelected"/>
                 </div>
-            </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+                    <div class="form-group">
+                        <label v-if="!user_gif_choice" class="labels">Add a gif to your profile</label>
+                        <div v-if="!user_gif_choice" class = "input-group">
+                        <input
+                            type="text"
+                            ref="gifsearch"
+                            v-model="searchTerm"
+                            class="form-control"
+                            placeholder="Enter a word"
+                            value=""
+                        />
+                        <span class="input-group-btn form-control">
+                            <button class="btn m-0" type="button" @click=getGifs()><b-icon-search></b-icon-search></button>
+                        </span>
+                        <span v-if="search_on" class="input-group-btn form-control">
+                            <button class="btn m-0" type="button" @click=removeSearch()><b-icon-x></b-icon-x></button>
+                        </span>
+                        </div>
+                        <div v-if="gifs.length > 0" class="gif-container">
+                            <img id="gif-image" :class="!user_gif_choice ? 'gif-image' : ''" @click=selectGif(gif) v-for="gif in gifs" :src="gif" :key="gif.id">
+                            <b-tooltip v-if="!user_gif_choice" target="gif-image" placement="rigth" triggers="hover">select this gif</b-tooltip>
+                            <b-button v-if="user_gif_choice" class="gif-button" @click=removeGif()>Remove this GIF from your profile<b-icon-x></b-icon-x></b-button>
+                        </div>
+                </div>
                 </div>
             <div class="row">
                 <div class="col">
@@ -217,6 +242,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     </div>
     </div>
@@ -245,7 +271,11 @@ export default {
 
     data() {
         return {
-            user : {...this.$cookies.get('user')},
+            user       : {...this.$cookies.get('user')},
+            searchTerm : "",
+            gifs: [],
+            search_on : false,
+            user_gif_choice : null,
         };
     },
 
@@ -280,15 +310,69 @@ export default {
     },
 
     methods: {
+        getGifs() {
+            console.log("Search term: " + this.searchTerm);
+            let apiKey = "HFY9lFDhVVSGtPA4tnnFIR0YfPGxzTok";
+            let searchEndPoint = "//api.giphy.com/v1/gifs/search?";
+            let limit = 5;
+
+            let url = `${searchEndPoint}&api_key=${apiKey}&q=${
+            this.searchTerm
+            }&limit=${limit}`;
+            console.log("url: " + url);
+            fetch(url)
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                this.buildGifs(json);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        },
+
+
+        buildGifs(json) {
+            this.search_on = !this.search_on;
+            this.gifs = json.data
+            .map(gif => gif.id)
+            .map(gifId => {
+            return `https://media.giphy.com/media/${gifId}/giphy.gif`;
+        });
+        },
+
+
+        selectGif(gif){
+            console.log("Gifs: " + this.gifs);
+            console.log("Gif: " + gif);
+            this.gifs = [gif];
+            this.search_on = !this.search_on;
+            this.user_gif_choice = gif;
+            console.log("After click Gifs: " + this.gifs);
+        },
+
+
+        removeSearch() {
+            this.gifs = [];
+            this.search_on = !this.search_on;
+            this.$refs.gifsearch.value = "";
+        },
+
+        removeGif() {
+            this.user_gif_choice = null;
+            this.gifs = [];
+        },
+
 		RemoveImage(image_index) {
             console.log("Remov ", image_index)
 			this.user['image' + image_index] = null
 		},
 
+
         AddImage(image_url, index) {
             console.log("Add ", image_url, index)
             this.user['image' + index] = image_url
-            // this.$refs.Jaroussel.setSlide(index)
         },
 
 
@@ -311,25 +395,31 @@ export default {
             }
         },
 
+
         setGender(val) {
             this.user.gender = val;
             console.log("gender %s", this.user.gender);
         },
+
 
         setSekesual(val) {
             this.user.sekesualOri = val;
             console.log("sekesualOri %s", this.user.sekesualOri);
         },
 
+
         onSelectImage(val) {
             console.log("selected: ", val)
         },
+
 
         calculateAge(birthday) {
             var ageDifMs = Date.now() - birthday.getTime();
             var ageDate = new Date(ageDifMs);
             return Math.abs(ageDate.getUTCFullYear() - 1970);
         },
+
+
         DOBSelected(e) {
             this.user.DOB = e
             // this.user.age = this.calculateAge(new Date(e.replace(/-/g,'/')))
@@ -385,6 +475,22 @@ export default {
     font-size: .825rem;
     background: #ffffff;
     color: #2e323c;
+}
+
+.gif-container {
+  margin-top: 30px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gif-image:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.gif-button {
+    margin: 5px;
+    font-size: 10px;
 }
 
 </style>

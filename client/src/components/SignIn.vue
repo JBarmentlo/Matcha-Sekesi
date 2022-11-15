@@ -22,7 +22,7 @@
 						class="form-control form-control-lg"
 					/>
 					<span class="input-group-btn form-control">
-						<button class="btn" v-on:click="password_visibility" type="button">
+						<button class="btn m-0" v-on:click="password_visibility" type="button">
 						<b-icon-eye-fill v-if="!visible"></b-icon-eye-fill>
 						<b-icon-eye-slash-fill v-else></b-icon-eye-slash-fill>
 						</button>
@@ -92,7 +92,7 @@ export default {
 				console.log("error in signin form submit: ", e)
 				throw(e)
 			}
-			
+
 		},
 		password_visibility() {
 			this.visible = !this.visible
@@ -116,7 +116,7 @@ export default {
 	// 				this.$cookies.remove('sekes_tokens')
 	// 				this.$cookies.remove('user')
 	// 			}
-				
+
 	// 		}
 	// 		catch (e) {
 	// 			console.log("error in auto cookie signin", e)
@@ -136,5 +136,5 @@ export default {
 .password > input {
 	width: 80%;
 }
-	
+
 </style>
