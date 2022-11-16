@@ -470,6 +470,6 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	// console.log("quyeriro: ", keri_string)
 	let user_query = await db.query(keri_string)
 
-	console.log("KERIIIIIIII: ", user_query.map(user => user.popScore))
+	// console.log("KERIIIIIIII: ", user_query.map(user => user.popScore))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
