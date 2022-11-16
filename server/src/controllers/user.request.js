@@ -396,7 +396,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			FROM USERS                                                                      \
 			INNER JOIN TAGS T                                                               \
 				on USERS.username = T.user                                                  \
-				AND T.tag in (TAG_LIST)                                                     \
+				AND T.tag in (@TAG_LIST)                                                     \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
 				AND (((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))) >= MIN_POP_SCORE                                               \
@@ -453,7 +453,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 				ON USERS.username = TAGLIST.user                                            \
 			ORDERBYREPLACE                                                                  \
 			LIMIT LIMIT_REPLACE OFFSET OFFSET_REPLACE;"
-			.replace("TAG_LIST"         , tag_list         )
+			.replace("@TAG_LIST"         , tag_list         )
 			.replace("MIN_AGE"          , min_age          )
 			.replace("MAX_AGE"          , max_age          )
 			.replace("MIN_POP_SCORE"    , min_rating       )
@@ -555,9 +555,11 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 		SELECT                                                                          \
 			USERLIST.user,                                                              \
 			popScore,\
-			GROUP_CONCAT(tag) as tag_list                                               \
+			GROUP_CONCAT(tag) as tag_list,                                               \
+			COUNT(tag) as commonTagCount \
 		FROM USERLIST LEFT JOIN TAGS                                                    \
 			ON USERLIST.user = TAGS.user                                                \
+			AND TAGS.tag IN (@TAG_LIST)\
 		GROUP BY user                                                                   \
 	)                                                                                   \
 	                                                                                    \
@@ -575,6 +577,7 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 	isCompleteProfile,                                                              \
 	0 as did_i_block_him,                                                           \
 	TAGLIST.popScore,\
+	commonTagCount,\
 	image0,                                                                         \
 	image1,                                                                         \
 	image2,                                                                         \
@@ -596,7 +599,7 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 		ON USERS.username = TAGLIST.user                                            \
 	ORDER BY similarityScore DESC                                                                  \
 	LIMIT LIMIT_REPLACE OFFSET OFFSET_REPLACE;"
-	.replace("TAG_LIST"         , tag_list         )
+	.replace("@TAG_LIST"         , tag_list         )
 	.replace(new RegExp("searcher_username", "g"), searcher_username)
 	.replace(new RegExp("@desires", "g"), desire_str)
 	.replace('OFFSET_REPLACE'   , offset)
@@ -604,6 +607,6 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 
 	let user_query = await db.query(keri_string)
 
-	// console.log("KERIIIIIIII: ", user_query.map(user => user.popScore))
+	console.log("KERIIIIIIII: ", user_query.map(user => user))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
