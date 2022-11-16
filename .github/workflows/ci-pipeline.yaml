@@ -2,6 +2,8 @@ name: SQL backend unit tests
 
 on:
   push:
+    branches:
+      - master
 
 
 env:
@@ -37,18 +39,24 @@ jobs:
           echo "LOLOL"
           mysql --version
           sudo systemctl status mysql.service
-          sudo bash server/sql_scripts/create_user_table.sh
+
+          sudo mysql -e 'CREATE DATABASE ${{ env.MATCHA_DB }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+          sudo mysql -e 'CREATE DATABASE ${{ env.MATCHA_TEST_DB }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+
+          sudo mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} ${{ env.MATCHA_DB }} < server/sql_scripts/define_db.sql
+          sudo mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} ${{ env.MATCHA_TEST_DB }} < server/sql_scripts/define_db.sql
+
+          sudo mysql -e "CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password';" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+          sudo mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"  -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
       - name: Install dependencies
         run: |
           cd SQL_Server
           npm ci
-
       - name: Run all unittests
         run: |
           cd SQL_Server
           npm test
-
       - name: SQL users table
         run: |
           sudo mysql -e 'use sekesitest; select * from USERS;' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
