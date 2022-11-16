@@ -30,24 +30,20 @@
                                 </div>
                                 <b-tooltip target="likes" placement="top" triggers="hover">likes</b-tooltip>
                                 <b-dropdown
-                                    id="list_people"
-                                    variant="link"
-                                    toggle-class="text-decoration-none"
-                                    no-caret
-                                    >
+                                id="list_people"
+                                variant="link"
+                                toggle-class="text-decoration-none"
+                                no-caret
+                                >
                                     <template #button-content>
-                                    <span class="caret_down"><b-icon-caret-down-fill class="caret"/></span>
+                                        <span class="caret_down"><b-icon-caret-down-fill class="caret"/></span>
                                     </template>
-                                    <div v-for="liker in user.like_list" :key="liker">
-                                    <b-dropdown-item v-for="liker in user.like_list" :key="liker">
-                                        <a :href="'?#/profile/' + liker">{{liker}}</a> liked you
-                                    </b-dropdown-item>
-                                    </div>
-                                    <div v-for="consulter in user.consult_list" :key="consulter">
-                                        <b-dropdown-item>
-                                            <li><a :href="'?#/profile/' + consulter">{{consulter}}</a> consulted your profile</li>
+                                        <b-dropdown-item v-for="liker in user.like_list" :key="liker">
+                                            <a :href="'?#/profile/' + liker">{{liker}}</a> liked you
                                         </b-dropdown-item>
-                                    </div>
+                                        <b-dropdown-item v-for="consulter in user.consult_list" :key="consulter">
+                                            <a :href="'?#/profile/' + consulter">{{consulter}}</a> consulted your profile
+                                        </b-dropdown-item>
                                 </b-dropdown>
                                 <b-tooltip target="list_people" placement="top" triggers="hover">More details</b-tooltip>
                             </div>

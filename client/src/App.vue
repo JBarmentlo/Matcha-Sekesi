@@ -110,6 +110,7 @@ export default {
 			catch (e) {
 				this.$cookies.remove('sekes_tokens')
 				this.$cookies.remove('user')
+				this.setLoggedIn(false);
 				console.log("error in auto cookie signin", e)
 				throw (e)
 			}

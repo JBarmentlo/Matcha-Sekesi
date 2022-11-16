@@ -48,3 +48,38 @@ export const searchUsers = async (access_token, min_age, max_age, required_tags,
 	console.log("setrch res:", response)
 	return response;
 }
+
+
+
+export const searchUsersInitial = async (access_token, user_tags, long, lat, desires, offset, limit) => {
+	console.log("initial user search: ", "\nuser_tags: ", user_tags , "\nlong: ", long , "\nlat: ", lat , "\ndesires: ", desires , "\noffset: ", offset , "\nlimit: ", limit )
+	let request = {
+		url: "http://localhost:8081/api/users/search_users_init", // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+			"x-access-signature" : access_token.signature,
+		},
+		data: JSON.stringify({
+			user_tags : user_tags,
+			long      : long,
+			lat       : lat,
+			offset    : offset,
+			limit     : limit,
+			desires   : desires
+		})
+		
+	};
+	console.log("requesting:", JSON.stringify({
+		user_tags : user_tags,
+		long      : long,
+		lat       : lat,
+		offset    : offset,
+		limit     : limit,
+		desires   : desires
+	}))
+	const response = await axios(request);
+	console.log("setrch res:", response)
+	return response;
+}

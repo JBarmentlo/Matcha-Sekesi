@@ -9,6 +9,7 @@ import SearchUsers    from '../components/SearchUsers.vue'
 import PopulateDb     from '../components/PopulateDb.vue'
 import ChatEx         from '../components/ChatEx.vue'
 import SignUp         from '../components/SignUp.vue'
+import {getMyUser}    from '../services/user'
 
 Vue.use(VueRouter)
 
@@ -58,6 +59,7 @@ const routes = [
   {
     path: '/populate',
     name: 'Populate for testing',
+    meta: {requiresAuth: true},
     component: PopulateDb
   },
   {
@@ -83,13 +85,36 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
     if (Vue.$cookies.isKey('user') && Vue.$cookies.isKey('sekes_tokens')) {
-      next()
-      return
+      console.log("checking login")
+      getMyUser(Vue.$cookies.get('sekes_tokens'))
+      .then( user => {
+        console.log("User logged in check:" + user.data.code)
+        if (user.data.code == "SUCCESS") {
+          console.log("checking login success")
+          next()
+          return
+        }
+        else {
+          console.log("checking login fail")
+          Vue.$cookies.remove('sekes_tokens')
+          Vue.$cookies.remove('user')
+          next('/signin')
+          return
+
+        }
+      })
+      .catch(e => {
+          console.log("checking login failure")
+          Vue.$cookies.remove('sekes_tokens')
+        Vue.$cookies.remove('user')
+        console.log("Trying to access page that requires signin", e)
+        next('/signin')
+        return
+      })
     }
-    console.log("GO SINGING")
-    next('/signin')
   } else {
     next()
+    return
   }
 })
 

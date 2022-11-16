@@ -396,7 +396,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			FROM USERS                                                                      \
 			INNER JOIN TAGS T                                                               \
 				on USERS.username = T.user                                                  \
-				AND T.tag in (TAG_LIST)                                                     \
+				AND T.tag in (@TAG_LIST)                                                     \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
 				AND (((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))) >= MIN_POP_SCORE                                               \
@@ -453,7 +453,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 				ON USERS.username = TAGLIST.user                                            \
 			ORDERBYREPLACE                                                                  \
 			LIMIT LIMIT_REPLACE OFFSET OFFSET_REPLACE;"
-			.replace("TAG_LIST"         , tag_list         )
+			.replace("@TAG_LIST"         , tag_list         )
 			.replace("MIN_AGE"          , min_age          )
 			.replace("MAX_AGE"          , max_age          )
 			.replace("MIN_POP_SCORE"    , min_rating       )
@@ -470,6 +470,147 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	// console.log("quyeriro: ", keri_string)
 	let user_query = await db.query(keri_string)
 
-	console.log("KERIIIIIIII: ", user_query.map(user => user.popScore))
+	// console.log("KERIIIIIIII: ", user_query.map(user => user.popScore))
+	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
+};
+
+exports.search_users_initial = async (searcher_username, user_tags, long, lat, desires, offset, limit) => {
+	console.log("Searching users initial")
+	console.log("criteria: ",
+	"user_tags     : ", user_tags  ,
+	"long          : ", long       ,
+	"lat           : ", lat        ,
+	"offset        : ", offset     ,
+	"limit         : ", limit      , 
+	"desires       : ", desires)
+
+	let tag_list = ""
+	if (user_tags == undefined || user_tags.length == 0) {
+		tag_list = "''"
+	}
+	else {
+		first = true
+		for (const tag of user_tags) {
+			if (first) {
+				tag_list += `'${tag}'`
+				first = false
+			}
+			else {
+				tag_list += `, '${tag}'`
+			}
+		}
+	}
+	let desire_str = ""
+	first = true
+	for (const d of desires) {
+		desire_str += first ? "AND (" : " OR "
+		desire_str += `(gender = '${d.gender}' AND sekesualOri = '${d.sekesualOri}')`
+		first = false
+	}
+	if (desire_str != "") {
+		desire_str += ')'
+	}
+
+tag_list="'Music'"
+	console.log("TAK: ", tag_list)
+	let keri_string =  
+	"WITH                                                                               \
+	\
+	MATCHES AS (                                                                        \
+		SELECT l1.liker, l1.liked                                                       \
+			FROM LIKES l1 INNER JOIN LIKES l2                                           \
+				ON l1.liked = l2.liker                                                  \
+				AND l1.liker = l2.liked                                                 \
+				AND l1.liker != l1.liked                                                \
+	),                                                                                  \
+																						\
+	CONVO_START AS (                                                                    \
+		SELECT                                                                          \
+			m1.sender, m1.receiver                                                      \
+		FROM                                                                            \
+			MSG AS m1                                                                   \
+		WHERE                                                                           \
+			m1.last_updated =                                                           \
+				(SELECT                                                                 \
+					MIN(m2.last_updated)                                            \
+				FROM                                                                \
+					MSG m2                                                          \
+				WHERE m1.ConvoId = m2.ConvoId)\
+	),                                     \
+																						\
+	USERLIST as (                                                                       \
+		SELECT                                                                          \
+			user,                                                                        \
+			LEAST ((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore\
+		FROM USERS                                                                      \
+		INNER JOIN TAGS T                                                               \
+			on USERS.username = T.user                                                  \
+			@desires                                                                    \
+			AND USERS.username != 'searcher_username'                                             \
+			AND IF((username IN(SELECT blocked                                          \
+				FROM BLOCKS                                                             \
+				WHERE blocker='searcher_username')                                      \
+				), 1 , 0) = 0                                                           \
+		GROUP BY user                                                                   \
+		),                                                                              \
+																						\
+	TAGLIST as (                                                                        \
+		SELECT                                                                          \
+			USERLIST.user,                                                              \
+			popScore,\
+			GROUP_CONCAT(tag) as tag_list,                                               \
+			COUNT(tag) as commonTagCount \
+		FROM USERLIST LEFT JOIN TAGS                                                    \
+			ON USERLIST.user = TAGS.user                                                \
+			AND TAGS.tag IN (@TAG_LIST)\
+		GROUP BY user                                                                   \
+	)                                                                                   \
+	                                                                                    \
+	SELECT                                                                              \
+	username,                                                                       \
+	firstName,                                                                      \
+	lastName,                                                                       \
+	bio,                                                                            \
+	gender,                                                                         \
+	TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                     \
+	DOB,                                                                            \
+	sekesualOri,                                                                    \
+	zipCode,                                                                        \
+	city,                                                                           \
+	isCompleteProfile,                                                              \
+	0 as did_i_block_him,                                                           \
+	TAGLIST.popScore,\
+	commonTagCount,\
+	image0,                                                                         \
+	image1,                                                                         \
+	image2,                                                                         \
+	image3,                                                                         \
+	profilePic,                                                                     \
+	longitude,                                                                      \
+	latitude,                                                                       \
+	mailVerified,                                                                   \
+	tag_list,                                                                       \
+	((GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10) + TAGLIST.popScore + commonTagCount * 3) as similarityScore, \
+	IF((username IN(SELECT liked                                                    \
+					FROM LIKES                                                      \
+					WHERE liker='searcher_username')                                \
+					), 1 , 0)                                                       \
+					AS did_i_like_him                                               \
+																					\
+	FROM USERS INNER JOIN TAGLIST                                                   \
+		ON USERS.username = TAGLIST.user                                            \
+	ORDER BY similarityScore DESC                                                                  \
+	LIMIT LIMIT_REPLACE OFFSET OFFSET_REPLACE;"
+	.replace('OFFSET_REPLACE' , offset            )
+	.replace('LIMIT_REPLACE'  , limit             )
+	.replace('LIMIT_REPLACE'  , limit             )
+	.replace(new RegExp       ('@LONG'            , "g")          , long             )
+	.replace(new RegExp       ('@LAT'             , "g")          , lat              )
+	.replace(new RegExp       ('@TAG_LIST'        , "g")          , tag_list         )
+	.replace(new RegExp       ("searcher_username", "g")          , searcher_username)
+	.replace(new RegExp       ("@desires"         , "g")          , desire_str       )
+	let user_query = await db.query(keri_string)
+
+	console.log("KERIIIIIIII: ", user_query.map(user => user))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
