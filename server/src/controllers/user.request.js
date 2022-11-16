@@ -486,7 +486,7 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 
 	let tag_list = ""
 	if (user_tags == undefined || user_tags.length == 0) {
-		tag_list = ''
+		tag_list = "''"
 	}
 	else {
 		first = true
@@ -511,6 +511,8 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 		desire_str += ')'
 	}
 
+tag_list="'Music'"
+	console.log("TAK: ", tag_list)
 	let keri_string =  
 	"WITH                                                                               \
 	\
@@ -588,7 +590,7 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 	latitude,                                                                       \
 	mailVerified,                                                                   \
 	tag_list,                                                                       \
-	((GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10) + TAGLIST.popScore + commonTagCount) as similarityScore, \
+	((GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10) + TAGLIST.popScore + commonTagCount * 3) as similarityScore, \
 	IF((username IN(SELECT liked                                                    \
 					FROM LIKES                                                      \
 					WHERE liker='searcher_username')                                \

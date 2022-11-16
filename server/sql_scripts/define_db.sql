@@ -13,8 +13,8 @@ create table USERS
     zipCode           varchar(10)                               null,
     city              varchar(100)                              null,
     isCompleteProfile tinyint(1)  default 0                     not null,
-    longitude         float                                     null,
-    latitude          float                                     null,
+    longitude         float       default 0                     not null,
+    latitude          float       default 0                     not null,
     id                mediumint auto_increment
         primary key,
     image1            varchar(100)                              null,
