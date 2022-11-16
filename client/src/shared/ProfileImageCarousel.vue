@@ -99,7 +99,13 @@ export default {
 
     async UploadAndAddImage(e) {
       const file = e.target.files[0];
-      console.log("UPAAA; ", file);
+      const acceptedImageTypes = ['image/webp', 'image/jpeg', 'image/png'];
+ 
+      if (!acceptedImageTypes.includes(file['type'])) {
+        console.log("not an image")
+        return
+      }
+      console.log("UPALoading: ", file);
 
       if (file == null) {
         console.log("WIERD SELECT NO FILE BUT CHANGE");
