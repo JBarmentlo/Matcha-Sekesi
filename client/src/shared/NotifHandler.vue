@@ -1,17 +1,17 @@
 <template>
-  <b-nav-item-dropdown right class="nav-link" :disabled="!unreadNotifs">
+  <b-nav-item-dropdown right class="nav-link" :disabled="!numberNotifs" @hide="setSeen">
     <template slot="button-content">
         Notifs
         <b-icon-bell-fill :class="unreadNotifs ? 'active_notif' : 'unactive_notif'"/>
         <b-icon-circle-fill :class="unreadNotifs ? 'active_notif' : 'unactive_notif'" v-show="unreadNotifs" class = "active_notif"/>
     </template>
     <div v-for="notif in notifs" :key="notif.id">
-          <b-dropdown-item  v-if="notif.seen == 0" @click="deleteAndRedirect(notif.id, notif.source_user)">
-          {{notifCardText(notif)}}<b-icon-x></b-icon-x>
+          <b-dropdown-item  v-if="notif.seen == 1" variant="secondary" @click="deleteAndRedirect(notif.id, notif.source_user)">
+            {{notifCardText(notif)}}<b-icon-x/>
           </b-dropdown-item>
-          <!-- <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)"><p>
-          {{notifCardText(notif)}}</p>
-          </b-dropdown-item> -->
+          <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)">
+            {{notifCardText(notif)}}<b-icon-x/>
+          </b-dropdown-item>
       </div>
   </b-nav-item-dropdown>
 </template>
@@ -33,6 +33,10 @@ data () {
 computed: {
   unreadNotifs() {
     return this.notifs.filter(n => n.seen == 0).length
+  },
+
+  numberNotifs() {
+    return this.notifs.length
   },
 
   notifText() {
