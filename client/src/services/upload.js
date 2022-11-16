@@ -6,7 +6,7 @@ export const uploadImage = async (sekes_tokens, image_file) => {
 	const formData = new FormData()
 	formData.append('file', image_file)
 	let request = {
-		url: "http://localhost:8081/api/image/upload", // should be replaced after going to production with domain url
+		url: "api/image/upload", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
