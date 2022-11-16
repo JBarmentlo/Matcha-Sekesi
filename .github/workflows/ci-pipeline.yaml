@@ -49,11 +49,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd SQL_Server
+          cd server
           npm ci
       - name: Run all unittests
         run: |
-          cd SQL_Server
+          cd server
           npm test
       - name: SQL users table
         run: |
