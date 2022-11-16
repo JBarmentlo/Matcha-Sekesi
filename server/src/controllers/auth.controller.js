@@ -85,7 +85,7 @@ exports.verifyMail = async (req, res) => {
             "UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
             verify_mail_result[0].user
         )
-        // sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
+        sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
         res.status(200).send({message: "verified mail for " + verify_mail_result.user, code: "SUCCESS"})
     }
     catch (e) {
