@@ -30,11 +30,16 @@ Vue.use(VueGeolocation);
 
 
 import { extend } from 'vee-validate';
-import { required, email, regex, alpha_num, alpha, numeric } from 'vee-validate/dist/rules';
+import { required, email, regex, alpha_num, alpha, numeric, image } from 'vee-validate/dist/rules';
 
 extend('required', {
   ...required,
   message: 'This field is required'
+});
+
+extend('image', {
+  ...image,
+  message: 'Please choose an image.'
 });
 
 extend('email', {

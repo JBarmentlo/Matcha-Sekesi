@@ -2,12 +2,12 @@
   <div>
     <img class="profile_pic" :src="profile_pic" :alt="profile_pic">
 			<br/>
-			<input
-				hidden
-				id="ProfilePicUpload"
-				type="file"
-				@change="UploadAndAddImage"
-			>
+      <input
+        hidden
+        id="ProfilePicUpload"
+        type="file"
+        @change="UploadAndAddImage"
+      >
       <span class="hovertext" @click="chooseFiles()" data-hover="Change Profile Pic">
       <b-iconstack class = "camera_container" font-scale="2">
         <b-icon stacked icon="circle" class="circle"></b-icon>
@@ -20,6 +20,7 @@
 
 <script>
 import { uploadImage }from '../services/upload'
+// import { validate } from 'vee-validate';
 
 
 export default {
@@ -33,6 +34,9 @@ export default {
   data() {
     return {
     }
+  },
+
+  components: {
   },
 
   computed: {
@@ -54,20 +58,26 @@ export default {
     },
 
     async UploadAndAddImage(e) {
-        const file = e.target.files[0]
-        if (file == null) {
-          console.log("WIERD SELECT NO FILE BUT CHANGE")
-          return
+      const file = e.target.files[0]
+      const acceptedImageTypes = ['image/webp', 'image/jpeg', 'image/png'];
+ 
+      if (!acceptedImageTypes.includes(file['type'])) {
+        console.log("not an image")
+        return
+      }
+      if (file == null) {
+        console.log("WIERD SELECT NO FILE BUT CHANGE")
+        return
+      }
+      else {
+        try {
+          let upload_res = await uploadImage(this.$cookies.get('sekes_tokens'), file)
+          this.$emit("upload_profile_pic", upload_res.data.url)
         }
-        else {
-          try {
-            let upload_res = await uploadImage(this.$cookies.get('sekes_tokens'), file)
-            this.$emit("upload_profile_pic", upload_res.data.url)
-          }
-          catch {
-            console.log("ERR")
-          }
+        catch {
+          console.log("ERR")
         }
+      }
     },
 
     mounted() {
