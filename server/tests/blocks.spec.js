@@ -37,12 +37,12 @@ describe('Test blocks', () => {
 		})
 		step('Missing blocked: Code LIKE_MISS', async () => {
 			await BlockController.block_user(mockRequest({blocked: 'lol'}, users.Mark.username), res)
-			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW_2")
+			assert.equal((res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW_2") || (res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW"), true)
 			return Promise.resolve()
 		})
 		step('Missing blocker: Code LIKE_MISS', async () => {
 			await BlockController.block_user(mockRequest({blocked: users.Jhonny.username}, 'lol'), res)
-			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW_2")
+			assert.equal((res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW_2") || (res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW"), true)
 			return Promise.resolve()
 		})
 	})

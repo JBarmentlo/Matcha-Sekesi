@@ -43,19 +43,19 @@ jobs:
           sudo mysql -e 'CREATE DATABASE ${{ env.MATCHA_DB }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
           sudo mysql -e 'CREATE DATABASE ${{ env.MATCHA_TEST_DB }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
-          sudo mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} ${{ env.MATCHA_DB }} < SQL_Server/sql_scripts/define_db.sql
-          sudo mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} ${{ env.MATCHA_TEST_DB }} < SQL_Server/sql_scripts/define_db.sql
+          sudo mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} ${{ env.MATCHA_DB }} < server/sql_scripts/define_db.sql
+          sudo mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} ${{ env.MATCHA_TEST_DB }} < server/sql_scripts/define_db.sql
 
           sudo mysql -e "CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password';" -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
           sudo mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION;"  -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
       - name: Install dependencies
         run: |
-          cd SQL_Server
+          cd server
           npm ci
       - name: Run all unittests
         run: |
-          cd SQL_Server
+          cd server
           npm test
       - name: SQL users table
         run: |

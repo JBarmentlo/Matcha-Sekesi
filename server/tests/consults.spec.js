@@ -47,12 +47,12 @@ describe('Test consults', () => {
 		})
 		step('Missing consulted: Code LIKE_MISS', async () => {
 			await ConsultController.consult_user(mockRequest({consulted: 'lol'}, users.Mark.username), res)
-			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW_2")
+			assert.equal((res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW_2") || (res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW"), true)
 			return Promise.resolve()
 		})
 		step('Missing consulter: Code LIKE_MISS', async () => {
 			await ConsultController.consult_user(mockRequest({consulted: users.Jhonny.username}, 'lol'), res)
-			assert.equal(res.send.lastCall.firstArg.code,  "ER_NO_REFERENCED_ROW_2")
+			assert.equal((res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW_2") || (res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW"), true)
 			return Promise.resolve()
 		})
 	})
