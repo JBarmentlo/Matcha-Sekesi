@@ -1,7 +1,8 @@
 <template>
 <div>
   <b-navbar toggleable="lg" type="light" variant="info" :class="[isActive ? 'darkk' : 'lightt']">
-    <b-navbar-brand href="#"><routerLink to="/" class="navbar-brand">SEKESI</routerLink></b-navbar-brand>
+    <b-navbar-brand v-if="!logged_in" href="#"><routerLink to="/" class="navbar-brand">SEKESI</routerLink></b-navbar-brand>
+    <b-navbar-brand v-else href="#"><routerLink to="/editprofile" class="navbar-brand">SEKESI</routerLink></b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
