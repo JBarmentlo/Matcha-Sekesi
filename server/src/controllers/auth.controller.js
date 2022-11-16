@@ -6,8 +6,6 @@ const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
 const searches = require("./user.request.js")
 
-const port = process.env.PORT || 8081
-
 exports.signup = async (req, res) => {
     console.log('Signup for user: ', req.body.username)
     let username  = req.body.username;

@@ -92,7 +92,9 @@ extend('zipcode', {
 Vue.config.productionTip = false
 
 import axios from "axios";
-axios.defaults.baseURL = 'http://localhost:8081';
+const PORT = process.env.PORT || 8081;
+
+axios.defaults.baseURL = `http://localhost:${PORT}`;
 
 new Vue({
   router,
