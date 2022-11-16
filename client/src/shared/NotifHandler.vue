@@ -6,7 +6,7 @@
         <b-icon-circle-fill :class="unreadNotifs ? 'active_notif' : 'unactive_notif'" v-show="unreadNotifs" class = "active_notif"/>
     </template>
     <div v-for="notif in notifs" :key="notif.id">
-          <b-dropdown-item  v-if="notif.seen == 0" @click="deleteNoot(notif.id)">
+          <b-dropdown-item  v-if="notif.seen == 0" @click="deleteAndRedirect(notif.id, notif.source_user)">
           {{notifCardText(notif)}}<b-icon-x></b-icon-x>
           </b-dropdown-item>
           <!-- <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)"><p>
@@ -78,6 +78,14 @@ methods: {
 
   async deleteNoot(id) {
     await deleteNotifs(this.$cookies.get('sekes_tokens'), id)
+  },
+
+  async deleteAndRedirect(id, username) 
+  {
+    this.deleteNoot(id)
+    if (this.$route.path != "/profile/"+ username) {
+      this.$router.push("/profile/"+ username)
+    }
   }
 },
 
