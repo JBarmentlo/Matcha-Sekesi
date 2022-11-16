@@ -473,3 +473,19 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	// console.log("KERIIIIIIII: ", user_query.map(user => user.popScore))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
+
+
+exports.search_users_initial = async (searcher_username, user_tags, long, lat, offset, limit, desires) => {
+	console.log("Searching users ")
+	console.log("criteria: ",
+	"interest_tags :"  , user_tags  ,
+	"min_rating    :"  , min_rating ,
+	"max_rating    :"  , max_rating ,
+	"long          :"  , long       ,
+	"lat           :"  , lat        ,
+	"offset        : " , offset     ,
+	"limit         : " , limit      , 
+	"desires       : " , desires)
+	
+	return {lol: 'lol'}
+};
