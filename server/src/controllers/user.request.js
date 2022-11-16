@@ -544,6 +544,7 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 		INNER JOIN TAGS T                                                               \
 			on USERS.username = T.user                                                  \
 			@desires                                                                    \
+			AND USERS.username != 'searcher_username'                                             \
 			AND IF((username IN(SELECT blocked                                          \
 				FROM BLOCKS                                                             \
 				WHERE blocker='searcher_username')                                      \
@@ -587,9 +588,7 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 	latitude,                                                                       \
 	mailVerified,                                                                   \
 	tag_list,                                                                       \
-	1 as similarityScore,\
-	GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10 as dist, \
-	LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore,\
+	((GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10) + TAGLIST.popScore + commonTagCount) as similarityScore, \
 	IF((username IN(SELECT liked                                                    \
 					FROM LIKES                                                      \
 					WHERE liker='searcher_username')                                \
