@@ -138,17 +138,18 @@ app.use('/api/chat', chatRouter, function(req, res, next){
 // #######################   IMAGE ROUTES   ########################
 
 
-
 require("./src/routes/image.routes")(app)
+
+
+
+// #######################   SERVE CLIENT DIST   ########################
+
+
+app.use("/", express.static('client_dist'));
+
 
 
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
-
-
-
-// #######################   SERVE CLIENT DIST   ########################
-
-app.use("/", express.static('client_dist'));

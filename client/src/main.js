@@ -91,6 +91,9 @@ extend('zipcode', {
 
 Vue.config.productionTip = false
 
+// import axios from "axios";
+// axios.defaults.baseURL = 'https://localhost:8081';
+
 new Vue({
   router,
   render: h => h(App)

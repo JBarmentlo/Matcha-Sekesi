@@ -4,9 +4,9 @@ const jwt      = require("jsonwebtoken");
 
 const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
-
 const searches = require("./user.request.js")
 
+const port = process.env.PORT || 8081
 
 exports.signup = async (req, res) => {
     console.log('Signup for user: ', req.body.username)
@@ -43,7 +43,7 @@ exports.signup = async (req, res) => {
             VALUES (?, ?);",
             [username, hash]
         )
-        sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8080/#/verify/" + encodeURIComponent(hash))
+        sendMail(mail, "Verify your email", "Please validate your email here: " + `http://localhost:8080/#/verify/` + encodeURIComponent(hash))
         res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
@@ -184,8 +184,6 @@ exports.signin = async (req, res) => {
         sign.write(`${user}`);
         sign.end();
         var signature = sign.sign(privateKey, 'hex');
-        // console.log("signature")
-        // console.log(signature)
     
         // sign username
         var token = jwt.sign({ username: user.username }, signature, {
@@ -219,7 +217,7 @@ exports.verifyToken = (req, res, next) => {
         jwt.verify(token, secret, (err, decoded) => {
             if (err) {
                 console.log("error: in token")
-                // console.log("error: ", err)
+                console.log("error: ", err)
                 return res.status(401).send({ message: "Unauthorized!" });
             }
             // console.log("Identified user %s from token", decoded.username)
