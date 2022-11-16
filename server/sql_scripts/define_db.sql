@@ -8,7 +8,7 @@ create table USERS
     password          varchar(100)                              not null,
     mailVerified      tinyint(1)  default 0                     not null,
     gender            varchar(10)                               null,
-    sekesualOri       varchar(10) default 'bi'                  null,
+    sekesualOri       varchar(10) default 'Bi'                  null,
     popScore          float       default 0                     not null,
     zipCode           varchar(10)                               null,
     city              varchar(100)                              null,
