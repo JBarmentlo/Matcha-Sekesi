@@ -35,9 +35,9 @@ exports.search_users = async (req, res) => {
 exports.search_users_initial = async (req, res) => {
 	console.log("searching users initial: ")
 	try {
-		let user_query = await searches.search_users_initial(req.username, req.body.user_tags, req.body.zipcodes, req.body.offset, req.body.limit, req.body.desires)
-		// console.log(user_query)
-		// console.log("Rows: ", user_query.map(user => {return {name: user.username, age: user.age, score: user.popScore, zip: user.zipCode}}))
+		let user_query = await searches.search_users_initial(req.username, req.body.user_tags, req.body.long, req.body.lat, req.body.desires, req.body.offset, req.body.limit, req.body.desires)
+		console.log(user_query)
+		console.log("Rows: ", user_query.map(user => {return {name: user.username, age: user.age, score: user.popScore, zip: user.zipCode}}))
 		res.status(200).send({message: 'Successfully queried users.', data: user_query})
 	}
 	catch (e) {
