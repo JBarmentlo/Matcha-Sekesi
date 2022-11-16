@@ -588,6 +588,7 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 	mailVerified,                                                                   \
 	tag_list,                                                                       \
 	1 as similarityScore,\
+	GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10 as dist, \
 	LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore,\
 	IF((username IN(SELECT liked                                                    \
 					FROM LIKES                                                      \
@@ -599,12 +600,14 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 		ON USERS.username = TAGLIST.user                                            \
 	ORDER BY similarityScore DESC                                                                  \
 	LIMIT LIMIT_REPLACE OFFSET OFFSET_REPLACE;"
-	.replace("@TAG_LIST"         , tag_list         )
-	.replace(new RegExp("searcher_username", "g"), searcher_username)
-	.replace(new RegExp("@desires", "g"), desire_str)
-	.replace('OFFSET_REPLACE'   , offset)
-	.replace('LIMIT_REPLACE'    , limit)
-
+	.replace('OFFSET_REPLACE' , offset            )
+	.replace('LIMIT_REPLACE'  , limit             )
+	.replace('LIMIT_REPLACE'  , limit             )
+	.replace(new RegExp       ('@LONG'            , "g")          , long             )
+	.replace(new RegExp       ('@LAT'             , "g")          , lat              )
+	.replace(new RegExp       ('@TAG_LIST'        , "g")          , tag_list         )
+	.replace(new RegExp       ("searcher_username", "g")          , searcher_username)
+	.replace(new RegExp       ("@desires"         , "g")          , desire_str       )
 	let user_query = await db.query(keri_string)
 
 	console.log("KERIIIIIIII: ", user_query.map(user => user))
