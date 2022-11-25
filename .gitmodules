@@ -1,6 +1,0 @@
-[submodule "client/client/src/cometchat-pro-vue-ui-kit"]
-	path = client/client/src/cometchat-pro-vue-ui-kit
-	url = https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit.git
-[submodule "client/src/cometchat-pro-vue-ui-kit"]
-	path = client/src/cometchat-pro-vue-ui-kit
-	url = https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit.git

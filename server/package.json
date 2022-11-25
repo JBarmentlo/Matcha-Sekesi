@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha  --exit --require './tests/hooks.js' --require mocha-steps ./tests/*.spec.js",
     "ci_test": "mocha  --exit ./tests/*.spec.js",
-    "coverage": "nyc --reporter=text npm run test"
+    "coverage": "nyc --reporter=text npm run test",
   },
   "author": "joepi",
   "license": "ISC",

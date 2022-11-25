@@ -10,15 +10,15 @@ router.post("/getallusers"         , auth.verifyToken , searchController.get_all
 router.get ("/getmyuser"           , auth.verifyToken , userController.get_my_user         );
 router.post("/updateuser"          , auth.verifyToken , userController.update_user_test    );
 router.post("/search_users"        , auth.verifyToken , searchController.search_users      );
-router.post("/search_users_init"   , auth.verifyToken , searchController.search_users_initial      );
+router.post("/search_users_init"   , auth.verifyToken , searchController.search_users_initial);
 router.get ("/getprofile/:username", auth.verifyToken , userController.get_user_by_username);
 
 router.post("/like"                , auth.verifyToken , likeController.like_user           );
 router.post("/unlike"              , auth.verifyToken , likeController.un_like_user        );
-router.get("/getmatches"           , auth.verifyToken , likeController.get_matches        );
+router.get("/getmatches"           , auth.verifyToken , likeController.get_matches         );
 
 router.post("/block"               , auth.verifyToken , blockController.block_user         );
-router.post("/report"               , auth.verifyToken , blockController.report_user         );
+router.post("/report"               , auth.verifyToken , blockController.report_user       );
 router.post("/unblock"             , auth.verifyToken , blockController.un_block_user      );
 
 
