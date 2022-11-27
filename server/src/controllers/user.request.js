@@ -116,6 +116,7 @@ exports.get_user = async (searcher_username, searched_username) => {
 				image2,                                          \
 				image3,                                          \
 				profilePic,                                      \
+				gif, \
 				TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,                  \
 				TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                       \
 				DOB,                                                                              \
@@ -191,6 +192,7 @@ exports.get_my_user = async (searched_username) => {
 				image2,                                              \
 				image3,                                              \
 				profilePic,                                          \
+				password, \
 				gif, \
 				last_connected, \
 				TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
@@ -222,7 +224,8 @@ exports.get_my_user = async (searched_username) => {
 					image1,                                          \
 					image2,                                          \
 					image3,                                          \
-					profilePic,                                      \
+				password, \
+				profilePic,                                      \
 					gif, \
 					last_connected, \
 					TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
@@ -232,7 +235,7 @@ exports.get_my_user = async (searched_username) => {
 			LEFT JOIN LIKES L                                        \
 				on TAGLIST.username = L.liked                        \
 			GROUP BY username,                                       \
-			tag_list),                                      \
+			password, tag_list),                                      \
 \
 			MATCHES AS (                                                                      \
 				SELECT l1.liker, l1.liked                                                     \
@@ -277,6 +280,7 @@ exports.get_my_user = async (searched_username) => {
 				isCompleteProfile,                                   \
 				longitude,                                           \
 				latitude,                                            \
+				password, \
 				id,                                                  \
 				image0,                                              \
 				image1,                                              \
@@ -294,7 +298,7 @@ exports.get_my_user = async (searched_username) => {
 			LEFT JOIN CONSULTS                                       \
 				on LIKELIST.username = CONSULTS.consulted            \
 			GROUP BY username,                                       \
-			tag_list, like_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
+			password, tag_list, like_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
 	
 	// console.log("get my user str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
 	let user_query = await db.query(keri_string)
