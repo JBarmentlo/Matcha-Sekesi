@@ -28,6 +28,7 @@ const createOneUser = async function(rawUser, tags) {
 	};
 	if (user.tag_list[0] == user.tag_list[1])
 		user.tag_list.pop()
+	console.log("creating user: ", user)
 	let request = {
 		url: "http://13.38.118.106:80/api/test/createuser",  // should be replaced after going to production with domain url
 		method: "post",
@@ -49,7 +50,9 @@ export const createRandomUsers = async (amount, tags) => {
 	let promises = []
 	for (const result of results) {
 		promises.push(createOneUser(result, tags))
+		console.log("create_user start one")
 	}
+	console.log("PROMISES LENFNTT", promises.length)
 
 	return Promise.all(promises)
 };
@@ -90,7 +93,7 @@ export const createRandomlikes = async (min, max) => {
 	console.log("LIKELIST: ", request_like.length)
 	let like_res = await axios(request_like)
 	console.log("LIKE RESL ", like_res)
-
+	return like_res
 };
 
 
@@ -129,6 +132,7 @@ export const createRandomConsults = async (min, max) => {
 	console.log("consultLIST: ", request_consult)
 	let consult_res = await axios(request_consult)
 	console.log("consult RESL ", consult_res)
+	return consult_res
 
 };
 
@@ -168,7 +172,7 @@ export const createRandomblocks = async (min, max) => {
 	console.log("blockLIST: ", request_block)
 	let block_res = await axios(request_block)
 	console.log("block RESL ", block_res)
-
+	return block_res
 };
 
 

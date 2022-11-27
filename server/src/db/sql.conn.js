@@ -37,11 +37,9 @@ async function connect() {
 async function query(sql, params) {
 	let used_connection
 	if (process.env.ENVIRONMENT == 'TEST') {
-		console.log("CONNECTING TO TEST DB")
 		used_connection = await test_connection
 	}
 	else {
-		console.log("CONNECTING TO REAL DB")
 		used_connection = await connection
 	}
 	// console.log(sql)
