@@ -199,8 +199,8 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
                     <div class="form-group">
-                        <label v-if="!user_gif_choice" class="labels">Add a gif to your profile</label>
-                        <div v-if="!user_gif_choice" class = "input-group">
+                        <label v-if="!user.gif" class="labels">Add a gif to your profile</label>
+                        <div v-if="!user.gif" class = "input-group">
                         <input
                             type="text"
                             ref="gifsearch"
@@ -216,10 +216,13 @@
                             <button class="btn m-0" type="button" @click=removeSearch()><b-icon-x></b-icon-x></button>
                         </span>
                         </div>
-                        <div v-if="gifs.length > 0" class="gif-container">
-                            <img id="gif-image" :class="!user_gif_choice ? 'gif-image' : ''" @click=selectGif(gif) v-for="gif in gifs" :src="gif" :key="gif.id">
-                            <b-tooltip v-if="!user_gif_choice" target="gif-image" placement="rigth" triggers="hover">select this gif</b-tooltip>
-                            <b-button v-if="user_gif_choice" class="gif-button" @click=removeGif()>Remove this GIF from your profile<b-icon-x></b-icon-x></b-button>
+                        <div v-if="user.gif">
+                            <img :src="user.gif">
+                            <b-button class="gif-button" @click=removeGif()>Remove this GIF from your profile<b-icon-x></b-icon-x></b-button>
+                        </div>
+                        <div v-if="!user.gif && gifs.length > 0" class="gif-container">
+                            <img id="gif-image" @click=selectGif(gif) v-for="gif in gifs" :src="gif" :key="gif.id">
+                            <b-tooltip  target="gif-image" placement="rigth" triggers="hover">select this gif</b-tooltip>
                         </div>
                 </div>
                 </div>
@@ -271,7 +274,6 @@ export default {
             searchTerm : "",
             gifs: [],
             search_on : false,
-            user_gif_choice : null,
         };
     },
 
@@ -344,7 +346,7 @@ export default {
             console.log("Gif: " + gif);
             this.gifs = [gif];
             this.search_on = !this.search_on;
-            this.user_gif_choice = gif;
+            this.user.gif = gif;
             console.log("After click Gifs: " + this.gifs);
         },
 
@@ -356,7 +358,7 @@ export default {
         },
 
         removeGif() {
-            this.user_gif_choice = null;
+            this.user.gif = null;
             this.gifs = [];
         },
 

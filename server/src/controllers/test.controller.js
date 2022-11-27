@@ -64,6 +64,7 @@ exports.create_user_test = async (req, res) => {
 	popScore          = req.body.popScore
 	zipCode           = req.body.zipCode
 	city              = req.body.city
+	gif               = req.body.gif
 	isCompleteProfile = req.body.isCompleteProfile
 	longitude         = req.body.longitude
 	latitude          = req.body.latitude
@@ -80,9 +81,9 @@ exports.create_user_test = async (req, res) => {
 	try {
 		await db.query(
 			'INSERT INTO USERS \
-			(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB) \
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB]
+			(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB, gif) \
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB, gif]
 			)
 		let keri_string ="INSERT INTO TAGS (tag, user) VALUES "
 		for (const tag of tag_list) {

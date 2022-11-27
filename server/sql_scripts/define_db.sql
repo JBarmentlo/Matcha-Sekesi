@@ -22,6 +22,7 @@ create table USERS
     image3            varchar(100)                              null,
     image0            varchar(100)                              null,
     profilePic        varchar(100)                              null,
+    gif               varchar(100)                              null,
     DOB               date                                      null,
     last_connected    timestamp   default '2022-09-28 11:54:54' null,
     constraint USERS_mail_uindex

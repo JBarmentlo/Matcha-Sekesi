@@ -59,14 +59,19 @@ export default {
 
 		startPollingMsg(freq) {
 			this.polling = setInterval(async () => {
-				if (this.messages == null) {
-					this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data
+				try {
+					if (this.messages == null) {
+						this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data
+					}
+					else {
+						let old_ids = this.messages.map(n => n.id)
+						this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data.reverse()
+						let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.$cookies.get('user').username))
+						this.notifyUser(new_notifs)
+					}
 				}
-				else {
-					let old_ids = this.messages.map(n => n.id)
-					this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data.reverse()
-					let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.$cookies.get('user').username))
-					this.notifyUser(new_notifs)
+				catch(e) {
+					console.log("Interrrupted notif polling", e)
 				}
 
 			}, freq)
