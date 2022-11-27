@@ -292,7 +292,7 @@ exports.get_my_user = async (searched_username) => {
 				tag_list,                                            \
 				last_connected, \
 				TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
-				((Select COUNT(*) from MATCHES AS M where M.liker = username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username)) as popScore, \
+				LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore,\
 				GROUP_CONCAT(consulter) as consult_list              \
 			FROM LIKELIST                                            \
 			LEFT JOIN CONSULTS                                       \

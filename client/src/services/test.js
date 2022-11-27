@@ -21,7 +21,7 @@ const createOneUser = async function(rawUser, tags) {
 		gif             :  gifs[Math.floor(Math.random() * gifs.length)],
 		image0          : "https://images.unsplash.com/photo-1580421828423-4b36a8ca65fb?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjEzNzYzNn0?utm_source=dictionnaire&utm_medium=referral",
 		profilePic      : rawUser.picture.medium,
-		tag_list        : [tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * sekesualOri.length)]],
+		tag_list        : [tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * tags.length)]],
 		longitude       : rawUser.location.coordinates.longitude,
 		latitude        : rawUser.location.coordinates.latitude,
 		DOB             : rawUser.dob.date.slice(0, 10)
