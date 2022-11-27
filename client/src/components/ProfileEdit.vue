@@ -216,10 +216,13 @@
                             <button class="btn m-0" type="button" @click=removeSearch()><b-icon-x></b-icon-x></button>
                         </span>
                         </div>
-                        <div v-if="gifs.length > 0" class="gif-container">
-                            <img id="gif-image" :class="!user.gif ? 'gif-image' : ''" @click=selectGif(gif) v-for="gif in gifs" :src="gif" :key="gif.id">
-                            <b-tooltip v-if="!user.gif" target="gif-image" placement="rigth" triggers="hover">select this gif</b-tooltip>
-                            <b-button v-if="user.gif" class="gif-button" @click=removeGif()>Remove this GIF from your profile<b-icon-x></b-icon-x></b-button>
+                        <div v-if="user.gif">
+                            <img :src="user.gif">
+                            <b-button class="gif-button" @click=removeGif()>Remove this GIF from your profile<b-icon-x></b-icon-x></b-button>
+                        </div>
+                        <div v-if="!user.gif && gifs.length > 0" class="gif-container">
+                            <img id="gif-image" @click=selectGif(gif) v-for="gif in gifs" :src="gif" :key="gif.id">
+                            <b-tooltip  target="gif-image" placement="rigth" triggers="hover">select this gif</b-tooltip>
                         </div>
                 </div>
                 </div>
