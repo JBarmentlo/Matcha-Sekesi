@@ -31,7 +31,6 @@ exports.get_all_users = async (searcher_username) => {
 			lastName,                                                                         \
 			bio,                                                                              \
 			mail,                                                                             \
-			password,                                                                         \
 			mailVerified,                                                                     \
 			gender,                                                                           \
 			sekesualOri,                                                                      \
@@ -102,7 +101,6 @@ exports.get_user = async (searcher_username, searched_username) => {
 				lastName,                                                                         \
 				bio,                                                                              \
 				mail,                                                                             \
-				password,                                                                         \
 				mailVerified,                                                                     \
 				gender,                                                                           \
 				sekesualOri,                                                                      \
@@ -179,7 +177,6 @@ exports.get_my_user = async (searched_username) => {
 				bio,                                                 \
 				DOB,                             \
 				mail,                                                \
-				password,                                            \
 				mailVerified,                                        \
 				gender,                                              \
 				sekesualOri,                                         \
@@ -212,7 +209,6 @@ exports.get_my_user = async (searched_username) => {
 					bio,                                             \
 					DOB,                             \
 					mail,                                            \
-					password,                                        \
 					mailVerified,                                    \
 					gender,                                          \
 					sekesualOri,                                     \
@@ -236,7 +232,7 @@ exports.get_my_user = async (searched_username) => {
 			LEFT JOIN LIKES L                                        \
 				on TAGLIST.username = L.liked                        \
 			GROUP BY username,                                       \
-			password, tag_list),                                      \
+			tag_list),                                      \
 \
 			MATCHES AS (                                                                      \
 				SELECT l1.liker, l1.liked                                                     \
@@ -273,7 +269,6 @@ exports.get_my_user = async (searched_username) => {
 				DOB,                             \
 				TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age, \
 				mail,                                                \
-				password,                                            \
 				mailVerified,                                        \
 				gender,                                              \
 				sekesualOri,                                         \
@@ -299,7 +294,7 @@ exports.get_my_user = async (searched_username) => {
 			LEFT JOIN CONSULTS                                       \
 				on LIKELIST.username = CONSULTS.consulted            \
 			GROUP BY username,                                       \
-			password, tag_list, like_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
+			tag_list, like_list;".replace('searcher_username', searched_username).replace('searched_username', searched_username)
 	
 	// console.log("get my user str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
 	let user_query = await db.query(keri_string)

@@ -3,7 +3,7 @@ import axios from "axios";
 const createOneUser = async function(rawUser, tags) {
 
 	const sekesualOri = ["Hetero", "Gay", "Bi"];
-
+	const gifs = ["https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif", "https://media.giphy.com/media/ICOgUNjpvO0PC/giphy.gif", "https://media.giphy.com/media/dK0tjRx03fhlK/giphy.gif", "https://media.giphy.com/media/hhYDWei0c7pDy/giphy.gif", "https://media.giphy.com/media/l0HlAnslBY1SCnKxy/giphy.gif"]
 	const user = {
 		username        : rawUser.login.username,
 		firstName       : rawUser.name.first,
@@ -18,6 +18,7 @@ const createOneUser = async function(rawUser, tags) {
 		zipCode         : rawUser.location.postcode,
 		city         		: rawUser.location.city,
 		isCompleteProfile : true,
+		gif             :  gifs[Math.floor(Math.random() * gifs.length)],
 		image0          : "https://images.unsplash.com/photo-1580421828423-4b36a8ca65fb?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjEzNzYzNn0?utm_source=dictionnaire&utm_medium=referral",
 		profilePic      : rawUser.picture.medium,
 		tag_list        : [tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * sekesualOri.length)]],
@@ -25,7 +26,6 @@ const createOneUser = async function(rawUser, tags) {
 		latitude        : rawUser.location.coordinates.latitude,
 		DOB             : rawUser.dob.date.slice(0, 10)
 	};
-
 	if (user.tag_list[0] == user.tag_list[1])
 		user.tag_list.pop()
 	let request = {
