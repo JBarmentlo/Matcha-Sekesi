@@ -18,26 +18,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const sanitizer = require("perfect-express-sanitizer");
 
 app.use(sanitizer.clean({
-    xss: true,
-    noSql: true,
+    xss: false,
+    noSql: false,
     sql: true,
-    sqlLevel: 5,
-}, whitelist = ["/api/image/upload", "/api/users/updateuser", "api/test"]));
-
-app.use(sanitizer.clean({
-  xss: true,
-  noSql: true,
-  sql: true,
-  sqlLevel: 4,
-}, whitelist = ["/api/image/upload"]));
-
-
-
-const protect = require('@risingstack/protect')
-app.use(protect.express.sqlInjection({
-  body: true,
-  loggerFunction: console.error
-}))
+    sqlLevel: 4,
+}, whitelist = ["/api/image/upload", "api/test"]));
 
 // app.use((req, res, next) => {
 //   console.log('Time:', Date.now())
