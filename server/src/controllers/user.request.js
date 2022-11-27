@@ -47,6 +47,7 @@ exports.get_all_users = async (searcher_username) => {
 			image2,                                          \
 			image3,                                          \
 			profilePic,                                      \
+			gif, \
 			TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,                  \
 			TIMESTAMPDIFF(YEAR, DOB, CURDATE()) as age,                                       \
 			DOB,                                                                              \
@@ -193,6 +194,7 @@ exports.get_my_user = async (searched_username) => {
 				image2,                                              \
 				image3,                                              \
 				profilePic,                                          \
+				gif, \
 				last_connected, \
 				TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
 				GROUP_CONCAT(tag) as tag_list                        \
@@ -225,6 +227,7 @@ exports.get_my_user = async (searched_username) => {
 					image2,                                          \
 					image3,                                          \
 					profilePic,                                      \
+					gif, \
 					last_connected, \
 					TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,\
 					GROUP_CONCAT(liker) as like_list,                \
@@ -285,6 +288,7 @@ exports.get_my_user = async (searched_username) => {
 				image2,                                              \
 				image3,                                              \
 				profilePic,                                          \
+				gif, \
 				like_list,                                           \
 				tag_list,                                            \
 				last_connected, \
