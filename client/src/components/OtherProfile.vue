@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { likeUser, unlikeUser } from "../services/user";
+import { likeUser, unlikeUser, consultUserProfile } from "../services/user";
 import { blockUser, unblockUser, reportUser } from "../services/user";
 import { getUserProfile } from "../services/user";
 
@@ -204,6 +204,12 @@ export default {
     );
     console.log(res);
     this.user = res.data.data;
+    try {
+      await consultUserProfile(this.$cookies.get("sekes_tokens"), this.userName)
+    }
+    catch {
+      console.log("consult My ass")
+    }
   },
 
   async beforeRouteUpdate(to, from, next) {

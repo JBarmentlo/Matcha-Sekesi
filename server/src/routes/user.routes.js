@@ -2,6 +2,7 @@ const auth = require("../controllers/auth.controller");
 const searchController = require("../controllers/search.controller");
 const userController = require("../controllers/user.controller");
 const likeController = require("../controllers/like.controller");
+const consultController = require("../controllers/consult.controller");
 const blockController = require("../controllers/block.controller");
 
 var router = require("express").Router();
@@ -20,6 +21,8 @@ router.get("/getmatches"           , auth.verifyToken , likeController.get_match
 router.post("/block"               , auth.verifyToken , blockController.block_user         );
 router.post("/report"               , auth.verifyToken , blockController.report_user         );
 router.post("/unblock"             , auth.verifyToken , blockController.un_block_user      );
+
+router.get("/consult/:username"     , auth.verifyToken , consultController.consult_user           );
 
 
 module.exports = router
