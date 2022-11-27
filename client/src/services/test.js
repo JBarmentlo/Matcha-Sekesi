@@ -29,7 +29,7 @@ const createOneUser = async function(rawUser, tags) {
 	if (user.tag_list[0] == user.tag_list[1])
 		user.tag_list.pop()
 	let request = {
-		url: "http://localhost:8081/api/test/createuser",  // should be replaced after going to production with domain url
+		url: "http://13.38.118.106:80/api/test/createuser",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -59,7 +59,7 @@ export const createRandomlikes = async (min, max) => {
 	console.log("Creating ", min, "-", max, " likes per user.")
 
 	let request = {
-		url: "http://localhost:8081/api/test/getuserlist",  // should be replaced after going to production with domain url
+		url: "http://13.38.118.106:80/api/test/getuserlist",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",
@@ -80,7 +80,7 @@ export const createRandomlikes = async (min, max) => {
 	}
 
 	let request_like = {
-		url: "http://localhost:8081/api/test/createlikes",  // should be replaced after going to production with domain url
+		url: "http://13.38.118.106:80/api/test/createlikes",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -98,7 +98,7 @@ export const createRandomConsults = async (min, max) => {
 	console.log("Creating ", min, "-", max, " consults per user.")
 
 	let request = {
-		url: "http://localhost:8081/api/test/getuserlist",  // should be replaced after going to production with domain url
+		url: "http://13.38.118.106:80/api/test/getuserlist",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",
@@ -119,7 +119,7 @@ export const createRandomConsults = async (min, max) => {
 	}
 
 	let request_consult = {
-		url: "http://localhost:8081/api/test/createconsults",  // should be replaced after going to production with domain url
+		url: "http://13.38.118.106:80/api/test/createconsults",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -137,7 +137,7 @@ export const createRandomblocks = async (min, max) => {
 	console.log("Creating ", min, "-", max, " blocks per user.")
 
 	let request = {
-		url: "http://localhost:8081/api/test/getuserlist",  // should be replaced after going to production with domain url
+		url: "http://13.38.118.106:80/api/test/getuserlist",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",
@@ -158,7 +158,7 @@ export const createRandomblocks = async (min, max) => {
 	}
 
 	let request_block = {
-		url: "http://localhost:8081/api/test/createblocks",  // should be replaced after going to production with domain url
+		url: "http://13.38.118.106:80/api/test/createblocks",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",

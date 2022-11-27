@@ -18,7 +18,7 @@ async function handle_new_mail_for_user(username, id, mail) {
 		[username, hash]
 	)
 	return Promise.resolve()
-	// return await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://localhost:8081/verify/" + encodeURIComponent(hash))
+	// return await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://13.38.118.106:80/verify/" + encodeURIComponent(hash))
 }
 
 
