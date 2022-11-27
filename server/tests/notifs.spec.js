@@ -43,7 +43,7 @@ describe('Notifications', () => {
 		return Promise.resolve()
 	})
 	step("Consult notif", async () => {
-		await ConsultController.consult_user(mockRequest({consulted: users.Jhonny.username}, users.Mark.username), res)
+		await ConsultController.consult_user_old(mockRequest({consulted: users.Jhonny.username}, users.Mark.username), res)
 		await NotifController.get_my_notifs(mockRequest({limit: 10, offset: 0}, users.Jhonny.username), res)
 		assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 		assert.equal(res.send.lastCall.firstArg.data[0].source_user, users.Mark.username)

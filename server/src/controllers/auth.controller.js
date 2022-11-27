@@ -218,7 +218,7 @@ exports.verifyToken = (req, res, next) => {
     
         jwt.verify(token, secret, (err, decoded) => {
             if (err) {
-                console.log("error: in token:\n", err)
+                // console.log("error: in token:\n", err)
                 // console.log("error: ", err)
                 return res.status(401).send({ message: "Unauthorized!" });
             }

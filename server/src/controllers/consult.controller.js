@@ -3,6 +3,40 @@ const NotifController = require('./notif.controller')
 
 
 // async function update_consult_timestamp()
+exports.consult_user_old = async (req, res) => {
+	console.log("consulting ", req.body.consulted)
+	try {
+		let consult_query_result = await db.query(
+			'REPLACE INTO CONSULTS \
+			(consulter, consulted) \
+			VALUES (?, ?)',
+			[req.username, req.body.consulted]
+			)
+		let notres = await NotifController.create_notif("CONSULT", req.username, req.body.consulted)
+		return res.status(200).send({message: 'Succesfully consulted user', code: "SUCCESS"})
+	}
+	catch (e) {
+		if (e.code == 'ER_NO_REFERENCED_ROW') {
+			return res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_NO_REFERENCED_ROW_2') {
+			res.status(200).send({message: "User name not existing", code: e.code})
+		}
+		else if (e.code == 'ER_DUP_ENTRY') {
+			return res.status(200).send({message: "Already Liked", code: e.code})
+		}
+		else if (e.code == 'ER_PARSE_ERROR') {
+			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			throw (e)
+		}
+		else {
+			console.log("EROOL: ", e)
+			return res.status(500).send({message: "Error in consult user ", error: e})
+			throw(e)
+		}
+	}
+}
+
 exports.consult_user = async (req, res) => {
 	console.log("consulting ", req.params.username)
 	try {
@@ -38,6 +72,7 @@ exports.consult_user = async (req, res) => {
 		}
 	}
 }
+
 
 
 exports.get_users_that_i_consulted = async (req, res) => {

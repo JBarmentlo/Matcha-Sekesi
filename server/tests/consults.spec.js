@@ -19,39 +19,39 @@ describe('Test consults', () => {
 	})
 	describe("Create Consults", () => {
 		step('mark   => jhonny Code SUCCESS', async () => {
-			await ConsultController.consult_user(mockRequest({consulted: users.Jhonny.username}, users.Mark.username), res)
+			await ConsultController.consult_user_old(mockRequest({consulted: users.Jhonny.username}, users.Mark.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 		step('mark   => bella Code Success', async ()  => {
-			await ConsultController.consult_user(mockRequest({consulted: users.Bella.username}, users.Mark.username), res)
+			await ConsultController.consult_user_old(mockRequest({consulted: users.Bella.username}, users.Mark.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 		step('bella  => jhonny Code Success', async () => {
-			await ConsultController.consult_user(mockRequest({consulted: users.Jhonny.username}, users.Bella.username), res)
+			await ConsultController.consult_user_old(mockRequest({consulted: users.Jhonny.username}, users.Bella.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 		step('jhonny => bella Code Success', async ()  => {
-			await ConsultController.consult_user(mockRequest({consulted: users.Bella.username}, users.Jhonny.username), res)
+			await ConsultController.consult_user_old(mockRequest({consulted: users.Bella.username}, users.Jhonny.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 	})
 	describe("Consult Error Handling", () => {
 		step('duplicate consult: Code SUCCESS', async () => {
-			await ConsultController.consult_user(mockRequest({consulted: users.Jhonny.username}, users.Mark.username), res)
+			await ConsultController.consult_user_old(mockRequest({consulted: users.Jhonny.username}, users.Mark.username), res)
 			assert.equal(res.send.lastCall.firstArg.code, "SUCCESS")
 			return Promise.resolve()
 		})
 		step('Missing consulted: Code LIKE_MISS', async () => {
-			await ConsultController.consult_user(mockRequest({consulted: 'lol'}, users.Mark.username), res)
+			await ConsultController.consult_user_old(mockRequest({consulted: 'lol'}, users.Mark.username), res)
 			assert.equal((res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW_2") || (res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW"), true)
 			return Promise.resolve()
 		})
 		step('Missing consulter: Code LIKE_MISS', async () => {
-			await ConsultController.consult_user(mockRequest({consulted: users.Jhonny.username}, 'lol'), res)
+			await ConsultController.consult_user_old(mockRequest({consulted: users.Jhonny.username}, 'lol'), res)
 			assert.equal((res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW_2") || (res.send.lastCall.firstArg.code == "ER_NO_REFERENCED_ROW"), true)
 			return Promise.resolve()
 		})
