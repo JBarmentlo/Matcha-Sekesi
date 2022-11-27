@@ -43,7 +43,7 @@ exports.signup = async (req, res) => {
             VALUES (?, ?);",
             [username, hash]
         )
-        sendMail(mail, "Verify your email", "Please validate your email here: " + "http://13.38.118.106:80/#/verify/" + encodeURIComponent(hash))
+        sendMail(mail, "Verify your email", "Please validate your email here: " + "http://matcha.yoopster.com:80/#/verify/" + encodeURIComponent(hash))
         res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
@@ -87,7 +87,7 @@ exports.verifyMail = async (req, res) => {
             "UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
             verify_mail_result[0].user
         )
-        // sendMail(mail, "Verify your email", "Please validate your email here: " + "http://13.38.118.106:80/verify/" + encodeURIComponent(hash))
+        // sendMail(mail, "Verify your email", "Please validate your email here: " + "http://matcha.yoopster.com:80/verify/" + encodeURIComponent(hash))
         res.status(200).send({message: "verified mail for " + verify_mail_result.user, code: "SUCCESS"})
     }
     catch (e) {
@@ -117,7 +117,7 @@ exports.requestresetPass = async (req, res) => {
             VALUES (?,?);",
             [user.username, hash]
         )
-        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://13.38.118.106:80/#/reset/" + encodeURIComponent(hash))
+        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + "http://matcha.yoopster.com:80/#/reset/" + encodeURIComponent(hash))
         return res.status(200).send({message: "Sucessfully requested reset", code: "SUCCESS", hash: hash})
     }
     catch (e) {

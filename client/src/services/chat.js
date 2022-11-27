@@ -4,7 +4,7 @@ import axios from "axios";
 export const getMyMessages = async (access_token) => {
 	// console.log("get messages ")
 	let request = {
-		url: "http://13.38.118.106:80/api/chat/getall", // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/chat/getall", // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type"       : "application/json",
@@ -20,7 +20,7 @@ export const getMyMessages = async (access_token) => {
 
 export const getConvo = async (access_token, username, offset, limit) => {
 	let request = {
-		url: "http://13.38.118.106:80/api/chat/get_conversation", // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/chat/get_conversation", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -41,7 +41,7 @@ export const getConvo = async (access_token, username, offset, limit) => {
 export const sendMsg = async (access_token, username, msg, convoId) => {
 	console.log("sending msg: ", 'username: ', username, 'msg: ', msg)
 	let request = {
-		url: "http://13.38.118.106:80/api/chat/send_message", // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/chat/send_message", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",

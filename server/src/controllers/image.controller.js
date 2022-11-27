@@ -5,7 +5,7 @@ exports.upload_image = async (req, res) => {
 	try {
 		let filename = req.file.filename
 		console.log('filename: ', req.file.filename, 'User: ', req.username)
-		res.status(200).send({'filename': filename, url: "http://13.38.118.106:80/api/image/get/" + filename})
+		res.status(200).send({'filename': filename, url: "http://matcha.yoopster.com:80/api/image/get/" + filename})
 	}
 	catch (e){
 		console.log("Error upload image: " + e);
@@ -21,9 +21,9 @@ exports.insert_fake_picture_test = async (filename, username) => {
 				(url, user) \
 				VALUES (?, ?);",
 
-			["http://13.38.118.106:80/api/image/get/" + filename, req.username])
+			["http://matcha.yoopster.com:80/api/image/get/" + filename, req.username])
 
-		return ("http://13.38.118.106:80/api/image/get/" + filename)
+		return ("http://matcha.yoopster.com:80/api/image/get/" + filename)
 	}
 	catch (e){
 		throw(e)
