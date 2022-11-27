@@ -4,7 +4,7 @@ import axios from "axios";
 export const getMyNotifs = async (access_token, offset, limit) => {
 	// console.log("get notifs ", offset, limit)
 	let request = {
-		url: "http://localhost:8081/api/notif/getall", // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/notif/getall", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -21,7 +21,7 @@ export const getMyNotifs = async (access_token, offset, limit) => {
 export const setSeenNotifs = async (access_token, notif_ids) => {
 	// console.log("setting see: ", notif_ids)
 	let request = {
-		url: "http://localhost:8081/api/notif/setseen", // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/notif/setseen", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -38,7 +38,7 @@ export const setSeenNotifs = async (access_token, notif_ids) => {
 export const deleteNotifs = async (access_token, id) => {
 	// console.log("delete notif")
 	let request = {
-		url: "http://localhost:8081/api/notif/delete", // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/notif/delete", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",

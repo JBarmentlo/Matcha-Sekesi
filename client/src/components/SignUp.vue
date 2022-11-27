@@ -23,7 +23,7 @@
 
 					<div class="form-group">
 						<label>First Name</label>
-						<ValidationProvider rules="required|alpha|length:5" immediate v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha|length:1" immediate v-slot="{ errors }">
 							<input
 								type="text"
 								v-model="firstName"
@@ -35,7 +35,7 @@
 
 					<div class="form-group">
 						<label>Last Name</label>
-						<ValidationProvider rules="required|alpha|length:5" immediate v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha|length:1" immediate v-slot="{ errors }">
 							<input
 								type="text"
 								v-model="lastName"
@@ -107,11 +107,11 @@ export default {
 
 	data() {
 		return {
-			username         : "jhonny",
-			mail             : "joepbarmentlo@gmail.com",
-			password         : "qwertasd",
-			firstName        : "useless",
-			lastName         : "useless",
+			username         : "",
+			mail             : "",
+			password         : "",
+			firstName        : "",
+			lastName         : "",
 			zipCode          : null,
 			city             : null,
 			latitude         : null,

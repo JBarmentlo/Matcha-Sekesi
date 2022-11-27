@@ -90,11 +90,12 @@ exports.create_user_test = async (req, res) => {
 			keri_string += ` ('${tag}', '${username}'),`
 		}
 		keri_string = keri_string.slice(0, -1)
+		let keri_res = 'Did not meet criteria'
 		if (tag_list.length != 0) {
-			await db.query(keri_string)
+			keri_res = await db.query(keri_string)
 		}
 		console.log("Created user: ", username)
-		return res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS'})
+		return res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS', user: keri_res})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {

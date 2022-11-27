@@ -14,7 +14,7 @@ export const signup = async item => {
 		longitude : item.longitude,
 	};
 	let request = {
-		url: "http://localhost:8081/api/auth/signup", // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/auth/signup", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json"
@@ -32,7 +32,7 @@ export const signin = async item => {
 		password: item.password
 	};
 	let request = {
-		url: "http://localhost:8081/api/auth/signin", // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/auth/signin", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json"
@@ -45,9 +45,9 @@ export const signin = async item => {
 };
 
 export const verifyMail = async hash => {
-	console.log("verifying url %s", "http://localhost:8081/api/auth/verify/" + encodeURIComponent(hash))
+	console.log("verifying url %s", "http://matcha.yoopster.com:80/api/auth/verify/" + encodeURIComponent(hash))
 	let request = {
-		url: "http://localhost:8081/api/auth/verify/" + encodeURIComponent(hash), // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/auth/verify/" + encodeURIComponent(hash), // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json"
@@ -62,7 +62,7 @@ export const verifyMail = async hash => {
 export const requestPassReset = async mail => {
 	console.log("requesting pass reset for %s", mail)
 	let request = {
-		url: "http://localhost:8081/api/auth/requestpassreset", // should be replaced after going to production with domain url
+		url: "http://matcha.yoopster.com:80/api/auth/requestpassreset", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json"
@@ -77,7 +77,7 @@ export const requestPassReset = async mail => {
 export const resetPassword = async (hash, pass) => {
 	console.log("pass reset for %s with the hash %s", pass, hash)
 	let request = {
-		url: "http://localhost:8081/api/auth/passreset",
+		url: "http://matcha.yoopster.com:80/api/auth/passreset",
 		method: "post",
 		headers: {
 			"Content-type": "application/json"

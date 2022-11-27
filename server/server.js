@@ -105,7 +105,7 @@ app.use('/api/notif', notifRouter, function(req, res, next){
   next();
 })
 
-
+console.log("ENVIO", process.env.ENVIRONMENT)
 // #######################  CHAT ROUTES   ########################
 
 chatRouter = require('./src/routes/chat.routes')
@@ -127,7 +127,7 @@ app.use('/api/chat', chatRouter, function(req, res, next){
 require("./src/routes/image.routes")(app)
 
 
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 80;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });

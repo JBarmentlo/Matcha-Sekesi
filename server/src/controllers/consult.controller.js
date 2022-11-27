@@ -4,14 +4,17 @@ const NotifController = require('./notif.controller')
 
 // async function update_consult_timestamp()
 exports.consult_user = async (req, res) => {
+	console.log("consulting ", req.params.username)
 	try {
 		let consult_query_result = await db.query(
 			'REPLACE INTO CONSULTS \
 			(consulter, consulted) \
 			VALUES (?, ?)',
-			[req.username, req.body.consulted]
+			[req.username, req.params.username]
 			)
-		await NotifController.create_notif("CONSULT", req.username, req.body.consulted)
+		let notres = await NotifController.create_notif("CONSULT", req.username, req.params.username)
+		console.log("consulting res ", consult_query_result)
+		console.log("notifres: ", notres )
 		return res.status(200).send({message: 'Succesfully consulted user', code: "SUCCESS"})
 	}
 	catch (e) {
