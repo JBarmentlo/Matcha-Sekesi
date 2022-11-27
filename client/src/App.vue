@@ -71,7 +71,7 @@ export default {
 					}
 				}
 				catch(e) {
-					console.log("Interrrupted notif polling XCV><MXCV><MXCV><MXCV><M", e)
+					console.log("Interrrupted notif polling", e)
 				}
 
 			}, freq)

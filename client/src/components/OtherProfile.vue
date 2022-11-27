@@ -79,9 +79,9 @@
               <span class="important">{{ user.sekesualOri }}</span>
             </div>
             <TagInputHandler v-if="user.tag_list.length != 0" v-model="user.tag_list" :disabled="true" />
-            <div v-if="user_gif" class="row justify-content-center gif">
+            <div v-if="user.gif" class="row justify-content-center gif">
               <div class="col-md-auto">
-                <img :src="user_gif"/>
+                <img :src="user.gif"/>
               </div>
             </div>
             <div class="about" v-if="user.bio && user.bio.length != 0">
@@ -116,7 +116,6 @@ export default {
     return {
       user: null,
       reported: false,
-			user_gif	 : "https://media.giphy.com/media/t3sZxY5zS5B0z5zMIz/giphy.gif",
     };
   },
 

@@ -22,7 +22,7 @@ app.use(sanitizer.clean({
     noSql: true,
     sql: true,
     sqlLevel: 5,
-}, whitelist = ["/api/image/upload", "/api/users/updateuser"]));
+}, whitelist = ["/api/image/upload", "/api/users/updateuser", "api/test"]));
 
 app.use(sanitizer.clean({
   xss: true,
