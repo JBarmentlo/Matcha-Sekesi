@@ -19,33 +19,34 @@ Define the tables for the databases.
 Create the Mysql user Sammy.
 
 ```bash
-cd SQL_Server/sql_scripts
-bash here_create_user_table.sh
+cd server/sql_scripts
+sudo bash here_create_user_table.sh
 ```
 
 ### NPM setup
 
 ```bash
-cd new_sekes_client
+cd client
 npm i
 ```
 
 ## Run the project
 
+### build the front
+
+```bash
+npm run build
+```
+
 ### Start the backend server
 
-You may have to install nodemon `npm install --global nodemon`.
 
 ```bash
 cd SQL_Server
-nodemon server.js
+node server.js
 ```
 
-### Run the front
 
-```bash
-npm run serve
-```
 
 ## Tests
 
