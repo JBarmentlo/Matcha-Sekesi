@@ -10,7 +10,7 @@ A basic NEVM crud
 export MATCHA_DB='sekesidb'
 export MATCHA_TEST_DB='sekesitest'
 export TEST='false'
-
+export ENVIRONMENT='TEST'
 ```
 ### Mysql Setup
 

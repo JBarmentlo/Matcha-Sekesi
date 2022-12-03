@@ -2,6 +2,8 @@ const express    = require("express");
 const bodyParser = require("body-parser");
 const cors       = require("cors");
 
+
+
 require('dotenv').config()
 
 const app = express();
@@ -30,6 +32,8 @@ app.use(sanitizer.clean({
 //   console.log("going next")
 //   next()
 // })
+
+
 
 
 const userRouter = require("./src/routes/user.routes")
@@ -127,13 +131,44 @@ app.use('/api/chat', chatRouter, function(req, res, next){
 require("./src/routes/image.routes")(app)
 
 
-const PORT = process.env.PORT || 80;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+// const PORT = process.env.PORT || 80;
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}.`);
+// });
 
 
 
 // #######################   SERVE CLIENT DIST   ########################
 
 app.use("/", express.static('client_dist'));
+
+
+
+// ################################### HTTPS ##############################################3
+
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+
+
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
+
+// Starting both http & https servers
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(8081, () => {
+	console.log('HTTP Server running on port 80');
+});
+
+httpsServer.listen(443, () => {
+	console.log('HTTPS Server running on port 443');
+});
