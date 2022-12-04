@@ -255,3 +255,71 @@ exports.updateLastConnected = async (req, res, next) => {
     }
 
 };
+
+
+const axios = require('axios');
+
+// const oauth = require('axios-oauth-client')
+
+// const getAuthorizationCode = oauth.authorizationCode(
+//   axios.create(),
+//   'https://api.intra.42.fr/oauth/token/', // OAuth 2.0 token endpoint
+//   process.env.OAUTH_ID,
+//   process.env.OAUTH_SECRET,
+//   'https://matcha.yoopster.com/api/auth/oauth/' // Redirect URL for your app
+// )
+
+// => { "access_token": "...", "expires_in": 900, ... }
+
+async function get_42_user_details(code) {
+    let auth = await getAuthorizationCode(code)
+	return auth;
+}
+var querystring = require('querystring');
+
+
+async function get_42_user_details(code) {
+    // let qs = querystring.stringify({
+    //     grant_type: 'authorization_code',
+    //     client_id: process.env.OAUTH_ID,
+    //     client_secret: process.env.OAUTH_SECRET,
+    //     redirect_uri: 'https://matcha.yoopster.com/api/auth/oauth/',
+    //     code: code
+    // })
+
+	let request = {
+		url: `https://api.intra.42.fr/oauth/token`,
+		method: "post",
+		headers: {
+			"Content-type": "application/json",
+            'Accept-Encoding': 'application/json'
+		},
+        params : {
+            grant_type: 'authorization_code',
+            client_id: process.env.OAUTH_ID,
+            client_secret: process.env.OAUTH_SECRET,
+            redirect_uri: 'https://matcha.yoopster.com/api/auth/oauth/',
+            code: code
+        }
+	};
+    console.log(request)
+	const response = await axios(request);
+    // console.log("code:\n", response)
+    // console.log("42222222:\n", response.body)
+    // console.log("42222222:\n", response.data)
+	return response;
+}
+
+exports.oauthInUp = async (req, res) => {
+    console.log('Oauth for code: ', req.query.code)
+    console.log(querystring.stringify({
+        grant_type: 'authorization_code',
+        client_id: process.env.OAUTH_ID,
+        client_secret: process.env.OAUTH_SECRET,
+        redirect_uri: 'https://matcha.yoopster.com/api/auth/oauth/',
+        code: req.query.code
+    }))
+    let response42 = await get_42_user_details(req.query.code)
+    console.log(response42)
+};
+

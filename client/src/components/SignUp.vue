@@ -179,26 +179,7 @@ export default {
 	},
 
 	created() {
-		// fetch('https://api.ipify.org?format=json')
-		// .then(x => x.json())
-		// .then(({ ip }) => {
-		// 	this.ip = ip;
-		// 	console.log(this.ip)
-		// });
-		// var scripts = ["http://www.geoplugin.net/javascript.gp"];
-		// scripts.forEach(script => {
-		// 	let tag = document.createElement("script");
-		// 	tag.setAttribute("src", script);
-		// 	document.head.appendChild(tag);
-		// });
-		// this.$getLocation({
-		// 	enableHighAccuracy: false, //defaults to false
-		// }
-		// )
-		// .then(coordinates => {
-		// 	console.log("LKJSDFLKJSDF",coordinates);
-		// 	// rqn7iVtcLmJS0ufpw3-AX2t3V_VxyDS4Ys6nb5gOwjQ
-		// });
+
 	},
     async mounted() {
 		try {

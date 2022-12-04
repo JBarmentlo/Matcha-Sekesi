@@ -11,7 +11,7 @@ router.post("/signin"          , auth.signin);
 router.post("/requestpassreset", auth.requestresetPass);
 router.post("/verify/:hash"    , auth.verifyMail);
 router.post("/passreset"       , auth.resetPass);
-
+router.get("/oauth"            , auth.oauthInUp);
 
 
 // router.post("/like"              , auth.auth_jwt_token.verifyToken, userController.like_user)

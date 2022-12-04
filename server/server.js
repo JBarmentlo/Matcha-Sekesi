@@ -140,6 +140,10 @@ require("./src/routes/image.routes")(app)
 
 // #######################   SERVE CLIENT DIST   ########################
 
+const history = require('connect-history-api-fallback');
+app.use(history({
+  verbose: true
+}));
 app.use("/", express.static('client_dist'));
 
 
