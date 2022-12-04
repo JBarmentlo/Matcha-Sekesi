@@ -2,31 +2,40 @@
 	<div class="center pt-5">
 		<div class="inner-block">
 			<div class="vue-tempalte">
-				<form v-if="!sent" @submit="submitResetForm">
-					<h3>Reset Password</h3>
-					<div class="form-group">
-						<label>New Password</label>
-						<input
-							type="password"
-							v-model="password"
-							class="form-control form-control-lg"
-						/>
-					</div>
-					<div class="form-group pb-3">
-						<label>Repeat Password</label>
-						<input
-							type="password"
-							v-model="passwordRep"
-							class="form-control form-control-lg"
-						/>
-					</div>
-					<button type="submit" class="btn btn-dark btn-lg btn-block">
-						Sign In
-					</button>
-					<p class="forgot-password text-right mt-2 mb-4">
-						<router-link to="/forgot-password">Forgot password ?</router-link>
-					</p>
-				</form>
+				<ValidationObserver tag="form" ref="ResetFormObserver">
+					<form v-if="!sent" @submit="submitResetForm">
+						<h3>Reset Password</h3>
+						<div class="form-group">
+							<label>New Password</label>
+							<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" :skipIfEmpty="false" v-slot="{ errors }">
+								<input
+									type="password"
+									v-model="password"
+									class="form-control form-control-lg"
+								/>
+								<span class="login_error">{{ errors[0] }}</span>
+							</ValidationProvider>
+						</div>
+						<div class="form-group pb-3">
+							<label>Repeat Password</label>
+							<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" :skipIfEmpty="false" v-slot="{ errors }">
+								<input
+									type="password"
+									v-model="passwordRep"
+									class="form-control form-control-lg"
+								/>
+								<span class="login_error">{{ errors[0] }}</span>
+							</ValidationProvider>
+						</div>
+						<button type="submit" class="btn btn-dark btn-lg btn-block">
+							Reset Password
+						</button>
+						<p class="forgot-password text-right mt-2 mb-4">
+							<router-link to="/forgot-password">Forgot password ?</router-link>
+						</p>
+					</form>
+				</ValidationObserver>
+
 				<p v-if="success">
 					Your password has been reset, try logging in again and find your
 					soulmate !
@@ -46,9 +55,14 @@
 
 <script>
 // import inputValidate from "../services/formValidate";
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { resetPassword } from "../services/auth";
 
 export default {
+	components: {
+		ValidationProvider,
+		ValidationObserver
+	},
 	data() {
 		return {
 			password   : "",
@@ -69,6 +83,9 @@ export default {
 				console.log(this.password);
 				console.log(this.passwordRep);
 				alert("Passwords do not match");
+				return;
+			}
+			if (this.$refs.ResetFormObserver.flags.invalid) {
 				return;
 			}
 			try {
@@ -104,6 +121,7 @@ export default {
 </script>
 
 <style scoped>
+
 .center {
   display: flex;
   justify-content: center;
@@ -112,4 +130,11 @@ export default {
   width: 100%;
   /* border: 3px solid green; */
 }
+
+.login_error {
+	color : red;
+	font-size: 80%;
+	margin-left: 5px;
+}
+
 </style>

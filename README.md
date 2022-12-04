@@ -10,7 +10,7 @@ A basic NEVM crud
 export MATCHA_DB='sekesidb'
 export MATCHA_TEST_DB='sekesitest'
 export TEST='false'
-
+export ENVIRONMENT='TEST'
 ```
 ### Mysql Setup
 
@@ -19,37 +19,58 @@ Define the tables for the databases.
 Create the Mysql user Sammy.
 
 ```bash
-cd SQL_Server/sql_scripts
-bash here_create_user_table.sh
+cd server/sql_scripts
+sudo bash here_create_user_table.sh
 ```
 
 ### NPM setup
 
 ```bash
-cd new_sekes_client
+cd client
 npm i
 ```
 
 ## Run the project
 
+### build the front
+
+```bash
+npm run build
+```
+
 ### Start the backend server
 
-You may have to install nodemon `npm install --global nodemon`.
 
 ```bash
 cd SQL_Server
-nodemon server.js
+node server.js
 ```
 
-### Run the front
 
-```bash
-npm run serve
-```
 
 ## Tests
 
 ```bash
 cd SQL_Server
 npm run test
+```
+
+# Nginx
+
+Listening to the 80 port might be troublesome in some scenarios (like an EC2 instance)
+You may want to set up an NGINX with this config.   
+[NGINX](https://www.nginx.com/blog/setting-up-nginx/)   
+[Conf](https://stackoverflow.com/questions/24861311/forwarding-port-80-to-8080-using-nginx)
+
+```nginx
+server {
+    listen 80;
+    server_name matcha.yoopster.com;
+
+    location / {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         "http://127.0.0.1:8081";
+    }
+}
 ```

@@ -17,8 +17,8 @@ async function handle_new_mail_for_user(username, id, mail) {
 		VALUES (?, ?)",
 		[username, hash]
 	)
-	return Promise.resolve()
-	// return await sendMail(mail, "Verify your email", "Please validate your email here: " + "http://matcha.yoopster.com:80/verify/" + encodeURIComponent(hash))
+	// return Promise.resolve()
+	return await sendMail(mail, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com/verify/" + encodeURIComponent(hash))
 }
 
 

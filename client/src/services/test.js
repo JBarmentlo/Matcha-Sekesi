@@ -30,7 +30,7 @@ const createOneUser = async function(rawUser, tags) {
 		user.tag_list.pop()
 	// console.log("creating user: ", user)
 	let request = {
-		url: "http://matcha.yoopster.com:80/api/test/createuser",  // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/test/createuser",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -62,7 +62,7 @@ export const createRandomlikes = async (min, max) => {
 	console.log("Creating ", min, "-", max, " likes per user.")
 
 	let request = {
-		url: "http://matcha.yoopster.com:80/api/test/getuserlist",  // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/test/getuserlist",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",
@@ -83,7 +83,7 @@ export const createRandomlikes = async (min, max) => {
 	}
 
 	let request_like = {
-		url: "http://matcha.yoopster.com:80/api/test/createlikes",  // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/test/createlikes",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -101,7 +101,7 @@ export const createRandomConsults = async (min, max) => {
 	console.log("Creating ", min, "-", max, " consults per user.")
 
 	let request = {
-		url: "http://matcha.yoopster.com:80/api/test/getuserlist",  // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/test/getuserlist",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",
@@ -122,7 +122,7 @@ export const createRandomConsults = async (min, max) => {
 	}
 
 	let request_consult = {
-		url: "http://matcha.yoopster.com:80/api/test/createconsults",  // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/test/createconsults",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -141,7 +141,7 @@ export const createRandomblocks = async (min, max) => {
 	console.log("Creating ", min, "-", max, " blocks per user.")
 
 	let request = {
-		url: "http://matcha.yoopster.com:80/api/test/getuserlist",  // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/test/getuserlist",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",
@@ -162,7 +162,7 @@ export const createRandomblocks = async (min, max) => {
 	}
 
 	let request_block = {
-		url: "http://matcha.yoopster.com:80/api/test/createblocks",  // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/test/createblocks",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",

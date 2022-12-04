@@ -30,6 +30,7 @@ exports.signup = async (req, res) => {
         latitude: req.body.latitude,
         longitude: req.body.longitude,
     })
+    console.log("LKJSDFLKJ")
 
     try {
         let query_result = await db.query(
@@ -44,6 +45,7 @@ exports.signup = async (req, res) => {
             VALUES (?, ?);",
             [username, hash]
         )
+        console.log("SIGNIUP:", query_result)
         sendMail(mail, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com/#/verify/" + encodeURIComponent(hash))
         res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
@@ -88,7 +90,7 @@ exports.verifyMail = async (req, res) => {
             "UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
             verify_mail_result[0].user
         )
-        // sendMail(mail, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com/#/verify/" + encodeURIComponent(hash))
+        sendMail(mail, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com:80/verify/" + encodeURIComponent(hash))
         res.status(200).send({message: "verified mail for " + verify_mail_result.user, code: "SUCCESS"})
     }
     catch (e) {
@@ -118,7 +120,7 @@ exports.requestresetPass = async (req, res) => {
             VALUES (?,?);",
             [user.username, hash]
         )
-        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + "https://matcha.yoopster.com/#/reset/" + encodeURIComponent(hash))
+        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + "https://matcha.yoopster.com//matcha.yoopster.com:80/#/reset/" + encodeURIComponent(hash))
         return res.status(200).send({message: "Sucessfully requested reset", code: "SUCCESS", hash: hash})
     }
     catch (e) {
@@ -219,7 +221,7 @@ exports.verifyToken = (req, res, next) => {
     
         jwt.verify(token, secret, (err, decoded) => {
             if (err) {
-                // console.log("error: in token:\n", err)
+                console.log("error: in token:\n", err)
                 // console.log("error: ", err)
                 return res.status(401).send({ message: "Unauthorized!" });
             }

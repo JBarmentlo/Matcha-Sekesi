@@ -4,7 +4,7 @@ import axios from "axios";
 export const updateUser = async (access_token, user) => {
 	console.log("User update for: ", user)
 	let request = {
-		url: "http://matcha.yoopster.com:80/api/users/updateuser", // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/users/updateuser", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -21,7 +21,7 @@ export const updateUser = async (access_token, user) => {
 export const getMyUser = async (access_token) => {
 	console.log("Get my user")
 	let request = {
-		url: "http://matcha.yoopster.com:80/api/users/getmyuser", // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/users/getmyuser", // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type"       : "application/json",
@@ -37,7 +37,7 @@ export const getMyUser = async (access_token) => {
 export const getUserProfile = async (access_token, username) => {
 	console.log("Get my user")
 	let request = {
-		url: `http://matcha.yoopster.com:80/api/users/getprofile/${username}`, // should be replaced after going to production with domain url
+		url: `https://matcha.yoopster.com/api/users/getprofile/${username}`, // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type"       : "application/json",
@@ -53,7 +53,7 @@ export const getUserProfile = async (access_token, username) => {
 export const consultUserProfile = async (access_token, username) => {
 	console.log("consult user", username)
 	let request = {
-		url: `http://matcha.yoopster.com:80/api/users/consult/${username}`, // should be replaced after going to production with domain url
+		url: `https://matcha.yoopster.com/api/users/consult/${username}`, // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type"       : "application/json",
@@ -72,7 +72,7 @@ export const consultUserProfile = async (access_token, username) => {
 export const getUserTags = async (username) => {
 	console.log("User update for: ", username)
 	let request = {
-		url: "http://matcha.yoopster.com:80/api/auth/getusertags", // should be replaced after going to production with domain url
+		url: "https://matcha.yoopster.com/api/auth/getusertags", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -88,7 +88,7 @@ export const getUserTags = async (username) => {
 export const likeUser = async (access_token, username) => {
 	// console.log("like: ", username)
 	let request = {
-		url: `http://matcha.yoopster.com:80/api/users/like`, // should be replaced after going to production with domain url
+		url: `https://matcha.yoopster.com/api/users/like`, // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -107,7 +107,7 @@ export const likeUser = async (access_token, username) => {
 export const unlikeUser = async (access_token, username) => {
 	console.log("unlike: ", username)
 	let request = {
-		url: `http://matcha.yoopster.com:80/api/users/unlike`, // should be replaced after going to production with domain url
+		url: `https://matcha.yoopster.com/api/users/unlike`, // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -126,7 +126,7 @@ export const unlikeUser = async (access_token, username) => {
 export const blockUser = async (access_token, username) => {
 	console.log("block: ", username)
 	let request = {
-		url: `http://matcha.yoopster.com:80/api/users/block`, // should be replaced after going to production with domain url
+		url: `https://matcha.yoopster.com/api/users/block`, // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -145,7 +145,7 @@ export const reportUser = async (access_token, username) => {
 	try {
 		console.log("report: ", username)
 		let request = {
-			url: `http://matcha.yoopster.com:80/api/users/report`, // should be replaced after going to production with domain url
+			url: `https://matcha.yoopster.com/api/users/report`, // should be replaced after going to production with domain url
 			method: "post",
 			headers: {
 				"Content-type"       : "application/json",
@@ -170,7 +170,7 @@ export const reportUser = async (access_token, username) => {
 export const unblockUser = async (access_token, username) => {
 	console.log("unblock: ", username)
 	let request = {
-		url: `http://matcha.yoopster.com:80/api/users/unblock`, // should be replaced after going to production with domain url
+		url: `https://matcha.yoopster.com/api/users/unblock`, // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -189,7 +189,7 @@ export const unblockUser = async (access_token, username) => {
 export const getMatches = async (access_token) => {
 	console.log("get matches: ")
 	let request = {
-		url: `http://matcha.yoopster.com:80/api/users/getmatches`, // should be replaced after going to production with domain url
+		url: `https://matcha.yoopster.com/api/users/getmatches`, // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type"       : "application/json",
@@ -206,7 +206,7 @@ export const getMatches = async (access_token) => {
 
 export const getLoc = async () => {
 	console.log("get Loc: ")
-	const res = await axios.get( 'http://ipinfo.io/json?token=e7f3e2a554658c')
+	const res = await axios.get( 'https://ipinfo.io/json?token=e7f3e2a554658c')
 	console.log("Located at: ", res)
 	return res
 }

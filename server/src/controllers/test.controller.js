@@ -77,7 +77,7 @@ exports.create_user_test = async (req, res) => {
 		tag_list = []
 	}
 
-	// console.log("\n\n\n\n\n\n\nusername: ", username, "\nfirstName: ", firstName, "\nlastName: ", lastName, "\ntag_list: ", tag_list, "\nmail: ", mail, "\npassword: ", "\npopScore: ", popScore, "\nzipCode: ", zipCode, "\ncity: ", city, "\nisCompleteProfile: ", isCompleteProfile, "\nlongitude: ", longitude, "\nlatitude: ", latitude, "\nDOB: ", DOB, "\nimage0: ", image0, "\nprofilePic: ", profilePic)
+	console.log("\n\n\n\n\n\n\nusername: ", username, "\nfirstName: ", firstName, "\nlastName: ", lastName, "\ntag_list: ", tag_list, "\nmail: ", mail, "\npassword: ", "\npopScore: ", popScore, "\nzipCode: ", zipCode, "\ncity: ", city, "\nisCompleteProfile: ", isCompleteProfile, "\nlongitude: ", longitude, "\nlatitude: ", latitude, "\nDOB: ", DOB, "\nimage0: ", image0, "\nprofilePic: ", profilePic)
 	try {
 		await db.query(
 			'INSERT INTO USERS \
@@ -94,7 +94,7 @@ exports.create_user_test = async (req, res) => {
 		if (tag_list.length != 0) {
 			keri_res = await db.query(keri_string)
 		}
-		console.log("Created user: ", username)
+		console.log("Created user: ", username, keri_res)
 		return res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS', user: keri_res})
 	}
 	catch (e) {
