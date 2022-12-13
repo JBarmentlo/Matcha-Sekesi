@@ -96,7 +96,7 @@ export default {
 
 	async mounted() {
 		// console.log("cookie signin disabled")
-		console.log("Signin Created");
+		console.log("App mounted");
 		if (this.$cookies.isKey("sekes_tokens") && this.$cookies.get("sekes_tokens") != null) {
 			console.log("already logged in by cookie");
 			try {
@@ -104,7 +104,11 @@ export default {
 				console.log("User:" + user.data.code)
 				if (user.data.code == "SUCCESS") {
 					this.$cookies.set("user", {...user.data.data})
+					console.log("signin success for route: ",this.$route.fullPath)
 					this.setLoggedIn(true);
+					if (["/", "signin", "signup"].includes(this.$route.fullPath)) {
+						this.$router.push("/editprofile")
+					}
 				}
 				else {
 					this.$cookies.remove('sekes_tokens')
