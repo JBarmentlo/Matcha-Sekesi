@@ -36,7 +36,7 @@ exports.signup = async (req, res) => {
             'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
             )
-        console.log("LKJSDFLKJlkjsdflkj")
+
         let hash = bcrypt.hashSync(query_result.insertId.toString(), 8)
         let insert_mail_result = await db.query(
             "INSERT INTO VERIFY \
@@ -255,83 +255,5 @@ exports.updateLastConnected = async (req, res, next) => {
     }
 
 };
-
-
-const axios = require('axios');
-
-
-async function get_42_user_details(bearer_token) {
-    console.log("TOKEEEEN: ", bearer_token)
-	let request = {
-		url: `https://api.intra.42.fr/v2/me`,
-		method: "get",
-		headers: {
-			"Content-type": "application/json",
-            'Accept-Encoding': 'identity',
-            Authorization : `Bearer ${bearer_token}`
-		}
-	};
-	const response = await axios(request);
-	return response;
-}
-
-async function get_42_user_token(code) {
-	let request = {
-		url: `https://api.intra.42.fr/oauth/token`,
-		method: "post",
-		headers: {
-			"Content-type": "application/json",
-            'Accept-Encoding': 'application/json'
-		},
-        params : {
-            grant_type: 'authorization_code',
-            client_id: process.env.OAUTH_ID,
-            client_secret: process.env.OAUTH_SECRET,
-            redirect_uri: 'https://matcha.yoopster.com/api/auth/oauth/',
-            code: code
-        }
-	};
-	const response = await axios(request);
-	return response;
-}
-
-exports.oauthInUp = async (req, res) => {
-    console.log('Oauth for code: ', req.query.code)
-    let token42 = await get_42_user_token(req.query.code)
-    if (token42.status == 200) {
-        console.log("got token")
-        console.log(token42.data.access_token)
-        console.log("refresh: ", token42.data.refresh_token)
-        console.log("refresh: ", token42.data)
-        let user_details = await get_42_user_details(token42.data.access_token)
-        if (user_details.status == 200) {
-            user_info = {
-                email     : user_details.data.email,
-                id        : user_details.data.id,
-                login     : user_details.data.login,
-                first_name: user_details.data.first_name,
-                last_name : user_details.data.last_name,
-                image     : user_details.data.image.link
-            }
-            console.log(user_info)
-            res.set('x-token', 'token-loool');
-            res.cookie('toktok', user_info)
-            res.redirect("/");
-        }
-    }
-    console.log(token42.status)
-};
-// 401 forbidden
-// data: {
-//     error: 'invalid_grant',
-//     error_description: 'The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.'
-//   }
-
-// 429 rate exceeded
-// data: '429 Too Many Requests (Rate Limit Exceeded)'
-//  TOKEN was undefined ????
-
-
-
 
 

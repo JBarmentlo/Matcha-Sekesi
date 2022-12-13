@@ -5,7 +5,7 @@ create table if not exists USERS
     lastName          varchar(300)                              null,
     bio               varchar(300)                              null,
     mail              varchar(300)                              not null,
-    password          varchar(300)                              not null,
+    password          varchar(300)                              null,
     mailVerified      tinyint(1)  default 0                     not null,
     gender            varchar(10)                               null,
     sekesualOri       varchar(10) default 'Bi'                  null,
@@ -121,6 +121,7 @@ create table if not exists Oauth42
         unique (username),
     constraint Oauth42_USERS_username_fk
         foreign key (username) references USERS (username)
+            on delete cascade
 );
 
 create table if not exists REPORTS
