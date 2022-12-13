@@ -46,9 +46,9 @@ export const signin = async item => {
 
 export const signin_up_oauth = async (code, longitude, latitude) => {
 	let data = {
-		code: item.code,
-		longitude: item.longitude,
-		latitude: item.latitude
+		code: code,
+		longitude: longitude,
+		latitude: latitude
 	};
 	let request = {
 		url: "https://matcha.yoopster.com/api/auth/signinupoauth", // should be replaced after going to production with domain url
