@@ -30,9 +30,10 @@ const routes = [
     component: SignIn
   },
   {
-    path: '/forgotpassword',
+    path: '/forgotpassword/:email?',
     name: 'Forgot Password',
-    component: ForgotPassword
+    component: ForgotPassword,
+    props: true,
   },
   {
     path: '/verify/:hash',

@@ -81,9 +81,9 @@ async function create_user(user_info) {
     }
     catch (e) {
         if (e.code == 'ER_DUP_ENTRY') {
-            console.log(e)
+            console.log("in err dup")
             if (e.sqlMessage.includes('USERS.USERS_mail_uindex')) {
-                return false
+                return 'mail_already_taken'
             }
 
             else if (e.sqlMessage.includes('USERS.USERS_username_uindex')) {
@@ -170,13 +170,17 @@ exports.oauthInUp = async (req, res) => {
                 console.log('user_created: ', existing_username)
             }
 
+            if (existing_username == 'mail_already_taken') {
+                return res.redirect(`/forgotpassword/taken`)
+            }
+
             let signin = await create_signin_data(existing_username)
             res.cookie("user", JSON.stringify(signin.user))
             console.log(("user", JSON.stringify({...signin.user})))
             res.cookie("sekes_tokens",  JSON.stringify({accessToken: signin.accessToken, signature: signin.signature}))
             console.log("sekes_tokens",  JSON.stringify({accessToken: signin.accessToken, signature: signin.signature}))
 
-            res.redirect("/editprofile");
+            return res.redirect("/editprofile");
         }
     }
 };
