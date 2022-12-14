@@ -44,6 +44,25 @@ export const signin = async item => {
 	return response;
 };
 
+export const signin_up_oauth = async (code, longitude, latitude) => {
+	let data = {
+		code: code,
+		longitude: longitude,
+		latitude: latitude
+	};
+	let request = {
+		url: "https://matcha.yoopster.com/api/auth/signinupoauth", // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type": "application/json"
+		},
+		data: JSON.stringify(data)
+	};
+
+	const response = await axios(request);
+	return response;
+};
+
 export const verifyMail = async hash => {
 	console.log("verifying url %s", "https://matcha.yoopster.com/api/auth/verify/" + encodeURIComponent(hash))
 	let request = {

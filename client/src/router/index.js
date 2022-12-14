@@ -77,8 +77,8 @@ const routes = [
   },
 ]
 
-
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 
@@ -104,8 +104,8 @@ router.beforeEach((to, from, next) => {
         }
       })
       .catch(e => {
-          console.log("checking login failure")
-          Vue.$cookies.remove('sekes_tokens')
+        console.log("checking login failure")
+        Vue.$cookies.remove('sekes_tokens')
         Vue.$cookies.remove('user')
         console.log("Trying to access page that requires signin", e)
         next('/signin')

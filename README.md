@@ -11,6 +11,7 @@ export MATCHA_DB='sekesidb'
 export MATCHA_TEST_DB='sekesitest'
 export TEST='false'
 export ENVIRONMENT='TEST'
+export PATH=$PATH:/home/ubuntu/.nvm/versions/node/v16.13.2/bin/
 ```
 ### Mysql Setup
 

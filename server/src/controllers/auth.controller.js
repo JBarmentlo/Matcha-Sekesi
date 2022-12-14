@@ -36,7 +36,7 @@ exports.signup = async (req, res) => {
             'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
             )
-        console.log("LKJSDFLKJlkjsdflkj")
+
         let hash = bcrypt.hashSync(query_result.insertId.toString(), 8)
         let insert_mail_result = await db.query(
             "INSERT INTO VERIFY \
@@ -255,3 +255,5 @@ exports.updateLastConnected = async (req, res, next) => {
     }
 
 };
+
+

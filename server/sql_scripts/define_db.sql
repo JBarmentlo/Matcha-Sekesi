@@ -1,11 +1,11 @@
-create table USERS
+create table if not exists USERS
 (
     username          varchar(300)                              not null,
     firstName         varchar(300)                              null,
     lastName          varchar(300)                              null,
     bio               varchar(300)                              null,
     mail              varchar(300)                              not null,
-    password          varchar(300)                              not null,
+    password          varchar(300)                              null,
     mailVerified      tinyint(1)  default 0                     not null,
     gender            varchar(10)                               null,
     sekesualOri       varchar(10) default 'Bi'                  null,
@@ -31,7 +31,7 @@ create table USERS
         unique (username)
 );
 
-create table BLOCKS
+create table if not exists BLOCKS
 (
     blocker      varchar(300)                        not null,
     blocked      varchar(300)                        not null,
@@ -46,7 +46,7 @@ create table BLOCKS
             on delete cascade
 );
 
-create table CONSULTS
+create table if not exists CONSULTS
 (
     consulter    varchar(300)                        not null,
     consulted    varchar(300)                        not null,
@@ -61,7 +61,7 @@ create table CONSULTS
             on delete cascade
 );
 
-create table LIKES
+create table if not exists LIKES
 (
     liker        varchar(300)                        not null,
     liked        varchar(300)                        not null,
@@ -76,7 +76,7 @@ create table LIKES
             on delete cascade
 );
 
-create table MSG
+create table if not exists MSG
 (
     id           int auto_increment
         primary key,
@@ -93,7 +93,7 @@ create table MSG
             on delete cascade
 );
 
-create table NOTIFS
+create table if not exists NOTIFS
 (
     id           int auto_increment
         primary key,
@@ -110,7 +110,21 @@ create table NOTIFS
             on delete cascade
 );
 
-create table REPORTS
+create table if not exists Oauth42
+(
+    id_42    int          not null
+        primary key,
+    username varchar(300) not null,
+    constraint Oauth42_id_42_uindex
+        unique (id_42),
+    constraint Oauth42_username_uindex
+        unique (username),
+    constraint Oauth42_USERS_username_fk
+        foreign key (username) references USERS (username)
+            on delete cascade
+);
+
+create table if not exists REPORTS
 (
     reporter     varchar(300)                        not null,
     reported     varchar(300)                        not null,
@@ -125,7 +139,7 @@ create table REPORTS
             on delete cascade
 );
 
-create table RESET
+create table if not exists RESET
 (
     user         varchar(300)                        null,
     id_hash      varchar(300)                        null,
@@ -135,7 +149,7 @@ create table RESET
             on delete cascade
 );
 
-create table TAGS
+create table if not exists TAGS
 (
     tag          varchar(300)                        not null,
     user         varchar(300)                        not null,
@@ -147,7 +161,7 @@ create table TAGS
             on delete cascade
 );
 
-create table VERIFY
+create table if not exists VERIFY
 (
     user         varchar(300)                        null,
     id_hash      varchar(300)                        null,

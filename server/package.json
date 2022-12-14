@@ -12,8 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "@risingstack/protect": "^1.2.0",
+    "axios": "^1.2.0",
+    "axios-oauth-client": "^2.0.0",
     "bcryptjs": "^2.4.3",
     "cli-progress": "^3.11.2",
+    "connect-history-api-fallback": "^2.0.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.1",
@@ -27,7 +30,8 @@
     "mailgun.js": "^8.0.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",
-    "perfect-express-sanitizer": "^1.0.9"
+    "perfect-express-sanitizer": "^1.0.9",
+    "querystring": "^0.2.1"
   },
   "devDependencies": {
     "chai": "^4.3.6",

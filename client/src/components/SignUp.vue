@@ -88,6 +88,9 @@
 						Already registered
 						<router-link :to="{ name: 'Sign In' }">sign in?</router-link>
 					</p>
+					<p class="forgot-password text-right">
+						<a href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-ed770153aaf57b2adf7cc62cc3c5d3014088889adbbfb5d2373d57a7b95c9fc6&redirect_uri=https%3A%2F%2Fmatcha.yoopster.com%2Fapi%2Fauth%2Foauth%2F&response_type=code">Create account with 42</a>
+					</p>
 				</form>
 				</ValidationObserver>
 			<!-- </div> -->
@@ -179,26 +182,7 @@ export default {
 	},
 
 	created() {
-		// fetch('https://api.ipify.org?format=json')
-		// .then(x => x.json())
-		// .then(({ ip }) => {
-		// 	this.ip = ip;
-		// 	console.log(this.ip)
-		// });
-		// var scripts = ["http://www.geoplugin.net/javascript.gp"];
-		// scripts.forEach(script => {
-		// 	let tag = document.createElement("script");
-		// 	tag.setAttribute("src", script);
-		// 	document.head.appendChild(tag);
-		// });
-		// this.$getLocation({
-		// 	enableHighAccuracy: false, //defaults to false
-		// }
-		// )
-		// .then(coordinates => {
-		// 	console.log("LKJSDFLKJSDF",coordinates);
-		// 	// rqn7iVtcLmJS0ufpw3-AX2t3V_VxyDS4Ys6nb5gOwjQ
-		// });
+
 	},
     async mounted() {
 		try {
