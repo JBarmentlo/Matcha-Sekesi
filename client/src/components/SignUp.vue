@@ -88,9 +88,9 @@
 						Already registered
 						<router-link :to="{ name: 'Sign In' }">sign in?</router-link>
 					</p>
-					<p class="forgot-password text-right">
-						<a href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-ed770153aaf57b2adf7cc62cc3c5d3014088889adbbfb5d2373d57a7b95c9fc6&redirect_uri=https%3A%2F%2Fmatcha.yoopster.com%2Fapi%2Fauth%2Foauth%2F&response_type=code">Create account with 42</a>
-					</p>
+					<b-button class="mt-3 loginBtn loginBtn--42" href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-ed770153aaf57b2adf7cc62cc3c5d3014088889adbbfb5d2373d57a7b95c9fc6&redirect_uri=https%3A%2F%2Fmatcha.yoopster.com%2Fapi%2Fauth%2Foauth%2F&response_type=code'>
+						Sign up with 42
+					</b-button>
 				</form>
 				</ValidationObserver>
 			<!-- </div> -->
@@ -207,6 +207,53 @@ export default {
 	color : red;
 	font-size: 80%;
 	margin-left: 5px;
+}
+
+.loginBtn {
+    box-sizing: border-box;
+    position: relative;
+    padding: 0 15px 0 46px;
+    border: none;
+    text-align: left;
+    line-height: 34px;
+    font-size: 13px;
+    color: #FFF;
+}
+
+.loginBtn:before {
+	content: "";
+	box-sizing: border-box;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 34px;
+	height: 100%;
+}
+
+.loginBtn:focus {
+	outline: none;
+}
+.loginBtn:active {
+	box-shadow: inset 0 0 0 32px rgba(0,0,0,0.1);
+}
+
+.loginBtn--42 {
+/*font-family: "Roboto", Roboto, arial, sans-serif;*/
+	background: #fef8f7;
+	color: black;
+	width: 55%;
+}
+.loginBtn--42:before {
+	border-right: #c0bcbc 1px solid;
+	background : url('https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg?uselang=fr');
+	background-size: 70%;
+	background-repeat: no-repeat;
+	background-position: 50%;
+}
+
+.loginBtn--42:hover, .loginBtn--42:focus {
+    background-color: #f3eceb;
+    background-image: linear-gradient(#e3e5e5, #c7c7c7e4);
 }
 
 
