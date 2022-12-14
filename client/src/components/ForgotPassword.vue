@@ -13,6 +13,7 @@
 							class="form-control form-control-lg"
 						/>
 					</div>
+					<p v-if="mail_in_use">Your 42 email is already linked to an account</p>
 					<button type="submit" class="btn btn-dark btn-lg btn-block">
 						Reset password
 					</button>
@@ -39,13 +40,23 @@ import { requestPassReset } from "../services/auth";
 export default {
 	data() {
 		return {
-			requestSent: false,
-			error      : false,
-			mail       : "",
+			requestSent : false,
+			error       : false,
+			mail        : "",
+			mail_in_use : this.email == "taken"
 		};
 	},
 
-	props: {},
+	computed: {
+
+	},
+
+	props: {
+		email: {
+		type: String,
+		default: ""
+		},
+	},
 
 	methods: {
 		async onSubmit(e) {
