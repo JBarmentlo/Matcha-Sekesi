@@ -308,18 +308,18 @@ exports.get_my_user = async (searched_username) => {
 
 exports.search_users = async (searcher_username, min_age, max_age, required_tags, min_rating, max_rating, zipcode, offset, limit, orderby, asc_or_desc, desires) => {
 	console.log("Searching users ")
-	console.log("criteria: ",
-	"min_age :"      , min_age      ,
-	"max_age :"      , max_age      ,
-	"interest_tags :", required_tags,
-	"min_rating :"   , min_rating   ,
-	"max_rating :"   , max_rating   ,
-	"zipcodes :"     , zipcode      ,
-	"offset: "       , offset       ,
-	"limit: "        , limit        , 
-	"order_by: "     , orderby      , 
-	"desires: "      , desires      , 
-	"asc_or_desc: "  , asc_or_desc)
+	// console.log("criteria: ",
+	// "min_age :"      , min_age      ,
+	// "max_age :"      , max_age      ,
+	// "interest_tags :", required_tags,
+	// "min_rating :"   , min_rating   ,
+	// "max_rating :"   , max_rating   ,
+	// "zipcodes :"     , zipcode      ,
+	// "offset: "       , offset       ,
+	// "limit: "        , limit        , 
+	// "order_by: "     , orderby      , 
+	// "desires: "      , desires      , 
+	// "asc_or_desc: "  , asc_or_desc)
 
 	let tag_list = ""
 	if (required_tags == undefined || required_tags.length == 0) {
@@ -363,10 +363,10 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	if (desire_str != "") {
 		desire_str += ')'
 	}
-	console.log("taglist: ", tag_list)
-	console.log("desire_ste: ", desire_str)
-	console.log("zipcode: ", zipcode)
-	console.log("orderby_str: ", orderby_str)
+	// console.log("taglist: ", tag_list)
+	// console.log("desire_ste: ", desire_str)
+	// console.log("zipcode: ", zipcode)
+	// console.log("orderby_str: ", orderby_str)
 	
 	let keri_string =  
 		"WITH                                                                               \
@@ -479,13 +479,13 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 
 exports.search_users_initial = async (searcher_username, user_tags, long, lat, desires, offset, limit) => {
 	console.log("Searching users initial")
-	console.log("criteria: ",
-	"user_tags     : ", user_tags  ,
-	"long          : ", long       ,
-	"lat           : ", lat        ,
-	"offset        : ", offset     ,
-	"limit         : ", limit      , 
-	"desires       : ", desires)
+	// console.log("criteria: ",
+	// "user_tags     : ", user_tags  ,
+	// "long          : ", long       ,
+	// "lat           : ", lat        ,
+	// "offset        : ", offset     ,
+	// "limit         : ", limit      , 
+	// "desires       : ", desires)
 
 	let tag_list = ""
 	if (user_tags == undefined || user_tags.length == 0) {
@@ -515,7 +515,7 @@ exports.search_users_initial = async (searcher_username, user_tags, long, lat, d
 	}
 
 tag_list="'Music'"
-	console.log("TAK: ", tag_list)
+	// console.log("TAK: ", tag_list)
 	let keri_string =  
 	"WITH                                                                               \
 	\
@@ -614,6 +614,6 @@ tag_list="'Music'"
 	.replace(new RegExp       ("@desires"         , "g")          , desire_str       )
 	let user_query = await db.query(keri_string)
 
-	console.log("KERIIIIIIII: ", user_query.map(user => user))
+	// console.log("KERIIIIIIII: ", user_query.map(user => user))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };

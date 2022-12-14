@@ -39,10 +39,12 @@
                                         <span class="caret_down"><b-icon-caret-down-fill class="caret"/></span>
                                     </template>
                                         <b-dropdown-item v-for="liker in user.like_list" :key="liker">
-                                            <a :href="'?#/profile/' + liker">{{liker}}</a> liked you
+                                            <router-link :to="{ name: 'profile', params: { userName: liker }}">{{liker}}</router-link> liked you.
+                                            <!-- <a :href="'matcha.yoopster.com/profile/' + liker">{{liker}}</a>  -->
                                         </b-dropdown-item>
                                         <b-dropdown-item v-for="consulter in user.consult_list" :key="consulter">
-                                            <a :href="'?#/profile/' + consulter">{{consulter}}</a> consulted your profile
+                                            <router-link :to="{ name: 'profile', params: { userName: consulter }}">{{consulter}}</router-link> consulted your profile
+                                            <!-- <a :href="'matcha.yoopster.com/profile/' + consulter">{{consulter}}</a> consulted your profile -->
                                         </b-dropdown-item>
                                 </b-dropdown>
                                 <b-tooltip target="list_people" placement="top" triggers="hover">More details</b-tooltip>
@@ -54,12 +56,6 @@
                         </div>
                     </div>
                     <ProfileImageCarousel ref="Jaroussel" :images="user_images" @AddImage="AddImage" @DeleteImage="RemoveImage"/>
-                    <!-- <div v-for="liker in user.like_list" :key="liker">
-                        <li><a :href="'?#/profile/' + liker">{{liker}}</a> liked you</li>
-                    </div>
-                    <div v-for="consulter in user.consult_list" :key="consulter">
-                        <li><a :href="'?#/profile/' + consulter">{{consulter}}</a> consulted your profile</li>
-                    </div> -->
                 </div>
             </div>
         </div>

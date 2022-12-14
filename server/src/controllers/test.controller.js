@@ -189,7 +189,7 @@ exports.create_likes = async (req, res) => {
 			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
-			console.log("create user likes test error:\n", e, "\n\nend error")
+			// console.log("create user likes test error:\n", e, "\n\nend error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
 			throw(e)
 		}
@@ -230,7 +230,7 @@ exports.create_consults = async (req, res) => {
 			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
-			console.log("create user consults test error:\n", e, "\n\nend error")
+			// console.log("create user consults test error:\n", e, "\n\nend error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
 			throw(e)
 		}
@@ -271,7 +271,7 @@ exports.create_blocks = async (req, res) => {
 			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
-			console.log("create user blocks test error:\n", e, "\n\nend error")
+			// console.log("create user blocks test error:\n", e, "\n\nend error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
 			throw(e)
 		}
