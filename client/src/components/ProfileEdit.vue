@@ -40,11 +40,9 @@
                                     </template>
                                         <b-dropdown-item v-for="liker in user.like_list" :key="liker">
                                             <router-link :to="{ name: 'profile', params: { userName: liker }}">{{liker}}</router-link> liked you.
-                                            <!-- <a :href="'matcha.yoopster.com/profile/' + liker">{{liker}}</a>  -->
                                         </b-dropdown-item>
                                         <b-dropdown-item v-for="consulter in user.consult_list" :key="consulter">
                                             <router-link :to="{ name: 'profile', params: { userName: consulter }}">{{consulter}}</router-link> consulted your profile
-                                            <!-- <a :href="'matcha.yoopster.com/profile/' + consulter">{{consulter}}</a> consulted your profile -->
                                         </b-dropdown-item>
                                 </b-dropdown>
                                 <b-tooltip target="list_people" placement="top" triggers="hover">More details</b-tooltip>
