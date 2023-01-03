@@ -6,13 +6,16 @@ A basic NEVM crud
 
 ## Start the server
 
-```
+```bash
 sudo su
 export MATCHA_DB='sekesidb'
 export MATCHA_TEST_DB='sekesitest'
 export TEST='false'
 export ENVIRONMENT='TEST'
 export PATH=$PATH:/home/ubuntu/.nvm/versions/node/v16.13.2/bin/
+```
+```bash
+nodemon server.js
 ```
 ### Mysql Setup
 
