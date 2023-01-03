@@ -1,12 +1,13 @@
 # NEVM-crud-tutorial
 A basic NEVM crud
 
-## Prerequisites
-
 - node 16.13.2
 - mysql 8
 
+## Start the server
+
 ```
+sudo su
 export MATCHA_DB='sekesidb'
 export MATCHA_TEST_DB='sekesitest'
 export TEST='false'
