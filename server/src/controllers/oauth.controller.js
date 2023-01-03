@@ -69,7 +69,7 @@ async function create_user(user_info) {
             VALUES (?, ?);",
             [login, hash]
         )
-        sendMail(email, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com/#/verify/" + encodeURIComponent(hash))
+        sendMail(email, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com/verify/" + encodeURIComponent(hash))
 
         let insert_42_result = await db.query(
             "INSERT INTO Oauth42 \
