@@ -14,6 +14,14 @@ export TEST='false'
 export ENVIRONMENT='TEST'
 export PATH=$PATH:/home/ubuntu/.nvm/versions/node/v16.13.2/bin/
 ```
+
+Reset the db if you want:
+```bash
+cd server/sql_scripts
+sudo bash here_create_user_table.sh
+```
+
+Go to the server folder and run:
 ```bash
 nodemon server.js
 ```
