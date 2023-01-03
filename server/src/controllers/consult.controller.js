@@ -47,8 +47,8 @@ exports.consult_user = async (req, res) => {
 			[req.username, req.params.username]
 			)
 		let notres = await NotifController.create_notif("CONSULT", req.username, req.params.username)
-		console.log("consulting res ", consult_query_result)
-		console.log("notifres: ", notres )
+		// console.log("consulting res ", consult_query_result)
+		// console.log("notifres: ", notres )
 		return res.status(200).send({message: 'Succesfully consulted user', code: "SUCCESS"})
 	}
 	catch (e) {

@@ -207,7 +207,7 @@ exports.create_consults = async (req, res) => {
 			bar1.update(i)
 			i += 1
 			req.username = consult.consulter.username
-			req.body.consulted = consult.consulted.username
+			req.params.username = consult.consulted.username
 			let consult_res = await consultController.consult_user(req, mock_res)
 		}
 		bar1.stop();

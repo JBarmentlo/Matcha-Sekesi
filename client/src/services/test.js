@@ -110,13 +110,14 @@ export const createRandomConsults = async (min, max) => {
 
 	const user_list = await (await axios(request)).data.data;
 	let consult_list = []
-
+	console.log("USERLIST: ", user_list)
 	for (const user of user_list){
 		let n_consults = Math.floor(Math.random() * (max - min)) + min
 
 		for (let i = 0; i < n_consults; i++) {
 			let random_user = user_list[Math.floor(Math.random() * user_list.length)]
 			let consult = {"consulter": user, "consulted": random_user}
+			console.log("randuser",random_user)
 			consult_list.push(consult)
 		}
 	}

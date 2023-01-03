@@ -14,7 +14,6 @@
               <h5 class="important-infos">{{ user.username }}</h5>
               <h6 class="connection_info not-important" v-if="user.connected == 1" target="disponibility" placement="right" >connected</h6 >
               <div class="connection_info not-important" v-else target="disponibility" placement="right" >Last connected: {{ last_connected }}</div >
-              <h6 class="email mt-3"><b-icon-mailbox /> {{ user.mail }}</h6>
               <div class="likeorblock_buttons">
                 <div class="row justify-content-md-center">
                   <div class="col-md-auto">
@@ -171,10 +170,18 @@ export default {
   },
 
   methods: {
+    // like(username) {
+    //   likeUser(this.$cookies.get("sekes_tokens"), username);
+    // },
+
     like(username) {
-      likeUser(this.$cookies.get("sekes_tokens"), username);
+			if (this.$cookies.get('user').profilePic == null) {
+				this.$swal('Please complete your profile with a profile picture to be able to like users.')
+				return
+			}
+			likeUser(this.$cookies.get('sekes_tokens'), username)
       this.user.did_i_like_him = 1;
-    },
+		},
 
     unlike(username) {
       unlikeUser(this.$cookies.get("sekes_tokens"), username);
