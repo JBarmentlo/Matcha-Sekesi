@@ -150,7 +150,7 @@ app.use("/", express.static('client_dist'));
 
 // ################################### HTTPS ##############################################3
 
-console.log("Routes:\n", app._router.stack)
+// console.log("Routes:\n", app._router.stack)
 
 
 const fs = require('fs');
