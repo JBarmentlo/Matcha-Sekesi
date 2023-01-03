@@ -25,6 +25,14 @@ Go to the server folder and run:
 ```bash
 nodemon server.js
 ```
+
+### Get access to git
+
+```bash
+eval `ssh-agent`
+ssh-add deploy_sekes
+```
+
 ### Mysql Setup
 
 Create the databases (sekesidb and sekesitest)
