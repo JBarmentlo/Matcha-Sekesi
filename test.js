@@ -16,5 +16,3 @@ async function get_mobis() {
     console.log("movies: ", response.data)
 	return response;
 }
-
-get_mobis()

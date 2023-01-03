@@ -49,7 +49,7 @@ describe("Tags", () => {
 			assert.equal(res.send.lastCall.firstArg.code, "ER_BAD_NULL_ERROR")
 		})
 		it("Too long tag", async () => {
-			await TagController.add_tag_to_user(mockRequest({username: users.Bella.username, tag: "Bitching aboutl;kjsd;flkgj;sldkfjg;xldfkjg;ldxkfj,.mdfgm,.cvm,.xcvbm,.cvbm,.cvb.,/mxcvb/.,xmcvb/.,xmcvb/.,xmcvb/.,mcb;lkxcvb;;lkxcvb;l,.m Mark"}), res)
+			await TagController.add_tag_to_user(mockRequest({username: users.Bella.username, tag: "LKJHSDFLKJHSDFLKJHSDLFKJHKSSLDKFJLSKDJFLKSDJFLKSJDFLKJSDFLKJSDFLKJSDLFKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKSJDFSDFKLJHSDLFKJSDBitching aboutl;kjsd;flkgj;sldkfjg;xldfkjg;ldxkfj,.mdfgm,.cvm,.xcvbm,.cvbm,.cvb.,/mxcvb/.,xmcvb/.,xmcvb/.,xmcvb/.,mcb;lkxcvb;;lkxcvb;l,.m Mark"}), res)
 			assert.equal(res.send.lastCall.firstArg.code, "ER_DATA_TOO_LONG")
 		})
 	})

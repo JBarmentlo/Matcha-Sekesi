@@ -77,9 +77,9 @@ exports.create_user_test = async (req, res) => {
 		tag_list = []
 	}
 
-	console.log("\n\n\n\n\n\n\nusername: ", username, "\nfirstName: ", firstName, "\nlastName: ", lastName, "\ntag_list: ", tag_list, "\nmail: ", mail, "\npassword: ", "\npopScore: ", popScore, "\nzipCode: ", zipCode, "\ncity: ", city, "\nisCompleteProfile: ", isCompleteProfile, "\nlongitude: ", longitude, "\nlatitude: ", latitude, "\nDOB: ", DOB, "\nimage0: ", image0, "\nprofilePic: ", profilePic)
+	// console.log("\n\n\n\n\n\n\nusername: ", username, "\nfirstName: ", firstName, "\nlastName: ", lastName, "\ntag_list: ", tag_list, "\nmail: ", mail, "\npassword: ", "\npopScore: ", popScore, "\nzipCode: ", zipCode, "\ncity: ", city, "\nisCompleteProfile: ", isCompleteProfile, "\nlongitude: ", longitude, "\nlatitude: ", latitude, "\nDOB: ", DOB, "\nimage0: ", image0, "\nprofilePic: ", profilePic)
 	try {
-		await db.query(
+		let user_create_res = await db.query(
 			'INSERT INTO USERS \
 			(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB, gif) \
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -94,7 +94,7 @@ exports.create_user_test = async (req, res) => {
 		if (tag_list.length != 0) {
 			keri_res = await db.query(keri_string)
 		}
-		console.log("Created user: ", username, keri_res)
+		// console.log("Created user: ", username, user_create_res)
 		return res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS', user: keri_res})
 	}
 	catch (e) {
@@ -114,7 +114,6 @@ exports.create_user_test = async (req, res) => {
 		else {
 			// console.log("create user test error:\n", e, "\n\nend signup error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
-			throw(e)
 		}
 	}	
 };

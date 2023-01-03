@@ -150,6 +150,9 @@ app.use("/", express.static('client_dist'));
 
 // ################################### HTTPS ##############################################3
 
+console.log("Routes:\n", app._router.stack)
+
+
 const fs = require('fs');
 const http = require('http');
 const https = require('https');

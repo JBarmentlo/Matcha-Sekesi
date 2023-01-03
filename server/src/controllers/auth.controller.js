@@ -9,7 +9,7 @@ const searches = require("./user.request.js")
 
 
 exports.signup = async (req, res) => {
-    console.log('Signup for users: ', req.body.username)
+    // console.log('Signup for users: ', req.body.username)
     let username  = req.body.username;
     let firstName = req.body.firstName;
     let lastName  = req.body.lastName;
@@ -20,16 +20,16 @@ exports.signup = async (req, res) => {
     let latitude  = req.body.latitude;
     let longitude = req.body.longitude;
 
-    console.log({
-        username: req.body.username,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        mail: req.body.mail,
-        zipCode: req.body.zipCode,
-        city: req.body.city,
-        latitude: req.body.latitude,
-        longitude: req.body.longitude,
-    })
+    // console.log({
+    //     username: req.body.username,
+    //     firstName: req.body.firstName,
+    //     lastName: req.body.lastName,
+    //     mail: req.body.mail,
+    //     zipCode: req.body.zipCode,
+    //     city: req.body.city,
+    //     latitude: req.body.latitude,
+    //     longitude: req.body.longitude,
+    // })
 
     try {
         let query_result = await db.query(

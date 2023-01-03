@@ -23,13 +23,14 @@ describe('Test users', () => {
 			let res = mockResponse()
 			let req = mockRequest(users.JhonnyDupName)
 			await test_con.create_user_test(req, res)
+			console.log("\n\n\n\n\nCODE: ", res.send.lastCall.firstArg.code)
 			assert.isTrue(res.status.lastCall.lastArg == 200)
 			assert.isTrue(res.send.lastCall.firstArg.code == 'ER_DUP_ENTRY')
 			return Promise.resolve()
 		})
 		step('Too long field: ER_DATA_TOO_LONG', async () => {
 			var user = JSON.parse(JSON.stringify(users.JhonnyDupName));
-			user.username = "LKJHSDFLKJHSDFLKJHSDLFKJHSDFKLJHSDLFKJSD<>FMN>XC<VN><XCMNFV>KJSHDFLKJHSDFGKJHSDFKJHSDLFKJHSDLFKJHSDLKFJHSDLFKJHSLDFKJHSDFLKJHSDLFKLjh"
+			user.username = "LKJHSDFLKJHSDFLKJHSDLFKJHKSSLDKFJLSKDJFLKSDJFLKSJDFLKJSDFLKJSDFLKJSDLFKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKSJDFSDFKLJHSDLFKJSDLKJHSDFLKJHSDFLKJHSDLFKJHKSSLDKFJLSKDJFLKSDJFLKSJDFLKJSDFLKJSDFLKJSDLFKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKJSDFLKSJDFSDFKLJHSDLFKJSD<>FMN>XC<VN><XCMNFV>KJSHDFLKJHSDFGKJHSDFKJHSDLFKJHSDLFKJHSDLKFJHSDLFKJHSLDFKJHSDFLKJHSDLFKLjh"
 			let res = mockResponse()
 			let req = mockRequest(user)
 			await test_con.create_user_test(req, res)
