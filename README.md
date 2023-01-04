@@ -95,3 +95,8 @@ server {
     }
 }
 ```
+
+TODO:
+- populate: on peut s'auto consulte et like, bloc etc... pas normal
+- Creation de deux user dans browser distinct: impossible de se retrouver
+- block: ne disparait pas dans le chat
