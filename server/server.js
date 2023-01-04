@@ -144,17 +144,15 @@ const history = require('connect-history-api-fallback');
 const historyMiddleware = history({
   disableDotRule: true,
   verbose: true,
-  // index: '/'
 });
 let route_base
 
 app.use((req, res, next) => {
+  console.log(req.path)
   route_base = req.path.split('/')[1]
-  if ([,'signup','signin','forgotpassword','verify','reset','editprofile','getallusers','populate','cat','profile'].includes(route_base)) {
-    console.log(route_base," redirect")
+  if (['signup','signin','forgotpassword','verify','reset','editprofile','getallusers','populate','cat','profile'].includes(route_base)) {
     historyMiddleware(req, res, next);
   } else {
-    console.log(route_base," not redirect")
     next();
   }
 });
