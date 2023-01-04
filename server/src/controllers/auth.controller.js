@@ -37,7 +37,7 @@ exports.signup = async (req, res) => {
             [username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
             )
 
-        let hash = bcrypt.hashSync(query_result.insertId.toString(), 8)
+        let hash = bcrypt.hashSync(query_result.insertId.toString(), 8).replace('.','').replace('/', '')
         let insert_mail_result = await db.query(
             "INSERT INTO VERIFY \
             (user, id_hash) \
@@ -111,7 +111,7 @@ exports.requestresetPass = async (req, res) => {
             return res.status(200).send({message: "No user for the reset request", code: "MISSING_RESET"})
         }
         let user = user_request[0]
-        let hash = bcrypt.hashSync(user.id.toString(), 8) 
+        let hash = bcrypt.hashSync(user.id.toString(), 8).replace('.','').replace('/', '')
         await db.query(
             "INSERT INTO RESET \
             (user, id_hash) \

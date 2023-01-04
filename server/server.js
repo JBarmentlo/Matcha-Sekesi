@@ -109,7 +109,6 @@ app.use('/api/notif', notifRouter, function(req, res, next){
   next();
 })
 
-console.log("ENVIO", process.env.ENVIRONMENT)
 // #######################  CHAT ROUTES   ########################
 
 chatRouter = require('./src/routes/chat.routes')
