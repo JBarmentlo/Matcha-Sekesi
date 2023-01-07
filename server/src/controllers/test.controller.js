@@ -94,7 +94,7 @@ exports.create_user_test = async (req, res) => {
 		if (tag_list.length != 0) {
 			keri_res = await db.query(keri_string)
 		}
-		// console.log("Created user: ", username, user_create_res)
+		console.log("Created user: ", username)
 		return res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS', user: keri_res})
 	}
 	catch (e) {
