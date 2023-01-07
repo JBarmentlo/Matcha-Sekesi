@@ -4,7 +4,7 @@ const NotifController = require('./notif.controller')
 
 // async function update_consult_timestamp()
 exports.consult_user_old = async (req, res) => {
-	console.log("consulting ", req.body.consulted)
+	// console.log("consulting ", req.body.consulted)
 	try {
 		let consult_query_result = await db.query(
 			'REPLACE INTO CONSULTS \
@@ -38,7 +38,7 @@ exports.consult_user_old = async (req, res) => {
 }
 
 exports.consult_user = async (req, res) => {
-	console.log("consulting ", req.params.username)
+	// console.log("consulting ", req.params.username)
 	try {
 		let consult_query_result = await db.query(
 			'REPLACE INTO CONSULTS \
