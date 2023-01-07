@@ -52,10 +52,16 @@ computed: {
 methods: {
   pollData () {
     this.polling = setInterval(async () => {
-      let old_notif_ids = this.notifs.map(n => n.id)
-      this.notifs = (await getMyNotifs(this.$cookies.get('sekes_tokens'), this.offset, this.limit)).data.data
-      let new_notifs = this.notifs.filter(n => !old_notif_ids.includes(n.id))
-      this.notifyUser(new_notifs)
+      try {
+        let old_notif_ids = this.notifs.map(n => n.id)
+        this.notifs = (await getMyNotifs(this.$cookies.get('sekes_tokens'), this.offset, this.limit)).data.data
+        let new_notifs = this.notifs.filter(n => !old_notif_ids.includes(n.id))
+        this.notifyUser(new_notifs)
+      }
+      catch (e) {
+        this.stop_polling()
+      }
+      
     }, 1000)
   },
 
@@ -90,6 +96,11 @@ methods: {
     if (this.$route.path != "/profile/"+ username) {
       this.$router.push("/profile/"+ username)
     }
+  },
+
+  stop_polling() {
+    console.log("stop polling notifs")
+    clearInterval(this.polling)
   }
 },
 

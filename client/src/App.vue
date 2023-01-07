@@ -71,7 +71,8 @@ export default {
 					}
 				}
 				catch(e) {
-					console.log("Interrrupted notif polling", e)
+					console.log("Interrrupted Msg polling")
+					clearInterval(this.polling)
 				}
 
 			}, freq)
