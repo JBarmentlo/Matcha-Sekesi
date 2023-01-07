@@ -36,7 +36,7 @@ exports.search_users_initial = async (req, res) => {
 	console.log("searching users initial: ")
 	try {
 		let user_query = await searches.search_users_initial(req.username, req.body.user_tags, req.body.long, req.body.lat, req.body.desires, req.body.offset, req.body.limit, req.body.desires)
-		console.log(user_query)
+		// console.log(user_query)
 		// console.log("Rows: ", user_query.map(user => {return {name: user.username, age: user.age, score: user.popScore, zip: user.zipCode, tag_count: user.commonTagCount}}))
 		res.status(200).send({message: 'Successfully queried users.', data: user_query})
 	}

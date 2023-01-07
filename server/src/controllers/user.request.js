@@ -168,7 +168,7 @@ exports.get_user = async (searcher_username, searched_username) => {
 };
 
 exports.get_my_user = async (searched_username) => {
-	console.log("Getting my profile: ", searched_username)
+	// console.log("Getting my profile: ", searched_username)
 	let keri_string = 
 		"WITH TAGLIST as (                                           \
 			SELECT                                                   \
@@ -543,34 +543,30 @@ tag_list="'Music'"
 																						\
 	USERLIST as (                                                                       \
 		SELECT                                                                          \
-			user,                                                                        \
-			LEAST ((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore\
+			username,                                                                        \
+			LEAST ((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore,\
+			COUNT(T.tag IN(@TAG_LIST)) as commonTagCount,\
+			GROUP_CONCAT(tag) as tag_list,\
+			IF((username IN(SELECT liked                                                    \
+				FROM LIKES                                                      \
+				WHERE liker='searcher_username')                                \
+				), 1 , 0)                                                       \
+				AS did_i_like_him                                               \
 		FROM USERS                                                                      \
-		INNER JOIN TAGS T                                                               \
+		LEFT JOIN TAGS T                                                               \
 			on USERS.username = T.user                                                  \
-			@desires                                                                    \
-			AND USERS.username != 'searcher_username'                                             \
+		WHERE username != 'searcher_username'                                             \
 			AND IF((username IN(SELECT blocked                                          \
 				FROM BLOCKS                                                             \
 				WHERE blocker='searcher_username')                                      \
 				), 1 , 0) = 0                                                           \
-		GROUP BY user                                                                   \
-		),                                                                              \
-																						\
-	TAGLIST as (                                                                        \
-		SELECT                                                                          \
-			USERLIST.user,                                                              \
-			popScore,\
-			GROUP_CONCAT(tag) as tag_list,                                               \
-			COUNT(tag) as commonTagCount \
-		FROM USERLIST LEFT JOIN TAGS                                                    \
-			ON USERLIST.user = TAGS.user                                                \
-			AND TAGS.tag IN (@TAG_LIST)\
-		GROUP BY user                                                                   \
-	)                                                                                   \
+			@desires                                                                    \
+			GROUP BY username                                                                   \
+		)                                                                              \
+																						\                                                                      \
 	                                                                                    \
 	SELECT                                                                              \
-	username,                                                                       \
+	USERS.username,                                                                       \
 	firstName,                                                                      \
 	lastName,                                                                       \
 	bio,                                                                            \
@@ -582,7 +578,7 @@ tag_list="'Music'"
 	city,                                                                           \
 	isCompleteProfile,                                                              \
 	0 as did_i_block_him,                                                           \
-	TAGLIST.popScore,\
+	USERLIST.popScore,\
 	commonTagCount,\
 	image0,                                                                         \
 	image1,                                                                         \
@@ -593,15 +589,10 @@ tag_list="'Music'"
 	latitude,                                                                       \
 	mailVerified,                                                                   \
 	tag_list,                                                                       \
-	((GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10) + TAGLIST.popScore + commonTagCount * 3) as similarityScore, \
-	IF((username IN(SELECT liked                                                    \
-					FROM LIKES                                                      \
-					WHERE liker='searcher_username')                                \
-					), 1 , 0)                                                       \
-					AS did_i_like_him                                               \
+	((GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10) + USERLIST.popScore + commonTagCount * 3) as similarityScore \
 																					\
-	FROM USERS INNER JOIN TAGLIST                                                   \
-		ON USERS.username = TAGLIST.user                                            \
+	FROM USERLIST LEFT JOIN USERS                                                    \
+		ON USERS.username = USERLIST.username       \
 	ORDER BY similarityScore DESC                                                                  \
 	LIMIT LIMIT_REPLACE OFFSET OFFSET_REPLACE;"
 	.replace('OFFSET_REPLACE' , offset            )
