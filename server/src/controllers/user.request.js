@@ -168,7 +168,7 @@ exports.get_user = async (searcher_username, searched_username) => {
 };
 
 exports.get_my_user = async (searched_username) => {
-	console.log("Getting my profile: ", searched_username)
+	// console.log("Getting my profile: ", searched_username)
 	let keri_string = 
 		"WITH TAGLIST as (                                           \
 			SELECT                                                   \
