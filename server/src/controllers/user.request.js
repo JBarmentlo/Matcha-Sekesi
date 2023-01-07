@@ -323,7 +323,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 
 	let tag_list = ""
 	if (required_tags == undefined || required_tags.length == 0) {
-		tag_list = 'T.tag'
+		tag_list = 'tag'
 	}
 	else {
 		first = true
@@ -391,38 +391,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 					FROM                                                                \
 						MSG m2                                                          \
 					WHERE m1.ConvoId = m2.ConvoId)\
-		),                                     \
-		                                                                                    \
-		USERLIST as (                                                                       \
-			SELECT                                                                          \
-				user                                                                        \
-			FROM USERS                                                                      \
-			INNER JOIN TAGS T                                                               \
-				on USERS.username = T.user                                                  \
-				AND T.tag in (@TAG_LIST)                                                     \
-				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
-				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
-				AND (((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))) >= MIN_POP_SCORE                                               \
-				AND LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) <= MAX_POP_SCORE                                               \
-				AND zipCode in (ZIPCODE)                                                    \
-				@desires                                           \
-				AND IF((username IN(SELECT blocked                                          \
-					FROM BLOCKS                                                             \
-					WHERE blocker='searcher_username')                                      \
-					), 1 , 0) = 0                                                           \
-			GROUP BY user                                                                   \
-			),                                                                              \
-																                            \
-		TAGLIST as (                                                                        \
-			SELECT                                                                          \
-				USERLIST.user,                                                              \
-				GROUP_CONCAT(tag) as tag_list                                               \
-			FROM USERLIST                                                                   \
-			LEFT JOIN TAGS                                                                  \
-				ON USERLIST.user = TAGS.user                                                \
-			GROUP BY user                                                                   \
-		)                                                                                  \
-																                            \
+		)			                            \
 		SELECT                                                                              \
 			username,                                                                       \
 			firstName,                                                                      \
@@ -444,7 +413,8 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			longitude,                                                                      \
 			latitude,                                                                       \
 			mailVerified,                                                                   \
-			tag_list,                                                                       \
+			COUNT(tag IN(@TAG_LIST)) as commonTagCount,\
+			GROUP_CONCAT(tag) as tag_list,\
 			LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore,\
 			IF((username IN(SELECT liked                                                    \
 							FROM LIKES                                                      \
@@ -452,9 +422,22 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 							), 1 , 0)                                                       \
 							AS did_i_like_him                                               \
 																                            \
-			FROM USERS INNER JOIN TAGLIST                                                   \
-				ON USERS.username = TAGLIST.user                                            \
-			ORDERBYREPLACE                                                                  \
+			FROM USERS LEFT JOIN TAGS                                                   \
+			on USERS.username = TAGS.user                                                  \
+				AND tag in (@TAG_LIST)                                                     \
+				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
+				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
+				AND (((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))) >= MIN_POP_SCORE                                               \
+				AND LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) <= MAX_POP_SCORE                                               \
+				AND zipCode in (ZIPCODE)                                                    \
+				@desires                                           \
+				AND IF((username IN(SELECT blocked                                          \
+					FROM BLOCKS                                                             \
+					WHERE blocker='searcher_username')                                      \
+					), 1 , 0) = 0                                                           \
+				WHERE username != 'searcher_username'                                             \
+				GROUP BY username, user                                                                   \
+				ORDERBYREPLACE                                                                  \
 			LIMIT LIMIT_REPLACE OFFSET OFFSET_REPLACE;"
 			.replace("@TAG_LIST"         , tag_list         )
 			.replace("MIN_AGE"          , min_age          )
