@@ -63,6 +63,9 @@ exports.create_user = async (req, res) => {
 	}	
 };
 
+const tolerated_keys = ['username', 'firstName', 'lastName', 'bio', 'mail', 'mailVerified', 'gender', 'sekesualOri', 'popScore', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
+
+
 
 exports.update_user_test = async (req, res) => {
 	try {
@@ -73,11 +76,13 @@ exports.update_user_test = async (req, res) => {
 			req.body.update.mailVerified = 0
 		}
 		for (const [key, value] of Object.entries(req.body.update)) {
-			if (!(first==true)) {
-				update_str += ', '
+			if (tolerated_keys.includes(key)) {
+				if (!(first==true)) {
+					update_str += ', '
+				}
+				first = false
+				update_str += `${key} = '${value}'`
 			}
-			first = false
-			update_str += `${key} = '${value}'`
 		}
 		update_str = update_str.replace("'null'", "NULL")
 		console.log("Updating user %s with str: %s", req.username, update_str)

@@ -605,6 +605,6 @@ tag_list="'Music'"
 	.replace(new RegExp       ("@desires"         , "g")          , desire_str       )
 	let user_query = await db.query(keri_string)
 
-	console.log("KERIIIIIIII: ", user_query.map(user => user))
+	// console.log("KERIIIIIIII: ", user_query.map(user => user))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
