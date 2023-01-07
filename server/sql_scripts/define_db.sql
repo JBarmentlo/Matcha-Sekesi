@@ -7,7 +7,7 @@ create table if not exists USERS
     mail              varchar(300)                              not null,
     password          varchar(300)                              null,
     mailVerified      tinyint(1)  default 0                     not null,
-    gender            varchar(10)                               null,
+    gender            varchar(10) default 'NonBinary'                             null,
     sekesualOri       varchar(10) default 'Bi'                  null,
     popScore          float       default 0                     not null,
     zipCode           varchar(10)                               null,

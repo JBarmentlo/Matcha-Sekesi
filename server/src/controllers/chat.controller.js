@@ -18,6 +18,10 @@ exports.get_all_messages = async (req, res) => {
 			SELECT MSG.id, sender, receiver, msg, last_updated FROM MATCHES INNER JOIN MSG \
 				ON (MSG.receiver IN (@searcher, matchee) \
 				AND MSG.sender IN (@searcher, matchee)) \
+			WHERE IF((MSG.sender IN(SELECT blocked                                          \
+					FROM BLOCKS                                                             \
+					WHERE blocker='searcher_username')                                      \
+					), 1 , 0) = 0                                                           \
 				ORDER BY last_updated DESC;".replace(new RegExp("@searcher", "g"), `'${req.username}'`)
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
