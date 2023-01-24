@@ -559,6 +559,7 @@ tag_list="'Music'"
 	zipCode,                                                                        \
 	city,                                                                           \
 	isCompleteProfile,                                                              \
+	USERLIST.did_i_like_him, \
 	0 as did_i_block_him,                                                           \
 	USERLIST.popScore,\
 	commonTagCount,\
