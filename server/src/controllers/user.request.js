@@ -423,14 +423,14 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 																                            \
 			FROM USERS LEFT JOIN TAGS                                                   \
 			on USERS.username = TAGS.user                                                  \
+				WHERE username != 'searcher_username'                                             \
 				AND tag in (@TAG_LIST)                                                     \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
-				AND (((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))) >= MIN_POP_SCORE                                               \
+				AND LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) >= MIN_POP_SCORE                                               \
 				AND LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) <= MAX_POP_SCORE                                               \
 				AND zipCode in (ZIPCODE)                                                    \
 				@desires                                           \                                           \
-				WHERE username != 'searcher_username'                                             \
 				AND IF((username IN(SELECT blocked                                          \
 					FROM BLOCKS                                                             \
 					WHERE blocker='searcher_username')                                      \
@@ -450,12 +450,12 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			.replace('OFFSET_REPLACE'   , offset)
 			.replace('LIMIT_REPLACE'    , limit)
 
-	console.log("search str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
+	// console.log("search str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
 
 	// console.log("quyeriro: ", keri_string)
 	let user_query = await db.query(keri_string)
-
-	console.log("KERIIIIIIII: ", user_query.map(user => user))
+	console.log("max; ",max_rating)
+	console.log("KERIIIIIIII: ", user_query.map(user => user.popScore))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
 
