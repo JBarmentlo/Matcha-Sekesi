@@ -9,7 +9,7 @@ const searches = require("./user.request.js")
 
 
 exports.signup = async (req, res) => {
-    // console.log('Signup for users: ', req.body.username)
+    console.log('Signup for users: ', req.body.username)
     let username  = req.body.username;
     let firstName = req.body.firstName;
     let lastName  = req.body.lastName;
@@ -48,6 +48,7 @@ exports.signup = async (req, res) => {
         res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
+        console.log(e)
         if (e.code == 'ER_DUP_ENTRY') {
             res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
         }

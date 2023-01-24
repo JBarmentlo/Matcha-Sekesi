@@ -571,7 +571,8 @@ tag_list="'Music'"
 	latitude,                                                                       \
 	mailVerified,                                                                   \
 	tag_list,                                                                       \
-	((GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10) + USERLIST.popScore + commonTagCount * 3) as similarityScore \
+	GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude) * 20)), 0) as dist_score, \
+	((GREATEST(2000 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0)) + USERLIST.popScore + commonTagCount * 3) as similarityScore \
 																					\
 	FROM USERLIST LEFT JOIN USERS                                                    \
 		ON USERS.username = USERLIST.username       \
@@ -587,6 +588,6 @@ tag_list="'Music'"
 	.replace(new RegExp       ("@desires"         , "g")          , desire_str       )
 	let user_query = await db.query(keri_string)
 
-	// console.log("KERIIIIIIII: ", user_query.map(user => user))
+	console.log("KERIIIIIIII: ", user_query.map(user => user.dist_score))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };

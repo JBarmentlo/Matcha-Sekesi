@@ -138,6 +138,7 @@ export default {
 			console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
 			if (this.$refs.formObserver.flags.invalid) {
+				console.log("invalid form")
 				return false;
 			}
 			let signup_res = await signup({
@@ -151,7 +152,7 @@ export default {
 				longitude : this.longitude,
 				zipCode   : this.zipCode,
 			})
-			// console.log("SIGnup RES: ", signup_res)
+			console.log("Form sent. response: ", signup_res.data)
 			this.username_taken    = false
 			this.mail_already_used = false
 			if (signup_res.status != 200) {
@@ -162,9 +163,11 @@ export default {
 				console.log("err dup entry on signup")
 				console.log(signup_res.data.message)
 				if (signup_res.data.message.includes("key 'USERS.USERS_mail_uindex'")) {
+					console.log("mail taken")
 					this.mail_already_used = true
 				}
 				if (signup_res.data.message.includes("key 'USERS.USERS_username_uindex'")) {
+					console.log("username taken")
 					this.username_taken = true
 				}
 			}
