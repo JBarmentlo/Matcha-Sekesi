@@ -160,10 +160,10 @@ exports.get_user = async (searcher_username, searched_username) => {
 																								\
 			Select                                                                            \
 				*,                                                                            \
-				((Select COUNT(*) from MATCHES AS M where M.liker = U.username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = U.username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = U.username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = U.username)) as popScore \
+			     LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore\
 			From MAIN AS U;".replace(new RegExp('@searcher_username', "g"), searcher_username).replace('searched_username', searched_username), )
 
-	// console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+	console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
 	return transform_csv_lists_to_arrays(user_query[0])
 };
 
@@ -450,12 +450,12 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			.replace('OFFSET_REPLACE'   , offset)
 			.replace('LIMIT_REPLACE'    , limit)
 
-	// console.log("search str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
+	console.log("search str: ", keri_string.replace(new RegExp(" {2,100}", "g"), "\n"))
 
 	// console.log("quyeriro: ", keri_string)
 	let user_query = await db.query(keri_string)
 
-	// console.log("KERIIIIIIII: ", user_query.map(user => user.tag_list + user.commonTagCount))
+	console.log("KERIIIIIIII: ", user_query.map(user => user))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };
 
