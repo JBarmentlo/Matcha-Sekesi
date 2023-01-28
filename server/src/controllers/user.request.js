@@ -308,34 +308,35 @@ exports.get_my_user = async (searched_username) => {
 
 exports.search_users = async (searcher_username, min_age, max_age, required_tags, min_rating, max_rating, zipcode, offset, limit, orderby, asc_or_desc, desires) => {
 	console.log("Searching users ")
-	// console.log("criteria: ",
-	// "min_age :"      , min_age      ,
-	// "max_age :"      , max_age      ,
-	// "interest_tags :", required_tags,
-	// "min_rating :"   , min_rating   ,
-	// "max_rating :"   , max_rating   ,
-	// "zipcodes :"     , zipcode      ,
-	// "offset: "       , offset       ,
-	// "limit: "        , limit        , 
-	// "order_by: "     , orderby      , 
-	// "desires: "      , desires      , 
-	// "asc_or_desc: "  , asc_or_desc)
+	console.log("criteria: ",
+	"min_age :"      , min_age      ,
+	"max_age :"      , max_age      ,
+	"interest_tags :", required_tags,
+	"min_rating :"   , min_rating   ,
+	"max_rating :"   , max_rating   ,
+	"zipcodes :"     , zipcode      ,
+	"offset: "       , offset       ,
+	"limit: "        , limit        , 
+	"order_by: "     , orderby      , 
+	"desires: "      , desires      , 
+	"asc_or_desc: "  , asc_or_desc)
 
 	let tag_list = ""
 	if (required_tags == undefined || required_tags.length == 0) {
-		tag_list = 'tag'
+		tag_list = '1'
 	}
 	else {
 		first = true
 		for (const tag of required_tags) {
 			if (first) {
-				tag_list += `'${tag}'`
+				tag_list += `tag in ('${tag}'`
 				first = false
 			}
 			else {
 				tag_list += `, '${tag}'`
 			}
 		}
+		tag_list += ')'
 	}
 
 	if (zipcode == undefined || zipcode == null) {
@@ -424,7 +425,7 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 			FROM USERS LEFT JOIN TAGS                                                   \
 			on USERS.username = TAGS.user                                                  \
 				WHERE username != 'searcher_username'                                             \
-				AND tag in (@TAG_LIST)                                                     \
+				AND @TAG_LIST                                                     \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
 				AND LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) >= MIN_POP_SCORE                                               \
@@ -455,8 +456,10 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 	// console.log("quyeriro: ", keri_string)
 	let user_query = await db.query(keri_string)
 	console.log("max; ",max_rating)
-	console.log("KERIIIIIIII: ", user_query.map(user => user.popScore))
-	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
+	user_query = user_query.map(user => transform_csv_lists_to_arrays(user))
+	console.log("KERIIIIIIII: ", user_query.map(user => [user.username, user.popScore]))
+	console.log("KERIIIIIIII: ", user_query.map(user => user.username).includes('jbarment'))
+	return user_query
 };
 
 exports.search_users_initial = async (searcher_username, user_tags, long, lat, desires, offset, limit) => {

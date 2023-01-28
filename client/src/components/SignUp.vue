@@ -47,7 +47,7 @@
 
 					<div class="form-group">
 						<label>Email address</label>
-						<ValidationProvider rules="email" immediate v-slot="{ errors }">
+						<ValidationProvider rules="required|email" immediate v-slot="{ errors }">
 							<input
 								type="email"
 								v-model="mail"

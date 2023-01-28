@@ -145,7 +145,7 @@ export default {
 
     popScore: function () {
       // return Math.round(this.user.popScore * 100) / 100;
-      this.user.popScore
+      return this.user.popScore
     },
 
     last_connected: function () {

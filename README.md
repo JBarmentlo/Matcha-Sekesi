@@ -37,10 +37,17 @@ eval `ssh-agent`
 ssh-add deploy_sekes
 ```
 
-### Find running server PID
+### Kill server
 
+As root, with the path export from above:
+```bash
+pm2 logs
+```
+
+Find running server PID and kill by hand:
 ```bash
 sudo netstat -lntp | grep -w ':80'
+kill pid
 ```
 
 ### Mysql Setup

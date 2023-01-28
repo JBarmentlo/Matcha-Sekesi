@@ -64,7 +64,7 @@ export default {
 	data() {
 		return {
 			tags: ["Music","Sekes","Travel","Web Dev","Alcoolic","Laughing","Gourmet","Cofee","Sunshine"],
-			n_user: 1000,
+			n_user: 500,
 			n_likes_per_user: 10,
 			n_blocks_per_user: 2,
 			n_consults_per_user: 3,

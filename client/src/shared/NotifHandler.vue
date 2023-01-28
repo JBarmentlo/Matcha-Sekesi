@@ -61,7 +61,7 @@ methods: {
       catch (e) {
         this.stop_polling()
       }
-      
+
     }, 1000)
   },
 
@@ -90,7 +90,7 @@ methods: {
     await deleteNotifs(this.$cookies.get('sekes_tokens'), id)
   },
 
-  async deleteAndRedirect(id, username) 
+  async deleteAndRedirect(id, username)
   {
     this.deleteNoot(id)
     if (this.$route.path != "/profile/"+ username) {
