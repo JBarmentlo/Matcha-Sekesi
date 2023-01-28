@@ -23,7 +23,11 @@ sudo bash here_create_user_table.sh
 
 Go to the server folder and run:
 ```bash
+# For development
 nodemon server.js
+
+# For production
+pm2 start server.js
 ```
 
 ### Get access to git
@@ -31,6 +35,12 @@ nodemon server.js
 ```bash
 eval `ssh-agent`
 ssh-add deploy_sekes
+```
+
+### Find running server PID
+
+```bash
+sudo netstat -lntp | grep -w ':80'
 ```
 
 ### Mysql Setup
