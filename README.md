@@ -102,6 +102,14 @@ sudo netstat -lntp | grep -w ':80'
 kill pid
 ```
 
+<br><br/>
+## Monitor the logs
+
+```bash
+pm2 logs server
+```
+
+Or examine the log files at `server/logs/*.logs`
 
 <br><br/>
 ## Get access to git
