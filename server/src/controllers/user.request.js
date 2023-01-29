@@ -160,10 +160,10 @@ exports.get_user = async (searcher_username, searched_username) => {
 																								\
 			Select                                                                            \
 				*,                                                                            \
-				((Select COUNT(*) from MATCHES AS M where M.liker = U.username) / (Select COUNT(B.liker) from LIKES AS B where B.liker = U.username)) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = U.username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = U.username)) as popScore \
+			     LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore\
 			From MAIN AS U;".replace(new RegExp('@searcher_username', "g"), searcher_username).replace('searched_username', searched_username), )
 
-	// console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+	console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
 	return transform_csv_lists_to_arrays(user_query[0])
 };
 
@@ -308,34 +308,35 @@ exports.get_my_user = async (searched_username) => {
 
 exports.search_users = async (searcher_username, min_age, max_age, required_tags, min_rating, max_rating, zipcode, offset, limit, orderby, asc_or_desc, desires) => {
 	console.log("Searching users ")
-	// console.log("criteria: ",
-	// "min_age :"      , min_age      ,
-	// "max_age :"      , max_age      ,
-	// "interest_tags :", required_tags,
-	// "min_rating :"   , min_rating   ,
-	// "max_rating :"   , max_rating   ,
-	// "zipcodes :"     , zipcode      ,
-	// "offset: "       , offset       ,
-	// "limit: "        , limit        , 
-	// "order_by: "     , orderby      , 
-	// "desires: "      , desires      , 
-	// "asc_or_desc: "  , asc_or_desc)
+	console.log("criteria: ",
+	"min_age :"      , min_age      ,
+	"max_age :"      , max_age      ,
+	"interest_tags :", required_tags,
+	"min_rating :"   , min_rating   ,
+	"max_rating :"   , max_rating   ,
+	"zipcodes :"     , zipcode      ,
+	"offset: "       , offset       ,
+	"limit: "        , limit        , 
+	"order_by: "     , orderby      , 
+	"desires: "      , desires      , 
+	"asc_or_desc: "  , asc_or_desc)
 
 	let tag_list = ""
 	if (required_tags == undefined || required_tags.length == 0) {
-		tag_list = 'tag'
+		tag_list = '1'
 	}
 	else {
 		first = true
 		for (const tag of required_tags) {
 			if (first) {
-				tag_list += `'${tag}'`
+				tag_list += `tag in ('${tag}'`
 				first = false
 			}
 			else {
 				tag_list += `, '${tag}'`
 			}
 		}
+		tag_list += ')'
 	}
 
 	if (zipcode == undefined || zipcode == null) {
@@ -423,14 +424,14 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 																                            \
 			FROM USERS LEFT JOIN TAGS                                                   \
 			on USERS.username = TAGS.user                                                  \
-				AND tag in (@TAG_LIST)                                                     \
+				WHERE username != 'searcher_username'                                             \
+				AND @TAG_LIST                                                     \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) >= MIN_AGE                          \
 				AND TIMESTAMPDIFF(YEAR, DOB, CURDATE()) <= MAX_AGE                          \
-				AND (((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))) >= MIN_POP_SCORE                                               \
+				AND LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) >= MIN_POP_SCORE                                               \
 				AND LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) <= MAX_POP_SCORE                                               \
 				AND zipCode in (ZIPCODE)                                                    \
 				@desires                                           \                                           \
-				WHERE username != 'searcher_username'                                             \
 				AND IF((username IN(SELECT blocked                                          \
 					FROM BLOCKS                                                             \
 					WHERE blocker='searcher_username')                                      \
@@ -454,9 +455,11 @@ exports.search_users = async (searcher_username, min_age, max_age, required_tags
 
 	// console.log("quyeriro: ", keri_string)
 	let user_query = await db.query(keri_string)
-
-	// console.log("KERIIIIIIII: ", user_query.map(user => user.tag_list + user.commonTagCount))
-	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
+	console.log("max; ",max_rating)
+	user_query = user_query.map(user => transform_csv_lists_to_arrays(user))
+	console.log("KERIIIIIIII: ", user_query.map(user => [user.username, user.popScore]))
+	console.log("KERIIIIIIII: ", user_query.map(user => user.username).includes('jbarment'))
+	return user_query
 };
 
 exports.search_users_initial = async (searcher_username, user_tags, long, lat, desires, offset, limit) => {
@@ -559,6 +562,7 @@ tag_list="'Music'"
 	zipCode,                                                                        \
 	city,                                                                           \
 	isCompleteProfile,                                                              \
+	USERLIST.did_i_like_him, \
 	0 as did_i_block_him,                                                           \
 	USERLIST.popScore,\
 	commonTagCount,\
@@ -571,7 +575,8 @@ tag_list="'Music'"
 	latitude,                                                                       \
 	mailVerified,                                                                   \
 	tag_list,                                                                       \
-	((GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0) / 10) + USERLIST.popScore + commonTagCount * 3) as similarityScore \
+	GREATEST(200 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude) * 20)), 0) as dist_score, \
+	((GREATEST(2000 - SQRT(((@LONG - longitude) * (@LONG - longitude)) + ((@LAT - latitude) * (@LAT - latitude))), 0)) + USERLIST.popScore + commonTagCount * 3) as similarityScore \
 																					\
 	FROM USERLIST LEFT JOIN USERS                                                    \
 		ON USERS.username = USERLIST.username       \
@@ -587,6 +592,6 @@ tag_list="'Music'"
 	.replace(new RegExp       ("@desires"         , "g")          , desire_str       )
 	let user_query = await db.query(keri_string)
 
-	// console.log("KERIIIIIIII: ", user_query.map(user => user))
+	console.log("KERIIIIIIII: ", user_query.map(user => user.dist_score))
 	return transform_csv_lists_to_arrays(user_query.map(user => transform_csv_lists_to_arrays(user)))
 };

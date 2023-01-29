@@ -27,7 +27,7 @@ exports.create_notif = async (type, source, target) => {
 				type = "UNMATCH"
 			}
 			else {
-				return {message: "Simple unlike no notif", code: "SUCCESS", id: notif_query.insertId}
+				return {message: "Simple unlike no notif", code: "SUCCESS", id: 0}
 			}
 		}
 		// console.log("FINALE TYPE : ", type)
@@ -41,12 +41,12 @@ exports.create_notif = async (type, source, target) => {
 	}
 	catch (e) {
 		if (e.code == 'ER_BAD_NULL_ERROR') {
-			throw(e)	
+			// throw(e)	
 			return "FAILURE"
 		}
 		else {
 			console.log("error in create notif:", e)
-			throw(e)	
+			// throw(e)	
 			return "FAILURE"
 		}
 	}

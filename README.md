@@ -23,7 +23,11 @@ sudo bash here_create_user_table.sh
 
 Go to the server folder and run:
 ```bash
+# For development
 nodemon server.js
+
+# For production
+pm2 start server.js
 ```
 
 ### Get access to git
@@ -31,6 +35,19 @@ nodemon server.js
 ```bash
 eval `ssh-agent`
 ssh-add deploy_sekes
+```
+
+### Kill server
+
+As root, with the path export from above:
+```bash
+pm2 logs
+```
+
+Find running server PID and kill by hand:
+```bash
+sudo netstat -lntp | grep -w ':80'
+kill pid
 ```
 
 ### Mysql Setup

@@ -52,13 +52,15 @@ async function create_user(user_info) {
     first_name = user_info.first_name,
     last_name  = user_info.last_name,
     image      = user_info.image
+    long       = user_info.long
+    lat        = user_info.lat
 
 
     try {
         let query_result = await db.query(
             'INSERT INTO USERS (username, mail , firstName , lastName , zipCode, longitude, latitude, city, profilePic)\
                         VALUES (?       , ?    , ?         , ?        , ?      , ?        , ?       , ?   , ?)',
-                               [login   , email, first_name, last_name, 75018  , 0.0      , 0.0     , 'Paris', image]
+                               [login   , email, first_name, last_name, 75018  , long     , lat     , 'Paris', image]
             )
 
         let hash = bcrypt.hashSync(query_result.insertId.toString(), 8)
@@ -147,6 +149,37 @@ async function create_signin_data(username) {
  
 };
 
+const ipInfo = require("ipinfo")
+const default_ip_ret =  {
+    ip      : '93.5.88.11',
+    hostname: '11.88.5.93.rev.sfr.net',
+    city    : 'Paris',
+    region  : 'Île-de-France',
+    country : 'FR',
+    loc     : '48.8412,2.3003',
+    org     : 'AS15557 Societe Francaise Du Radiotelephone - SFR SA',
+    postal  : '75713 CEDEX 15',
+    timezone: 'Europe/Paris'
+  }
+
+async function get_loc(req) {
+    try {
+        var forwardedIpsStr = req.header('x-forwarded-for') || req.socket.remoteAddress;
+        var IP = '';
+        if (forwardedIpsStr, 'e7f3e2a554658c') {
+            IP = forwardedIpsStr.split(',')[0];
+            IP = forwardedIpsStr.split(':');
+            IP = IP.at(-1)
+            let ip_ret = await ipInfo(IP)
+            return ip_ret.loc.split(',')
+        }
+        return default_ip_ret.loc.split(',')
+    }
+    catch (e) {
+        return default_ip_ret.loc.split(',')
+    }
+}
+
 exports.oauthInUp = async (req, res) => {
     console.log('Oauth for codeee: ', req.query.code)
     let token42 = await get_42_user_token(req.query.code)
@@ -164,8 +197,10 @@ exports.oauthInUp = async (req, res) => {
             console.log(user_info)
             let existing_username = await does_user_already_exist(user_info.id)
             let user_exists = (existing_username != null)
-
             if (!user_exists) {
+                let localisation = await get_loc(req)
+                user_info.long = localisation[0]
+                user_info.lat = localisation[1]
                 existing_username = await create_user(user_info)
                 console.log('user_created: ', existing_username)
             }

@@ -60,8 +60,9 @@ export default {
     async UploadAndAddImage(e) {
       const file = e.target.files[0]
       const acceptedImageTypes = ['image/webp', 'image/jpeg', 'image/png'];
- 
+
       if (!acceptedImageTypes.includes(file['type'])) {
+        alert("We only accept the following image formats: webp, jpeg, png")
         console.log("not an image")
         return
       }
