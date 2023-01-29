@@ -1,7 +1,6 @@
-# NEVM-crud-tutorial
+# Matcha Sekesi - A TinderLike
 
-A basic NEVM crud
-
+A basic tinderlike web app built on a Vue2 / express / mysql stack.
 
 ## Install The dependencies
 
