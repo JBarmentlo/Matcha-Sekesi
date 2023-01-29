@@ -93,7 +93,7 @@ async function create_user(user_info) {
                 return create_user(user_info)
             }
         }
-        throw(e)
+        // throw(e)
         return false
     }	
 };

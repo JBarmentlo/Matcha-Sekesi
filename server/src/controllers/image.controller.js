@@ -26,6 +26,6 @@ exports.insert_fake_picture_test = async (filename, username) => {
 		return ("https://matcha.yoopster.com/api/image/get/" + filename)
 	}
 	catch (e){
-		throw(e)
+		// throw(e)
 	}
 }

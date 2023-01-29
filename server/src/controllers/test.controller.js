@@ -103,7 +103,7 @@ exports.create_user_test = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-			// throw(e)
+			// // throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
 			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -149,7 +149,7 @@ exports.get_user_list = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in like user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 };
@@ -179,7 +179,7 @@ exports.create_likes = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-			// throw(e)
+			// // throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
 			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -190,7 +190,7 @@ exports.create_likes = async (req, res) => {
 		else {
 			// console.log("create user likes test error:\n", e, "\n\nend error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
-			throw(e)
+			// throw(e)
 		}
 	}	
 };
@@ -220,7 +220,7 @@ exports.create_consults = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-			// throw(e)
+			// // throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
 			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -231,7 +231,7 @@ exports.create_consults = async (req, res) => {
 		else {
 			// console.log("create user consults test error:\n", e, "\n\nend error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
-			throw(e)
+			// throw(e)
 		}
 	}	
 };
@@ -261,7 +261,7 @@ exports.create_blocks = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-			// throw(e)
+			// // throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
 			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -272,7 +272,7 @@ exports.create_blocks = async (req, res) => {
 		else {
 			// console.log("create user blocks test error:\n", e, "\n\nend error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
-			throw(e)
+			// throw(e)
 		}
 	}	
 };

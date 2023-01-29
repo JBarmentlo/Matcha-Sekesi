@@ -32,7 +32,7 @@ exports.consult_user_old = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			return res.status(500).send({message: "Error in consult user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -68,7 +68,7 @@ exports.consult_user = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			return res.status(500).send({message: "Error in consult user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -100,7 +100,7 @@ exports.get_users_that_i_consulted = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			return res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
+			// throw(e)
 		}
 	}	
 }
@@ -131,7 +131,7 @@ exports.get_users_that_consulted_me = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			return res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
+			// throw(e)
 		}
 	}	
 }
@@ -161,7 +161,7 @@ exports.get_consult_matches = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
+			// throw(e)
 		}
 	}	
 }

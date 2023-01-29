@@ -41,12 +41,12 @@ exports.create_notif = async (type, source, target) => {
 	}
 	catch (e) {
 		if (e.code == 'ER_BAD_NULL_ERROR') {
-			// throw(e)	
+			// // throw(e)	
 			return "FAILURE"
 		}
 		else {
 			console.log("error in create notif:", e)
-			// throw(e)	
+			// // throw(e)	
 			return "FAILURE"
 		}
 	}

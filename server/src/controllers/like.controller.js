@@ -33,7 +33,7 @@ exports.like_user = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			return res.status(500).send({message: "Error in like user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -55,7 +55,7 @@ exports.un_like_user = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			return res.status(500).send({message: "Error in unlike user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -85,7 +85,7 @@ exports.get_users_that_i_liked = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			return res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
+			// throw(e)
 		}
 	}	
 }
@@ -116,7 +116,7 @@ exports.get_users_that_liked_me = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			return res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
+			// throw(e)
 		}
 	}	
 }
@@ -152,7 +152,7 @@ exports.get_matches = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			return res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
+			// throw(e)
 		}
 	}	
 }

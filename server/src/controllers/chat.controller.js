@@ -30,7 +30,7 @@ exports.get_all_messages = async (req, res) => {
 	}
 	catch (e) {
 		console.log("get messages error:\n", e, "\nend error")
-		throw(e)
+		// throw(e)
 	}
 }	
 
@@ -54,7 +54,7 @@ exports.get_conversation = async (req, res) => {
 	}
 	catch (e) {
 		console.log("get convo error:\n", e, "\nend error")
-		throw(e)
+		// throw(e)
 	}
 }
 
@@ -75,6 +75,6 @@ exports.send_message = async (req, res) => {
 	}
 	catch (e) {
 		console.log("send message error:\n", e, "\nend error")
-		throw(e)
+		// throw(e)
 	}
 }	

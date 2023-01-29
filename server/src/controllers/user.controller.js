@@ -47,7 +47,7 @@ exports.create_user = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-			// throw(e)
+			// // throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
 			res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -58,7 +58,7 @@ exports.create_user = async (req, res) => {
 		else {
 			console.log("signup error:\n", e, "\nend signup error")
 			res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
-			throw(e)
+			// throw(e)
 		}
 	}	
 };
@@ -106,7 +106,7 @@ exports.update_user_test = async (req, res) => {
 		// TODO ER_BAD_FIELD_ERROR
 		console.log("update user error:\n", e, "\nend update user error")
 		res.status(500).send({message: 'error in update test user', error: e, code: 'FAILURE'})
-		throw(e)
+		// throw(e)
 
 	}	
 
@@ -123,7 +123,7 @@ exports.get_user_by_username = async (req, res) => {
 	catch (e) {
 		console.log("get user by name error:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get user by username', error: e})
-		throw(e)
+		// throw(e)
 	}	
 }
 
@@ -140,6 +140,6 @@ exports.get_my_user = async (req, res) => {
 	catch (e) {
 		console.log("get user by name error:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get user by username', error: e})
-		throw(e)
+		// throw(e)
 	}
 }

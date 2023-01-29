@@ -54,7 +54,7 @@ exports.signup = async (req, res) => {
         }
         else if (e.code == 'ER_PARSE_ERROR') {
             res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-            // throw(e)
+            // // throw(e)
         }
         else if (e.code == 'ER_DATA_TOO_LONG') {
             res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -65,7 +65,7 @@ exports.signup = async (req, res) => {
         else {
             console.log("signup error:\n", e, "\nend signup error")
             res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
-            throw(e)
+            // throw(e)
         }
     }	
 };
@@ -233,7 +233,7 @@ exports.verifyToken = (req, res, next) => {
     catch (e) {
         console.log('error in verify token')
         // console.log(e)
-        // throw(e)
+        // // throw(e)
     }
 
 };
@@ -252,7 +252,7 @@ exports.updateLastConnected = async (req, res, next) => {
     catch (e) {
         console.log('error in update co')
         // console.log(e)
-        throw(e)
+        // throw(e)
     }
 
 };

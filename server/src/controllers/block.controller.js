@@ -37,7 +37,7 @@ exports.block_user_by_id = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in block user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -70,7 +70,7 @@ exports.block_user = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in block user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -103,7 +103,7 @@ exports.report_user = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in report user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -126,7 +126,7 @@ exports.un_block_user = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in block user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -155,7 +155,7 @@ exports.get_users_that_i_blocked = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
+			// throw(e)
 		}
 	}	
 }
@@ -183,7 +183,7 @@ exports.get_users_that_blocked_me = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			res.status(500).send({message: 'error in get user by id', error: e})
-			throw(e)
+			// throw(e)
 		}
 	}	
 }
@@ -213,7 +213,7 @@ exports.get_users_that_blocked_me = async (req, res) => {
 // 		else {
 // 			console.log("get user by id error:\n", e, "\nend error")
 // 			res.status(500).send({message: 'error in get user by id', error: e})
-// 			throw(e)
+// 			// throw(e)
 // 		}
 // 	}	
 // }

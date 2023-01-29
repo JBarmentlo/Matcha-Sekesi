@@ -37,7 +37,7 @@ exports.add_tag_to_user = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in like user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -71,7 +71,7 @@ exports.remove_tag_from_user = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in like user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
@@ -90,7 +90,7 @@ exports.get_tags_from_user = async (req, res) => {
 	catch (e) {
 		console.log("get user tags errorr:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get yuser tags', error: e})
-		throw(e)
+		// throw(e)
 	}	
 }
 
@@ -104,7 +104,7 @@ exports.get_all_tags = async (req, res) => {
 	catch (e) {
 		console.log("get user tags errorr:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get yuser tags', error: e})
-		throw(e)
+		// throw(e)
 	}	
 }
 
@@ -157,7 +157,7 @@ exports.update_user_tags = async (req, res) => {
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in like user ", error: e})
-			throw(e)
+			// throw(e)
 		}
 	}
 }
