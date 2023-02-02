@@ -281,6 +281,10 @@ export default {
             }
         },
 
+        counter: function() {
+            return this.$root.store.state.counter
+        },
+
 		user_images: function() {
 				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3]
         },

@@ -71,6 +71,22 @@ export default {
 		},
 		wrongUser() {
 			return this.status == 'MISSING_USERNAME'
+		},
+		token: {
+			get: function() {
+				return this.$root.store.state.token;
+			},
+			set: function(sekes_token) {
+				this.$root.store.setTokenAction(sekes_token);
+			}
+		},
+		user: {
+			get: function() {
+				return this.$root.store.state.user;
+			},
+			set: function(user) {
+				this.$root.store.setUserAction(user);
+			}
 		}
 	},
 
@@ -90,6 +106,16 @@ export default {
 					console.log("user cookie set to: ", signin_res.data.user)
 					this.$cookies.set("user", {...signin_res.data.user})
 					this.$cookies.set("sekes_tokens",  (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
+					console.log(signin_res.data)
+
+					this.user = {...signin_res.data.user}
+					this.token = {
+						accessToken: signin_res.data.accessToken,
+						signature: signin_res.data.signature
+					}
+					localStorage.setItem('sekes_token', JSON.stringify(this.token))
+					localStorage.setItem('user', JSON.stringify(this.user))
+
 					this.$emit('setLoggedIn', true)
 					this.$router.push('/editprofile')
 				}

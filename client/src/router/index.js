@@ -17,16 +17,19 @@ const routes = [
   {
     path: '/',
     name: 'home',
+    meta: {requiresNotAuth: true},
     component: SignIn
   },
   {
     path: '/signup',
     name: 'Sign Up',
+    meta: {requiresNotAuth: true},
     component: SignUp
   },
   {
     path: '/signin',
     name: 'Sign In',
+    meta: {requiresNotAuth: true},
     component: SignIn
   },
   {
@@ -78,45 +81,89 @@ const routes = [
   },
 ]
 
-const router = new VueRouter({
+export const router = new VueRouter({
   mode: 'history',
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)) {
-    if (Vue.$cookies.isKey('user') && Vue.$cookies.isKey('sekes_tokens')) {
-      console.log("checking login")
-      getMyUser(Vue.$cookies.get('sekes_tokens'))
-      .then( user => {
-        console.log("User logged in check:" + user.data.code)
-        if (user.data.code == "SUCCESS") {
-          console.log("checking login success")
-          next()
-          return
-        }
-        else {
-          console.log("checking login fail")
-          Vue.$cookies.remove('sekes_tokens')
-          Vue.$cookies.remove('user')
-          next('/signin')
-          return
-
-        }
-      })
-      .catch(e => {
-        console.log("checking login failure")
-        Vue.$cookies.remove('sekes_tokens')
-        Vue.$cookies.remove('user')
-        console.log("Trying to access page that requires signin", e)
-        next('/signin')
-        return
-      })
-    }
-  } else {
-    next()
-    return
+export var store = {
+  debug: true,
+  state: {
+    token    : null,
+    user     : null,
+    logged_in: false,
+    counter  : 0
+  },
+  setLoggedInAction (newValue) {
+    if (this.debug) console.log('setLoggedInAction triggered with', newValue)
+    this.state.logged_in = newValue
+  },
+  setTokenAction (newValue) {
+    if (this.debug) console.log('setTokenAction triggered')
+    this.state.token = newValue
+  },
+  clearTokenAction () {
+    if (this.debug) console.log('clearTokenAction triggered')
+    this.state.token = ''
+  },
+  setUserAction (newValue) {
+    if (this.debug) console.log('setUserAction triggered')
+    this.state.user = newValue
+  },
+  clearUserAction () {
+    if (this.debug) console.log('clearUserAction triggered')
+    this.state.user = ''
+  },
+  increaseCounterAction () {
+    if (this.debug) console.log('Counter triggered')
+    this.state.counter += 1
   }
+}
+
+export const updateUserStore = async () => {
+  if (store.token != null) {
+    try {
+      let user_res = await getMyUser(store.token)
+      if (user_res.code == 200 && user_res.data.code == 'SUCCESS') {
+        store.setUserAction({...user_res.data.data})
+        store.setLoggedInAction(true)
+        console.log("Logged in")
+        return true
+      }
+    }
+    catch (e) {
+      console.log("ERROR IN UPDASTE STORE", e)
+    }
+  }
+  store.clearUserAction(null)
+  store.setLoggedInAction(false)
+  return false
+}
+
+router.beforeEach((to, from, next) => {
+  updateUserStore().then(() => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (store.state.logged_in) {
+        next()
+      }
+      else {
+        next('/signin')
+      }
+    }
+  
+    else if (to.matched.some(record => record.meta.requiresNotAuth)) {
+      if (!store.state.logged_in) {
+        next()
+      }
+      else {
+        next('/editprofile')
+      }
+    }
+
+    else {
+      next()
+      return
+    }
+  })
 })
 
-export default router

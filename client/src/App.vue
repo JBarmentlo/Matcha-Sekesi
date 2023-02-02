@@ -38,6 +38,22 @@ export default {
 	},
 
 	computed: {
+		token: {
+			get: function() {
+				return this.$root.store.state.token;
+			},
+			set: function(sekes_token) {
+				this.$root.store.setTokenAction(sekes_token);
+			}
+		},
+		user: {
+			get: function() {
+				return this.$root.store.state.user;
+			},
+			set: function(user) {
+				this.$root.store.setUserAction(user);
+			}
+		}
 	},
 
 	methods: {
@@ -61,11 +77,11 @@ export default {
 			this.polling = setInterval(async () => {
 				try {
 					if (this.messages == null) {
-						this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data
+						this.messages = (await getMyMessages(this.token, 0, 100)).data.data
 					}
 					else {
 						let old_ids = this.messages.map(n => n.id)
-						this.messages = (await getMyMessages(this.$cookies.get('sekes_tokens'), 0, 100)).data.data.reverse()
+						this.messages = (await getMyMessages(this.token, 0, 100)).data.data.reverse()
 						let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.$cookies.get('user').username))
 						this.notifyUser(new_notifs)
 					}
@@ -93,18 +109,25 @@ export default {
 
 	created() {
 		console.log("Created App");
+		this.user  = JSON.parse(localStorage.getItem('user'))
+		this.token = JSON.parse(localStorage.getItem('sekes_token'))
+		// console.log("####################################");
+		// console.log(this.$root.store.state.token)
+		// this.$root.store.setTokenAction("YIHAA")
+		// console.log(this.$root.store.state.token)
+		// console.log("####################################");
 	},
 
 	async mounted() {
 		// console.log("cookie signin disabled")
 		console.log("App mounted");
-		if (this.$cookies.isKey("sekes_tokens") && this.$cookies.get("sekes_tokens") != null) {
+		if (this.token != null) {
 			console.log("already logged in by cookie");
 			try {
-				let user = await getMyUser(this.$cookies.get('sekes_tokens'))
+				let user = await getMyUser(this.token)
 				console.log("User:" + user.data.code)
 				if (user.data.code == "SUCCESS") {
-					this.$cookies.set("user", {...user.data.data})
+					this.user = {...user.data.data}
 					console.log("signin success for route: ",this.$route.fullPath)
 					this.setLoggedIn(true);
 					if (["/", "signin", "signup"].includes(this.$route.fullPath)) {
@@ -112,14 +135,14 @@ export default {
 					}
 				}
 				else {
-					this.$cookies.remove('sekes_tokens')
-					this.$cookies.remove('user')
+					this.token = null
+					this.user  = null
 					// this.$router.push('/signin')
 				}
 			}
 			catch (e) {
-				this.$cookies.remove('sekes_tokens')
-				this.$cookies.remove('user')
+				this.token = null
+				this.user  = null
 				this.setLoggedIn(false);
 				console.log("error in auto cookie signin", e)
 				throw (e)
