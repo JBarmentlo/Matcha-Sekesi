@@ -1,10 +1,10 @@
-import axios from "axios";
+import {api_axios} from './axios_setup';
 
 
 export const getMyNotifs = async (access_token, offset, limit) => {
 	// console.log("get notifs ", offset, limit)
 	let request = {
-		url: "https://matcha.yoopster.com/api/notif/getall", // should be replaced after going to production with domain url
+		url: "/api/notif/getall", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -13,7 +13,7 @@ export const getMyNotifs = async (access_token, offset, limit) => {
 		},
 		data: JSON.stringify({limit: limit, offset: offset})
 	};
-	const response = await axios(request);
+	const response = await api_axios(request);
 	// console.log("Notifs res: ", response)
 	return response;
 }
@@ -21,7 +21,7 @@ export const getMyNotifs = async (access_token, offset, limit) => {
 export const setSeenNotifs = async (access_token, notif_ids) => {
 	// console.log("setting see: ", notif_ids)
 	let request = {
-		url: "https://matcha.yoopster.com/api/notif/setseen", // should be replaced after going to production with domain url
+		url: "/api/notif/setseen", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -30,7 +30,7 @@ export const setSeenNotifs = async (access_token, notif_ids) => {
 		},
 		data: JSON.stringify({id_list: notif_ids})
 	};
-	const response = await axios(request);
+	const response = await api_axios(request);
 	// console.log("Notifs res: ", response)
 	return response;
 }
@@ -38,7 +38,7 @@ export const setSeenNotifs = async (access_token, notif_ids) => {
 export const deleteNotifs = async (access_token, id) => {
 	// console.log("delete notif")
 	let request = {
-		url: "https://matcha.yoopster.com/api/notif/delete", // should be replaced after going to production with domain url
+		url: "/api/notif/delete", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -47,6 +47,6 @@ export const deleteNotifs = async (access_token, id) => {
 		},
 		data: JSON.stringify({id: id})
 	};
-	const response = await axios(request);
+	const response = await api_axios(request);
 	return response;
 }

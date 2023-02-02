@@ -1,4 +1,4 @@
-import axios from "axios";
+import {api_axios} from './axios_setup';
 
 
 export const uploadImage = async (sekes_tokens, image_file) => {
@@ -6,7 +6,7 @@ export const uploadImage = async (sekes_tokens, image_file) => {
 	const formData = new FormData()
 	formData.append('file', image_file)
 	let request = {
-		url: "https://matcha.yoopster.com/api/image/upload", // should be replaced after going to production with domain url
+		url: "/api/image/upload", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -15,7 +15,7 @@ export const uploadImage = async (sekes_tokens, image_file) => {
 		},
 		data: formData
 	};
-	let response = await axios(request)
+	let response = await api_axios(request)
 	// console.log("UPLOad response : ", response)
 
 	return response

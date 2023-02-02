@@ -38,15 +38,6 @@ app.use(sanitizer.clean({
     sqlLevel: 4,
 }, whitelist = ["/api/image/upload", "api/test"]));
 
-// app.use((req, res, next) => {
-//   console.log('Time:', Date.now())
-//   console.log("inje: ",sqlinjection(req, res))
-//   console.log("going next")
-//   next()
-// })
-
-
-
 
 const userRouter = require("./src/routes/user.routes")
 const authRouter = require("./src/routes/auth.routes")
@@ -178,21 +169,7 @@ app.use(function (req, res, next) {
   }
 })
 
-// var path = require("path");
-// app.use(function (req, res, next) {
-//   var filename = path.basename(req.url);
-//   var extension = path.extname(filename);
-//   if (extension === '.css' || extension === '.js')
-//       console.log("The file " + filename + " was requested.", req.url);
-//   next();
-// });
-
-
-// app.use(history({
-//   verbose: true
-// }))
 app.use("/", express.static(__dirname + '/client_dist'));
-
 
 
 // ################################### HTTPS ##############################################3
@@ -200,28 +177,32 @@ app.use("/", express.static(__dirname + '/client_dist'));
 // console.log("Routes:\n", app._router.stack)
 
 
-const http = require('http');
+const http  = require('http');
 const https = require('https');
 
 
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/chain.pem', 'utf8');
-
-const credentials = {
-	key: privateKey,
-	cert: certificate,
-	ca: ca
-};
-
 // Starting both http & https servers
 const httpServer = http.createServer(app);
-const httpsServer = https.createServer(credentials, app);
 
-httpServer.listen(80, () => {
-	console.log('HTTP Server running on port 80');
+httpServer.listen(process.env.MATCHA_HTTP_PORT, () => {
+	console.log(`HTTP Server running on port ${process.env.MATCHA_HTTP_PORT}`);
 });
 
-httpsServer.listen(443, () => {
-	console.log('HTTPS Server running on port 443');
-});
+if (process.env.MATCHA_USE_HTTPS == 'TRUE') {
+  const privateKey  = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/privkey.pem', 'utf8');
+  const certificate = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/cert.pem', 'utf8');
+  const ca          = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/chain.pem', 'utf8');
+  
+  const credentials = {
+    key  : privateKey,
+    cert : certificate,
+    ca   : ca
+  };
+  
+  const httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(process.env.MATCHA_HTTPS_PORT, () => {
+    console.log(`HTTPS Server running on port ${process.env.MATCHA_HTTPS_PORT}`);
+  });
+}
+
+console.log(`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`)

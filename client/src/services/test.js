@@ -1,4 +1,4 @@
-import axios from "axios";
+import {api_axios} from './axios_setup';
 
 const createOneUser = async function(rawUser, tags) {
 
@@ -30,7 +30,7 @@ const createOneUser = async function(rawUser, tags) {
 		user.tag_list.pop()
 	// console.log("creating user: ", user)
 	let request = {
-		url: "https://matcha.yoopster.com/api/test/createuser",  // should be replaced after going to production with domain url
+		url: "/api/test/createuser",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -38,7 +38,7 @@ const createOneUser = async function(rawUser, tags) {
 		data: JSON.stringify(user)
 	};
 
-	return axios(request);
+	return api_axios(request);
 }
 
 export const createRandomUsers = async (amount, tags) => {
@@ -62,14 +62,14 @@ export const createRandomlikes = async (min, max) => {
 	console.log("Creating ", min, "-", max, " likes per user.")
 
 	let request = {
-		url: "https://matcha.yoopster.com/api/test/getuserlist",  // should be replaced after going to production with domain url
+		url: "/api/test/getuserlist",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",
 		},
 	};
 
-	const user_list = await (await axios(request)).data.data;
+	const user_list = await (await api_axios(request)).data.data;
 	let like_list = []
 
 	for (const user of user_list){
@@ -83,7 +83,7 @@ export const createRandomlikes = async (min, max) => {
 	}
 
 	let request_like = {
-		url: "https://matcha.yoopster.com/api/test/createlikes",  // should be replaced after going to production with domain url
+		url: "/api/test/createlikes",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -91,7 +91,7 @@ export const createRandomlikes = async (min, max) => {
 		data: JSON.stringify({'like_list': like_list})
 	};
 	console.log("LIKELIST: ", request_like.length)
-	let like_res = await axios(request_like)
+	let like_res = await api_axios(request_like)
 	console.log("LIKE RESL ", like_res)
 	return like_res
 };
@@ -101,14 +101,14 @@ export const createRandomConsults = async (min, max) => {
 	console.log("Creating ", min, "-", max, " consults per user.")
 
 	let request = {
-		url: "https://matcha.yoopster.com/api/test/getuserlist",  // should be replaced after going to production with domain url
+		url: "/api/test/getuserlist",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",
 		},
 	};
 
-	const user_list = await (await axios(request)).data.data;
+	const user_list = await (await api_axios(request)).data.data;
 	let consult_list = []
 	console.log("USERLIST: ", user_list)
 	for (const user of user_list){
@@ -123,7 +123,7 @@ export const createRandomConsults = async (min, max) => {
 	}
 
 	let request_consult = {
-		url: "https://matcha.yoopster.com/api/test/createconsults",  // should be replaced after going to production with domain url
+		url: "/api/test/createconsults",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -131,7 +131,7 @@ export const createRandomConsults = async (min, max) => {
 		data: JSON.stringify({'consult_list': consult_list})
 	};
 	console.log("consultLIST: ", request_consult)
-	let consult_res = await axios(request_consult)
+	let consult_res = await api_axios(request_consult)
 	console.log("consult RESL ", consult_res)
 	return consult_res
 
@@ -142,14 +142,14 @@ export const createRandomblocks = async (min, max) => {
 	console.log("Creating ", min, "-", max, " blocks per user.")
 
 	let request = {
-		url: "https://matcha.yoopster.com/api/test/getuserlist",  // should be replaced after going to production with domain url
+		url: "/api/test/getuserlist",  // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type": "application/json",
 		},
 	};
 
-	const user_list = await (await axios(request)).data.data;
+	const user_list = await (await api_axios(request)).data.data;
 	let block_list = []
 
 	for (const user of user_list){
@@ -163,7 +163,7 @@ export const createRandomblocks = async (min, max) => {
 	}
 
 	let request_block = {
-		url: "https://matcha.yoopster.com/api/test/createblocks",  // should be replaced after going to production with domain url
+		url: "/api/test/createblocks",  // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type": "application/json",
@@ -171,7 +171,7 @@ export const createRandomblocks = async (min, max) => {
 		data: JSON.stringify({'block_list': block_list})
 	};
 	console.log("blockLIST: ", request_block)
-	let block_res = await axios(request_block)
+	let block_res = await api_axios(request_block)
 	console.log("block RESL ", block_res)
 	return block_res
 };

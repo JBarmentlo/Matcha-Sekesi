@@ -8,6 +8,8 @@ const db       = require("../db/sql.conn");
 const searches = require("./user.request.js")
 
 
+const hostname=`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`
+
 exports.signup = async (req, res) => {
     console.log('Signup for users: ', req.body.username)
     let username  = req.body.username;
@@ -44,7 +46,7 @@ exports.signup = async (req, res) => {
             VALUES (?, ?);",
             [username, hash]
         )
-        sendMail(mail, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com/verify/" + encodeURIComponent(hash))
+        sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)}`)
         res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
@@ -89,7 +91,6 @@ exports.verifyMail = async (req, res) => {
             "UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
             verify_mail_result[0].user
         )
-        // sendMail(mail, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com/verify/" + encodeURIComponent(hash))
         res.status(200).send({message: "verified mail for " + verify_mail_result.user, code: "SUCCESS"})
     }
     catch (e) {
@@ -100,7 +101,6 @@ exports.verifyMail = async (req, res) => {
 
 exports.requestresetPass = async (req, res) => {
     console.log("requesting reset psw for mail %s", req.body.mail)
-    // console.log("requesting reset psw for mail %s", req.body)
     
     try {
         let user_request = await db.query(
@@ -119,7 +119,7 @@ exports.requestresetPass = async (req, res) => {
             VALUES (?,?);",
             [user.username, hash]
         )
-        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + "https://matcha.yoopster.com/reset/" + encodeURIComponent(hash))
+        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + `${hostname}/reset/${encodeURIComponent(hash)}`)
         return res.status(200).send({message: "Sucessfully requested reset", code: "SUCCESS", hash: hash})
     }
     catch (e) {
