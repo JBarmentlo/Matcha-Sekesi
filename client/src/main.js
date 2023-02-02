@@ -4,9 +4,6 @@ import './plugins/bootstrap-vue'
 import App from './App.vue'
 import {router, store} from './router'
 
-console.log("SEDLKFJSDLFKJSDFLKJ")
-console.log(store)
-console.log("SEDLKFJSDLFKJSDFLKJ")
 import VueCookies from 'vue-cookies-reactive'
 Vue.use(VueCookies)
 

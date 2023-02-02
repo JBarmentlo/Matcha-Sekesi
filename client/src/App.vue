@@ -11,8 +11,9 @@
 
 
 <script>
-import { getMyUser } from "./services/user";
+// import { getMyUser } from "./services/user";
 import { getMyMessages } from './services/chat'
+// import { updateUserStore } from './router'
 
 import NavBar from "./shared/NavBar.vue"
 
@@ -29,7 +30,6 @@ export default {
 
 	data() {
 		return {
-			logged_in       : false,
 			currentUser     : Object,
 			messages        : null,
 			polling         : null,
@@ -46,12 +46,22 @@ export default {
 				this.$root.store.setTokenAction(sekes_token);
 			}
 		},
+
 		user: {
 			get: function() {
 				return this.$root.store.state.user;
 			},
 			set: function(user) {
 				this.$root.store.setUserAction(user);
+			}
+		},
+
+		logged_in: {
+			get: function() {
+				return this.$root.store.state.logged_in;
+			},
+			set: function(logged_in) {
+				this.$root.store.setLoggedInAction(logged_in);
 			}
 		}
 	},
@@ -109,8 +119,9 @@ export default {
 
 	created() {
 		console.log("Created App");
-		this.user  = JSON.parse(localStorage.getItem('user'))
-		this.token = JSON.parse(localStorage.getItem('sekes_token'))
+		// this.user  = JSON.parse(localStorage.getItem('user'))
+		// this.token = JSON.parse(localStorage.getItem('sekes_token'))
+		// updateUserStore()
 		// console.log("####################################");
 		// console.log(this.$root.store.state.token)
 		// this.$root.store.setTokenAction("YIHAA")
@@ -119,39 +130,41 @@ export default {
 	},
 
 	async mounted() {
-		// console.log("cookie signin disabled")
 		console.log("App mounted");
-		if (this.token != null) {
-			console.log("already logged in by cookie");
-			try {
-				let user = await getMyUser(this.token)
-				console.log("User:" + user.data.code)
-				if (user.data.code == "SUCCESS") {
-					this.user = {...user.data.data}
-					console.log("signin success for route: ",this.$route.fullPath)
-					this.setLoggedIn(true);
-					if (["/", "signin", "signup"].includes(this.$route.fullPath)) {
-						this.$router.push("/editprofile")
-					}
-				}
-				else {
-					this.token = null
-					this.user  = null
-					// this.$router.push('/signin')
-				}
-			}
-			catch (e) {
-				this.token = null
-				this.user  = null
-				this.setLoggedIn(false);
-				console.log("error in auto cookie signin", e)
-				throw (e)
-			}
+		if (this.logged_in) {
+			this.setLoggedIn
 		}
-		else {
-			console.log("not cookie signed in")
-			// this.$router.push('/signin')
-		}
+		// if (this.token != null) {
+		// 	console.log("already logged in by cookie");
+		// 	try {
+		// 		let user = await getMyUser(this.token)
+		// 		console.log("User:" + user.data.code)
+		// 		if (user.data.code == "SUCCESS") {
+		// 			this.user = {...user.data.data}
+		// 			console.log("signin success for route: ",this.$route.fullPath)
+		// 			this.setLoggedIn(true);
+		// 			if (["/", "signin", "signup"].includes(this.$route.fullPath)) {
+		// 				this.$router.push("/editprofile")
+		// 			}
+		// 		}
+		// 		else {
+		// 			this.token = null
+		// 			this.user  = null
+		// 			// this.$router.push('/signin')
+		// 		}
+		// 	}
+		// 	catch (e) {
+		// 		this.token = null
+		// 		this.user  = null
+		// 		this.setLoggedIn(false);
+		// 		console.log("error in auto cookie signin", e)
+		// 		throw (e)
+		// 	}
+		// }
+		// else {
+		// 	console.log("not cookie signed in")
+		// 	// this.$router.push('/signin')
+		// }
 	},
 
 	beforeDestroy () {

@@ -86,11 +86,35 @@ export const router = new VueRouter({
   routes
 })
 
+
+function InitialiseTok() {
+  let tok
+  try {
+    tok = JSON.parse(localStorage.sekes_tokens)
+  }
+  catch {
+    tok = null
+  }
+  return tok
+}
+
+function InitialiseUser() {
+  let user
+  try {
+    user = JSON.parse(localStorage.user)
+  }
+  catch {
+    user = null
+  }
+  return user
+}
+
 export var store = {
+
   debug: true,
   state: {
-    token    : null,
-    user     : null,
+    token    : InitialiseTok(),
+    user     : InitialiseUser(),
     logged_in: false,
     counter  : 0
   },
@@ -99,20 +123,30 @@ export var store = {
     this.state.logged_in = newValue
   },
   setTokenAction (newValue) {
-    if (this.debug) console.log('setTokenAction triggered')
+    if (this.debug) console.log('setTokenAction triggered', newValue != null)
+    if (this.state.token != null && newValue == null) console.log("DESTRAUES TOKE")
     this.state.token = newValue
+    try {
+      localStorage.sekes_tokens.setItem(JSON.stringify(newValue))
+    }
+    catch (e) {
+      console.log("SET TOKEN ERR")
+    }
   },
   clearTokenAction () {
     if (this.debug) console.log('clearTokenAction triggered')
-    this.state.token = ''
+    if (this.state.token != null) console.log("DESTRAUES TOKE")
+    this.state.token = null
   },
   setUserAction (newValue) {
-    if (this.debug) console.log('setUserAction triggered')
+    if (this.debug) console.log('setUserAction triggered', newValue != null)
+    if (this.state.user != null && newValue == null) console.log("DESTRAUES user")
     this.state.user = newValue
   },
   clearUserAction () {
     if (this.debug) console.log('clearUserAction triggered')
-    this.state.user = ''
+    if (this.state.user != null) console.log("DESTRAUES user")
+    this.state.user = null
   },
   increaseCounterAction () {
     if (this.debug) console.log('Counter triggered')
@@ -121,47 +155,66 @@ export var store = {
 }
 
 export const updateUserStore = async () => {
-  if (store.token != null) {
+  if (store.state.token != null) {
+    console.log('Updating user store')
     try {
-      let user_res = await getMyUser(store.token)
-      if (user_res.code == 200 && user_res.data.code == 'SUCCESS') {
+      let user_res = await getMyUser(store.state.token)
+      if (user_res.status == 200 && user_res.data.code == 'SUCCESS') {
+        console.log("Setting creds")
+        console.log({...user_res.data.data})
         store.setUserAction({...user_res.data.data})
         store.setLoggedInAction(true)
         console.log("Logged in")
-        return true
+        return user_res
+      }
+      else {
+        console.log("CODE: ", user_res.status)
+        console.log("data: ", user_res.data.data)
       }
     }
     catch (e) {
       console.log("ERROR IN UPDASTE STORE", e)
     }
   }
-  store.clearUserAction(null)
-  store.setLoggedInAction(false)
+  // console.log("Clearing creds")
+  // store.clearUserAction(null)
+  // store.setLoggedInAction(false)
+  console.log("Not Logged in")
   return false
 }
 
+
 router.beforeEach((to, from, next) => {
+  console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)
+  console.log("store token null: ", store.state.token == null)
   updateUserStore().then(() => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
+      console.log("Requires auth")
       if (store.state.logged_in) {
+        console.log("gut")
         next()
       }
       else {
+        console.log("bat")
         next('/signin')
       }
     }
   
     else if (to.matched.some(record => record.meta.requiresNotAuth)) {
+      console.log("Requires no auth")
       if (!store.state.logged_in) {
+        console.log("gut")
         next()
       }
       else {
+        console.log("bat")
         next('/editprofile')
       }
     }
 
     else {
-      next()
+        console.log("EZ")
+        next()
       return
     }
   })
