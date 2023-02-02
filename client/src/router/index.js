@@ -110,7 +110,6 @@ function InitialiseUser() {
 }
 
 export var store = {
-
   debug: true,
   state: {
     token    : InitialiseTok(),
@@ -130,7 +129,7 @@ export var store = {
       localStorage.sekes_tokens.setItem(JSON.stringify(newValue))
     }
     catch (e) {
-      console.log("SET TOKEN ERR")
+      console.log("SET TOKEN ERR", e)
     }
   },
   clearTokenAction () {
@@ -142,6 +141,12 @@ export var store = {
     if (this.debug) console.log('setUserAction triggered', newValue != null)
     if (this.state.user != null && newValue == null) console.log("DESTRAUES user")
     this.state.user = newValue
+    try {
+      localStorage.user.setItem(JSON.stringify(newValue))
+    }
+    catch (e) {
+      console.log("SET USER ERR", e)
+    }
   },
   clearUserAction () {
     if (this.debug) console.log('clearUserAction triggered')
