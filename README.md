@@ -8,6 +8,20 @@ A basic tinderlike web app built on a Vue2 / express / mysql stack.
 - mysql 8
 
 
+#### **`client/.env`**
+
+```bash
+VUE_APP_MATCHA_DB="sekesidb"
+VUE_APP_MATCHA_TEST_DB='sekesitest'
+VUE_APP_TEST='false'
+VUE_APP_ENVIRONMENT='TEST'
+VUE_APP_MATCHA_USE_HTTPS='FALSE'
+VUE_APP_MATCHA_HTTPS_PORT=443
+VUE_APP_MATCHA_HTTP_PORT=8081
+VUE_APP_MATCHA_DEFAULT_PORT=8081
+VUE_APP_MATCHA_HOST='http://localhost'
+```
+
 <br><br/>
 ## Export environment variables
 
