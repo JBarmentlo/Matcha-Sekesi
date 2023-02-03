@@ -151,7 +151,7 @@ export var store = {
 
   
   setUserAction (newValue) {
-    console.log('setUserAction triggered', newValue)
+    if (this.debug) console.log('setUserAction triggered', newValue != null)
     if (this.state.user != null && newValue == null) console.log("DESTRAUES user")
     this.state.user = newValue
     try {
@@ -182,61 +182,54 @@ export const updateUserStore = async () => {
       let user_res = await getMyUser(store.state.token)
       if (user_res.status == 200 && user_res.data.code == 'SUCCESS') {
         console.log("Setting creds")
-        console.log({...user_res.data.data})
         store.setUserAction({...user_res.data.data})
         store.setLoggedInAction(true)
-        console.log("Logged in")
+        console.log("Update store Logged in")
         return user_res
       }
       else {
         console.log("CODE: ", user_res.status)
-        console.log("data: ", user_res.data.data)
       }
     }
     catch (e) {
       console.log("ERROR IN UPDASTE STORE", e)
     }
   }
-
-  console.log("Not Logged in")
+  console.log("Update store Not Logged in")
   return "falsetto "
 }
 updateUserStore()
 
 router.beforeEach((to, from, next) => {
-  return next()
-  // console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)
-  // console.log("store token null: ", store.state.token == null)
-  // updateUserStore().then(() => {
-  //   if (to.matched.some(record => record.meta.requiresAuth)) {
-  //     console.log("Requires auth")
-  //     if (store.state.logged_in) {
-  //       console.log("gut")
-  //       next()
-  //     }
-  //     else {
-  //       console.log("bat")
-  //       next('/signin')
-  //     }
-  //   }
-  
-  //   else if (to.matched.some(record => record.meta.requiresNotAuth)) {
-  //     console.log("Requires no auth")
-  //     if (!store.state.logged_in) {
-  //       console.log("gut")
-  //       next()
-  //     }
-  //     else {
-  //       console.log("bat")
-  //       next('/editprofile')
-  //     }
-  //   }
+  console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)
+  console.log("store token null: ", store.state.token == null)
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    console.log("Requires auth")
+    if (store.state.logged_in) {
+      console.log("gut")
+      next()
+    }
+    else {
+      console.log("bat")
+      return next('/signin')
+    }
+  }
 
-  //   else {
-  //       console.log("EZ")
-  //       next()
-  //     return
-  //   }
-  // })
+  else if (to.matched.some(record => record.meta.requiresNotAuth)) {
+    console.log("Requires no auth")
+    if (!store.state.logged_in) {
+      console.log("gut")
+      return next()
+    }
+    else {
+      console.log("bat")
+      return next('/editprofile')
+    }
+  }
+
+  else {
+    console.log("EZ")
+    return next()
+  }
 })
 

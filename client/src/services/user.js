@@ -19,7 +19,6 @@ export const updateUser = async (access_token, user) => {
 }
 
 export const getMyUser = async (access_token) => {
-	console.log("Get my user")
 	let request = {
 		url: "/api/users/getmyuser", // should be replaced after going to production with domain url
 		method: "get",

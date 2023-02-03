@@ -117,6 +117,7 @@ export default {
 						signature: signin_res.data.signature
 					}
 					this.logged_in = true
+					console.log("SIGNING pushing ROUTE")
 					this.$router.push('/editprofile')
 				}
 			}

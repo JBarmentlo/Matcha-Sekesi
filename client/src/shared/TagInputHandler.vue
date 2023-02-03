@@ -87,7 +87,7 @@ export default {
         this.existingTags = this.existingTags.concat(tags)
       }
       catch (e) {
-        console.log("error getting all tags")
+        console.log("error getting all tags", (e))
       }
     },
 

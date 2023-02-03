@@ -120,7 +120,7 @@ async mounted() {
     this.pollData()
   }
   catch (e) {
-    console.log("error in get notifs: ", e)
+    console.log("no notifs")
   }
 },
 
