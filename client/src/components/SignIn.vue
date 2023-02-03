@@ -110,10 +110,6 @@ export default {
 					password: this.password
 				})
 				if (signin_res.data.code == 'SUCCESS') {
-					// console.log("sekes_tokens_cookie set to : ", (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
-					// console.log("user cookie set to: ", signin_res.data.user)
-					// this.$cookies.set("user", {...signin_res.data.user})
-					// this.$cookies.set("sekes_tokens",  (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
 					console.log("Signed In Sucess")
 					this.user = {...signin_res.data.user}
 					this.token = {

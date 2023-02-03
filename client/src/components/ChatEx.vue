@@ -30,6 +30,36 @@ export default {
 			polling: null
 		}
 	},
+
+	computed: {
+        token: {
+            get: function() {
+                return this.$root.store.state.token;
+            },
+            set: function(sekes_token) {
+                this.$root.store.setTokenAction(sekes_token);
+            }
+        },
+
+        user: {
+            get: function() {
+                return this.$root.store.state.user;
+            },
+            set: function(user) {
+                this.$root.store.setUserAction(user);
+            }
+        },
+
+        logged_in: {
+            get: function() {
+                return this.$root.store.state.logged_in;
+            },
+            set: function(logged_in) {
+                this.$root.store.setLoggedInAction(logged_in);
+            }
+        }
+    },
+
 	methods: {
 		fetchMessages({ room }) {
 			console.log("fetch")
@@ -45,7 +75,7 @@ export default {
 						console.log("stop poll: ", this.polling)
 						clearInterval(this.polling)
 					}
-					this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
+					this.messages = (await getConvo(this.token, room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
 					this.messagesLoaded = true
 					this.pollRoom(room)
 					return
@@ -96,7 +126,7 @@ export default {
 				}
 			]
 			console.log(message.content.replace(new RegExp("'", "g"), "''"))
-			sendMsg(this.$cookies.get('sekes_tokens'), message.roomId , message.content.replace(new RegExp("'", "g"), "''"), this.usersToConvoId(this.currentUserId, message.roomId))
+			sendMsg(this.token, message.roomId , message.content.replace(new RegExp("'", "g"), "''"), this.usersToConvoId(this.currentUserId, message.roomId))
 		},
 
 		addNewMessage() {
@@ -139,9 +169,9 @@ export default {
 		},
 		pollRoom (room) {
 			this.polling = setInterval(async () => {
-				let new_mesg = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
+				let new_mesg = (await getConvo(this.token, room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
 				if (new_mesg.length > this.messages.length) {
-					this.messages = (await getConvo(this.$cookies.get('sekes_tokens'), room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
+					this.messages = (await getConvo(this.token, room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
 				}
 			}, 1000)
 		},
@@ -177,12 +207,12 @@ export default {
 		}
 	},
 	async mounted() {
-			this.rawMessages = (await getMyMessages(this.$cookies.get('sekes_tokens'))).data.data.reverse()
-			let matches = (await getMatches(this.$cookies.get('sekes_tokens'))).data.data
+			this.rawMessages = (await getMyMessages(this.token)).data.data.reverse()
+			let matches = (await getMatches(this.token)).data.data
 			// console.log(matches)
 			let new_rooms = matches.map(m => this.matchToRoom(m))
 			this.rooms = new_rooms
-			this.currentUserId = this.$cookies.get('user').username
+			this.currentUserId = this.user.username
 	},
 
 	beforeDestroy () {
