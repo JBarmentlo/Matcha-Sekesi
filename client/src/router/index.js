@@ -88,9 +88,10 @@ export const router = new VueRouter({
 
 
 function InitialiseTok() {
+  console.log("Initialising store eTok")
   let tok
   try {
-    tok = JSON.parse(localStorage.sekes_tokens)
+    tok = JSON.parse(sessionStorage.sekes_tokens)
   }
   catch {
     tok = null
@@ -99,9 +100,10 @@ function InitialiseTok() {
 }
 
 function InitialiseUser() {
+  console.log("Initialising store User")
   let user
   try {
-    user = JSON.parse(localStorage.user)
+    user = JSON.parse(sessionStorage.user)
   }
   catch {
     user = null
@@ -109,12 +111,16 @@ function InitialiseUser() {
   return user
 }
 
+function InitialiseLoggedIn() {
+  return InitialiseUser() != null
+}
+
 export var store = {
   debug: true,
   state: {
     token    : InitialiseTok(),
     user     : InitialiseUser(),
-    logged_in: false,
+    logged_in: InitialiseLoggedIn(),
     counter  : 0
   },
 
@@ -128,7 +134,7 @@ export var store = {
     if (this.state.token != null && newValue == null) console.log("DESTRAUES TOKE")
     this.state.token = newValue
     try {
-      localStorage.setItem('sekes_tokens', JSON.stringify(newValue))
+      sessionStorage.setItem('sekes_tokens', JSON.stringify(newValue))
     }
     catch (e) {
       console.log("SET TOKEN ERR", e)
@@ -140,7 +146,7 @@ export var store = {
     if (this.state.token != null) console.log("DESTRAUES TOKE")
 
     this.state.token = null
-    localStorage.removeItem('user')
+    sessionStorage.removeItem('user')
   },
 
   
@@ -149,7 +155,7 @@ export var store = {
     if (this.state.user != null && newValue == null) console.log("DESTRAUES user")
     this.state.user = newValue
     try {
-      localStorage.setItem('user', JSON.stringify(newValue))
+      sessionStorage.setItem('user', JSON.stringify(newValue))
     }
     catch (e) {
       console.log("SET USER ERR", e)
@@ -160,7 +166,7 @@ export var store = {
     if (this.debug) console.log('clearUserAction triggered')
     if (this.state.user != null) console.log("DESTRAUES user")
     this.state.user = null
-    localStorage.removeItem('user')
+    sessionStorage.removeItem('user')
   },
 
   increaseCounterAction () {
@@ -191,47 +197,46 @@ export const updateUserStore = async () => {
       console.log("ERROR IN UPDASTE STORE", e)
     }
   }
-  // console.log("Clearing creds")
-  // store.clearUserAction(null)
-  // store.setLoggedInAction(false)
+
   console.log("Not Logged in")
-  return false
+  return "falsetto "
 }
 
 
 router.beforeEach((to, from, next) => {
-  console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)
-  console.log("store token null: ", store.state.token == null)
-  updateUserStore().then(() => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-      console.log("Requires auth")
-      if (store.state.logged_in) {
-        console.log("gut")
-        next()
-      }
-      else {
-        console.log("bat")
-        next('/signin')
-      }
-    }
+  return next()
+  // console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)
+  // console.log("store token null: ", store.state.token == null)
+  // updateUserStore().then(() => {
+  //   if (to.matched.some(record => record.meta.requiresAuth)) {
+  //     console.log("Requires auth")
+  //     if (store.state.logged_in) {
+  //       console.log("gut")
+  //       next()
+  //     }
+  //     else {
+  //       console.log("bat")
+  //       next('/signin')
+  //     }
+  //   }
   
-    else if (to.matched.some(record => record.meta.requiresNotAuth)) {
-      console.log("Requires no auth")
-      if (!store.state.logged_in) {
-        console.log("gut")
-        next()
-      }
-      else {
-        console.log("bat")
-        next('/editprofile')
-      }
-    }
+  //   else if (to.matched.some(record => record.meta.requiresNotAuth)) {
+  //     console.log("Requires no auth")
+  //     if (!store.state.logged_in) {
+  //       console.log("gut")
+  //       next()
+  //     }
+  //     else {
+  //       console.log("bat")
+  //       next('/editprofile')
+  //     }
+  //   }
 
-    else {
-        console.log("EZ")
-        next()
-      return
-    }
-  })
+  //   else {
+  //       console.log("EZ")
+  //       next()
+  //     return
+  //   }
+  // })
 })
 

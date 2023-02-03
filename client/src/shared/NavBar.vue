@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import router from "@/router";
+import { router } from "@/router";
 import NotifHandler from "./NotifHandler.vue";
 
 export default {
@@ -49,15 +49,40 @@ export default {
     NotifHandler,
   },
 
-  props: {
-    logged_in: Boolean,
-  },
-
   data() {
     return {
       notifs: [],
       isActive: false,
     };
+  },
+
+    computed: {
+    token: {
+      get: function() {
+        return this.$root.store.state.token;
+      },
+      set: function(sekes_token) {
+        this.$root.store.setTokenAction(sekes_token);
+      }
+    },
+
+    user: {
+      get: function() {
+        return this.$root.store.state.user;
+      },
+      set: function(user) {
+        this.$root.store.setUserAction(user);
+      }
+    },
+
+    logged_in: {
+        get: function() {
+            return this.$root.store.state.logged_in;
+        },
+        set: function(logged_in) {
+            this.$root.store.setLoggedInAction(logged_in);
+        }
+    }
   },
 
   methods: {
@@ -68,13 +93,14 @@ export default {
     },
     logout() {
       console.log("LOGGING OUT");
-      if (this.$cookies.isKey("user")) this.$cookies.remove("user");
-      console.log("remo9ve user xookie");
-      if (this.$cookies.isKey("sekes_tokens"))
-        this.$cookies.remove("sekes_tokens");
-      console.log("remo9ve token xookie");
-      this.$emit("setLoggedIn", false);
-      if (this.$route.path != "/signin") router.push("/signin");
+      this.user = null;
+      this.token = null;
+      this.logged_in = false
+      console.log("ROUTE: ", this.$route.path)
+      if (this.$route.path != "/signin") {
+        console.log("ROUTE: pushing /singing")
+        router.push("/signin");
+      }
     },
   },
 };

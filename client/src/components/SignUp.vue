@@ -100,7 +100,7 @@
 // import inputValidate from "../services/formValidate";
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { signup } from "../services/auth";
-import router from "@/router";
+import { router } from "@/router";
 import { getLoc } from '../services/user.js'
 export default {
 	components: {

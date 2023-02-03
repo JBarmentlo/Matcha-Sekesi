@@ -1,6 +1,6 @@
 <template>
 	<div class="center pt-5">
-		<div v-if="user != null">
+		<div v-if="! logged_in">
 			<form @submit="submitLoginForm">
 				<h3>SIGN IN</h3>
 				<div class="form-group">
@@ -109,22 +109,18 @@ export default {
 					username: this.username,
 					password: this.password
 				})
-				console.log("data: ",signin_res.data)
-				this.status = signin_res.data.code
 				if (signin_res.data.code == 'SUCCESS') {
-					console.log("sekes_tokens_cookie set to : ", (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
-					console.log("user cookie set to: ", signin_res.data.user)
-					this.$cookies.set("user", {...signin_res.data.user})
-					this.$cookies.set("sekes_tokens",  (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
-					console.log(signin_res.data)
-
+					// console.log("sekes_tokens_cookie set to : ", (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
+					// console.log("user cookie set to: ", signin_res.data.user)
+					// this.$cookies.set("user", {...signin_res.data.user})
+					// this.$cookies.set("sekes_tokens",  (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
+					console.log("Signed In Sucess")
 					this.user = {...signin_res.data.user}
 					this.token = {
 						accessToken: signin_res.data.accessToken,
 						signature: signin_res.data.signature
 					}
-
-					this.$emit('setLoggedIn', true)
+					this.logged_in = true
 					this.$router.push('/editprofile')
 				}
 			}
