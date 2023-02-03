@@ -94,9 +94,38 @@ export default {
 			offset       : 0,
 			limit        : 200,
 			current_page : 1,
-			user         : this.$cookies.get('user'),
 		}
 	},
+
+    computed: {
+        token: {
+            get: function() {
+                return this.$root.store.state.token;
+            },
+            set: function(sekes_token) {
+                this.$root.store.setTokenAction(sekes_token);
+            }
+        },
+
+        user: {
+            get: function() {
+                return this.$root.store.state.user;
+            },
+            set: function(user) {
+                this.$root.store.setUserAction(user);
+            }
+        },
+
+        logged_in: {
+            get: function() {
+                return this.$root.store.state.logged_in;
+            },
+            set: function(logged_in) {
+                this.$root.store.setLoggedInAction(logged_in);
+            }
+        }
+    },
+
 	methods: {
 		async search() {
 			if (this.$refs.zipcode_valid.flags.invalid) {
@@ -107,7 +136,7 @@ export default {
 			// let desire = this.determineAppropriateSekes(this.user.gender, this.user.sekesualOri)
 			// console.log("DESIIIIRE: ", desires)
 			this.zipcode = this.zipcode == "" ? null : this.zipcode
-			let rese = await searchUsers(this.$cookies.get('sekes_tokens'),this.age[0], this.age[1], this.required_tags, this.rating[0], this.rating[1], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
+			let rese = await searchUsers(this.token ,this.age[0], this.age[1], this.required_tags, this.rating[0], this.rating[1], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
 			this.users = rese.data.data
 			this.current_page = 1
 		},
@@ -141,10 +170,10 @@ export default {
 
 		addScoreBlend(user) {
 			let score = user.popScore
-			if ((user.zipCode != null) && (user.zipCode == this.$cookies.get('user').zipCode)) {
+			if ((user.zipCode != null) && (user.zipCode == this.user.zipCode)) {
 				score += 2
 			}
-			score += user.tag_list.filter(t => this.$cookies.get('user').tag_list.includes(t)).length
+			score += user.tag_list.filter(t => this.user.tag_list.includes(t)).length
 			return {...user, score: score}
 		},
 		order_list() {
@@ -162,8 +191,8 @@ export default {
 	async created() {
 		let desires = this.allCompatible({gender: this.user.gender, sekesualOri: this.user.sekesualOri})
 		// console.log("DESIIIIRE: ", desires)
-		// let rese = await searchUsers(this.$cookies.get('sekes_tokens'), this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, 5, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
-		let rese = await searchUsersInitial(this.$cookies.get('sekes_tokens'), this.user.tag_list, this.user.longitude, this.user.latitude, desires, this.offset, this.limit)
+		// let rese = await searchUsers(this.token , this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, 5, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
+		let rese = await searchUsersInitial(this.token , this.user.tag_list, this.user.longitude, this.user.latitude, desires, this.offset, this.limit)
 		this.users = rese.data.data.map(this.addScoreBlend).sort((a,b) => {a.score < b.score})
 		this.current_page = 1
 	}
