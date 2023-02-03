@@ -46,6 +46,15 @@ computed: {
     else {
       return 'Nootifs (' + this.unreadNotifs + ')'
     }
+  },
+
+  token: {
+    get: function() {
+      return this.$root.store.state.token;
+    },
+    set: function(sekes_token) {
+      this.$root.store.setTokenAction(sekes_token);
+    }
   }
 },
 
@@ -54,7 +63,7 @@ methods: {
     this.polling = setInterval(async () => {
       try {
         let old_notif_ids = this.notifs.map(n => n.id)
-        this.notifs = (await getMyNotifs(this.$cookies.get('sekes_tokens'), this.offset, this.limit)).data.data
+        this.notifs = (await getMyNotifs(this.token, this.offset, this.limit)).data.data
         let new_notifs = this.notifs.filter(n => !old_notif_ids.includes(n.id))
         this.notifyUser(new_notifs)
       }
@@ -82,12 +91,12 @@ methods: {
   },
 
   async setSeen() {
-    await setSeenNotifs(this.$cookies.get('sekes_tokens') ,this.notifs.map(n => n.id))
+    await setSeenNotifs(this.token ,this.notifs.map(n => n.id))
     this.notifs = this.notifs.map(n => {return {...n, seen:1}})
   },
 
   async deleteNoot(id) {
-    await deleteNotifs(this.$cookies.get('sekes_tokens'), id)
+    await deleteNotifs(this.token, id)
   },
 
   async deleteAndRedirect(id, username)
@@ -106,7 +115,7 @@ methods: {
 
 async mounted() {
   try {
-    let nooti = await getMyNotifs(this.$cookies.get('sekes_tokens'), this.offset, this.limit)
+    let nooti = await getMyNotifs(this.token, this.offset, this.limit)
     this.notifs = nooti.data.data
     this.pollData()
   }

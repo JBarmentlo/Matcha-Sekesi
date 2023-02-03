@@ -1,11 +1,14 @@
 const db = require("../db/sql.conn");
 
+const hostname=`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`
+
+
 exports.upload_image = async (req, res) => {
 	console.log("Uploading image")
 	try {
 		let filename = req.file.filename
 		console.log('filename: ', req.file.filename, 'User: ', req.username)
-		res.status(200).send({'filename': filename, url: "https://matcha.yoopster.com/api/image/get/" + filename})
+		res.status(200).send({'filename': filename, url: `${hostname}/api/image/get/${filename}`})
 	}
 	catch (e){
 		console.log("Error upload image: " + e);
@@ -21,9 +24,9 @@ exports.insert_fake_picture_test = async (filename, username) => {
 				(url, user) \
 				VALUES (?, ?);",
 
-			["https://matcha.yoopster.com/api/image/get/" + filename, req.username])
+			[`${hostname}/api/image/get/${filename}`, req.username])
 
-		return ("https://matcha.yoopster.com/api/image/get/" + filename)
+		return (`${hostname}/api/image/get/${filename}`)
 	}
 	catch (e){
 		// throw(e)

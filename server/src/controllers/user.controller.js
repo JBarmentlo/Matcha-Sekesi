@@ -8,6 +8,9 @@ const tagController = require("./tag.controller")
 // function check_create_user_input(req) {
 // 	if (typeof())
 // }
+const hostname=`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`
+
+
 
 async function handle_new_mail_for_user(username, id, mail) {
 	let hash = bcrypt.hashSync(id.toString(), 8)
@@ -18,7 +21,7 @@ async function handle_new_mail_for_user(username, id, mail) {
 		[username, hash]
 	)
 	// return Promise.resolve()
-	return await sendMail(mail, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com/verify/" + encodeURIComponent(hash))
+	return await sendMail(mail, "Verify your email", "Please validate your email here: " + `${hostname}/verify/${encodeURIComponent(hash)}`)
 }
 
 
