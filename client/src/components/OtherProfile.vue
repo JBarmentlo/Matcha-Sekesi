@@ -114,6 +114,7 @@ export default {
   data() {
     return {
       reported: false,
+      user: null
     };
   },
 
@@ -165,15 +166,6 @@ export default {
         },
         set: function(sekes_token) {
             this.$root.store.setTokenAction(sekes_token);
-        }
-    },
-
-    user: {
-        get: function() {
-            return this.$root.store.state.user;
-        },
-        set: function(user) {
-            this.$root.store.setUserAction(user);
         }
     },
 

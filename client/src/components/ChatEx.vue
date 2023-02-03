@@ -209,7 +209,6 @@ export default {
 	async mounted() {
 			this.rawMessages = (await getMyMessages(this.token)).data.data.reverse()
 			let matches = (await getMatches(this.token)).data.data
-			// console.log(matches)
 			let new_rooms = matches.map(m => this.matchToRoom(m))
 			this.rooms = new_rooms
 			this.currentUserId = this.user.username

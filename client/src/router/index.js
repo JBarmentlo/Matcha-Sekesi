@@ -151,7 +151,7 @@ export var store = {
 
   
   setUserAction (newValue) {
-    if (this.debug) console.log('setUserAction triggered', newValue != null)
+    console.log('setUserAction triggered', newValue)
     if (this.state.user != null && newValue == null) console.log("DESTRAUES user")
     this.state.user = newValue
     try {
@@ -201,7 +201,7 @@ export const updateUserStore = async () => {
   console.log("Not Logged in")
   return "falsetto "
 }
-
+updateUserStore()
 
 router.beforeEach((to, from, next) => {
   return next()
