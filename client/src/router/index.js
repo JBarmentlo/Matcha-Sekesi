@@ -117,42 +117,52 @@ export var store = {
     logged_in: false,
     counter  : 0
   },
+
   setLoggedInAction (newValue) {
     if (this.debug) console.log('setLoggedInAction triggered with', newValue)
     this.state.logged_in = newValue
   },
+
   setTokenAction (newValue) {
     if (this.debug) console.log('setTokenAction triggered', newValue != null)
     if (this.state.token != null && newValue == null) console.log("DESTRAUES TOKE")
     this.state.token = newValue
     try {
-      localStorage.sekes_tokens.setItem(JSON.stringify(newValue))
+      localStorage.setItem('sekes_tokens', JSON.stringify(newValue))
     }
     catch (e) {
       console.log("SET TOKEN ERR", e)
     }
   },
+
   clearTokenAction () {
     if (this.debug) console.log('clearTokenAction triggered')
     if (this.state.token != null) console.log("DESTRAUES TOKE")
+
     this.state.token = null
+    localStorage.removeItem('user')
   },
+
+  
   setUserAction (newValue) {
     if (this.debug) console.log('setUserAction triggered', newValue != null)
     if (this.state.user != null && newValue == null) console.log("DESTRAUES user")
     this.state.user = newValue
     try {
-      localStorage.user.setItem(JSON.stringify(newValue))
+      localStorage.setItem('user', JSON.stringify(newValue))
     }
     catch (e) {
       console.log("SET USER ERR", e)
     }
   },
+
   clearUserAction () {
     if (this.debug) console.log('clearUserAction triggered')
     if (this.state.user != null) console.log("DESTRAUES user")
     this.state.user = null
+    localStorage.removeItem('user')
   },
+
   increaseCounterAction () {
     if (this.debug) console.log('Counter triggered')
     this.state.counter += 1

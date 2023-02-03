@@ -1,6 +1,6 @@
 <template>
 	<div class="center pt-5">
-		<div v-if="status != 'SUCCESS'">
+		<div v-if="user != null">
 			<form @submit="submitLoginForm">
 				<h3>SIGN IN</h3>
 				<div class="form-group">
@@ -80,12 +80,22 @@ export default {
 				this.$root.store.setTokenAction(sekes_token);
 			}
 		},
+
 		user: {
 			get: function() {
 				return this.$root.store.state.user;
 			},
 			set: function(user) {
 				this.$root.store.setUserAction(user);
+			}
+		},
+
+		logged_in: {
+			get: function() {
+				return this.$root.store.state.logged_in;
+			},
+			set: function(logged_in) {
+				this.$root.store.setLoggedInAction(logged_in);
 			}
 		}
 	},
@@ -113,8 +123,6 @@ export default {
 						accessToken: signin_res.data.accessToken,
 						signature: signin_res.data.signature
 					}
-					localStorage.setItem('sekes_token', JSON.stringify(this.token))
-					localStorage.setItem('user', JSON.stringify(this.user))
 
 					this.$emit('setLoggedIn', true)
 					this.$router.push('/editprofile')

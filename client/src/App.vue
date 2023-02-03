@@ -92,7 +92,7 @@ export default {
 					else {
 						let old_ids = this.messages.map(n => n.id)
 						this.messages = (await getMyMessages(this.token, 0, 100)).data.data.reverse()
-						let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.$cookies.get('user').username))
+						let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.user.username))
 						this.notifyUser(new_notifs)
 					}
 				}

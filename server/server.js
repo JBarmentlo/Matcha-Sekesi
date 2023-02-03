@@ -169,7 +169,7 @@ app.use(function (req, res, next) {
   }
 })
 
-app.use("/", express.static(__dirname + '/client_dist'));
+// app.use("/", express.static(__dirname + '/client_dist'));
 
 
 // ################################### HTTPS ##############################################3
