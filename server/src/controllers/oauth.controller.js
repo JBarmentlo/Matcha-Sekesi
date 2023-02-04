@@ -212,12 +212,13 @@ exports.oauthInUp = async (req, res) => {
             }
 
             let signin = await create_signin_data(existing_username)
-            res.cookie("user", JSON.stringify(signin.user))
-            console.log(("user", JSON.stringify({...signin.user})))
-            res.cookie("sekes_tokens",  JSON.stringify({accessToken: signin.accessToken, signature: signin.signature}))
-            console.log("sekes_tokens",  JSON.stringify({accessToken: signin.accessToken, signature: signin.signature}))
+            // res.cookie("user", JSON.stringify(signin.user))
+            // console.log(("user", JSON.stringify({...signin.user})))
+            // res.cookie("sekes_tokens",  JSON.stringify({accessToken: signin.accessToken, signature: signin.signature}))
+            // console.log("sekes_tokens",  JSON.stringify({accessToken: signin.accessToken, signature: signin.signature}))
 
-            return res.redirect("/editprofile");
+            // return res.redirect("/editprofile");
+            return res.redirect(`/signing?oauth_token=${encodeURIComponent(signin.accessToken)}`)
         }
     }
 };

@@ -11,7 +11,6 @@
 
 
 <script>
-// import { getMyUser } from "./services/user";
 import { getMyMessages } from './services/chat'
 // import { updateUserStore } from './router'
 

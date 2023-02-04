@@ -54,6 +54,7 @@
 
 <script>
 import { signin } from "../services/auth";
+import { getMyUser } from "../services/user.js";
 
 export default {
 	data() {
@@ -140,11 +141,21 @@ export default {
 	},
 
 	async mounted() {
-		// if (this.oauth_token != null) {
-		// 	let user_response = await getMyUser(this.token)
-		// 	this.user = user_response.data.data
-		// 	this.token
-		// }
+		if (this.oauth_token != null) {
+			try {
+				this.token = {
+						accessToken: this.oauth_token,
+						signature: 'hehe_no_flaw_here'
+					}
+				let user_response = await getMyUser(this.token)
+				this.user = user_response.data.data
+				this.logged_in = true
+			}
+			catch (e) {
+				console.log("Url TOk issue")
+			}
+			
+		}
 	}
 };
 </script>
