@@ -160,7 +160,7 @@ const default_ip_ret =  {
     country : 'FR',
     loc     : '48.8412,2.3003',
     org     : 'AS15557 Societe Francaise Du Radiotelephone - SFR SA',
-    postal  : '75713 CEDEX 15',
+    postal  : '75713',
     timezone: 'Europe/Paris'
   }
 
