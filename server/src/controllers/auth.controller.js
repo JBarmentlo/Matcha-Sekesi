@@ -203,7 +203,6 @@ exports.signin = async (req, res) => {
         console.error("ERROR in signin")
         throw (e)
     }
- 
 };
 
 exports.verifyToken = (req, res, next) => {
@@ -213,15 +212,12 @@ exports.verifyToken = (req, res, next) => {
             return res.status(403).send({ message: "No token provided!" });
         }
         
-        console.log(token)
         jwt.verify(token, process.env.SIGNATURE, (err, decoded) => {
             if (err) {
                 console.log("error in decode: ", err)
                 return res.status(401).send({ message: "Unauthorized!" });
             }
-            // console.log("Identified user %s from token", decoded.username)
             req.username = decoded.username;
-            // console.log("Identified: ", decoded.username)
             next();
         });
     }
