@@ -30,7 +30,8 @@ const routes = [
     path: '/signin',
     name: 'Sign In',
     meta: {requiresNotAuth: true},
-    component: SignIn
+    component: SignIn,
+    props: route => ({ token: route.query.token })
   },
   {
     path: '/forgotpassword/:email?',
@@ -110,6 +111,7 @@ function InitialiseUser() {
   }
   return user
 }
+
 
 function InitialiseLoggedIn() {
   return InitialiseUser() != null

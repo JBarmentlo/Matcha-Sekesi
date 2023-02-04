@@ -11,7 +11,6 @@ export const uploadImage = async (sekes_tokens, image_file) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : sekes_tokens.accessToken,
-			"x-access-signature" : sekes_tokens.signature,
 		},
 		data: formData
 	};

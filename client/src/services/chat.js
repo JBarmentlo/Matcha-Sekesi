@@ -8,7 +8,6 @@ export const getMyMessages = async (access_token) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 	};
 	const response = await api_axios(request);
@@ -24,7 +23,6 @@ export const getConvo = async (access_token, username, offset, limit) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({
 			username : username,
@@ -45,7 +43,6 @@ export const sendMsg = async (access_token, username, msg, convoId) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({
 			username : username,

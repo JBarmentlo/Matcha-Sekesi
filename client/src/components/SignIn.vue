@@ -65,6 +65,13 @@ export default {
 		};
 	},
 
+	props: {
+		oauth_token: {
+		type: String,
+		default: null
+		},
+	},
+
 	computed: {
 		wrongPass() {
 			return this.status == 'WRONG_PASSWORD'
@@ -131,6 +138,14 @@ export default {
 			this.visible = !this.visible
 		},
 	},
+
+	async mounted() {
+		// if (this.oauth_token != null) {
+		// 	let user_response = await getMyUser(this.token)
+		// 	this.user = user_response.data.data
+		// 	this.token
+		// }
+	}
 };
 </script>
 

@@ -397,7 +397,7 @@ export default {
                 await updateUser(this.token, user_diffy)
                 await tagUploadRes
                 let user_response = await getMyUser(this.token)
-                console.log("GOT NEW USEr", user_response.data.data)
+                // console.log("GOT NEW USEr", user_response.data.data)
                 this.user = user_response.data.data
             }
             catch (e) {

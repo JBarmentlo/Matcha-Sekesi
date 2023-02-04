@@ -115,8 +115,7 @@ describe('Test signup', () => {
 		step("Verify headers calls next", async () => {
 			let next = sinon.stub()
 			await AuthController.verifyToken({ headers: {
-												"x-access-token": res.send.lastCall.firstArg.accessToken,
-												"x-access-signature": res.send.lastCall.firstArg.signature
+												"x-access-token": res.send.lastCall.firstArg.accessToken
 											}}, res, next)
 			assert.isTrue(next.calledOnce)
 			return Promise.resolve()
@@ -124,8 +123,7 @@ describe('Test signup', () => {
 		step("Incorrect does not call next", async () => {
 			let next = sinon.stub()
 			await AuthController.verifyToken({ headers: {
-												"x-access-token": "res.send.lastCall.firstArg.accessToken",
-												"x-access-signature": res.send.lastCall.firstArg.signature
+												"x-access-token": "res.send.lastCall.firstArg.accessToken"
 											}}, res, next)
 			assert.isFalse(next.calledOnce)
 			return Promise.resolve()
@@ -134,7 +132,6 @@ describe('Test signup', () => {
 			let next = sinon.stub()
 			await AuthController.verifyToken({ headers: {
 												"x-access-token": res.send.lastCall.firstArg.accessToken,
-												"x-access-signature": "res.send.lastCall.firstArg.signature"
 											}}, res, next)
 			assert.isFalse(next.calledOnce)
 		return Promise.resolve()

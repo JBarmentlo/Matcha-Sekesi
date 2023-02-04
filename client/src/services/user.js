@@ -9,7 +9,6 @@ export const updateUser = async (access_token, user) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({update: user})
 	};
@@ -25,7 +24,6 @@ export const getMyUser = async (access_token) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		}
 	};
 	
@@ -41,7 +39,6 @@ export const getUserProfile = async (access_token, username) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		}
 	};
 	
@@ -57,7 +54,6 @@ export const consultUserProfile = async (access_token, username) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		}
 	};
 	
@@ -92,7 +88,6 @@ export const likeUser = async (access_token, username) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({liked: username})
 	};
@@ -111,7 +106,6 @@ export const unlikeUser = async (access_token, username) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({unliked: username})
 	};
@@ -130,7 +124,6 @@ export const blockUser = async (access_token, username) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({blocked: username})
 	};
@@ -150,7 +143,6 @@ export const reportUser = async (access_token, username) => {
 			headers: {
 				"Content-type"       : "application/json",
 				"x-access-token"     : access_token.accessToken,
-				"x-access-signature" : access_token.signature,
 			},
 			data: JSON.stringify({reported: username})
 		};
@@ -175,7 +167,6 @@ export const unblockUser = async (access_token, username) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({unblocked: username})
 	};
@@ -194,7 +185,6 @@ export const getMatches = async (access_token) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 	};
 	

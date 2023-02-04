@@ -163,6 +163,16 @@ exports.resetPass = async (req, res) => {
     }
 };
 
+
+// const { privateKey, publicKey } = crypto.generateKeyPairSync('ec', {
+//     namedCurve: 'sect239k1'
+// });
+// const sign = crypto.createSign('SHA256');
+// sign.write(`lol`);
+// sign.end();
+// var signature = sign.sign(privateKey, 'hex');
+// console.log("\n\nSIGNOS: ", signature)
+
 exports.signin = async (req, res) => {
     try {
         console.log("signing in %o", req.body)
@@ -177,27 +187,15 @@ exports.signin = async (req, res) => {
             return res.status(201).send({ accessToken: null, message: "Invalid Password!", code: "WRONG_PASSWORD" });
         }
     
-        const { privateKey, publicKey } = crypto.generateKeyPairSync('ec', {
-            namedCurve: 'sect239k1'
-        });
-    
-    
-        const sign = crypto.createSign('SHA256');
-        sign.write(`${user}`);
-        sign.end();
-        var signature = sign.sign(privateKey, 'hex');
-        // console.log("signature")
-        // console.log(signature)
-    
         // sign username
-        var token = jwt.sign({ username: user.username }, signature, {
+        var token = jwt.sign({ username: user.username }, process.env.SIGNATURE, {
             expiresIn: 86400 // 24 hours
         });
         // console.log("signed in: ", user)
         res.status(200).send({
             user       : user,
             accessToken: token,
-            signature  : signature,
+            signature: "hehe_no_security_flaw",
             code       : "SUCCESS"
         });
     }
@@ -211,17 +209,13 @@ exports.signin = async (req, res) => {
 exports.verifyToken = (req, res, next) => {
     try {
         let token = req.headers["x-access-token"];
-        let secret = req.headers["x-access-signature"];
-        // console.log("Verifying tokens")
-        // console.log("Verifying token: ", token == undefined," ,secret: ", secret == undefined)
         if (!token) {
             return res.status(403).send({ message: "No token provided!" });
         }
     
-        jwt.verify(token, secret, (err, decoded) => {
+        jwt.verify(token, process.env.SIGNATURE, (err, decoded) => {
             if (err) {
-                // console.log("error: in token:\n", err)
-                // console.log("error: ", err)
+                console.log("error in decode: ", err)
                 return res.status(401).send({ message: "Unauthorized!" });
             }
             // console.log("Identified user %s from token", decoded.username)
@@ -231,11 +225,9 @@ exports.verifyToken = (req, res, next) => {
         });
     }
     catch (e) {
-        console.log('error in verify token')
-        // console.log(e)
-        // // throw(e)
+        console.log('error in verify token', e)
+        return res.status(401).send({ message: "Unauthorizedd!" });
     }
-
 };
 
 exports.updateLastConnected = async (req, res, next) => {
