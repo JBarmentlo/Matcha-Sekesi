@@ -78,12 +78,10 @@ exports.verifyMail = async (req, res) => {
             where id_hash=?",
             req.params.hash)
     
-        console.log('verify_mail_result:', verify_mail_result)
         let add_mail = await db.query(`
             INSERT INTO VERIFIEDMAIL (user, mail)
                 VALUES (?, ?)`,
             [verify_mail_result[0].user, verify_mail_result[0].mail])
-        console.log('add_mail:', add_mail)
 
         res.status(200).send({message: "verified mail for " + verify_mail_result[0].user, code: "SUCCESS"})
     }
