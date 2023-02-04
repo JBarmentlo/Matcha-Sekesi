@@ -121,15 +121,13 @@ async function create_signin_data(username) {
             throw("undefined user wtf")
         }
 
-        // sign username
-        var token = jwt.sign({ username: user }, process.env.SIGNATURE, {
+        var token = jwt.sign({ username: user.username }, process.env.SIGNATURE, {
             expiresIn: 86400 // 24 hours
         });
-        // console.log("signed in: ", user)
         return {
             user       : user,
             accessToken: token,
-            signature  : signature,
+            signature  : 'hehe_no_security_breach_here',
             code       : "SUCCESS"
         }
     }
