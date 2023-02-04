@@ -1,10 +1,10 @@
-import axios from "axios";
+import {api_axios} from './axios_setup';
 
 
 export const getAllTags = async (sekes_tokens) => {
 	// console.log("Get all tags")
 	let request = {
-		url: "https://matcha.yoopster.com/api/tags/getall", // should be replaced after going to production with domain url
+		url: "/api/tags/getall", // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type"       : "application/json",
@@ -12,7 +12,7 @@ export const getAllTags = async (sekes_tokens) => {
 			"x-access-signature" : sekes_tokens.signature,
 		},
 	};
-	let response = await axios(request)
+	let response = await api_axios(request)
 
 	return response
 }
@@ -20,7 +20,7 @@ export const getAllTags = async (sekes_tokens) => {
 export const updateUserTags = async (sekes_tokens, tag_list) => {
 	// console.log("Get all tags")
 	let request = {
-		url: "https://matcha.yoopster.com/api/tags/update", // should be replaced after going to production with domain url
+		url: "/api/tags/update", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -29,7 +29,7 @@ export const updateUserTags = async (sekes_tokens, tag_list) => {
 		},
 		data: JSON.stringify({'tag_list': tag_list})
 	};
-	let response = await axios(request)
+	let response = await api_axios(request)
 
 	return response
 }

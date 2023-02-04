@@ -44,12 +44,12 @@ export default {
 			}
 			else {
 					try {
-					await uploadImage(this.$cookies.get('sekes_tokens'), this.selected_file)
+					await uploadImage(this.$root.store.state.token, this.selected_file)
 					this.message = "Upload complete"
 				}
-				catch {
+				catch (e) {
 					this.message = "Error"
-					console.log("ERR")
+					console.log("ERR", (e))
 				}
 				finally {
 					this.selected_file = null

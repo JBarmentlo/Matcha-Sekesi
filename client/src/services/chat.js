@@ -1,10 +1,9 @@
-import axios from "axios";
-
+import {api_axios} from './axios_setup';
 
 export const getMyMessages = async (access_token) => {
 	// console.log("get messages ")
 	let request = {
-		url: "https://matcha.yoopster.com/api/chat/getall", // should be replaced after going to production with domain url
+		url: "/api/chat/getall", // should be replaced after going to production with domain url
 		method: "get",
 		headers: {
 			"Content-type"       : "application/json",
@@ -12,7 +11,7 @@ export const getMyMessages = async (access_token) => {
 			"x-access-signature" : access_token.signature,
 		},
 	};
-	const response = await axios(request);
+	const response = await api_axios(request);
 	// console.log("MSG res: ", response)
 	return response;
 }
@@ -20,7 +19,7 @@ export const getMyMessages = async (access_token) => {
 
 export const getConvo = async (access_token, username, offset, limit) => {
 	let request = {
-		url: "https://matcha.yoopster.com/api/chat/get_conversation", // should be replaced after going to production with domain url
+		url: "/api/chat/get_conversation", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -33,7 +32,7 @@ export const getConvo = async (access_token, username, offset, limit) => {
 			limit    : limit,
 		})
 	};
-	const response = await axios(request);
+	const response = await api_axios(request);
 	// console.log("convo res: ", response)
 	return response;
 }
@@ -41,7 +40,7 @@ export const getConvo = async (access_token, username, offset, limit) => {
 export const sendMsg = async (access_token, username, msg, convoId) => {
 	console.log("sending msg: ", 'username: ', username, 'msg: ', msg)
 	let request = {
-		url: "https://matcha.yoopster.com/api/chat/send_message", // should be replaced after going to production with domain url
+		url: "/api/chat/send_message", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",
@@ -55,7 +54,7 @@ export const sendMsg = async (access_token, username, msg, convoId) => {
 		})
 	};
 	console.log("MSG data:", request.data)
-	const response = await axios(request);
+	const response = await api_axios(request);
 	// console.log("MSG res: ", response)
 	return response;
 }

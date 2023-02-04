@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div v-if="user != null" class="container">
 <div class="col-md-12">
 	<div class="pt-4"></div>
 
@@ -65,7 +65,25 @@ export default {
 	computed: {
 		total_pages() {
 			return Math.ceil(this.users.length / this.user_per_page)
-		}
+		},
+
+		token: {
+            get: function() {
+                return this.$root.store.state.token;
+            },
+            set: function(sekes_token) {
+                this.$root.store.setTokenAction(sekes_token);
+            }
+        },
+
+		user: {
+            get: function() {
+                return this.$root.store.state.user;
+            },
+            set: function(user) {
+                this.$root.store.setUserAction(user);
+            }
+        },
 	},
 
 	props: {
@@ -84,12 +102,6 @@ export default {
   },
 
 	methods: {
-		likeUserButton(id, index) {
-			// likeUser(this.$cookies.get('user'), id)
-			console.log("Like user: ", id, index)
-			// .then(console.log("liked user CHECK WHY SPLICEEEEE"))
-		},
-
 		profile_pic_url(url) {
 			if (url != null) {
 				return url
@@ -97,40 +109,33 @@ export default {
 			return require("../assets/empty_profile.png")
 		},
 
-		val_to_tag(val) {
-			return {
-				key: val,
-				value: val
-			}
-		},
-
 		like(index, username) {
-			if (this.$cookies.get('user').profilePic == null) {
+			if (this.user.profilePic == null) {
 				this.$swal('Please complete your profile with a profile picture to be able to like users.')
 				return
 			}
-			likeUser(this.$cookies.get('sekes_tokens'), username)
+			likeUser(this.token, username)
 			let new_users = this.users
 			new_users.splice(index, 1, {...this.users[index], did_i_like_him: 1})
 			this.$emit('users_change', new_users)
 		},
 
 		unlike(index, username) {
-			unlikeUser(this.$cookies.get('sekes_tokens'), username)
+			unlikeUser(this.token, username)
 			let new_users = this.users
 			new_users.splice(index, 1, {...this.users[index], did_i_like_him: 0})
 			this.$emit('users_change', new_users)
 		},
 
 		block(index, username) {
-			blockUser(this.$cookies.get('sekes_tokens'), username)
+			blockUser(this.token, username)
 			let new_users = this.users
 			new_users.splice(index, 1)
 			this.$emit('users_change', new_users)
 		},
 
 		unblock(index, username) {
-			unblockUser(this.$cookies.get('sekes_tokens'), username)
+			unblockUser(this.token, username)
 			let new_users = this.users
 			new_users.splice(index, 1)
 			this.$emit('users_change', new_users)

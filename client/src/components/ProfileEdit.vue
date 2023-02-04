@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div v-if="user != null" class="container">
     <div class="row">
         <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
             <div class="card h-100">
@@ -264,7 +264,6 @@ export default {
 
     data() {
         return {
-            user       : {...this.$cookies.get('user')},
             searchTerm : "",
             gifs: [],
             search_on : false,
@@ -272,14 +271,32 @@ export default {
     },
 
     computed: {
-        accessTokens: function() {
-            if (this.$cookies.isKey('sekes_tokens')) {
-                return this.$cookies.get('sekes_tokens')
-            }
-            else {
-                return null
-            }
-        },
+		token: {
+			get: function() {
+				return this.$root.store.state.token;
+			},
+			set: function(sekes_token) {
+				this.$root.store.setTokenAction(sekes_token);
+			}
+		},
+
+		user: {
+			get: function() {
+				return this.$root.store.state.user;
+			},
+			set: function(user) {
+				this.$root.store.setUserAction(user);
+			}
+		},
+
+		logged_in: {
+			get: function() {
+				return this.$root.store.state.logged_in;
+			},
+			set: function(logged_in) {
+				this.$root.store.setLoggedInAction(logged_in);
+			}
+		},
 
 		user_images: function() {
 				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3]
@@ -369,17 +386,18 @@ export default {
 
 
         async updateProfile() {
-            let user_diffy = diff(this.$cookies.get('user'), this.user)
+            // # TODO: this diffy will be empty
+            let user_diffy = diff(this.user, this.user)
             delete user_diffy.last_connected
             delete user_diffy.connected
             try {
                 let tagUploadRes = this.$refs.tagHandler.uploadTags()
                 delete user_diffy.tag_list
                 console.log("sending updato: ", user_diffy)
-                await updateUser(this.$cookies.get('sekes_tokens'), user_diffy)
+                await updateUser(this.token, user_diffy)
                 await tagUploadRes
-                let user_response = await getMyUser(this.$cookies.get('sekes_tokens'))
-                this.$cookies.set('user', user_response.data.data)
+                let user_response = await getMyUser(this.token)
+                console.log("GOT NEW USEr", user_response.data.data)
                 this.user = user_response.data.data
             }
             catch (e) {

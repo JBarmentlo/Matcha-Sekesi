@@ -100,7 +100,7 @@
 // import inputValidate from "../services/formValidate";
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { signup } from "../services/auth";
-import router from "@/router";
+import { router } from "@/router";
 import { getLoc } from '../services/user.js'
 export default {
 	components: {
@@ -110,11 +110,11 @@ export default {
 
 	data() {
 		return {
-			username         : "",
-			mail             : "",
-			password         : "",
-			firstName        : "",
-			lastName         : "",
+			username         : "jhonny",
+			mail             : "joepbarmentlo@gmail.com",
+			password         : "Qwertasd!1",
+			firstName        : "jojo",
+			lastName         : "nini",
 			zipCode          : null,
 			city             : null,
 			latitude         : null,
@@ -135,6 +135,7 @@ export default {
 		},
 
 		async signupFormSubmit(e) {
+			console.log("OIUSDF", process.env.VUE_APP_MATCHA_DB)
 			console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
 			if (this.$refs.formObserver.flags.invalid) {

@@ -113,20 +113,12 @@ export default {
 
   data() {
     return {
-      user: null,
       reported: false,
+      user: null
     };
   },
 
   computed: {
-    accessTokens: function () {
-      if (this.$cookies.isKey("sekes_tokens")) {
-        return this.$cookies.get("sekes_tokens");
-      } else {
-        return null;
-      }
-    },
-
     user_images: function () {
       return [
         this.user.image0,
@@ -144,7 +136,6 @@ export default {
     },
 
     popScore: function () {
-      // return Math.round(this.user.popScore * 100) / 100;
       return this.user.popScore
     },
 
@@ -168,52 +159,66 @@ export default {
       };
       return new Intl.DateTimeFormat("en-US", options).format(date);
     },
+
+    token: {
+        get: function() {
+            return this.$root.store.state.token;
+        },
+        set: function(sekes_token) {
+            this.$root.store.setTokenAction(sekes_token);
+        }
+    },
+
+    logged_in: {
+        get: function() {
+            return this.$root.store.state.logged_in;
+        },
+        set: function(logged_in) {
+            this.$root.store.setLoggedInAction(logged_in);
+        }
+    }
   },
 
   methods: {
-    // like(username) {
-    //   likeUser(this.$cookies.get("sekes_tokens"), username);
-    // },
-
     like(username) {
-			if (this.$cookies.get('user').profilePic == null) {
+			if (this.user.profilePic == null) {
 				this.$swal('Please complete your profile with a profile picture to be able to like users.')
 				return
 			}
-			likeUser(this.$cookies.get('sekes_tokens'), username)
+			likeUser(this.token, username)
       this.user.did_i_like_him = 1;
 		},
 
     unlike(username) {
-      unlikeUser(this.$cookies.get("sekes_tokens"), username);
+      unlikeUser(this.token, username);
       this.user.did_i_like_him = 0;
     },
 
     block(username) {
-      blockUser(this.$cookies.get("sekes_tokens"), username);
+      blockUser(this.token, username);
       this.user.did_i_block_him = 1;
     },
 
     unblock(username) {
-      unblockUser(this.$cookies.get("sekes_tokens"), username);
+      unblockUser(this.token, username);
       this.user.did_i_block_him = 0;
     },
 
     report(username) {
-      reportUser(this.$cookies.get("sekes_tokens"), username);
+      reportUser(this.token, username);
       this.reported = true;
     },
   },
 
   async mounted() {
     let res = await getUserProfile(
-      this.$cookies.get("sekes_tokens"),
+      this.token,
       this.userName
     );
     console.log(res);
     this.user = res.data.data;
     try {
-      await consultUserProfile(this.$cookies.get("sekes_tokens"), this.userName)
+      await consultUserProfile(this.token, this.userName)
     }
     catch {
       console.log("consult My ass")
@@ -223,7 +228,7 @@ export default {
   async beforeRouteUpdate(to, from, next) {
     // Call the API query method when the URL changes
     let res = await getUserProfile(
-      this.$cookies.get("sekes_tokens"),
+      this.token,
       to.params.userName
     );
     this.user = res.data.data;

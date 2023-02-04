@@ -1,6 +1,6 @@
 <template>
 	<div class="center pt-5">
-		<div v-if="status != 'SUCCESS'">
+		<div v-if="! logged_in">
 			<form @submit="submitLoginForm">
 				<h3>SIGN IN</h3>
 				<div class="form-group">
@@ -71,6 +71,32 @@ export default {
 		},
 		wrongUser() {
 			return this.status == 'MISSING_USERNAME'
+		},
+		token: {
+			get: function() {
+				return this.$root.store.state.token;
+			},
+			set: function(sekes_token) {
+				this.$root.store.setTokenAction(sekes_token);
+			}
+		},
+
+		user: {
+			get: function() {
+				return this.$root.store.state.user;
+			},
+			set: function(user) {
+				this.$root.store.setUserAction(user);
+			}
+		},
+
+		logged_in: {
+			get: function() {
+				return this.$root.store.state.logged_in;
+			},
+			set: function(logged_in) {
+				this.$root.store.setLoggedInAction(logged_in);
+			}
 		}
 	},
 
@@ -83,14 +109,15 @@ export default {
 					username: this.username,
 					password: this.password
 				})
-				console.log("data: ",signin_res.data)
-				this.status = signin_res.data.code
 				if (signin_res.data.code == 'SUCCESS') {
-					console.log("sekes_tokens_cookie set to : ", (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
-					console.log("user cookie set to: ", signin_res.data.user)
-					this.$cookies.set("user", {...signin_res.data.user})
-					this.$cookies.set("sekes_tokens",  (({ accessToken, signature }) => ({ accessToken, signature }))(signin_res.data))
-					this.$emit('setLoggedIn', true)
+					console.log("Signed In Sucess")
+					this.user = {...signin_res.data.user}
+					this.token = {
+						accessToken: signin_res.data.accessToken,
+						signature: signin_res.data.signature
+					}
+					this.logged_in = true
+					console.log("SIGNING pushing ROUTE")
 					this.$router.push('/editprofile')
 				}
 			}

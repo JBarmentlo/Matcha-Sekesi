@@ -43,6 +43,8 @@ async function get_42_user_token(code) {
 	return response;
 }
 
+const hostname=`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`
+
 async function create_user(user_info) {
     console.log('Creating Oauth user', user_info)
 
@@ -71,7 +73,7 @@ async function create_user(user_info) {
             VALUES (?, ?);",
             [login, hash]
         )
-        sendMail(email, "Verify your email", "Please validate your email here: " + "https://matcha.yoopster.com/verify/" + encodeURIComponent(hash))
+        sendMail(email, "Verify your email", `Please validate your email here: ${hostname}/verify/${encodeURIComponent(hash)}`)
 
         let insert_42_result = await db.query(
             "INSERT INTO Oauth42 \
@@ -158,7 +160,7 @@ const default_ip_ret =  {
     country : 'FR',
     loc     : '48.8412,2.3003',
     org     : 'AS15557 Societe Francaise Du Radiotelephone - SFR SA',
-    postal  : '75713 CEDEX 15',
+    postal  : '75713',
     timezone: 'Europe/Paris'
   }
 

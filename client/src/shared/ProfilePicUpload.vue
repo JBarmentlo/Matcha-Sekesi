@@ -72,11 +72,11 @@ export default {
       }
       else {
         try {
-          let upload_res = await uploadImage(this.$cookies.get('sekes_tokens'), file)
+          let upload_res = await uploadImage(this.$root.store.state.token, file)
           this.$emit("upload_profile_pic", upload_res.data.url)
         }
-        catch {
-          console.log("ERR")
+        catch (e) {
+          console.log("ERR in upload prof", e)
         }
       }
     },

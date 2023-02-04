@@ -2,7 +2,7 @@ import Vue from 'vue'
 import './plugins/bootstrap-vue'
 
 import App from './App.vue'
-import router from './router'
+import {router, store} from './router'
 
 import VueCookies from 'vue-cookies-reactive'
 Vue.use(VueCookies)
@@ -91,7 +91,41 @@ extend('zipcode', {
 
 Vue.config.productionTip = false
 
+// var store = {
+//   debug: true,
+//   state: {
+//     token    : null,
+//     user     : null,
+//     logged_in: false,
+//     counter  : 0
+//   },
+//   setTokenAction (newValue) {
+//     if (this.debug) console.log('setTokenAction triggered with', newValue)
+//     this.state.token = newValue
+//   },
+//   clearTokenAction () {
+//     if (this.debug) console.log('clearMessageAction triggered')
+//     this.state.token = ''
+//   },
+//   setUserAction (newValue) {
+//     if (this.debug) console.log('setUserAction triggered with', newValue)
+//     this.state.user = newValue
+//   },
+//   clearUserAction () {
+//     if (this.debug) console.log('clearMessageAction triggered')
+//     this.state.user = ''
+//   },
+//   increaseCounterAction () {
+//     if (this.debug) console.log('Counter triggered')
+//     this.state.counter += 1
+//   }
+// }
+
 new Vue({
+  data: {
+    // sharedState: store.state,
+    store: store
+  },
   router,
   render: h => h(App)
 }).$mount('#app')

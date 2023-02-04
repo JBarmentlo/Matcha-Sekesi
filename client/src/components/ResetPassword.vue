@@ -107,15 +107,7 @@ export default {
 		},
 	},
 	created() {
-		// console.log("Created");
-		// if (
-		// 	this.$cookies.isKey("user") &&
-		// 	this.$cookies.get("user").data.id != null
-		// ) {
-		// 	console.log("already logged in by cookie");
-		// 	this.$emit("setLoggedIn", true);
-		// 	// router.push("/profile");
-		// }
+
 	},
 };
 </script>

@@ -43,25 +43,51 @@ export default {
     return {
       selectedTags: this.tagTransform(this.user_tags),
       existingTags: [],
-      currentUserTags: this.$cookies.get('user').tag_list
     }
   },
 
   computed: {
     rawSelectedTagList: function() {
       return this.selectedTags.map(o => {return o.value})
-    }
+    },
+    
+    token: {
+			get: function() {
+				return this.$root.store.state.token;
+			},
+			set: function(sekes_token) {
+				this.$root.store.setTokenAction(sekes_token);
+			}
+		},
+
+		user: {
+			get: function() {
+				return this.$root.store.state.user;
+			},
+			set: function(user) {
+				this.$root.store.setUserAction(user);
+			}
+		},
+
+		logged_in: {
+			get: function() {
+				return this.$root.store.state.logged_in;
+			},
+			set: function(logged_in) {
+				this.$root.store.setLoggedInAction(logged_in);
+			}
+		},
   },
 
   methods: {
     async getTags() {
       try {
-        let res = await getAllTags(this.$cookies.get('sekes_tokens'))
+        let res = await getAllTags(this.token)
         let tags = res.data.data.map(o => {return {'key': o.tag, 'value': o.tag}})
         this.existingTags = this.existingTags.concat(tags)
       }
       catch (e) {
-        console.log("error getting all tags")
+        console.log("error getting all tags", (e))
       }
     },
 
@@ -71,7 +97,7 @@ export default {
 
     onTagAdded() {
       this.$emit('change_selected_tags', this.rawSelectedTagList)
-      // updateUserTags(this.$cookies.get('sekes_tokens'), this.rawSelectedTagList)
+      // updateUserTags(this.token, this.rawSelectedTagList)
     },
 
     onTagRemoved() {
@@ -88,7 +114,7 @@ export default {
     async uploadTags() {
       console.log("Updloading tags")
       try {
-        await updateUserTags(this.$cookies.get('sekes_tokens'), this.rawSelectedTagList)
+        await updateUserTags(this.token, this.rawSelectedTagList)
       }
       catch (e) {
         console.log("ERROR in upload tags: ", e)

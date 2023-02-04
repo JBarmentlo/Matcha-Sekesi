@@ -114,7 +114,7 @@ export default {
       } else {
         try {
           let upload_res = await uploadImage(
-            this.$cookies.get("sekes_tokens"),
+            this.$root.store.state.token,
             file
           );
           console.log("received response uploade: ", upload_res.data)
