@@ -124,7 +124,7 @@
                 </div>
                 </div>
                 <div class="col">
-                    <label class="labels">Sekesual Orientation</label>
+                    <label class="labels">Orientation</label>
                     <div>
                         <b-dropdown
                             variant="link"

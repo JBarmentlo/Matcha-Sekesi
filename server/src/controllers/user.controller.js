@@ -133,9 +133,7 @@ exports.get_user_by_username = async (req, res) => {
 
 exports.get_my_user = async (req, res) => {
 	try {
-		console.log("getting user: req.username")
-		console.log(req.username)
-		console.log("-----------")
+		console.log("getting user:", req.username)
 		let user_query = await searches.get_my_user(req.username)
 		console.log("USERSE: ", user_query)
 		if (user_query == undefined) {
