@@ -1,5 +1,5 @@
 <template>
-    <div id="app"
+    <div v-if="store_loaded" id="app"
         :class="[isActive ? 'darkmode' : '']">
         <NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in" @change-mode="enableDarkMode"/>
         <notifications/>
@@ -11,9 +11,8 @@
 
 
 <script>
-// import { getMyUser } from "./services/user";
 import { getMyMessages } from './services/chat'
-// import { updateUserStore } from './router'
+import { updateUserStore } from './router'
 
 import NavBar from "./shared/NavBar.vue"
 
@@ -30,10 +29,10 @@ export default {
 
     data() {
         return {
-            currentUser     : Object,
             messages        : null,
             polling         : null,
-            isActive: false,
+            isActive        : false,
+            store_loaded    : false
         }
     },
 
@@ -71,10 +70,15 @@ export default {
             if (val) {
                 console.log("Start Polling notifs / messages")
                 this.startPollingMsg(1000)
+                console.log("PUSHING editprofile")
+                if (this.$route.requiresNotAuth) this.$route.push("/editprofile")
+                
             }
             else {
                 console.log("Stop Polling notifs / messages")
                 clearInterval(this.polling)
+                console.log("PUSHING signin")
+                if (this.$route.requiresAuth) this.$route.push("/signin")
             }
         },
       },
@@ -127,6 +131,21 @@ export default {
     },
 
     async mounted() {
+        console.log("Mounting App");
+        try {
+            await updateUserStore()
+            console.log("starting state", "logged_in:", this.logged_in, "user:", this.user != null, "token:", this.token != null)
+            if (this.$route.meta.requiresNotAuth && this.logged_in) {
+                this.$router.push("/editprofile")
+            }
+            if (this.$route.meta.requiresAuth && !this.logged_in) {
+                this.$router.push("/signin")
+            }
+        }
+        catch (e) {
+            console.log("error mounting app", e)
+        }
+        this.store_loaded = true
         console.log("App mounted");
     },
 

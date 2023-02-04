@@ -54,6 +54,7 @@
 
 <script>
 import { signin } from "../services/auth";
+import { getMyUser } from "../services/user.js";
 
 export default {
 	data() {
@@ -63,6 +64,13 @@ export default {
 			status: "",
 			visible: false
 		};
+	},
+
+	props: {
+		oauth_token: {
+		type: String,
+		default: null
+		},
 	},
 
 	computed: {
@@ -131,6 +139,27 @@ export default {
 			this.visible = !this.visible
 		},
 	},
+
+	async mounted() {
+		console.log("mounted signin: ", this.oauth_token)
+		if (this.oauth_token != null) {
+			try {
+				this.token = {
+						accessToken: this.oauth_token,
+						signature: 'hehe_no_flaw_here'
+					}
+				console.log("getting useres")
+				let user_response = await getMyUser(this.token)
+				console.log("got user: ", user_response.status)
+				this.user = user_response.data.data
+				this.logged_in = true
+				this.$router.push("/editprofile")
+			}
+			catch (e) {
+				console.log("Url TOk issue")
+			}
+		}
+	}
 };
 </script>
 

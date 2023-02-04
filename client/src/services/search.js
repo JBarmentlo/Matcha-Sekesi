@@ -9,7 +9,6 @@ export const getAllUsers = async (access_token) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 	};
 
@@ -26,7 +25,6 @@ export const searchUsers = async (access_token, min_age, max_age, required_tags,
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({
 			min_age       : min_age,
@@ -59,7 +57,6 @@ export const searchUsersInitial = async (access_token, user_tags, long, lat, des
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({
 			user_tags : user_tags,

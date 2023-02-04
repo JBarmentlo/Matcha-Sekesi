@@ -9,7 +9,6 @@ export const getMyNotifs = async (access_token, offset, limit) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({limit: limit, offset: offset})
 	};
@@ -26,7 +25,6 @@ export const setSeenNotifs = async (access_token, notif_ids) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({id_list: notif_ids})
 	};
@@ -43,7 +41,6 @@ export const deleteNotifs = async (access_token, id) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : access_token.accessToken,
-			"x-access-signature" : access_token.signature,
 		},
 		data: JSON.stringify({id: id})
 	};

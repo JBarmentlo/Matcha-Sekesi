@@ -9,7 +9,6 @@ export const getAllTags = async (sekes_tokens) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : sekes_tokens.accessToken,
-			"x-access-signature" : sekes_tokens.signature,
 		},
 	};
 	let response = await api_axios(request)
@@ -25,7 +24,6 @@ export const updateUserTags = async (sekes_tokens, tag_list) => {
 		headers: {
 			"Content-type"       : "application/json",
 			"x-access-token"     : sekes_tokens.accessToken,
-			"x-access-signature" : sekes_tokens.signature,
 		},
 		data: JSON.stringify({'tag_list': tag_list})
 	};

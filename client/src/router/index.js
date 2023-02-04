@@ -30,7 +30,8 @@ const routes = [
     path: '/signin',
     name: 'Sign In',
     meta: {requiresNotAuth: true},
-    component: SignIn
+    component: SignIn,
+    props: route => ({ oauth_token: route.query.oauth_token })
   },
   {
     path: '/forgotpassword/:email?',
@@ -100,14 +101,15 @@ function InitialiseTok() {
 }
 
 function InitialiseUser() {
-  console.log("Initialising store User")
-  let user
-  try {
-    user = JSON.parse(sessionStorage.user)
-  }
-  catch {
-    user = null
-  }
+  // console.log("Initialising store User")
+  // let user
+  // try {
+  //   user = JSON.parse(sessionStorage.user)
+  // }
+  // catch {
+  //   user = null
+  // }
+  let user = null
   return user
 }
 
@@ -130,7 +132,7 @@ export var store = {
   },
 
   setTokenAction (newValue) {
-    if (this.debug) console.log('setTokenAction triggered', newValue != null)
+    if (this.debug) console.log('setTokenAction triggered', newValue)
     if (this.state.token != null && newValue == null) console.log("DESTRAUES TOKE")
     this.state.token = newValue
     try {
@@ -195,14 +197,17 @@ export const updateUserStore = async () => {
       console.log("ERROR IN UPDASTE STORE", e)
     }
   }
+  else {
+    console.log("No token to update store")
+  }
   console.log("Update store Not Logged in")
   return "falsetto "
 }
-updateUserStore()
+// updateUserStore()
 
 router.beforeEach((to, from, next) => {
   console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)
-  console.log("store token null: ", store.state.token == null)
+  console.log("logged_in: ", store.state.logged_in, "user: ", store.state.user != null, "token: ", store.state.token != null)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     console.log("Requires auth")
     if (store.state.logged_in) {
