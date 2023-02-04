@@ -8,7 +8,7 @@ const tagController = require("./tag.controller")
 // function check_create_user_input(req) {
 // 	if (typeof())
 // }
-const hostname=`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`
+const hostname = require('../fixtures/hostname.js').hostname
 
 
 
@@ -68,52 +68,75 @@ exports.create_user = async (req, res) => {
 
 const tolerated_keys = ['username', 'firstName', 'lastName', 'bio', 'mail', 'mailVerified', 'gender', 'sekesualOri', 'popScore', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
 
-
-
-exports.update_user_test = async (req, res) => {
+exports.update_user = async (req, res) => {
+	let update = req.body.update
+	Object.keys(update).forEach(key => {
+		if (!tolerated_keys.includes(key) || update[key] == null || update[key] == undefined) {
+			delete update[key]
+		}
+	});
+	console.log("Update")
+	console.log(update)
 	try {
-		let update_str  = ""
-		let first       = true
-		let update_mail = Object.keys(req.body.update).includes('mail')
-		if (update_mail) {
-			req.body.update.mailVerified = 0
-		}
-		for (const [key, value] of Object.entries(req.body.update)) {
-			if (tolerated_keys.includes(key)) {
-				if (!(first==true)) {
-					update_str += ', '
-				}
-				first = false
-				update_str += `${key} = '${value}'`
-			}
-		}
-		update_str = update_str.replace("'null'", "NULL")
-		console.log("Updating user %s with str: %s", req.username, update_str)
-		let update_result
-		if (update_str.length != 0) {
-			update_result = await db.query(
-				`UPDATE USERS \
-				SET ${update_str}\
-				WHERE USERS.username=?;`,
-				req.username)
-				if (update_mail == true) {
-					await handle_new_mail_for_user(req.username, update_result.insertId, req.body.update.mail)
-				}
-		}
-		else {
-			update_result = {}
-		}
-		res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
+		let update_res = await db.query(`
+		UPDATE USERS
+			SET   ?
+			WHERE username=?
+		`,
+		[update, req.username])
+		console.log("UPDASE: ", update_res)
+		res.status(200).send({code: "SUCCESS"})
 	}
 	catch (e) {
-		// TODO ER_BAD_FIELD_ERROR
-		console.log("update user error:\n", e, "\nend update user error")
-		res.status(500).send({message: 'error in update test user', error: e, code: 'FAILURE'})
-		// throw(e)
-
-	}	
-
+		throw(e)
+		res.status(403).send({code: "INVALID FORM"})
+	}
 }
+
+// exports.update_user_test = async (req, res) => {
+// 	try {
+// 		let update_str  = ""
+// 		let first       = true
+// 		let update_mail = Object.keys(req.body.update).includes('mail')
+// 		if (update_mail) {
+// 			req.body.update.mailVerified = 0
+// 		}
+// 		for (const [key, value] of Object.entries(req.body.update)) {
+// 			if (tolerated_keys.includes(key)) {
+// 				if (!(first==true)) {
+// 					update_str += ', '
+// 				}
+// 				first = false
+// 				update_str += `${key} = '${value}'`
+// 			}
+// 		}
+// 		update_str = update_str.replace("'null'", "NULL")
+// 		console.log("Updating user %s with str: %s", req.username, update_str)
+// 		let update_result
+// 		if (update_str.length != 0) {
+// 			update_result = await db.query(
+// 				`UPDATE USERS \
+// 				SET ${update_str}\
+// 				WHERE USERS.username=?;`,
+// 				req.username)
+// 				if (update_mail == true) {
+// 					await handle_new_mail_for_user(req.username, update_result.insertId, req.body.update.mail)
+// 				}
+// 		}
+// 		else {
+// 			update_result = {}
+// 		}
+// 		res.status(200).send({message: "succesful update", data: update_result, code: 'SUCCESS'})
+// 	}
+// 	catch (e) {
+// 		// TODO ER_BAD_FIELD_ERROR
+// 		console.log("update user error:\n", e, "\nend update user error")
+// 		res.status(500).send({message: 'error in update test user', error: e, code: 'FAILURE'})
+// 		// throw(e)
+
+// 	}	
+
+// }
 
 
 exports.get_user_by_username = async (req, res) => {
@@ -135,7 +158,6 @@ exports.get_my_user = async (req, res) => {
 	try {
 		console.log("getting user:", req.username)
 		let user_query = await searches.get_my_user(req.username)
-		console.log("USERSE: ", user_query)
 		if (user_query == undefined) {
 			return res.status(204).send({message: "No user found", code: 'FAILURE'})
 		}

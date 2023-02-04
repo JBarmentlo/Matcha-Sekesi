@@ -8,7 +8,7 @@ const db       = require("../db/sql.conn");
 const searches = require("./user.request.js")
 
 
-const hostname=`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`
+const hostname = require('../fixtures/hostname.js').hostname
 
 exports.signup = async (req, res) => {
     console.log('Signup for users: ', req.body.username)

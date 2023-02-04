@@ -117,6 +117,8 @@ export default {
 					username: this.username,
 					password: this.password
 				})
+				this.status = signin_res.data.code
+				console.log(signin_res.data.code)
 				if (signin_res.data.code == 'SUCCESS') {
 					console.log("Signed In Sucess")
 					this.user = {...signin_res.data.user}
@@ -125,7 +127,6 @@ export default {
 						signature: signin_res.data.signature
 					}
 					this.logged_in = true
-					console.log("SIGNING pushing ROUTE")
 					this.$router.push('/editprofile')
 				}
 			}

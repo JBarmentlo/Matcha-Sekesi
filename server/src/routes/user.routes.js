@@ -9,7 +9,7 @@ var router = require("express").Router();
 
 router.post("/getallusers"         , auth.verifyToken , searchController.get_all_users     );
 router.get ("/getmyuser"           , auth.verifyToken , userController.get_my_user         );
-router.post("/updateuser"          , auth.verifyToken , userController.update_user_test    );
+router.post("/updateuser"          , auth.verifyToken , userController.update_user    );
 router.post("/search_users"        , auth.verifyToken , searchController.search_users      );
 router.post("/search_users_init"   , auth.verifyToken , searchController.search_users_initial      );
 router.get ("/getprofile/:username", auth.verifyToken , userController.get_user_by_username);
