@@ -12,6 +12,7 @@ env:
   TEST: 'true'
   APIkey: ${{ secrets.API_KEY}},
   APIurl: ${{ secrets.API_URL}},
+  SIGNATURE: ${{ secrets.SIGNATURE}},
 
 jobs:
   run_unittests:
@@ -45,7 +46,6 @@ jobs:
       - name: Run all unittests
         run: |
           cd server
-          echo ${{ secrets.PASSPHRASE }} | gpg  --yes --passphrase-fd 0 .env.gpg
           npm test
       - name: SQL users table
         run: |
