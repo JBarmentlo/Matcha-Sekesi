@@ -31,7 +31,7 @@ const routes = [
     name: 'Sign In',
     meta: {requiresNotAuth: true},
     component: SignIn,
-    props: route => ({ token: route.query.token })
+    props: route => ({ oauth_token: route.query.oauth_token })
   },
   {
     path: '/forgotpassword/:email?',
@@ -101,17 +101,17 @@ function InitialiseTok() {
 }
 
 function InitialiseUser() {
-  console.log("Initialising store User")
-  let user
-  try {
-    user = JSON.parse(sessionStorage.user)
-  }
-  catch {
-    user = null
-  }
+  // console.log("Initialising store User")
+  // let user
+  // try {
+  //   user = JSON.parse(sessionStorage.user)
+  // }
+  // catch {
+  //   user = null
+  // }
+  let user = null
   return user
 }
-
 
 function InitialiseLoggedIn() {
   return InitialiseUser() != null
@@ -132,7 +132,7 @@ export var store = {
   },
 
   setTokenAction (newValue) {
-    if (this.debug) console.log('setTokenAction triggered', newValue != null)
+    if (this.debug) console.log('setTokenAction triggered', newValue)
     if (this.state.token != null && newValue == null) console.log("DESTRAUES TOKE")
     this.state.token = newValue
     try {
@@ -197,10 +197,13 @@ export const updateUserStore = async () => {
       console.log("ERROR IN UPDASTE STORE", e)
     }
   }
+  else {
+    console.log("No token to update store")
+  }
   console.log("Update store Not Logged in")
   return "falsetto "
 }
-updateUserStore()
+// updateUserStore()
 
 router.beforeEach((to, from, next) => {
   console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)

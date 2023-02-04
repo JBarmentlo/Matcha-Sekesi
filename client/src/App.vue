@@ -1,5 +1,5 @@
 <template>
-    <div id="app"
+    <div v-if="store_loaded" id="app"
         :class="[isActive ? 'darkmode' : '']">
         <NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in" @change-mode="enableDarkMode"/>
         <notifications/>
@@ -12,7 +12,7 @@
 
 <script>
 import { getMyMessages } from './services/chat'
-// import { updateUserStore } from './router'
+import { updateUserStore } from './router'
 
 import NavBar from "./shared/NavBar.vue"
 
@@ -29,10 +29,10 @@ export default {
 
     data() {
         return {
-            currentUser     : Object,
             messages        : null,
             polling         : null,
-            isActive: false,
+            isActive        : false,
+            store_loaded    : false
         }
     },
 
@@ -126,6 +126,14 @@ export default {
     },
 
     async mounted() {
+        console.log("Mounting App");
+        try {
+            await updateUserStore()
+        }
+        catch (e) {
+            console.log("error mounting app", e)
+        }
+        this.store_loaded = true
         console.log("App mounted");
     },
 

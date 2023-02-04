@@ -212,7 +212,8 @@ exports.verifyToken = (req, res, next) => {
         if (!token) {
             return res.status(403).send({ message: "No token provided!" });
         }
-    
+        
+        console.log(token)
         jwt.verify(token, process.env.SIGNATURE, (err, decoded) => {
             if (err) {
                 console.log("error in decode: ", err)
@@ -250,3 +251,8 @@ exports.updateLastConnected = async (req, res, next) => {
 };
 
 
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpiYXJtZW50IiwiaWF0IjoxNjc1NTIxMTM5LCJleHAiOjE2NzU2MDc1Mzl9.wCuJ0H_CekQp5JLRbs6j49ba2ydY8TLttztCixajLbA
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpiYXJtZW50IiwiaWF0IjoxNjc1NTIxMTM5LCJleHAiOjE2NzU2MDc1Mzl9.wCuJ0H_CekQp5JLRbs6j49ba2ydY8TLttztCixajLbA
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpiYXJtZW50IiwiaWF0IjoxNjc1NTIxMTM5LCJleHAiOjE2NzU2MDc1Mzl9.wCuJ0H_CekQp5JLRbs6j49ba2ydY8TLttztCixajLbA
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpiYXJtZW50IiwiaWF0IjoxNjc1NTIxMTE4LCJleHAiOjE2NzU2MDc1MTh9.chdEqoOX5g96nzHAflPkZ8I-6rFCBo2_unCYj48rKoE

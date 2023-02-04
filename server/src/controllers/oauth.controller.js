@@ -121,19 +121,8 @@ async function create_signin_data(username) {
             throw("undefined user wtf")
         }
 
-        const { privateKey, publicKey } = crypto.generateKeyPairSync('ec', {
-            namedCurve: 'sect239k1'
-        });
-    
-        const sign = crypto.createSign('SHA256');
-        sign.write(`${user}`);
-        sign.end();
-        var signature = sign.sign(privateKey, 'hex');
-        // console.log("signature")
-        // console.log(signature)
-    
         // sign username
-        var token = jwt.sign({ username: user.username }, signature, {
+        var token = jwt.sign({ username: user }, process.env.SIGNATURE, {
             expiresIn: 86400 // 24 hours
         });
         // console.log("signed in: ", user)
@@ -218,10 +207,12 @@ exports.oauthInUp = async (req, res) => {
             // console.log("sekes_tokens",  JSON.stringify({accessToken: signin.accessToken, signature: signin.signature}))
 
             // return res.redirect("/editprofile");
-            return res.redirect(`/signing?oauth_token=${encodeURIComponent(signin.accessToken)}`)
+            console.log("sending:\n-",signin.accessToken,"\n-",encodeURIComponent(signin.accessToken), "\n")
+            return res.redirect(`/signin?oauth_token=${encodeURIComponent(signin.accessToken)}`)
         }
     }
 };
+
 // 401 forbidden
 // data: {
 //     error: 'invalid_grant',
