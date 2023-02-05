@@ -1,9 +1,7 @@
 const db       = require("../db/sql.conn");
 var bcrypt     = require("bcryptjs");
 const sendMail = require('../services/mailgun');
-const searches = require("./user.request.js")
 const new_searches = require("./user.request.js")
-const tagController = require("./tag.controller")
 const hostname = require('../fixtures/hostname.js').hostname
 
 

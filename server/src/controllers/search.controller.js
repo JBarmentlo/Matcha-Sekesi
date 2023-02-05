@@ -1,5 +1,3 @@
-const db       = require("../db/sql.conn");
-const searches = require("./user.request.js")
 const new_searches = require("./user.request.js")
 
 exports.get_all_users = async (req, res) => {

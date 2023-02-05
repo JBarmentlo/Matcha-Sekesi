@@ -5,7 +5,6 @@ const crypto   = require('crypto');
 const jwt      = require("jsonwebtoken");
 
 const sendMail = require('../services/mailgun');
-const searches = require("./user.request.js")
 const new_searches = require("./user.request.js")
 
 
