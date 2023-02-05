@@ -101,7 +101,7 @@ exports.update_user = async (req, res) => {
 exports.get_user_by_username = async (req, res) => {
 	console.log("gettin user by username")
 	try {
-		let user_query = await searches.get_user(req.username, req.params.username)
+		let user_query = await new_searches.get_user(req.username, req.params.username)
 		// console.log('prof: ',user_query)
 		res.status(200).send({message: 'Successfully queried user for username.', data: user_query})
 	}

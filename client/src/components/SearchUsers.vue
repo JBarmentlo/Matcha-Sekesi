@@ -37,7 +37,7 @@
 			<fieldset>
 				<label class="filter_title" for="min_rating">Order by:</label>
 				<div>
-					<input type="radio" id="Popularity" name="order_by" value="popScore" checked v-model="order_by">
+					<input type="radio" id="Popularity" name="order_by" value="pop_score" checked v-model="order_by">
 					<label for="Popularity">Popularity</label>
 				</div>
 				<div>
@@ -89,7 +89,7 @@ export default {
 			required_tags: [],
 			rating		 : [0, 5],
 			zipcode      : null,
-			order_by     : "popScore",
+			order_by     : "pop_score",
 			asc_or_desc  : "DESC",
 			offset       : 0,
 			limit        : 200,
@@ -169,7 +169,7 @@ export default {
 		},
 
 		addScoreBlend(user) {
-			let score = user.popScore
+			let score = user.pop_score
 			if ((user.zipCode != null) && (user.zipCode == this.user.zipCode)) {
 				score += 2
 			}

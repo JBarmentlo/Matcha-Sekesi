@@ -166,6 +166,7 @@ exports.get_user = async (searcher_username, searched_username) => {
 	// console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
 	return transform_csv_lists_to_arrays(user_query[0])
 };
+
 exports.get_my_user_new = async (searched_username) => {
 	let user = db.query(`
 	

@@ -59,7 +59,7 @@
             <div class="row infos justify-content-md-center">
               <div class="col-md-auto">
                 <p>Popularity:</p>
-                <p class="important">{{ popScore }}</p>
+                <p class="important">{{ pop_score }}</p>
               </div>
               <div v-if="user.zipCode" class="col-md-auto">
                 <p>
@@ -135,8 +135,8 @@ export default {
       return require("../assets/empty_profile.png");
     },
 
-    popScore: function () {
-      return this.user.popScore
+    pop_score: function () {
+      return this.user.pop_score
     },
 
     last_connected: function () {
