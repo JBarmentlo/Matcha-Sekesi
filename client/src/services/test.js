@@ -41,6 +41,16 @@ const createOneUser = async function(rawUser, tags) {
 	return api_axios(request);
 }
 
+function removeDuplicates(arr) {
+	let unique = [];
+	for(let i=0; i < arr.length; i++){ 
+		if(unique.indexOf(arr[i]) === -1) { 
+			unique.push(arr[i]); 
+		} 
+	}
+	return unique;
+}
+
 export const createRandomUsers = async (amount, tags) => {
 	console.log("Creating ", amount, " users.")
 
@@ -49,12 +59,14 @@ export const createRandomUsers = async (amount, tags) => {
 	console.log("Raw data: ", results)
 	let promises = []
 	for (const result of results) {
-		promises.push(createOneUser(result, tags))
+		await createOneUser(result, tags)
+		// promises.push(createOneUser(result, tags))
 		// console.log("create_user start one")
 	}
 	// console.log("PROMISES LENFNTT", promises.length)
 
-	return Promise.all(promises)
+	// return Promise.all(promises)
+	return promises
 };
 
 
@@ -97,6 +109,7 @@ export const createRandomlikes = async (min, max) => {
 };
 
 
+
 export const createRandomConsults = async (min, max) => {
 	console.log("Creating ", min, "-", max, " consults per user.")
 
@@ -108,7 +121,8 @@ export const createRandomConsults = async (min, max) => {
 		},
 	};
 
-	const user_list = await (await api_axios(request)).data.data;
+	const user_list = removeDuplicates((await api_axios(request)).data.data);
+
 	let consult_list = []
 	console.log("USERLIST: ", user_list)
 	for (const user of user_list){

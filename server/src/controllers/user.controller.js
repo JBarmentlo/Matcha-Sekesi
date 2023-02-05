@@ -116,6 +116,24 @@ exports.get_my_user = async (req, res) => {
 	try {
 		console.log("getting user:", req.username)
 		let user_query = await searches.get_my_user(req.username)
+		// let user_query = await db.query(`
+		// 	SET @searcher = 'jhonny',
+		// 	@searcher_tags = (
+		// 		SELECT JSON_ARRAYAGG(tag) as searcher_tag_list
+		// 		FROM TAGS
+		// 		WHERE user='jhonny'
+		// 		GROUP BY user),
+
+		// 	@searcher_tags_cat = (
+		// 		SELECT GROUP_CONCAT(tag) as searcher_tags_cat
+		// 		FROM TAGS
+		// 		WHERE user='jhonny'
+		// 		GROUP BY user),
+
+		// 	@required_tags = 'Music, Travel'
+		// 	SELECT * FROM USERS;
+
+		// `)
 		if (user_query == undefined) {
 			return res.status(204).send({message: "No user found", code: 'FAILURE'})
 		}

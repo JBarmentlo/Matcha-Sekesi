@@ -64,7 +64,6 @@ const routes = [
   {
     path: '/populate',
     name: 'Populate for testing',
-    meta: {requiresAuth: true},
     component: PopulateDb
   },
   {

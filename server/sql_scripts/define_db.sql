@@ -166,7 +166,11 @@ create table if not exists VERIFIEDMAIL
     mail         varchar(300)                        null,
     constraint user_mail___fk
         foreign key (user) references USERS (username)
-            on delete cascade
+            on delete cascade,
+    constraint no_duplicates_MAILS
+        unique (mail),
+    constraint no_duplicates_USERS
+        unique (user)
 );
 
 
