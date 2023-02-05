@@ -94,6 +94,16 @@ exports.create_user_test = async (req, res) => {
 		if (tag_list.length != 0) {
 			keri_res = await db.query(keri_string)
 		}
+        let add_mail = await db.query(`
+            INSERT INTO VERIFIEDMAIL (user, mail)
+                VALUES (?, ?)`,
+            [username, mail])
+
+		if (add_mail.affectedRows != 1) {
+			console.log(`\n\n\nDELETING ${username} BECAUSE ${add_mail}.\n\n\n`)
+			await db.query(`DELETE FROM USERS WHERE username=?`, [username])
+		}
+
 		console.log("Created user: ", username)
 		return res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS', user: keri_res})
 	}

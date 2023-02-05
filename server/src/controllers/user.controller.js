@@ -81,14 +81,16 @@ exports.update_user = async (req, res) => {
 
 		let del_mail = await db.query(`DELETE FROM VERIFIEDMAIL WHERE user=? AND mail != ?`,
 		[req.username, update.mail])
-
+		
 		if (del_mail.affectedRows) {
 			await handle_new_mail_for_user(req.username, update_res.insertId, update.mail)
 		}
+		// console.log(`\n\n\n${"SUCCESS", update_res.affectedRows}\n\n\n`)
 
-		res.status(200).send({code: "SUCCESS"})
+		res.status(200).send({code: "SUCCESS", data: update_res, mail_changed: del_mail.affectedRows})
 	}
 	catch (e) {
+		console.log(e)
 		throw(e)
 		res.status(403).send({code: "INVALID FORM"})
 	}

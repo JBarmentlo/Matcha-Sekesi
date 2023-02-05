@@ -27,7 +27,7 @@ exports.signup = async (req, res) => {
             )
 
         let hash = bcrypt.hashSync(query_result.insertId.toString(), 8).replace('.','').replace('/', '')
-        let insert_mail_result = await db.query(
+        await db.query(
             "INSERT INTO VERIFY \
             (user, id_hash, mail) \
             VALUES (?, ?, ?);",

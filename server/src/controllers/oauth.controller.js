@@ -46,6 +46,7 @@ async function get_42_user_token(code) {
 const hostname = require('../fixtures/hostname.js').hostname
 
 async function create_user(user_info) {
+    // TODO FIX THIS BULLSHIT
     console.log('Creating Oauth user', user_info)
 
     email      = user_info.email,
