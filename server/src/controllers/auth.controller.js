@@ -5,7 +5,7 @@ const jwt      = require("jsonwebtoken");
 const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
 const searches = require("./user.request.js")
-const new_searches = require("./user.request_new.js")
+const new_searches = require("./user.request.js")
 const hostname = require('../fixtures/hostname.js').hostname
 
 

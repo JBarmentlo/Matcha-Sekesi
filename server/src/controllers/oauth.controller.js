@@ -6,7 +6,7 @@ const jwt      = require("jsonwebtoken");
 
 const sendMail = require('../services/mailgun');
 const searches = require("./user.request.js")
-const new_searches = require("./user.request_new.js")
+const new_searches = require("./user.request.js")
 
 
 async function get_42_user_details(bearer_token) {
