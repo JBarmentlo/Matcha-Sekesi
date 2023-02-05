@@ -4,11 +4,9 @@ const jwt      = require("jsonwebtoken");
 
 const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
-
 const searches = require("./user.request.js")
+const hostname = require('../fixtures/hostname.js').hostname
 
-
-const hostname=`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`
 
 exports.signup = async (req, res) => {
     console.log('Signup for users: ', req.body.username)
@@ -22,17 +20,6 @@ exports.signup = async (req, res) => {
     let latitude  = req.body.latitude;
     let longitude = req.body.longitude;
 
-    // console.log({
-    //     username: req.body.username,
-    //     firstName: req.body.firstName,
-    //     lastName: req.body.lastName,
-    //     mail: req.body.mail,
-    //     zipCode: req.body.zipCode,
-    //     city: req.body.city,
-    //     latitude: req.body.latitude,
-    //     longitude: req.body.longitude,
-    // })
-
     try {
         let query_result = await db.query(
             'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -40,13 +27,14 @@ exports.signup = async (req, res) => {
             )
 
         let hash = bcrypt.hashSync(query_result.insertId.toString(), 8).replace('.','').replace('/', '')
-        let insert_mail_result = await db.query(
+        await db.query(
             "INSERT INTO VERIFY \
-            (user, id_hash) \
-            VALUES (?, ?);",
-            [username, hash]
+            (user, id_hash, mail) \
+            VALUES (?, ?, ?);",
+            [username, hash, mail]
         )
         sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)}`)
+        console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${hostname}/verify/${encodeURIComponent(hash)}`)
         res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
@@ -79,19 +67,23 @@ exports.verifyMail = async (req, res) => {
             "SELECT * FROM VERIFY \
             where id_hash=?",
             req.params.hash)
-        if (verify_mail_result.length == 0) {
+    
+            if (verify_mail_result.length == 0) {
             res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
             return
         }
+    
         let delete_reset_result = await db.query(
             "DELETE FROM VERIFY \
             where id_hash=?",
             req.params.hash)
-        let verify_user_result = await db.query(
-            "UPDATE USERS SET mailVerified=1 WHERE USERS.username=?",
-            verify_mail_result[0].user
-        )
-        res.status(200).send({message: "verified mail for " + verify_mail_result.user, code: "SUCCESS"})
+    
+        let add_mail = await db.query(`
+            INSERT INTO VERIFIEDMAIL (user, mail)
+                VALUES (?, ?)`,
+            [verify_mail_result[0].user, verify_mail_result[0].mail])
+
+        res.status(200).send({message: "verified mail for " + verify_mail_result[0].user, code: "SUCCESS"})
     }
     catch (e) {
         res.status(200).send({message: "Error in verify mail", code: "Failure"})
@@ -162,16 +154,6 @@ exports.resetPass = async (req, res) => {
         throw (e)
     }
 };
-
-
-// const { privateKey, publicKey } = crypto.generateKeyPairSync('ec', {
-//     namedCurve: 'sect239k1'
-// });
-// const sign = crypto.createSign('SHA256');
-// sign.write(`lol`);
-// sign.end();
-// var signature = sign.sign(privateKey, 'hex');
-// console.log("\n\nSIGNOS: ", signature)
 
 exports.signin = async (req, res) => {
     try {

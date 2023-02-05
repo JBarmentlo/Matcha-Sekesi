@@ -163,10 +163,14 @@ exports.get_user = async (searcher_username, searched_username) => {
 			     LEAST((((Select COUNT(1) from LIKES AS B where B.liked = username) / SQRT((Select COUNT(1) from LIKES AS B where B.liker = username))) + ((Select COUNT(*) from CONVO_START AS C where C.receiver = username) / (Select COUNT(C.sender) + 1  from CONVO_START AS C where C.sender = username))), 5) as popScore\
 			From MAIN AS U;".replace(new RegExp('@searcher_username', "g"), searcher_username).replace('searched_username', searched_username), )
 
-	console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
+	// console.log("KERIIIIIIII: ", transform_csv_lists_to_arrays(user_query[0]))
 	return transform_csv_lists_to_arrays(user_query[0])
 };
-
+exports.get_my_user_new = async (searched_username) => {
+	let user = db.query(`
+	
+	`)
+}
 exports.get_my_user = async (searched_username) => {
 	// console.log("Getting my profile: ", searched_username)
 	let keri_string = 

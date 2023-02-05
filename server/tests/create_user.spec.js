@@ -52,7 +52,8 @@ describe('Test users', () => {
 	describe("User updates", () => {
 		step('Updated jhonny', async () => {
 			let res = mockResponse()
-			await UserController.update_user_test(mockRequest({update: {zipCode: 'lol', mail: "newmail@mail.com"}}, users.Jhonny.username), res)
+			await UserController.update_user(mockRequest({update: {zipCode: 'lol', mail: "newmail@mail.com"}}, users.Jhonny.username), res)
+			console.log("\n\nJEJEJEJ:", res.send.lastCall.firstArg)
 			assert.equal(res.send.lastCall.firstArg.code, 'SUCCESS')
 			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
 			return Promise.resolve()

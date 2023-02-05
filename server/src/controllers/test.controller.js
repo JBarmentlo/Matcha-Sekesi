@@ -50,6 +50,16 @@ exports.verifyTestModeOn = (req, res, next) => {
 };
 
 
+function removeDuplicates(arr) {
+	let unique = [];
+	for(let i=0; i < arr.length; i++){ 
+		if(unique.indexOf(arr[i]) === -1) { 
+			unique.push(arr[i]); 
+		} 
+	}
+	return unique;
+}
+
 exports.create_user_test = async (req, res) => {
 
 	username          = req.body.username
@@ -79,6 +89,7 @@ exports.create_user_test = async (req, res) => {
 
 	// console.log("\n\n\n\n\n\n\nusername: ", username, "\nfirstName: ", firstName, "\nlastName: ", lastName, "\ntag_list: ", tag_list, "\nmail: ", mail, "\npassword: ", "\npopScore: ", popScore, "\nzipCode: ", zipCode, "\ncity: ", city, "\nisCompleteProfile: ", isCompleteProfile, "\nlongitude: ", longitude, "\nlatitude: ", latitude, "\nDOB: ", DOB, "\nimage0: ", image0, "\nprofilePic: ", profilePic)
 	try {
+		console.log(username, tag_list)
 		let user_create_res = await db.query(
 			'INSERT INTO USERS \
 			(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB, gif) \
@@ -86,14 +97,25 @@ exports.create_user_test = async (req, res) => {
 			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB, gif]
 			)
 		let keri_string ="INSERT INTO TAGS (tag, user) VALUES "
-		for (const tag of tag_list) {
+		// console.log(removeDuplicates(tag_list))
+		for (const tag of removeDuplicates(tag_list)) {
 			keri_string += ` ('${tag}', '${username}'),`
 		}
 		keri_string = keri_string.slice(0, -1)
-		let keri_res = 'Did not meet criteria'
+		let keri_res = 'Did not meet tag criteria'
 		if (tag_list.length != 0) {
 			keri_res = await db.query(keri_string)
 		}
+        let add_mail = await db.query(`
+            INSERT INTO VERIFIEDMAIL (user, mail)
+                VALUES (?, ?)`,
+            [username, mail])
+
+		if (add_mail.affectedRows != 1) {
+			console.log(`\n\n\nDELETING ${username} BECAUSE ${add_mail}.\n\n\n`)
+			await db.query(`DELETE FROM USERS WHERE username=?`, [username])
+		}
+
 		console.log("Created user: ", username)
 		return res.status(200).send({message: 'Succesfully created user', code: 'SUCCESS', user: keri_res})
 	}
@@ -112,7 +134,7 @@ exports.create_user_test = async (req, res) => {
 			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
-			// console.log("create user test error:\n", e, "\n\nend signup error")
+			console.log("create user test error:\n", e, "\n\nend signup error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
 		}
 	}	

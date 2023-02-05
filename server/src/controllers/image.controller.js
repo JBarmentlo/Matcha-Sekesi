@@ -1,6 +1,6 @@
 const db = require("../db/sql.conn");
 
-const hostname=`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`
+const hostname = require('../fixtures/hostname.js').hostname
 
 
 exports.upload_image = async (req, res) => {

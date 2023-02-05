@@ -15,8 +15,7 @@ create table if not exists USERS
     isCompleteProfile tinyint(1)  default 0                     not null,
     longitude         float       default 0                     not null,
     latitude          float       default 0                     not null,
-    id                mediumint auto_increment
-        primary key,
+    id                mediumint auto_increment    primary key,
     image1            varchar(300)                              null,
     image2            varchar(300)                              null,
     image3            varchar(300)                              null,
@@ -161,10 +160,25 @@ create table if not exists TAGS
             on delete cascade
 );
 
+create table if not exists VERIFIEDMAIL
+(
+    user         varchar(300)                        null,
+    mail         varchar(300)                        null,
+    constraint user_mail___fk
+        foreign key (user) references USERS (username)
+            on delete cascade,
+    constraint no_duplicates_MAILS
+        unique (mail),
+    constraint no_duplicates_USERS
+        unique (user)
+);
+
+
 create table if not exists VERIFY
 (
     user         varchar(300)                        null,
     id_hash      varchar(300)                        null,
+    mail         varchar(300)                        null,
     last_updated timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint user_verify___fk
         foreign key (user) references USERS (username)

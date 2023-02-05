@@ -129,15 +129,7 @@ app.use('/api/chat', chatRouter, function(req, res, next){
 // #######################   IMAGE ROUTES   ########################
 
 
-
 require("./src/routes/image.routes")(app)
-
-
-// const PORT = process.env.PORT || 80;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}.`);
-// });
-
 
 
 // #######################   SERVE CLIENT DIST   ########################
@@ -205,4 +197,4 @@ if (process.env.MATCHA_USE_HTTPS == 'TRUE') {
   });
 }
 
-console.log(`${process.env.MATCHA_HOST}${process.env.MATCHA_DEFAULT_PORT == '80' || process.env.MATCHA_DEFAULT_PORT == '443' ? '' : ':' + process.env.MATCHA_DEFAULT_PORT}`)
+console.log(`Hostname: ${require('./src/fixtures/hostname.js').hostname}`)

@@ -247,7 +247,7 @@
 import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
 
 import {updateUser, getMyUser} from '../services/user'
-import { diff } from '../services/utils'
+// import { diff } from '../services/utils'
 
 import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
 import TagInputHandler from '../shared/TagInputHandler.vue'
@@ -387,7 +387,7 @@ export default {
 
         async updateProfile() {
             // # TODO: this diffy will be empty
-            let user_diffy = diff(this.user, this.user)
+            let user_diffy = {...this.user}
             delete user_diffy.last_connected
             delete user_diffy.connected
             try {
