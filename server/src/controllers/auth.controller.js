@@ -5,6 +5,7 @@ const jwt      = require("jsonwebtoken");
 const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
 const searches = require("./user.request.js")
+const new_searches = require("./user.request_new.js")
 const hostname = require('../fixtures/hostname.js').hostname
 
 
@@ -158,12 +159,11 @@ exports.resetPass = async (req, res) => {
 exports.signin = async (req, res) => {
     try {
         console.log("signing in %o", req.body)
-        let user = await searches.get_my_user(req.body.username)
-        // console.log("userreq",user)
-        if (user == undefined) {
+        let user = await new_searches.get_my_user(req.body.username)
+        if (user == undefined || user.length == 0) {
             return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
         }
-        // console.log("USER for signing: ", user)
+        user = user[0]
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) {
             return res.status(201).send({ accessToken: null, message: "Invalid Password!", code: "WRONG_PASSWORD" });

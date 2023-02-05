@@ -36,7 +36,7 @@ exports.clear_db = () => {
 
 exports.verifyTestModeOn = (req, res, next) => {
     try {
-        if (process.env.ENVIRONMENT == 'TEST') {
+        if (process.env.TEST == 'true') {
             next();
         }
         else {
@@ -68,14 +68,11 @@ exports.create_user_test = async (req, res) => {
 	bio               = req.body.bio
 	mail              = req.body.mail
 	password          = bcrypt.hashSync(req.body.password, 8),
-	mailVerified      = req.body.mailVerified
 	gender            = req.body.gender
 	sekesualOri       = req.body.sekesualOri
-	popScore          = req.body.popScore
 	zipCode           = req.body.zipCode
 	city              = req.body.city
 	gif               = req.body.gif
-	isCompleteProfile = req.body.isCompleteProfile
 	longitude         = req.body.longitude
 	latitude          = req.body.latitude
 	DOB               = req.body.DOB
@@ -87,14 +84,14 @@ exports.create_user_test = async (req, res) => {
 		tag_list = []
 	}
 
-	// console.log("\n\n\n\n\n\n\nusername: ", username, "\nfirstName: ", firstName, "\nlastName: ", lastName, "\ntag_list: ", tag_list, "\nmail: ", mail, "\npassword: ", "\npopScore: ", popScore, "\nzipCode: ", zipCode, "\ncity: ", city, "\nisCompleteProfile: ", isCompleteProfile, "\nlongitude: ", longitude, "\nlatitude: ", latitude, "\nDOB: ", DOB, "\nimage0: ", image0, "\nprofilePic: ", profilePic)
+	console.log(longitude)
 	try {
 		console.log(username, tag_list)
 		let user_create_res = await db.query(
 			'INSERT INTO USERS \
-			(username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB, gif) \
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-			[username, firstName, lastName, bio, mail, password, mailVerified, gender, sekesualOri, popScore, zipCode, city, isCompleteProfile, longitude, latitude, image0, profilePic, DOB, gif]
+			(username, firstName, lastName, bio, mail, password, gender, sekesualOri, zipCode, city, longitude, latitude, image0, profilePic, DOB, gif) \
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+			[username, firstName, lastName, bio, mail, password, gender, sekesualOri, zipCode, city, longitude, latitude, image0, profilePic, DOB, gif]
 			)
 		let keri_string ="INSERT INTO TAGS (tag, user) VALUES "
 		// console.log(removeDuplicates(tag_list))

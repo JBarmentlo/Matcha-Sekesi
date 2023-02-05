@@ -61,7 +61,7 @@ exports.create_user = async (req, res) => {
 };
 
 
-const tolerated_keys = ['username', 'firstName', 'lastName', 'bio', 'mail', 'mailVerified', 'gender', 'sekesualOri', 'popScore', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
+const tolerated_keys = ['username', 'firstName', 'lastName', 'bio', 'mail', 'gender', 'sekesualOri', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
 exports.update_user = async (req, res) => {
 	let update = req.body.update
 	Object.keys(update).forEach(key => {
