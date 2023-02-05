@@ -132,40 +132,12 @@ export default {
 				return
 			}
 			console.log(this.age, this.required_tags, this.rating, this.zipcode)
-			let desires = this.allCompatible({gender: this.user.gender, sekesualOri: this.user.sekesualOri})
 			// let desire = this.determineAppropriateSekes(this.user.gender, this.user.sekesualOri)
 			// console.log("DESIIIIRE: ", desires)
 			this.zipcode = this.zipcode == "" ? null : this.zipcode
-			let rese = await searchUsers(this.token ,this.age[0], this.age[1], this.required_tags, this.rating[0], this.rating[1], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
+			let rese = await searchUsers(this.token ,this.age[0], this.age[1], this.required_tags, this.rating[0], this.rating[1], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc)
 			this.users = rese.data.data
 			this.current_page = 1
-		},
-
-		compatible(one, two) {
-			if (one.gender == two.gender) {
-				return (["Gay", "Bi"].includes(one.sekesualOri) && ["Gay", "Bi"].includes(two.sekesualOri))
-			}
-			else {
-				return (["Hetero", "Bi"].includes(one.sekesualOri) && ["Hetero", "Bi"].includes(two.sekesualOri))
-			}
-		},
-
-		allCompatible(one) {
-			let genders = ["Male", "Female", "NonBinary"]
-			let sekesuals = ["Hetero", "Bi", "Gay"]
-			let pairs = []
-			for (const g of genders) {
-				for (const s of sekesuals) {
-					// console.log(one.gender, one.sekesualOri)
-					// console.log(g, s)
-					// console.log(this.compatible(one, {gender: g, sekesualOri: s}))
-					// console.log("----")
-					if (this.compatible(one, {gender: g, sekesualOri: s})) {
-						pairs.push({gender: g, sekesualOri: s})
-					}
-				}
-			}
-			return pairs
 		},
 
 		addScoreBlend(user) {
@@ -189,11 +161,10 @@ export default {
 	},
 
 	async created() {
-		let desires = this.allCompatible({gender: this.user.gender, sekesualOri: this.user.sekesualOri})
 		// console.log("DESIIIIRE: ", desires)
 		// let rese = await searchUsers(this.token , this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, 5, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
-		let rese = await searchUsersInitial(this.token , this.user.tag_list, this.user.longitude, this.user.latitude, desires, this.offset, this.limit)
-		this.users = rese.data.data.map(this.addScoreBlend).sort((a,b) => {a.score < b.score})
+		let rese = await searchUsersInitial(this.token, this.offset, this.limit)
+		this.users = rese.data.data
 		this.current_page = 1
 	}
 

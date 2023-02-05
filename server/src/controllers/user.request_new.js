@@ -95,15 +95,14 @@ COMPLETEPROFILE AS (
 ),
 
 POPSCORE as (
-	SELECT USERS.username,
-			IFNULL((number_of_likes_received / (number_of_likes_received + number_of_likes_given + 1)) * 2.5
-				+ (converstations_initiated / (converstations_recieved + converstations_initiated + 1)) * 2.5, 
-										0) as pop_score
-	FROM USERS
-		LEFT JOIN LIKES_INFO
-			ON USERS.username=LIKES_INFO.username
-		LEFT JOIN CONVO_START_INFO
-			ON USERS.username = CONVO_START_INFO.username
+    SELECT USERS.username,
+           IFNULL((number_of_likes_received / (number_of_likes_received + number_of_likes_given + 1)), 0) * 2.5
+               + IFNULL((converstations_initiated / (converstations_recieved + converstations_initiated + 1)), 0) * 2.5 as pop_score
+    FROM USERS
+        LEFT JOIN LIKES_INFO
+            ON USERS.username=LIKES_INFO.username
+        LEFT JOIN CONVO_START_INFO
+            ON USERS.username = CONVO_START_INFO.username
 )
 
 SELECT
@@ -215,8 +214,8 @@ LIKES_INFO as (
 
 POPSCORE as (
     SELECT USERS.username,
-           IFNULL((number_of_likes_received / (number_of_likes_received + number_of_likes_given + 1)) * 2.5
-               + (converstations_initiated / (converstations_recieved + converstations_initiated + 1)) * 2.5, 0) as pop_score
+           IFNULL((number_of_likes_received / (number_of_likes_received + number_of_likes_given + 1)), 0) * 2.5
+               + IFNULL((converstations_initiated / (converstations_recieved + converstations_initiated + 1)), 0) * 2.5 as pop_score
     FROM USERS
         LEFT JOIN LIKES_INFO
             ON USERS.username=LIKES_INFO.username
@@ -292,19 +291,11 @@ LIMIT 10 OFFSET 0
 }
 
 exports.search_users_initial = async (searcher_username,
-									  user_tags,
-									  long,
-									  lat,
-									  desires,
 									  offset,
 									  limit) => {
 
     console.log("INITIAL search:\n", {
 		searcher_username : searcher_username,
-		user_tags         : user_tags,
-		long              : long,
-		lat               : lat,
-		desires           : desires,
 		offset            : offset,
 		limit             : limit
 	})
@@ -367,8 +358,8 @@ LIKES_INFO as (
 
 POPSCORE as (
     SELECT USERS.username,
-           IFNULL((number_of_likes_received / (number_of_likes_received + number_of_likes_given + 1)) * 2.5
-               + (converstations_initiated / (converstations_recieved + converstations_initiated + 1)) * 2.5, 0) as pop_score
+           IFNULL((number_of_likes_received / (number_of_likes_received + number_of_likes_given + 1)), 0) * 2.5
+               + IFNULL((converstations_initiated / (converstations_recieved + converstations_initiated + 1)), 0) * 2.5 as pop_score
     FROM USERS
         LEFT JOIN LIKES_INFO
             ON USERS.username=LIKES_INFO.username
@@ -492,20 +483,163 @@ LIMIT ${limit} OFFSET ${offset}
 	let search_results = await db.query(keri_string)
 	return search_results
 }
-// exports.search_users = async (searcher_username, 
-// 							  min_age, 
-// 							  max_age, 
-// 							  required_tags, 
-// 							  min_rating, 
-// 							  max_rating, 
-// 							  zipcode, 
-// 							  offset, 
-// 							  limit, 
-// 							  orderby, 
-// 							  asc_or_desc, 
-// 							  searcher_gender, 
-// 							  searcher_ori) => {
 
-// 	zipcode ? zipcode : '%'
-// 	tag_list ? tag_list : []
-// }
+exports.search_users = async (searcher_username, 
+							  min_age,
+							  max_age,
+							  required_tags,
+							  min_rating,
+							  max_rating,
+							  zipcode,
+							  offset,
+							  limit,
+							  orderby,
+							  asc_or_desc) => {
+
+
+	zipcode = zipcode ? `%${zipcode}%` : '%'
+	required_tags ? required_tags : []
+	let number_of_required_tags = required_tags.length
+	required_tags = required_tags.join(',')
+
+	let keri_string = 
+`
+WITH
+TAG_INFO as (
+    SELECT
+        user,
+        JSON_ARRAYAGG(tag) as tag_list,
+        SUM(IF(FIND_IN_SET(tag, (SELECT GROUP_CONCAT(tag) as searcher_tags_cat
+                                 FROM TAGS
+                                 WHERE user='${searcher_username}'
+                                 GROUP BY user)), 1, 0)) as number_of_common_tags,
+        SUM(IF(FIND_IN_SET(tag, '${required_tags}'), 1, 0)) as number_of_required_tags,
+        COUNT(tag) as number_of_tags
+    FROM
+        TAGS
+    GROUP BY
+        user
+),
+
+CONVO_START AS (
+    SELECT
+        m1.sender as convo_starter,
+        m1.receiver as convo_reciever
+    FROM
+        MSG AS m1
+    WHERE
+        m1.last_updated =
+            (SELECT
+                MIN(m2.last_updated)
+            FROM
+                MSG m2
+            WHERE
+                m1.ConvoId = m2.ConvoId)
+),
+
+CONVO_START_INFO AS (
+    SELECT USERS.username,
+           SUM(convo_starter=USERS.username) as converstations_initiated,
+           SUM(convo_reciever=USERS.username) as converstations_recieved
+    FROM USERS
+        CROSS JOIN CONVO_START
+    GROUP BY
+        USERS.username
+),
+
+LIKES_INFO as (
+    SELECT USERS.username,
+           SUM(liker='${searcher_username}') > 0 as did_i_like_him,
+           SUM(liker=USERS.username) as number_of_likes_given,
+           SUM(liked=USERS.username) as number_of_likes_received
+    FROM USERS
+        CROSS JOIN LIKES
+    GROUP BY USERS.username
+),
+
+
+POPSCORE as (
+    SELECT USERS.username,
+           IFNULL((number_of_likes_received / (number_of_likes_received + number_of_likes_given + 1)), 0) * 2.5
+               + IFNULL((converstations_initiated / (converstations_recieved + converstations_initiated + 1)), 0) * 2.5 as pop_score
+    FROM USERS
+        LEFT JOIN LIKES_INFO
+            ON USERS.username=LIKES_INFO.username
+        LEFT JOIN CONVO_START_INFO
+            ON USERS.username = CONVO_START_INFO.username
+),
+BLOCKED as (
+    SELECT
+        blocked,
+        SUM(blocker='${searcher_username}') > 0 as did_i_block_him
+    FROM
+        BLOCKS
+    GROUP BY
+        blocked
+),
+
+LIKED as (
+    SELECT liked,
+           SUM(liker='${searcher_username}') > 0 as did_i_like_him,
+           COUNT(liker) as number_of_likes_received
+    FROM LIKES
+    GROUP BY liked
+)
+
+
+SELECT
+    USERS.username,
+    firstName,
+    lastName,
+    IFNULL(bio, '') as bio,
+    DOB,
+    mail,
+    gender,
+    sekesualOri,
+    zipCode,
+    city,
+    longitude,
+    latitude,
+    id,
+    image0,
+    image1,
+    image2,
+    image3,
+    profilePic,
+    gif,
+    last_connected,
+    pop_score as popScore,
+    IFNULL(did_i_like_him, 0) as did_i_like_him,
+    IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
+    IFNULL(tag_list, cast('[]' as json)) as tag_list,
+    IFNULL(did_i_block_him, 0) as did_i_block_him,
+    IFNULL(number_of_common_tags, 0) as number_of_common_tags,
+    IFNULL(number_of_required_tags, 0) as number_of_required_tags
+FROM
+    USERS
+LEFT JOIN POPSCORE
+    ON USERS.username = POPSCORE.username
+LEFT JOIN LIKED
+    ON USERS.username = LIKED.liked
+LEFT JOIN BLOCKED
+    ON USERS.username = BLOCKED.blocked
+LEFT JOIN TAG_INFO
+    ON USERS.username = TAG_INFO.user
+WHERE
+    zipCode LIKE('${zipcode}') AND
+    pop_score >= ${min_rating} AND
+    pop_score <= ${max_rating}
+GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
+HAVING
+    age <= ${max_age} AND
+    age >= ${min_age} AND
+    did_i_block_him = 0 AND
+    number_of_required_tags = ${number_of_required_tags}
+ORDER BY ${orderby} ${asc_or_desc}
+LIMIT ${limit} OFFSET ${offset}
+`
+	console.log(keri_string)
+	let search_results = await db.query(keri_string)
+	console.log("FOUND search users: ", search_results)
+	return search_results
+}
