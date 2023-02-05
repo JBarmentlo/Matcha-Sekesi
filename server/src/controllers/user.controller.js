@@ -2,6 +2,7 @@ const db       = require("../db/sql.conn");
 var bcrypt     = require("bcryptjs");
 const sendMail = require('../services/mailgun');
 const searches = require("./user.request.js")
+const new_searches = require("./user.request_new.js")
 const tagController = require("./tag.controller")
 const hostname = require('../fixtures/hostname.js').hostname
 
@@ -115,26 +116,9 @@ exports.get_user_by_username = async (req, res) => {
 exports.get_my_user = async (req, res) => {
 	try {
 		console.log("getting user:", req.username)
-		let user_query = await searches.get_my_user(req.username)
-		// let user_query = await db.query(`
-		// 	SET @searcher = 'jhonny',
-		// 	@searcher_tags = (
-		// 		SELECT JSON_ARRAYAGG(tag) as searcher_tag_list
-		// 		FROM TAGS
-		// 		WHERE user='jhonny'
-		// 		GROUP BY user),
-
-		// 	@searcher_tags_cat = (
-		// 		SELECT GROUP_CONCAT(tag) as searcher_tags_cat
-		// 		FROM TAGS
-		// 		WHERE user='jhonny'
-		// 		GROUP BY user),
-
-		// 	@required_tags = 'Music, Travel'
-		// 	SELECT * FROM USERS;
-
-		// `)
-		if (user_query == undefined) {
+		let user_query = await new_searches.get_my_user(req.username)
+		
+		if (user_query == null) {
 			return res.status(204).send({message: "No user found", code: 'FAILURE'})
 		}
 		res.status(200).send({message: 'Successfully queried user for username.', code: 'SUCCESS', data: user_query})

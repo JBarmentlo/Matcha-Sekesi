@@ -134,8 +134,8 @@ exports.get_my_user = async (username) => {
 		TIMESTAMPDIFF(SECOND , last_connected, NOW()) <= 3 as connected,
 		IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
 		IFNULL(tag_list, cast('[]' as json)) as tag_list,
-		IFNULL(liker_list, cast('[]' as json)) as liker_list,
-		IFNULL(consulter_list, cast('[]' as json)) as consulter_list
+		IFNULL(liker_list, cast('[]' as json)) as like_list,
+		IFNULL(consulter_list, cast('[]' as json)) as consult_list
 	FROM
 		USERS
 	LEFT JOIN VALIDMAIL
@@ -159,5 +159,8 @@ exports.get_my_user = async (username) => {
 
 	let my_user = await db.query(keri_string, [username])
 	// console.log("found", my_user)
+	if (my_user.length == 0) {
+		return null
+	}
 	return my_user
 }

@@ -160,7 +160,7 @@ exports.signin = async (req, res) => {
     try {
         console.log("signing in %o", req.body)
         let user = await new_searches.get_my_user(req.body.username)
-        if (user == undefined || user.length == 0) {
+        if (user == null || user == undefined) {
             return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
         }
         user = user[0]
