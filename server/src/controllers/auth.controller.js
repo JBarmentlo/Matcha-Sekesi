@@ -64,28 +64,26 @@ exports.verifyMail = async (req, res) => {
     try {
         console.log("verifying mail")
         let verify_mail_result = await db.query(
-            "SELECT * FROM VERIFY \
-            where id_hash=?",
+            `SELECT * FROM VERIFY
+            where id_hash=?`,
             req.params.hash)
     
-            if (verify_mail_result.length == 0) {
-            res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
-            return
+        if (verify_mail_result.length == 0) {
+            return res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
         }
-    
+        
         let delete_reset_result = await db.query(
             "DELETE FROM VERIFY \
             where id_hash=?",
             req.params.hash)
-    
         let add_mail = await db.query(`
             INSERT INTO VERIFIEDMAIL (user, mail)
                 VALUES (?, ?)`,
             [verify_mail_result[0].user, verify_mail_result[0].mail])
-
         res.status(200).send({message: "verified mail for " + verify_mail_result[0].user, code: "SUCCESS"})
     }
     catch (e) {
+        throw (e)
         res.status(200).send({message: "Error in verify mail", code: "Failure"})
         throw (e)
     }

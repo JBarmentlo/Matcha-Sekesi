@@ -58,6 +58,10 @@ exports.check_profile_complete = async (req, res, next) => {
             COMPLETEPROFILE AS (
                 SELECT
                     USERS.username,
+                    ISNULL(profilePic) as no_profile_pic,
+                    is_verified_mail = 0 as no_verified_mail,
+                    JSON_LENGTH(tag_list) = 0 as no_tags,
+                    LENGTH(bio) = 0 as no_bio,
                     not (ISNULL(profilePic) OR is_verified_mail = 0 OR JSON_LENGTH(tag_list) = 0 OR LENGTH(bio) = 0) as is_complete_profile
                 FROM
                     USERS
@@ -75,7 +79,7 @@ exports.check_profile_complete = async (req, res, next) => {
                 username = ?
             `,
             [req.username])
-        console.log("got:", profile_complete_query, profile_complete_query.length)
+        console.log("got:", profile_complete_query)
         if (profile_complete_query.length == 1 && profile_complete_query[0].is_complete_profile) {
             return next()
         }
