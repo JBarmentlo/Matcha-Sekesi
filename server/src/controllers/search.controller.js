@@ -1,5 +1,6 @@
 const db       = require("../db/sql.conn");
 const searches = require("./user.request.js")
+const new_searches = require("./user.request_new.js")
 
 exports.get_all_users = async (req, res) => {
 	console.log("getting all users relative to: ", req.username)
@@ -35,7 +36,7 @@ exports.search_users = async (req, res) => {
 exports.search_users_initial = async (req, res) => {
 	console.log("searching users initial: ")
 	try {
-		let user_query = await searches.search_users_initial(req.username, req.body.user_tags, req.body.long, req.body.lat, req.body.desires, req.body.offset, req.body.limit, req.body.desires)
+		let user_query = await new_searches.search_users_initial(req.username, req.body.user_tags, req.body.long, req.body.lat, req.body.desires, req.body.offset, req.body.limit)
 		// console.log(user_query)
 		// console.log("Rows: ", user_query.map(user => {return {name: user.username, age: user.age, score: user.popScore, zip: user.zipCode, tag_count: user.commonTagCount}}))
 		res.status(200).send({message: 'Successfully queried users.', data: user_query})

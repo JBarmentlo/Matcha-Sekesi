@@ -23,7 +23,7 @@ exports.signup = async (req, res) => {
 
     try {
         let query_result = await db.query(
-            'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            `INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
             )
 
@@ -163,7 +163,6 @@ exports.signin = async (req, res) => {
         if (user == null || user == undefined) {
             return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
         }
-        user = user[0]
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) {
             return res.status(201).send({ accessToken: null, message: "Invalid Password!", code: "WRONG_PASSWORD" });
