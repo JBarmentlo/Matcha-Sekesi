@@ -502,7 +502,8 @@ LEFT JOIN TAG_INFO
 LEFT JOIN SIMILARITY
     ON USERS.username = SIMILARITY.username
 WHERE
-    COMPATIBLE.compatible
+    COMPATIBLE.compatible AND
+    USERS.username!='${searcher_username}'
 GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 HAVING
     did_i_block_him=0
@@ -657,7 +658,8 @@ LEFT JOIN TAG_INFO
 WHERE
     zipCode LIKE('${zipcode}') AND
     pop_score >= ${min_rating} AND
-    pop_score <= ${max_rating}
+    pop_score <= ${max_rating} AND
+    USERS.username!='${searcher_username}'
 GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 HAVING
     age <= ${max_age} AND

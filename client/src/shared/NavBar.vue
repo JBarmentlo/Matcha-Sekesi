@@ -86,7 +86,6 @@ export default {
     },
 
     profile_complete: function() {
-      // return this.$root.store.state.user.is_complete_profile;
       return this.$root.store.getProfileComplete();
     }
   },
