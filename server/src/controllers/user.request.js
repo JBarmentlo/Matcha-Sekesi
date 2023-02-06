@@ -46,42 +46,6 @@ TAG_LIST as (
 		user
 ),
 
-CONVO_START AS (
-	SELECT
-		m1.sender as convo_starter,
-		m1.receiver as convo_reciever
-	FROM
-		MSG AS m1
-	WHERE
-		m1.last_updated =
-			(SELECT
-				MIN(m2.last_updated)
-			FROM
-				MSG m2
-			WHERE
-				m1.ConvoId = m2.ConvoId)
-),
-
-CONVO_START_INFO AS (
-	SELECT USERS.username,
-			SUM(convo_starter=USERS.username) as converstations_initiated,
-			SUM(convo_reciever=USERS.username) as converstations_recieved
-	FROM USERS
-		CROSS JOIN CONVO_START
-	GROUP BY
-		USERS.username
-),
-
-LIKES_INFO as (
-	SELECT USERS.username,
-			SUM(liker=?) > 0 as did_i_like_him,
-			SUM(liker=USERS.username) as number_of_likes_given,
-			SUM(liked=USERS.username) as number_of_likes_received
-	FROM USERS
-		CROSS JOIN LIKES
-	GROUP BY USERS.username
-),
-
 COMPLETEPROFILE AS (
 	SELECT
 		USERS.username,
@@ -92,17 +56,6 @@ COMPLETEPROFILE AS (
 		ON USERS.username = VALIDMAIL.username
 	LEFT JOIN TAG_LIST
 		ON USERS.username = TAG_LIST.user
-),
-
-POPSCORE as (
-    SELECT USERS.username,
-           IFNULL((number_of_likes_received / (number_of_likes_received + number_of_likes_given + 1)), 0) * 2.5
-               + IFNULL((converstations_initiated / (converstations_recieved + converstations_initiated + 1)), 0) * 2.5 as pop_score
-    FROM USERS
-        LEFT JOIN LIKES_INFO
-            ON USERS.username=LIKES_INFO.username
-        LEFT JOIN CONVO_START_INFO
-            ON USERS.username = CONVO_START_INFO.username
 )
 
 SELECT
@@ -205,7 +158,7 @@ LIKES_INFO as (
            SUM(liker=USERS.username) as number_of_likes_given,
            SUM(liked=USERS.username) as number_of_likes_received
     FROM USERS
-        CROSS JOIN LIKES
+        LEFT JOIN LIKES on USERS.username = LIKES.liker OR USERS.username = LIKES.liked
     GROUP BY USERS.username
 ),
 
@@ -350,9 +303,10 @@ LIKES_INFO as (
            SUM(liker=USERS.username) as number_of_likes_given,
            SUM(liked=USERS.username) as number_of_likes_received
     FROM USERS
-        CROSS JOIN LIKES
+        LEFT JOIN LIKES on USERS.username = LIKES.liker OR USERS.username = LIKES.liked
     GROUP BY USERS.username
 ),
+
 
 POPSCORE as (
     SELECT USERS.username,
@@ -552,7 +506,7 @@ LIKES_INFO as (
            SUM(liker=USERS.username) as number_of_likes_given,
            SUM(liked=USERS.username) as number_of_likes_received
     FROM USERS
-        CROSS JOIN LIKES
+        LEFT JOIN LIKES on USERS.username = LIKES.liker OR USERS.username = LIKES.liked
     GROUP BY USERS.username
 ),
 
