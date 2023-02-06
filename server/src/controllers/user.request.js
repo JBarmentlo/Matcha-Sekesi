@@ -537,6 +537,14 @@ LIKED as (
            COUNT(liker) as number_of_likes_received
     FROM LIKES
     GROUP BY liked
+),
+
+DISTANCE as (
+    select USERS.username,
+           SQRT(POWER(USERS.longitude - searcher.longitude, 2) + POWER(USERS.latitude - searcher.latitude, 2)) as distance
+        from USERS
+            CROSS JOIN USERS searcher
+                ON searcher.username=@searcher
 )
 
 
@@ -562,6 +570,7 @@ SELECT
     gif,
     last_connected,
     pop_score as popScore,
+    distance,
     IFNULL(did_i_like_him, 0) as did_i_like_him,
     IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
     IFNULL(tag_list, cast('[]' as json)) as tag_list,
@@ -578,6 +587,8 @@ LEFT JOIN BLOCKED
     ON USERS.username = BLOCKED.blocked
 LEFT JOIN TAG_INFO
     ON USERS.username = TAG_INFO.user
+LEFT JOIN DISTANCE
+    ON USERS.username = DISTANCE.username
 WHERE
     zipCode LIKE('${zipcode}') AND
     pop_score >= ${min_rating} AND
@@ -595,6 +606,5 @@ LIMIT ${limit} OFFSET ${offset}
 `
 	console.log(keri_string)
 	let search_results = await db.query(keri_string)
-	console.log("FOUND search users: ", search_results)
 	return search_results
 }

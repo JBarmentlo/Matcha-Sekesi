@@ -45,11 +45,11 @@
                     <label for="age">Age</label>
                 </div>
                 <div>
-                    <input type="radio" id="zip" name="order_by" value="zipCode" v-model="order_by">
+                    <input type="radio" id="zip" name="order_by" value="distance" v-model="order_by">
                     <label for="zip">Zipcode</label>
                 </div>
                 <div>
-                    <input type="radio" id="tags" name="order_by" value="tag_list" v-model="order_by">
+                    <input type="radio" id="tags" name="order_by" value="number_of_common_tags" v-model="order_by">
                     <label for="tags">Tags</label>
                 </div>
             </fieldset>
@@ -67,7 +67,7 @@
         </form>
         <div class="row">
             <LoadingSpinner v-if="users.length==0"  class="container">Find the perfect Partner</LoadingSpinner >
-            <span v-if="users.length==0"  class="text-center">Finding the perfect woman for you</span>
+            <span v-if="users.length==0"  class="text-center">Finding the perfect partner for you</span>
             <profile-list :users="users" :current_page="current_page"></profile-list>
         </div>
     </div>
