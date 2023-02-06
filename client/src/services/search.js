@@ -24,11 +24,8 @@ export const searchUsers = async (access_token, min_age, max_age, required_tags,
 	};
 
 	const response = await api_axios(request);
-	console.log("setrch res:", response)
 	return response;
 }
-
-
 
 export const searchUsersInitial = async (access_token, offset, limit) => {
 	let request = {
@@ -45,6 +42,5 @@ export const searchUsersInitial = async (access_token, offset, limit) => {
 		
 	};
 	const response = await api_axios(request);
-	console.log("setrch res:", response)
 	return response;
 }

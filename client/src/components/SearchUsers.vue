@@ -68,7 +68,7 @@
         <div class="row">
             <LoadingSpinner v-if="users.length==0"  class="container">Find the perfect Partner</LoadingSpinner >
             <span v-if="users.length==0"  class="text-center">Finding the perfect partner for you</span>
-            <profile-list :users="users" :current_page="current_page"></profile-list>
+            <profile-list :users="users"  @ChangeUserListPage="change_page" :current_page="current_page"></profile-list>
         </div>
     </div>
 </template>
@@ -142,10 +142,8 @@ export default {
             if (this.$refs.zipcode_valid.flags.invalid) {
                 return
             }
-            console.log(this.age, this.required_tags, this.rating, this.zipcode)
-            // let desire = this.determineAppropriateSekes(this.user.gender, this.user.sekesualOri)
-            // console.log("DESIIIIRE: ", desires)
             this.zipcode = this.zipcode == "" ? null : this.zipcode
+            this.users = []
             let rese = await searchUsers(this.token ,this.age[0], this.age[1], this.required_tags, this.rating[0], this.rating[1], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc)
             this.users = rese.data.data
             this.current_page = 1
@@ -167,6 +165,10 @@ export default {
                 this.asc_or_desc = "ASC"
             }
             this.search()
+        },
+
+        change_page(page) {
+            this.current_page = page
         }
 
     },
