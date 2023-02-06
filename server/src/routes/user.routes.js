@@ -8,7 +8,7 @@ const middlewares = require("../controllers/middlewares");
 
 var router = require("express").Router();
 
-router.get ("/getmyuser"           , auth.verifyToken , middlewares.check_mailverified        , userController.get_my_user );
+router.get ("/getmyuser"           , auth.verifyToken , userController.get_my_user );
 router.post("/updateuser"          , auth.verifyToken ,                                         userController.update_user            );
 router.post("/search_users"        , auth.verifyToken , middlewares.check_profile_complete    , searchController.search_users);
 router.post("/search_users_init"   , auth.verifyToken , middlewares.check_profile_complete    , searchController.search_users_initial );

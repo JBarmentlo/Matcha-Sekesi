@@ -129,6 +129,9 @@ export default {
 					this.logged_in = true
 					this.$router.push('/editprofile')
 				}
+				else if (signin_res.data.code == 'NON_VALIDATED_MAIL') {
+					this.$swal("Please verify your mail by clicking the link you've recieved.")
+				}
 			}
 			catch (e) {
 				console.log("error in signin form submit: ", e)

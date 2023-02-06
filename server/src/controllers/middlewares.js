@@ -1,29 +1,30 @@
 const db = require("../db/sql.conn");
 
 exports.check_mailverified = async (req, res, next) => {
-    console.log("Checking mail has been verified for ", req.username)
+    console.log("Checking mail has been verified for ", req.body.username)
     try {
         let mail_verified_query = await db.query(
             `
             SELECT
-                1
+                username,
+                NOT ISNULL(VERIFIEDMAIL.mail) as is_verified
             FROM
-                VERIFIEDMAIL
+                USERS LEFT JOIN VERIFIEDMAIL
+                ON USERS.username = VERIFIEDMAIL.user
             WHERE
-                user='jhonny'
+                username=?
             `,
-            [req.username])
+            [req.body.username])
         console.log("got:", mail_verified_query, mail_verified_query.length)
-        if (mail_verified_query.length == 1) {
-            return next()
+
+        if (mail_verified_query.length == 1 && !mail_verified_query[0].is_verified) {
+            return res.status(202).send({message: `You are not authorized to perform this action: ${req.url}, please validate your mail`, code: 'NON_VALIDATED_MAIL'})
         }
-        else {
-            return res.status(401).send({message: `You are not authorized to perform this action: ${req.url}, please validate your mail`, code: 'NON_VALIDATED_MAIL'})
-        }
+        return next()
     }
     catch (e) {
         throw(e)
-        return res.status(401).send({message: "You are not authorized to perform this action. mail."})
+        return res.status(202).send({message: "You are not authorized to perform this action. mail."})
     }
 }
 
@@ -84,12 +85,12 @@ exports.check_profile_complete = async (req, res, next) => {
             return next()
         }
         else {
-            return res.status(401).send({message: `You are not authorized to perform this action ${req.url}, please complete your profile`, code: 'INCOMPLETE_PROFILE'})
+            return res.status(202).send({message: `You are not authorized to perform this action ${req.url}, please complete your profile`, code: 'INCOMPLETE_PROFILE'})
         }
     }
     catch (e) {
         throw(e)
-        return res.status(401).send({message: "You are not authorized to perform this action. profile."})
+        return res.status(202).send({message: "You are not authorized to perform this action. profile."})
     }
 }
 
@@ -127,17 +128,17 @@ exports.validate_signup_form = async (req, res, next) => {
         console.log(!isEmail(mail), username.length < 5, !isString(firstName), !isString(lastName), !isString(city), isNaN(longitude), isNaN(latitude))
 
         if (!isEmail(mail) || username.length < 5 || !isString(firstName) || !isString(lastName) || !isString(city) || isNaN(longitude) || isNaN(latitude)) {
-            return res.status(403).send({message: "invalid signup form", code: "INVALID_FORM"})
+            return res.status(202).send({message: "invalid signup form", code: "INVALID_FORM"})
         }
         console.log(!isValidPassword(password))
         if (!isValidPassword(password)) {
-            return res.status(403).send({message: "invalid signup password", code: "INVALID_FORM"})
+            return res.status(202).send({message: "invalid signup password", code: "INVALID_FORM"})
         }
         return next()
     }
     catch (e) {
         console.log("error in validate signup")
         throw(e)
-        res.status(403).send({message: "invalid signup formm", code: "INVALID_FORM"})
+        res.status(202).send({message: "invalid signup formm", code: "INVALID_FORM"})
     }
 }

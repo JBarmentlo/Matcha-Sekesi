@@ -103,87 +103,111 @@ function InitialiseTok() {
 export var store = {
   debug: true,
   state: {
-    token        : InitialiseTok(),
-    user         : null,
-    logged_in    : false,
+    token            : InitialiseTok(),
+    user             : null,
+    logged_in        : false,
   },
 
-  setLoggedInAction (newValue) {
-    if (this.debug) console.log('setLoggedInAction triggered with', newValue)
-    this.state.logged_in = newValue
-  },
 
   setTokenAction (newValue) {
     if (this.debug) console.log('setTokenAction triggered', newValue)
-    if (this.state.token != null && newValue == null) console.log("DESTRAUES TOKE")
-    this.state.token = newValue
+    
+    if (newValue == null) {
+      return this.clearTokenAction()
+    }
+
     try {
+      this.state.token = newValue
       sessionStorage.setItem('sekes_tokens', JSON.stringify(newValue))
     }
     catch (e) {
       console.log("SET TOKEN ERR", e)
+      this.clearTokenAction()
     }
   },
 
   clearTokenAction () {
     if (this.debug) console.log('clearTokenAction triggered')
-    if (this.state.token != null) console.log("DESTRAUES TOKE")
-
     this.state.token = null
-    sessionStorage.removeItem('user')
+
+    sessionStorage.removeItem('sekes_tokens')
   },
 
   
   setUserAction (newValue) {
     if (this.debug) console.log('setUserAction triggered', newValue != null)
-    if (this.state.user != null && newValue == null) console.log("DESTRAUES user")
-    this.state.user = newValue
+
+    if (newValue == null) {
+      return this.clearUserAction()
+    }
+
     try {
+      this.state.user = newValue
       sessionStorage.setItem('user', JSON.stringify(newValue))
     }
     catch (e) {
+      this.clearUserAction()
       console.log("SET USER ERR", e)
     }
   },
 
   clearUserAction () {
     if (this.debug) console.log('clearUserAction triggered')
-    if (this.state.user != null) console.log("DESTRAUES user")
     this.state.user = null
     sessionStorage.removeItem('user')
   },
 
-  increaseCounterAction () {
-    if (this.debug) console.log('Counter triggered')
-    this.state.counter += 1
-  }
+  setLoggedInAction(newValue) {
+    if (this.debug) console.log('setLoggedInAction triggered')
+    this.state.logged_in = newValue
+  },
+
+  getMailVerified() {
+    if (this.state.user == null) {
+      return false
+    }
+    return this.state.user.mail_verified
+  },
+
+  getProfileComplete() {
+    if (this.state.user == null) {
+      return false
+    }
+    return this.state.user.profile_complete
+  },
+
+  clearStore() {
+    this.clearTokenAction()
+    this.clearUserAction()
+    this.setLoggedInAction(false)
+  },
 }
 
 export const updateUserStore = async () => {
-  if (store.state.token != null) {
-    console.log('Updating user store')
-    try {
-      let user_res = await getMyUser(store.state.token)
-      if (user_res.status == 200 && user_res.data.code == 'SUCCESS') {
-        console.log("Setting creds")
-        store.setUserAction({...user_res.data.data})
-        store.setLoggedInAction(true)
-        console.log("Update store Logged in")
-        return user_res
-      }
-      else {
-        console.log("CODE: ", user_res.status)
-      }
-    }
-    catch (e) {
-      console.log("ERROR IN UPDASTE STORE", e)
-    }
-  }
-  else {
+  if (store.state.token == null) {
     console.log("No token to update store")
+    return store.clearStore()
   }
-  console.log("Update store Not Logged in")
-  return "falsetto "
+
+  try {
+    console.log('Updating user store')
+    let user_res = await getMyUser(store.state.token)
+    if (user_res.status == 200 && user_res.data.code == 'SUCCESS') {
+      console.log("Setting creds")
+      store.setUserAction({...user_res.data.data})
+      store.setLoggedInAction(true)
+      console.log("Update store Logged in")
+      return
+    }
+    else {
+      console.log("CODE: ", user_res.status)
+      return store.clearStore()
+    }
+  }
+  catch (e) {
+    console.log("ERROR IN UPDASTE STORE", e)
+    return store.clearStore()
+  }
 }
 // updateUserStore()
 

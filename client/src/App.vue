@@ -12,7 +12,7 @@
 
 <script>
 import { getMyMessages } from './services/chat'
-import { updateUserStore } from './router'
+// import { updateUserStore } from './router'
 
 import NavBar from "./shared/NavBar.vue"
 
@@ -133,14 +133,16 @@ export default {
     async mounted() {
         console.log("Mounting App");
         try {
-            await updateUserStore()
-            console.log("starting state", "logged_in:", this.logged_in, "user:", this.user != null, "token:", this.token != null)
-            if (this.$route.meta.requiresNotAuth && this.logged_in) {
-                this.$router.push("/editprofile")
-            }
-            if (this.$route.meta.requiresAuth && !this.logged_in) {
-                this.$router.push("/signin")
-            }
+            this.store_loaded = true
+            // TODO: put it back ?
+            // await updateUserStore()
+            // console.log("starting state", "logged_in:", this.logged_in, "user:", this.user != null, "token:", this.token != null)
+            // if (this.$route.meta.requiresNotAuth && this.logged_in) {
+                // this.$router.push("/editprofile")
+            // }
+            // if (this.$route.meta.requiresAuth && !this.logged_in) {
+                // this.$router.push("/signin")
+            // }
         }
         catch (e) {
             console.log("error mounting app", e)

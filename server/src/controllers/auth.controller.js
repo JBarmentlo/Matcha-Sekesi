@@ -196,7 +196,7 @@ exports.verifyToken = (req, res, next) => {
         jwt.verify(token, process.env.SIGNATURE, (err, decoded) => {
             if (err) {
                 console.log("error in decode: ", err)
-                return res.status(401).send({ message: "Unauthorized!" });
+                return res.status(401).send({ message: "Unauthenticated!" });
             }
             req.username = decoded.username;
             return next();
