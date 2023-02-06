@@ -7,8 +7,8 @@ const middlewares    = require("../controllers/middlewares");
 // const auth				= require("../authentication");
 var router				= require("express").Router();
 
-router.post("/signup"          , auth.signup);
-router.post("/signin"          , middlewares.check_mailverified, auth.signin);
+router.post("/signup"          , middlewares.validate_signup_form , auth.signup);
+router.post("/signin"          , middlewares.check_mailverified   , auth.signin);
 router.post("/requestpassreset", auth.requestresetPass);
 router.post("/verify/:hash"    , auth.verifyMail);
 router.post("/passreset"       , auth.resetPass);

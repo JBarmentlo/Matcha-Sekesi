@@ -92,3 +92,52 @@ exports.check_profile_complete = async (req, res, next) => {
         return res.status(401).send({message: "You are not authorized to perform this action. profile."})
     }
 }
+
+function isEmail(email) {
+    var emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    if (email !== '' && email.match(emailFormat)) { return true; }
+    
+    return false;
+}
+
+function isValidPassword(pass) {
+    var passFormat = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+    if (pass !== '' && pass.match(passFormat)) { return true; }
+    
+    return false;
+}
+
+
+function isString(val) {
+    return (typeof val === 'string' || val instanceof String) 
+}
+
+exports.validate_signup_form = async (req, res, next) => {
+    try {
+        let username  = req.body.username;
+        let firstName = req.body.firstName;
+        let lastName  = req.body.lastName;
+        let mail      = req.body.mail;
+        let password  = req.body.password;
+        let zipCode   = req.body.zipCode;
+        let city      = req.body.city;
+        let latitude  = req.body.latitude;
+        let longitude = req.body.longitude;
+
+        console.log(!isEmail(mail), username.length < 5, !isString(firstName), !isString(lastName), !isString(city), isNaN(longitude), isNaN(latitude))
+
+        if (!isEmail(mail) || username.length < 5 || !isString(firstName) || !isString(lastName) || !isString(city) || isNaN(longitude) || isNaN(latitude)) {
+            return res.status(403).send({message: "invalid signup form", code: "INVALID_FORM"})
+        }
+        console.log(!isValidPassword(password))
+        if (!isValidPassword(password)) {
+            return res.status(403).send({message: "invalid signup password", code: "INVALID_FORM"})
+        }
+        return next()
+    }
+    catch (e) {
+        console.log("error in validate signup")
+        throw(e)
+        res.status(403).send({message: "invalid signup formm", code: "INVALID_FORM"})
+    }
+}

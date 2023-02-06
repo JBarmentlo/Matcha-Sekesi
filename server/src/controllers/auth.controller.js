@@ -71,15 +71,17 @@ exports.verifyMail = async (req, res) => {
         if (verify_mail_result.length == 0) {
             return res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
         }
-        
-        let delete_reset_result = await db.query(
+
+        await db.query(
             "DELETE FROM VERIFY \
             where id_hash=?",
             req.params.hash)
-        let add_mail = await db.query(`
+
+        await db.query(`
             INSERT INTO VERIFIEDMAIL (user, mail)
                 VALUES (?, ?)`,
             [verify_mail_result[0].user, verify_mail_result[0].mail])
+
         res.status(200).send({message: "verified mail for " + verify_mail_result[0].user, code: "SUCCESS"})
     }
     catch (e) {
@@ -101,6 +103,7 @@ exports.requestresetPass = async (req, res) => {
             console.log("MISSING: ", user_request)
             return res.status(200).send({message: "No user for the reset request", code: "MISSING_RESET"})
         }
+
         let user = user_request[0]
         let hash = bcrypt.hashSync(user.id.toString(), 8).replace('.','').replace('/', '')
         await db.query(
