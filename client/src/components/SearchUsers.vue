@@ -66,6 +66,8 @@
             </div>
         </form>
         <div class="row">
+            <LoadingSpinner v-if="users.length==0"  class="container">Find the perfect Partner</LoadingSpinner >
+            <span v-if="users.length==0"  class="text-center">Finding the perfect woman for you</span>
             <profile-list :users="users" :current_page="current_page"></profile-list>
         </div>
     </div>
@@ -78,10 +80,11 @@ import TagInputHandler from '../shared/TagInputHandler.vue'
 import 'bootstrap-slider/dist/css/bootstrap-slider.css'
 import Slider from '@vueform/slider/dist/slider.vue2.js'
 import { ValidationProvider } from 'vee-validate';
+import LoadingSpinner from './LoadingSpinner'
 
 
 export default {
-    components: { ProfileList, TagInputHandler, Slider, ValidationProvider},
+    components: { ProfileList, TagInputHandler, Slider, ValidationProvider, LoadingSpinner},
     data() {
         return {
             users        : [],
