@@ -53,13 +53,13 @@ describe('Test users', () => {
 		step('Updated jhonny', async () => {
 			let res = mockResponse()
 			await UserController.update_user(mockRequest({update: {zipCode: 'lol', mail: "newmail@mail.com"}}, users.Jhonny.username), res)
-			console.log("\n\nJEJEJEJ:", res.send.lastCall.firstArg)
 			assert.equal(res.send.lastCall.firstArg.code, 'SUCCESS')
 			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
 			return Promise.resolve()
 		})
 		step("modified mail is unverified", async () => {
 			await UserController.get_user_by_username(mockRequest(body = {username: users.Jhonny.username}, username = 'bella', params = {username: users.Jhonny.username}), res)
+			console.log("\n\n", res.send.lastCall.firstArg.data)
 			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 0)
 			return Promise.resolve()
 		})

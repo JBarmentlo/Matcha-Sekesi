@@ -26,8 +26,8 @@ exports.like_user = async (req, res) => {
 			return res.status(200).send({message: "Already Liked", code: e.code})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			console.log("EROOL: ", e)
-			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			console.log("EROOR in like: ", e)
+			return res.status(403).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
@@ -49,11 +49,11 @@ exports.un_like_user = async (req, res) => {
 	}
 	catch (e) {
 		if (e.code == 'ER_PARSE_ERROR') {
-			return res.status(500).send({message: "Parsing error when unliking.", error: e, code: 'FAILURE'})
+			return res.status(403).send({message: "Parsing error when unliking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
-			console.log("EROOL: ", e)
+			console.log("EROR unlike: ", e)
 			return res.status(500).send({message: "Error in unlike user ", error: e})
 			// throw(e)
 		}

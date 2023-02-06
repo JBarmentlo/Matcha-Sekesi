@@ -16,7 +16,7 @@ const test_connection = mysql.createConnection({
 	});
 
 async function connect() {
-	if (process.env.ENVIRONMENT == 'TEST') {
+	if (process.env.TEST == 'true') {
 		return test_connection
 	}
 	else {
@@ -36,7 +36,7 @@ async function connect() {
 
 async function query(sql, params) {
 	let used_connection
-	if (process.env.ENVIRONMENT == 'TEST') {
+	if (process.env.TEST == 'true') {
 		used_connection = await test_connection
 	}
 	else {
@@ -53,7 +53,7 @@ async function query(sql, params) {
 
 async function drop_all() {
 	let used_connection
-	if (process.env.ENVIRONMENT == 'TEST') {
+	if (process.env.TEST == 'true') {
 		used_connection = await test_connection
 	}
 	else {

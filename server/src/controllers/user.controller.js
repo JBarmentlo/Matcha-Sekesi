@@ -1,8 +1,7 @@
 const db       = require("../db/sql.conn");
 var bcrypt     = require("bcryptjs");
 const sendMail = require('../services/mailgun');
-const searches = require("./user.request.js")
-const tagController = require("./tag.controller")
+const new_searches = require("./user.request.js")
 const hostname = require('../fixtures/hostname.js').hostname
 
 
@@ -61,7 +60,7 @@ exports.create_user = async (req, res) => {
 };
 
 
-const tolerated_keys = ['username', 'firstName', 'lastName', 'bio', 'mail', 'mailVerified', 'gender', 'sekesualOri', 'popScore', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
+const tolerated_keys = ['username', 'firstName', 'lastName', 'bio', 'mail', 'gender', 'sekesualOri', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
 exports.update_user = async (req, res) => {
 	let update = req.body.update
 	Object.keys(update).forEach(key => {
@@ -90,9 +89,9 @@ exports.update_user = async (req, res) => {
 		res.status(200).send({code: "SUCCESS", data: update_res, mail_changed: del_mail.affectedRows})
 	}
 	catch (e) {
-		console.log(e)
-		throw(e)
+		console.log("update", e)
 		res.status(403).send({code: "INVALID FORM"})
+		throw(e)
 	}
 }
 
@@ -100,7 +99,7 @@ exports.update_user = async (req, res) => {
 exports.get_user_by_username = async (req, res) => {
 	console.log("gettin user by username")
 	try {
-		let user_query = await searches.get_user(req.username, req.params.username)
+		let user_query = await new_searches.get_user(req.username, req.params.username)
 		// console.log('prof: ',user_query)
 		res.status(200).send({message: 'Successfully queried user for username.', data: user_query})
 	}
@@ -115,26 +114,9 @@ exports.get_user_by_username = async (req, res) => {
 exports.get_my_user = async (req, res) => {
 	try {
 		console.log("getting user:", req.username)
-		let user_query = await searches.get_my_user(req.username)
-		// let user_query = await db.query(`
-		// 	SET @searcher = 'jhonny',
-		// 	@searcher_tags = (
-		// 		SELECT JSON_ARRAYAGG(tag) as searcher_tag_list
-		// 		FROM TAGS
-		// 		WHERE user='jhonny'
-		// 		GROUP BY user),
-
-		// 	@searcher_tags_cat = (
-		// 		SELECT GROUP_CONCAT(tag) as searcher_tags_cat
-		// 		FROM TAGS
-		// 		WHERE user='jhonny'
-		// 		GROUP BY user),
-
-		// 	@required_tags = 'Music, Travel'
-		// 	SELECT * FROM USERS;
-
-		// `)
-		if (user_query == undefined) {
+		let user_query = await new_searches.get_my_user(req.username)
+		
+		if (user_query == null) {
 			return res.status(204).send({message: "No user found", code: 'FAILURE'})
 		}
 		res.status(200).send({message: 'Successfully queried user for username.', code: 'SUCCESS', data: user_query})

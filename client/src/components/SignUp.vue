@@ -7,7 +7,7 @@
 					<div v-if="status_not_200" class="login_error">There was an error handling your request</div>
 					<div class="form-group">
 						<label>Username</label>
-						<ValidationProvider rules="required|alpha_num|length:5" immediate v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha_num|length:5" v-slot="{ errors }">
 							<input
 								autocomplete="username"
 								type="username"
@@ -23,7 +23,7 @@
 
 					<div class="form-group">
 						<label>First Name</label>
-						<ValidationProvider rules="required|alpha|length:1" immediate v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha|length:1" v-slot="{ errors }">
 							<input
 								type="text"
 								v-model="firstName"
@@ -35,7 +35,7 @@
 
 					<div class="form-group">
 						<label>Last Name</label>
-						<ValidationProvider rules="required|alpha|length:1" immediate v-slot="{ errors }">
+						<ValidationProvider rules="required|alpha|length:1" v-slot="{ errors }">
 							<input
 								type="text"
 								v-model="lastName"
@@ -47,7 +47,7 @@
 
 					<div class="form-group">
 						<label>Email address</label>
-						<ValidationProvider rules="required|email" immediate v-slot="{ errors }">
+						<ValidationProvider rules="required|email" v-slot="{ errors }">
 							<input
 								type="email"
 								v-model="mail"
@@ -61,7 +61,7 @@
 
 					<div class="form-group pb-2">
 						<label>Password</label>
-						<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" :skipIfEmpty="false" immediate v-slot="{ errors }">
+						<ValidationProvider :rules="{ passewordo: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/ }" :skipIfEmpty="false" v-slot="{ errors }">
 							<div class = "input-group">
 								<input
 									autocomplete="current-password"
@@ -136,7 +136,6 @@ export default {
 
 		async signupFormSubmit(e) {
 			console.log("OIUSDF", process.env.VUE_APP_MATCHA_DB)
-			console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
 			if (this.$refs.formObserver.flags.invalid) {
 				console.log("invalid form")
@@ -177,12 +176,6 @@ export default {
 				router.push("/signin");
 			}
 		},
-
-		locate() {
-			return {
-
-			}
-		}
 	},
 
 	created() {

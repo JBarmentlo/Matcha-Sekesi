@@ -1,4 +1,6 @@
 const testController = require("../controllers/test.controller");
+const middlewares    = require("../controllers/middlewares");
+const auth           = require("../controllers/auth.controller");
 
 var router = require("express").Router();
 

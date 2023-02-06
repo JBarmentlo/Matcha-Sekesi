@@ -87,7 +87,7 @@ app.use('/api/tags', tagRouter, function(req, res, next){
 
 testRouter = require('./src/routes/test.routes')
 
-if (process.env.ENVIRONMENT == 'TEST') {
+if (process.env.TEST == 'true') {
   console.log("Setting up test routes")
   app.use('/api/test', testRouter, function(req, res, next){
     res.header(

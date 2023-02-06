@@ -99,30 +99,13 @@ function InitialiseTok() {
   return tok
 }
 
-function InitialiseUser() {
-  // console.log("Initialising store User")
-  // let user
-  // try {
-  //   user = JSON.parse(sessionStorage.user)
-  // }
-  // catch {
-  //   user = null
-  // }
-  let user = null
-  return user
-}
-
-function InitialiseLoggedIn() {
-  return InitialiseUser() != null
-}
 
 export var store = {
   debug: true,
   state: {
-    token    : InitialiseTok(),
-    user     : InitialiseUser(),
-    logged_in: InitialiseLoggedIn(),
-    counter  : 0
+    token        : InitialiseTok(),
+    user         : null,
+    logged_in    : false,
   },
 
   setLoggedInAction (newValue) {
@@ -204,8 +187,9 @@ export const updateUserStore = async () => {
 }
 // updateUserStore()
 
-router.beforeEach((to, from, next) => {
+router.beforeResolve(async (to, from, next) => {
   console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)
+  await updateUserStore()
   console.log("logged_in: ", store.state.logged_in, "user: ", store.state.user != null, "token: ", store.state.token != null)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     console.log("Requires auth")
@@ -230,7 +214,6 @@ router.beforeEach((to, from, next) => {
       return next('/editprofile')
     }
   }
-
   else {
     console.log("EZ")
     return next()

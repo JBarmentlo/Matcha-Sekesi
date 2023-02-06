@@ -30,6 +30,7 @@ exports.get_all_messages = async (req, res) => {
 	}
 	catch (e) {
 		console.log("get messages error:\n", e, "\nend error")
+		return res.status(400).send({message: 'Failed in querying your messages.', data: [], code:'FAILURE'})
 		// throw(e)
 	}
 }	
@@ -53,6 +54,7 @@ exports.get_conversation = async (req, res) => {
 		return res.status(200).send({message: 'Successfully queried your messages.', data: message_keri, code:'SUCCESS'})
 	}
 	catch (e) {
+		return res.status(400).send({message: 'Failed in querying your conversation.', data: [], code:'FAILURE'})
 		console.log("get convo error:\n", e, "\nend error")
 		// throw(e)
 	}
@@ -65,15 +67,16 @@ exports.send_message = async (req, res) => {
 			"INSERT INTO MSG (sender, receiver, msg, convoId)  \
 				VALUES (@sender, @receiver, @msg, @convoId);"
 			.replace(new RegExp("@sender"   , "g"), `'${req.username}'`     )
-			.replace(new RegExp("@receiver"   , "g"), `'${req.body.username}'`)
-			.replace(new RegExp("@msg"   , "g"), `'${req.body.msg}'`     )
-			.replace(new RegExp("@convoId", "g"), `'${req.body.convoId}'`  )
+			.replace(new RegExp("@receiver" , "g"), `'${req.body.username}'`)
+			.replace(new RegExp("@msg"      , "g"), `'${req.body.msg}'`     )
+			.replace(new RegExp("@convoId"  , "g"), `'${req.body.convoId}'` )
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
-		// console.log("got convo : ", message_keri)
+		console.log("sent message: ", message_keri)
 		return res.status(200).send({message: 'Successfully inserted message.', data: message_keri, code:'SUCCESS'})
 	}
 	catch (e) {
+		return res.status(400).send({message: 'Failed in sending your data.', data: [], code:'FAILURE'})
 		console.log("send message error:\n", e, "\nend error")
 		// throw(e)
 	}

@@ -5,7 +5,7 @@ const crypto   = require('crypto');
 const jwt      = require("jsonwebtoken");
 
 const sendMail = require('../services/mailgun');
-const searches = require("./user.request.js")
+const new_searches = require("./user.request.js")
 
 
 async function get_42_user_details(bearer_token) {
@@ -117,8 +117,8 @@ async function does_user_already_exist(user_id) {
 async function create_signin_data(username) {
     try {
         console.log("oauth signing in %s", username)
-        let user = await searches.get_my_user(username)
-        if (user == undefined) {
+        let user = await new_searches.get_my_user(username)
+        if (user == null) {
             throw("undefined user wtf")
         }
 

@@ -4,7 +4,7 @@ const jwt      = require("jsonwebtoken");
 
 const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
-const searches = require("./user.request.js")
+const new_searches = require("./user.request.js")
 const hostname = require('../fixtures/hostname.js').hostname
 
 
@@ -22,7 +22,7 @@ exports.signup = async (req, res) => {
 
     try {
         let query_result = await db.query(
-            'INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            `INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
             )
 
@@ -35,26 +35,26 @@ exports.signup = async (req, res) => {
         )
         sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)}`)
         console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${hostname}/verify/${encodeURIComponent(hash)}`)
-        res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
+        return res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
         console.log(e)
         if (e.code == 'ER_DUP_ENTRY') {
-            res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
+            return res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
         }
         else if (e.code == 'ER_PARSE_ERROR') {
-            res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
+            return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
             // // throw(e)
         }
         else if (e.code == 'ER_DATA_TOO_LONG') {
-            res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+            return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
         }
         else if (e.code == 'ER_BAD_NULL_ERROR') {
-            res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
+            return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
         }
         else {
             console.log("signup error:\n", e, "\nend signup error")
-            res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
+            return res.status(403).send({message: 'error in create test user', error: e, code: 'FAILURE'})
             // throw(e)
         }
     }	
@@ -64,29 +64,28 @@ exports.verifyMail = async (req, res) => {
     try {
         console.log("verifying mail")
         let verify_mail_result = await db.query(
-            "SELECT * FROM VERIFY \
-            where id_hash=?",
+            `SELECT * FROM VERIFY
+            where id_hash=?`,
             req.params.hash)
     
-            if (verify_mail_result.length == 0) {
-            res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
-            return
+        if (verify_mail_result.length == 0) {
+            return res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
         }
-    
-        let delete_reset_result = await db.query(
+
+        await db.query(
             "DELETE FROM VERIFY \
             where id_hash=?",
             req.params.hash)
-    
-        let add_mail = await db.query(`
+
+        await db.query(`
             INSERT INTO VERIFIEDMAIL (user, mail)
                 VALUES (?, ?)`,
             [verify_mail_result[0].user, verify_mail_result[0].mail])
 
-        res.status(200).send({message: "verified mail for " + verify_mail_result[0].user, code: "SUCCESS"})
+        return res.status(200).send({message: "verified mail for " + verify_mail_result[0].user, code: "SUCCESS"})
     }
     catch (e) {
-        res.status(200).send({message: "Error in verify mail", code: "Failure"})
+        return res.status(200).send({message: "Error in verify mail", code: "Failure"})
         throw (e)
     }
 };
@@ -103,6 +102,7 @@ exports.requestresetPass = async (req, res) => {
             console.log("MISSING: ", user_request)
             return res.status(200).send({message: "No user for the reset request", code: "MISSING_RESET"})
         }
+
         let user = user_request[0]
         let hash = bcrypt.hashSync(user.id.toString(), 8).replace('.','').replace('/', '')
         await db.query(
@@ -150,7 +150,7 @@ exports.resetPass = async (req, res) => {
     }
     catch (e) {
         console.log("error in reset Pass: ",e)
-        res.status(200).send({message: "Error in reset pass", code: "Failure"})
+        return res.status(200).send({message: "Error in reset pass", code: "Failure"})
         throw (e)
     }
 };
@@ -158,12 +158,10 @@ exports.resetPass = async (req, res) => {
 exports.signin = async (req, res) => {
     try {
         console.log("signing in %o", req.body)
-        let user = await searches.get_my_user(req.body.username)
-        // console.log("userreq",user)
-        if (user == undefined) {
+        let user = await new_searches.get_my_user(req.body.username)
+        if (user == null || user == undefined) {
             return res.status(201).send({message: "user doesnt exist", code: "MISSING_USERNAME"})
         }
-        // console.log("USER for signing: ", user)
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) {
             return res.status(201).send({ accessToken: null, message: "Invalid Password!", code: "WRONG_PASSWORD" });
@@ -182,7 +180,8 @@ exports.signin = async (req, res) => {
         });
     }
     catch (e) {
-        console.error("ERROR in signin")
+        console.error("ERROR in signin", e)
+        return res.status(400).send({message: "Error in signin", code: "Failure"})
         throw (e)
     }
 };
@@ -200,7 +199,7 @@ exports.verifyToken = (req, res, next) => {
                 return res.status(401).send({ message: "Unauthorized!" });
             }
             req.username = decoded.username;
-            next();
+            return next();
         });
     }
     catch (e) {
@@ -218,7 +217,7 @@ exports.updateLastConnected = async (req, res, next) => {
             SET last_connected = CURRENT_TIMESTAMP\
             WHERE username= ?;",
             req.username)
-        next();
+        return next();
     }
     catch (e) {
         console.log('error in update co')
