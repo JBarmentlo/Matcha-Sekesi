@@ -248,7 +248,7 @@ SELECT
     lastName,
     IFNULL(bio, '') as bio,
     DOB,
-    mail,
+    USERS.mail,
     gender,
     sekesualOri,
     zipCode,
@@ -267,7 +267,8 @@ SELECT
     IFNULL(did_i_like_him, 0) as did_i_like_him,
     IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
     IFNULL(tag_list, cast('[]' as json)) as tag_list,
-    IFNULL(did_i_block_him, 0) as did_i_block_him
+    IFNULL(did_i_block_him, 0) as did_i_block_him,
+    NOT ISNULL(VERIFIEDMAIL.mail) as mailVerified
 FROM
     USERS
 LEFT JOIN POPSCORE
@@ -278,9 +279,11 @@ LEFT JOIN BLOCKED
     ON USERS.username = BLOCKED.blocked
 LEFT JOIN TAG_LIST
     ON USERS.username = TAG_LIST.user
+LEFT JOIN VERIFIEDMAIL
+    ON USERS.username = VERIFIEDMAIL.user
 WHERE
     USERS.username='${searched_username}'
-GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
+GROUP BY USERS.username, firstName, lastName, bio, DOB, USERS.mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 LIMIT 10 OFFSET 0
 `
 	let other_user = await db.query(keri_string)
