@@ -236,30 +236,7 @@ LIKED as (
            COUNT(liker) as number_of_likes_received
     FROM LIKES
     GROUP BY liked
-),
-
-VALIDMAIL as (
-	SELECT
-		username,
-		COUNT(VERIFIEDMAIL.mail) as is_verified_mail
-	FROM
-		USERS
-			LEFT JOIN VERIFIEDMAIL
-				ON USERS.username = VERIFIEDMAIL.user
-	GROUP BY USERS.username
-),
-
-COMPLETEPROFILE AS (
-	SELECT
-		USERS.username,
-		not (ISNULL(profilePic) OR is_verified_mail = 0 OR JSON_LENGTH(tag_list) = 0 OR LENGTH(bio) = 0) as is_complete_profile
-	FROM
-		USERS
-	LEFT JOIN VALIDMAIL
-		ON USERS.username = VALIDMAIL.username
-	LEFT JOIN TAG_LIST
-		ON USERS.username = TAG_LIST.user
-),
+)
 
 
 SELECT
@@ -284,12 +261,10 @@ SELECT
     gif,
     last_connected,
     pop_score,
-    is_complete_profile,
     IFNULL(did_i_like_him, 0) as did_i_like_him,
     IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
     IFNULL(tag_list, cast('[]' as json)) as tag_list,
-    IFNULL(did_i_block_him, 0) as did_i_block_him,
-    NOT ISNULL(VERIFIEDMAIL.mail) as mailVerified
+    IFNULL(did_i_block_him, 0) as did_i_block_him
 FROM
     USERS
 LEFT JOIN POPSCORE
@@ -300,15 +275,12 @@ LEFT JOIN BLOCKED
     ON USERS.username = BLOCKED.blocked
 LEFT JOIN TAG_LIST
     ON USERS.username = TAG_LIST.user
-LEFT JOIN VERIFIEDMAIL
-    ON USERS.username = VERIFIEDMAIL.user
-LEFT JOIN COMPLETEPROFILE
-	ON USERS.username = COMPLETEPROFILE.username
 WHERE
     USERS.username='${searched_username}'
 GROUP BY USERS.username, firstName, lastName, bio, DOB, USERS.mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 LIMIT 10 OFFSET 0
 `
+    console.log(keri_string)
 	let other_user = await db.query(keri_string)
 	if (other_user.length == 0) {
 		return null

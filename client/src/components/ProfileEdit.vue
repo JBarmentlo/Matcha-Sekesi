@@ -17,10 +17,6 @@
                         </div>
                         <div class = "popularity">
                             <div class = "d-flex justify-content-center align-items-center text-center">
-                                <div id="popscore" class = "pop p-3">
-                                    <b-icon-heart />  {{ pop_score }}
-                                </div>
-                                <b-tooltip target="popscore" placement="top" triggers="hover">popularity score</b-tooltip>
                                 <div id="views" class = "views p-3">
                                     <b-icon-eye />  {{ user.consult_list.length }}
                                 </div>
@@ -307,10 +303,6 @@ export default {
                 return this.user.profilePic
             }
             return require("../assets/empty_profile.png")
-        },
-
-        pop_score: function () {
-            return Math.round(this.user.pop_score * 100) / 100;
         },
 
         isCompleteProfile: function() {
