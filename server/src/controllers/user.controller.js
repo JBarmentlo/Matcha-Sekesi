@@ -89,9 +89,9 @@ exports.update_user = async (req, res) => {
 		res.status(200).send({code: "SUCCESS", data: update_res, mail_changed: del_mail.affectedRows})
 	}
 	catch (e) {
-		console.log(e)
-		throw(e)
+		console.log("update", e)
 		res.status(403).send({code: "INVALID FORM"})
+		throw(e)
 	}
 }
 

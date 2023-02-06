@@ -136,7 +136,6 @@ export default {
 
 		async signupFormSubmit(e) {
 			console.log("OIUSDF", process.env.VUE_APP_MATCHA_DB)
-			console.log("LOCALISATION:", this.locate())
 			e.preventDefault();
 			if (this.$refs.formObserver.flags.invalid) {
 				console.log("invalid form")

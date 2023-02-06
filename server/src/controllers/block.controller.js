@@ -35,15 +35,14 @@ exports.block_user_by_id = async (req, res) => {
 			throw (e)
 		}
 		else {
-			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in block user ", error: e})
+			console.log("EROOR block: ", e)
+			res.status(400).send({message: "Error in block user ", code: "FAILURE", error: e})
 			// throw(e)
 		}
 	}
 }
 
 exports.block_user = async (req, res) => {
-	// console.log('blocking ', req.username, req.body.blocked)
 	try {
 		let block_query_result = await db.query(
 			'INSERT INTO BLOCKS \
@@ -64,12 +63,12 @@ exports.block_user = async (req, res) => {
 			res.status(200).send({message: "User name not existing", code: e.code})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			res.status(403).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
-			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in block user ", error: e})
+			console.log("error block: ", e)
+			res.status(400).send({message: "Error in block user ", code: "FAILURE", error: e})
 			// throw(e)
 		}
 	}
@@ -97,12 +96,12 @@ exports.report_user = async (req, res) => {
 			res.status(200).send({message: "User name not existing", code: e.code})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			res.status(403).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
-			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in report user ", error: e})
+			console.log("EROOR report: ", e)
+			res.status(400).send({message: "Error in report user ", code: "FAILURE", error: e})
 			// throw(e)
 		}
 	}
@@ -120,12 +119,12 @@ exports.un_block_user = async (req, res) => {
 	}
 	catch (e) {
 		if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
+			res.status(403).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in block user ", error: e})
+			res.status(400).send({message: "Error in unblock user ", code: "FAILURE", error: e})
 			// throw(e)
 		}
 	}

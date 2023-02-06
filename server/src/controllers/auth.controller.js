@@ -35,26 +35,26 @@ exports.signup = async (req, res) => {
         )
         sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)}`)
         console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${hostname}/verify/${encodeURIComponent(hash)}`)
-        res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
+        return res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
         console.log(e)
         if (e.code == 'ER_DUP_ENTRY') {
-            res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
+            return res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
         }
         else if (e.code == 'ER_PARSE_ERROR') {
-            res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
+            return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
             // // throw(e)
         }
         else if (e.code == 'ER_DATA_TOO_LONG') {
-            res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+            return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
         }
         else if (e.code == 'ER_BAD_NULL_ERROR') {
-            res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
+            return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
         }
         else {
             console.log("signup error:\n", e, "\nend signup error")
-            res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
+            return res.status(403).send({message: 'error in create test user', error: e, code: 'FAILURE'})
             // throw(e)
         }
     }	
@@ -82,11 +82,10 @@ exports.verifyMail = async (req, res) => {
                 VALUES (?, ?)`,
             [verify_mail_result[0].user, verify_mail_result[0].mail])
 
-        res.status(200).send({message: "verified mail for " + verify_mail_result[0].user, code: "SUCCESS"})
+        return res.status(200).send({message: "verified mail for " + verify_mail_result[0].user, code: "SUCCESS"})
     }
     catch (e) {
-        throw (e)
-        res.status(200).send({message: "Error in verify mail", code: "Failure"})
+        return res.status(200).send({message: "Error in verify mail", code: "Failure"})
         throw (e)
     }
 };
@@ -151,7 +150,7 @@ exports.resetPass = async (req, res) => {
     }
     catch (e) {
         console.log("error in reset Pass: ",e)
-        res.status(200).send({message: "Error in reset pass", code: "Failure"})
+        return res.status(200).send({message: "Error in reset pass", code: "Failure"})
         throw (e)
     }
 };
@@ -181,7 +180,8 @@ exports.signin = async (req, res) => {
         });
     }
     catch (e) {
-        console.error("ERROR in signin")
+        console.error("ERROR in signin", e)
+        return res.status(400).send({message: "Error in signin", code: "Failure"})
         throw (e)
     }
 };
@@ -199,7 +199,7 @@ exports.verifyToken = (req, res, next) => {
                 return res.status(401).send({ message: "Unauthorized!" });
             }
             req.username = decoded.username;
-            next();
+            return next();
         });
     }
     catch (e) {
@@ -217,7 +217,7 @@ exports.updateLastConnected = async (req, res, next) => {
             SET last_connected = CURRENT_TIMESTAMP\
             WHERE username= ?;",
             req.username)
-        next();
+        return next();
     }
     catch (e) {
         console.log('error in update co')
