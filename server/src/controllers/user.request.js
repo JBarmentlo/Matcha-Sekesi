@@ -129,7 +129,6 @@ SELECT
 	profilePic,
 	gif,
 	last_connected,
-	pop_score,
 	TIMESTAMPDIFF(SECOND, last_connected, NOW()) <= 3 as connected,
 	IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
 	IFNULL(tag_list,       cast('[]' as json)) as tag_list,
@@ -141,8 +140,6 @@ LEFT JOIN VALIDMAIL
 	ON USERS.username = VALIDMAIL.username
 LEFT JOIN COMPLETEPROFILE
 	ON USERS.username = COMPLETEPROFILE.username
-LEFT JOIN POPSCORE
-	ON USERS.username = POPSCORE.username
 LEFT JOIN TAG_LIST
 	ON USERS.username = TAG_LIST.user
 LEFT JOIN LIKER_LIST
@@ -660,6 +657,7 @@ WHERE
     pop_score >= ${min_rating} AND
     pop_score <= ${max_rating} AND
     USERS.username!='${searcher_username}'
+
 GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 HAVING
     age <= ${max_age} AND
