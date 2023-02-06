@@ -73,7 +73,11 @@ exports.check_profile_complete = async (req, res, next) => {
             )
 
             SELECT
-                is_complete_profile
+                is_complete_profile,
+                no_profile_pic,
+                no_verified_mail,
+                no_tags,
+                no_bio
             FROM
                 COMPLETEPROFILE
             WHERE

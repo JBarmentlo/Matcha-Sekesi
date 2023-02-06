@@ -173,7 +173,7 @@ export var store = {
     if (this.state.user == null) {
       return false
     }
-    return this.state.user.profile_complete
+    return this.state.user.is_complete_profile
   },
 
   clearStore() {
