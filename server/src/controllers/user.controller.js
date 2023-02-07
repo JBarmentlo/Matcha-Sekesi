@@ -3,6 +3,7 @@ var bcrypt     = require("bcryptjs");
 const sendMail = require('../services/mailgun');
 const new_searches = require("./user.request.js")
 const hostname = require('../fixtures/hostname.js').hostname
+const {accentsTidy} = require('../services/name_cleaner')
 
 
 async function handle_new_mail_for_user(username, id, mail) {
@@ -76,6 +77,26 @@ exports.create_user = async (req, res) => {
 	}	
 };
 
+async function get_long_lat(city) {
+	try {
+		let res = await db.query(
+			`
+			SELECT * from VILLEPOSTAL
+			WHERE nom_commune=?
+			`,
+			[accentsTidy(city)]
+		)
+		if (res.length != 0) {
+			return {longitude:res[0].longitude, latitude:res[0].latitude, code_postal:res[0].code_postal}
+		}
+		return null
+	}
+	catch (e) {
+		console.log(e, city)
+		return null
+	}
+}
+
 
 const tolerated_keys = ['username', 'firstName', 'lastName', 'bio', 'mail', 'gender', 'sekesualOri', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
 exports.update_user = async (req, res) => {
@@ -85,6 +106,11 @@ exports.update_user = async (req, res) => {
 			delete update[key]
 		}
 	});
+	let location = await get_long_lat(city, zipCode)
+	if (location != null && location.longitude != null) {
+		update.longitude = location.longitude
+		update.latitude  = location.latitude
+	}
 	console.log("Update")
 	console.log(update)
 	try {

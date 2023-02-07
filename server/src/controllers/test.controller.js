@@ -6,6 +6,7 @@ const bar1              = new cliProgress.SingleBar({}, cliProgress.Presets.shad
 const likeController    = require("../controllers/like.controller")
 const consultController = require("../controllers/consult.controller")
 const blockController   = require("../controllers/block.controller")
+const {accentsTidy}     = require('../services/name_cleaner')
 
 const mockResponse = () => {
 	const res = {};
@@ -67,7 +68,7 @@ async function get_long_lat(city, postal_code) {
 			SELECT * from VILLEPOSTAL
 			WHERE nom_commune=?
 			`,
-			[city]
+			[accentsTidy(city)]
 		)
 		if (res.length != 0) {
 			return {longitude:res[0].longitude, latitude:res[0].latitude, code_postal:res[0].code_postal}

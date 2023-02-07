@@ -3,8 +3,7 @@ const { parse } = require("csv-parse");
 const db       = require("./src/db/sql.conn");
 const cliProgress       = require('cli-progress');
 const bar1              = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-
-
+const {accentsTidy} = require('./src/services/name_cleaner')
 
 async function insert_city(postal, lat, long, name) {
   try {
@@ -19,7 +18,7 @@ async function insert_city(postal, lat, long, name) {
     console.log(e)
   }
 }
-cities = []
+
 function do_the_thing() {
   total = 39202
   done = 0
@@ -28,8 +27,7 @@ function do_the_thing() {
   .pipe(parse({ delimiter: ",", from_line: 2 }))
   .on("data", async function (row) {
     if (row[2] != '' && row[5] != '' && row[6] != '' && row[9] != '') {
-      cities.push((row[2], row[5], row[6], row[9]))
-      await insert_city(row[2], row[5], row[6], row[9])
+      await insert_city(row[2], row[5], row[6], accentsTidy(row[9]))
       done += 1
 			bar1.update(done)
     }
@@ -39,4 +37,3 @@ function do_the_thing() {
   });
 }
 do_the_thing()
-console.log(cities)

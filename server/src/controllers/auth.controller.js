@@ -6,7 +6,7 @@ const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
 const new_searches = require("./user.request.js")
 const hostname = require('../fixtures/hostname.js').hostname
-
+const { nanoid } = require("nanoid");
 
 exports.signup = async (req, res) => {
     console.log('Signup for users: ', req.body.username)
@@ -25,14 +25,16 @@ exports.signup = async (req, res) => {
             `INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
             )
-
-        let hash = bcrypt.hashSync(query_result.insertId.toString(), 8).replace('.','').replace('/', '')
+        let hash = nanoid(48);
+        console.log(hash)
+        // let hash = bcrypt.hashSync(query_result.insertId.toString(), 8).replace('.','').replace('/', '')
         await db.query(
             "INSERT INTO VERIFY \
             (user, id_hash, mail) \
             VALUES (?, ?, ?);",
             [username, hash, mail]
         )
+        
         sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)} `)
         console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${hostname}/verify/${encodeURIComponent(hash)} `)
         return res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
