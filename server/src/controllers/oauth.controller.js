@@ -66,7 +66,7 @@ async function create_user(user_info) {
                                [login   , email, first_name, last_name, 75018  , long     , lat     , 'Paris', image]
             )
 
-        let hash = bcrypt.hashSync(query_result.insertId.toString(), 8)
+        let hash = nanoid(48);
 
         let insert_mail_result = await db.query(
             "INSERT INTO VERIFY \

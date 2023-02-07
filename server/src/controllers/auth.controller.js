@@ -26,8 +26,6 @@ exports.signup = async (req, res) => {
             [username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
             )
         let hash = nanoid(48);
-        console.log(hash)
-        // let hash = bcrypt.hashSync(query_result.insertId.toString(), 8).replace('.','').replace('/', '')
         await db.query(
             "INSERT INTO VERIFY \
             (user, id_hash, mail) \
@@ -107,7 +105,7 @@ exports.requestresetPass = async (req, res) => {
         }
 
         let user = user_request[0]
-        let hash = bcrypt.hashSync(user.id.toString(), 8).replace('.','').replace('/', '')
+        let hash = nanoid(48);
         await db.query(
             "INSERT INTO RESET \
             (user, id_hash) \

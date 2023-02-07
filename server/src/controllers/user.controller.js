@@ -7,7 +7,7 @@ const {accentsTidy} = require('../services/name_cleaner')
 
 
 async function handle_new_mail_for_user(username, id, mail) {
-	let hash = bcrypt.hashSync(id.toString(), 8)
+	let hash = nanoid(48);
 	let insert_mail_result = await db.query(
 		"INSERT INTO VERIFY \
 		(user, id_hash) \
