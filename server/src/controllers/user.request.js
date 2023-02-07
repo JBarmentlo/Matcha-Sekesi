@@ -544,7 +544,7 @@ DISTANCE as (
            SQRT(POWER(USERS.longitude - searcher.longitude, 2) + POWER(USERS.latitude - searcher.latitude, 2)) as distance
         from USERS
             CROSS JOIN USERS searcher
-                ON searcher.username=@searcher
+                ON searcher.username='${searcher_username}'
 )
 
 

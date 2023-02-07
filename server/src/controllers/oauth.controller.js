@@ -3,6 +3,7 @@ const db       = require("../db/sql.conn");
 const bcrypt   = require("bcryptjs");
 const crypto   = require('crypto');
 const jwt      = require("jsonwebtoken");
+const { nanoid } = require("nanoid");
 
 const sendMail = require('../services/mailgun');
 const new_searches = require("./user.request.js")

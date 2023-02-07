@@ -34,10 +34,10 @@
                                     <template #button-content>
                                         <span class="caret_down"><b-icon-caret-down-fill class="caret"/></span>
                                     </template>
-                                        <b-dropdown-item v-for="liker in user.like_list" :key="liker">
+                                        <b-dropdown-item v-for="liker in user.like_list" :key="liker + 'liker'">
                                             <router-link :to="{ name: 'profile', params: { userName: liker }}">{{liker}}</router-link> liked you.
                                         </b-dropdown-item>
-                                        <b-dropdown-item v-for="consulter in user.consult_list" :key="consulter">
+                                        <b-dropdown-item v-for="consulter in user.consult_list" :key="consulter + 'consulter'">
                                             <router-link :to="{ name: 'profile', params: { userName: consulter }}">{{consulter}}</router-link> consulted your profile
                                         </b-dropdown-item>
                                 </b-dropdown>

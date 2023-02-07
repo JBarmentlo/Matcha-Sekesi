@@ -3,7 +3,7 @@ var bcrypt     = require("bcryptjs");
 const sendMail = require('../services/mailgun');
 const new_searches = require("./user.request.js")
 const hostname = require('../fixtures/hostname.js').hostname
-const {accentsTidy} = require('../services/name_cleaner')
+const { nanoid } = require("nanoid");
 
 
 async function handle_new_mail_for_user(username, id, mail) {
@@ -77,22 +77,22 @@ exports.create_user = async (req, res) => {
 	}	
 };
 
-async function get_long_lat(city) {
+async function get_long_lat(post_code) {
 	try {
 		let res = await db.query(
 			`
 			SELECT * from VILLEPOSTAL
-			WHERE nom_commune=?
+			WHERE code_postal=?
 			`,
-			[accentsTidy(city)]
+			[post_code]
 		)
 		if (res.length != 0) {
-			return {longitude:res[0].longitude, latitude:res[0].latitude, code_postal:res[0].code_postal}
+			return {longitude:res[0].longitude, latitude:res[0].latitude, code_postal:res[0].code_postal, nom_comunne:res[0].nom_commune}
 		}
 		return null
 	}
 	catch (e) {
-		console.log(e, city)
+		console.log(e, post_code)
 		return null
 	}
 }
@@ -106,11 +106,19 @@ exports.update_user = async (req, res) => {
 			delete update[key]
 		}
 	});
-	let location = await get_long_lat(city, zipCode)
-	if (location != null && location.longitude != null) {
-		update.longitude = location.longitude
-		update.latitude  = location.latitude
+	try {
+		let location = await get_long_lat(req.body.update.zipCode)
+		if (location != null && location.longitude != null) {
+			console.log("Improved GPS loc: ", location)
+			update.longitude = location.longitude
+			update.latitude  = location.latitude
+		}
 	}
+	catch (e) {
+		console.log("not improving GPS", e)
+	}
+	
+
 	console.log("Update")
 	console.log(update)
 	try {
