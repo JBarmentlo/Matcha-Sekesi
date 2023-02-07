@@ -60,6 +60,26 @@ function removeDuplicates(arr) {
 	return unique;
 }
 
+async function get_long_lat(city, postal_code) {
+	try {
+		let res = await db.query(
+			`
+			SELECT * from VILLEPOSTAL
+			WHERE nom_commune=?
+			`,
+			[city]
+		)
+		if (res.length != 0) {
+			return {longitude:res[0].longitude, latitude:res[0].latitude, code_postal:res[0].code_postal}
+		}
+		return null
+	}
+	catch (e) {
+		console.log(e, city, postal_code)
+		return null
+	}
+}
+
 exports.create_user_test = async (req, res) => {
 
 	username          = req.body.username
@@ -80,13 +100,17 @@ exports.create_user_test = async (req, res) => {
 	profilePic        = req.body.profilePic
 	tag_list          = req.body.tag_list
 
+	let location = await get_long_lat(city, zipCode)
+	if (location != null && location.longitude != null) {
+		longitude = location.longitude
+		latitude = location.latitude
+		zipCode = location.code_postal
+	}
 	if (tag_list == undefined || tag_list == null) {
 		tag_list = []
 	}
 
-	console.log(longitude)
 	try {
-		console.log(username, tag_list)
 		let user_create_res = await db.query(
 			'INSERT INTO USERS \
 			(username, firstName, lastName, bio, mail, password, gender, sekesualOri, zipCode, city, longitude, latitude, image0, profilePic, DOB, gif) \
@@ -94,7 +118,6 @@ exports.create_user_test = async (req, res) => {
 			[username, firstName, lastName, bio, mail, password, gender, sekesualOri, zipCode, city, longitude, latitude, image0, profilePic, DOB, gif]
 			)
 		let keri_string ="INSERT INTO TAGS (tag, user) VALUES "
-		// console.log(removeDuplicates(tag_list))
 		for (const tag of removeDuplicates(tag_list)) {
 			keri_string += ` ('${tag}', '${username}'),`
 		}

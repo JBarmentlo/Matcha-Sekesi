@@ -18,6 +18,23 @@ async function handle_new_mail_for_user(username, id, mail) {
 }
 
 
+async function get_long_lat(city, postal_code) {
+	try {
+		let res = db.query(
+			`
+			SELECT * from VILLEDPOSTAL
+			WHERE code_postal=?
+			`,
+			[postal_code]
+		)		
+		console.log(res)
+	}
+	catch (e) {
+		console.log(e, city, postal_code)
+	}
+}
+
+
 exports.create_user = async (req, res) => {
 	let username  = req.body.username;
 	let firstName = req.body.firstName;

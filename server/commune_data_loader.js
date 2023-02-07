@@ -6,7 +6,7 @@ const bar1              = new cliProgress.SingleBar({}, cliProgress.Presets.shad
 
 
 
-async function insert_city(postal, long, lat, name) {
+async function insert_city(postal, lat, long, name) {
   try {
     return await db.query(`
     INSERT INTO VILLEPOSTAL

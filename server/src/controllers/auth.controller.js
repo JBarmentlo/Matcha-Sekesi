@@ -33,8 +33,8 @@ exports.signup = async (req, res) => {
             VALUES (?, ?, ?);",
             [username, hash, mail]
         )
-        sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)}`)
-        console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${hostname}/verify/${encodeURIComponent(hash)}`)
+        sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)} `)
+        console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${hostname}/verify/${encodeURIComponent(hash)} `)
         return res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
@@ -62,11 +62,12 @@ exports.signup = async (req, res) => {
 
 exports.verifyMail = async (req, res) => {
     try {
-        console.log("verifying mail")
+        console.log("verifying mail. hash: ", req.params.hash)
         let verify_mail_result = await db.query(
             `SELECT * FROM VERIFY
             where id_hash=?`,
             req.params.hash)
+        
     
         if (verify_mail_result.length == 0) {
             return res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
