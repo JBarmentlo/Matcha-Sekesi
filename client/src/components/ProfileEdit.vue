@@ -389,10 +389,11 @@ export default {
                 await updateUser(this.token, user_diffy)
                 await tagUploadRes
                 let user_response = await getMyUser(this.token)
-                // console.log("GOT NEW USEr", user_response.data.data)
                 this.user = user_response.data.data
+                this.$swal("Successfully updated your profile.")
             }
             catch (e) {
+                this.$swal("Unsuccessful profile update.")
                 console.log("error in update User or get response:\n", e)
             }
         },
