@@ -126,6 +126,7 @@ export default {
 				}
 			]
 			console.log(message.content.replace(new RegExp("'", "g"), "''"))
+			console.log("romid", message.roomId)
 			sendMsg(this.token, message.roomId , message.content.replace(new RegExp("'", "g"), "''"), this.usersToConvoId(this.currentUserId, message.roomId))
 		},
 
@@ -158,7 +159,7 @@ export default {
 			}
 			return {
 				// roomId: `${short}${long.length}${long}`,
-				roomId: match.matchee,
+				roomId: match.liker,
 				roomName: match.liker,
 				avatar: this.profilePicNull(match.profilePic),
 				users: [
