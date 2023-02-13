@@ -572,7 +572,7 @@ SELECT
     pop_score as popScore,
     distance,
     IFNULL(did_i_like_him, 0) as did_i_like_him,
-    IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
+    IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 18) as age,
     IFNULL(tag_list, cast('[]' as json)) as tag_list,
     IFNULL(did_i_block_him, 0) as did_i_block_him,
     IFNULL(number_of_common_tags, 0) as number_of_common_tags,

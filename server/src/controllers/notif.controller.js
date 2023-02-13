@@ -53,16 +53,41 @@ exports.create_notif = async (type, source, target) => {
 } 
 
 exports.get_my_notifs = async (req, res) => {
-	// console.log("get notif: ", [req.username, req.body.limit, req.body.offset])
 	try {
 		notif_query = await db.query(
-			"SELECT * FROM NOTIFS \
-			WHERE target_user=? AND \
-			NOT EXISTS (SELECT 1 FROM BLOCKS \
-				WHERE NOTIFS.source_user = BLOCKS.blocked AND NOTIFS.target_user = BLOCKS.blocker OR \
-				NOTIFS.source_user = BLOCKS.blocker AND NOTIFS.target_user = BLOCKS.blocked) \
-			ORDER BY last_updated DESC LIMIT ? OFFSET ?;",
-			[req.username, req.body.limit, req.body.offset],)
+			`
+			WITH
+			BLOCKED as (
+				SELECT
+					blocked,
+					SUM(blocker=?) > 0 as did_i_block_him
+				FROM
+					BLOCKS
+				GROUP BY
+					blocked
+			)
+
+			SELECT 
+				id,
+				type,
+				source_user,
+				target_user,
+				seen,
+				last_updated,
+				IFNULL(did_i_block_him, 0) as blocked_source
+			FROM NOTIFS
+				LEFT JOIN BLOCKED
+					ON BLOCKED.blocked=NOTIFS.source_user
+			WHERE 
+				target_user=?
+			HAVING
+				blocked_source=0
+			ORDER BY last_updated DESC LIMIT ? OFFSET ?;
+			`
+			,
+			[req.username, req.username, req.body.limit, req.body.offset],)
+		
+		// console.log("get notif: ", req.username, notif_query.length)
 		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
 	}
 	catch (e) {
@@ -103,7 +128,6 @@ exports.set_seen_notifs = async (req, res) => {
 		return res.status(201).send({message: "failed notif set seen", data: [], code: "FAILURE"})
 	}
 }
-
 
 exports.set_seen_notif = async (req, res) => {
 	try {
