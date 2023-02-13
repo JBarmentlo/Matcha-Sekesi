@@ -68,6 +68,7 @@
                             v-model="user.firstName"
                             class="form-control"
                             placeholder="Enter first name"
+                            maxlength="50"
                             value=""
                         />
                     </div>
@@ -81,6 +82,7 @@
                             class="form-control"
                             value=""
                             placeholder="Enter last name"
+                            maxlength="50"
                         />
                     </div>
                 </div>
@@ -92,8 +94,10 @@
                             v-model="user.mail"
                             class="form-control"
                             placeholder="Enter email adress"
+                            maxlength="255"
                             value=""
                         />
+                        <span v-if="mail_taken" class="login_error">Mail already in use</span>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -104,6 +108,7 @@
                         v-model="user.zipCode"
                         class="form-control"
                         placeholder="zip"
+                        maxlength="100"
                         value=""
                     />
                 </div>
@@ -263,6 +268,7 @@ export default {
             searchTerm : "",
             gifs: [],
             search_on : false,
+            mail_taken: false
         };
     },
 
@@ -383,14 +389,25 @@ export default {
             delete user_diffy.last_connected
             delete user_diffy.connected
             try {
-                let tagUploadRes = this.$refs.tagHandler.uploadTags()
+                await this.$refs.tagHandler.uploadTags()
                 delete user_diffy.tag_list
                 console.log("sending updato: ", user_diffy)
-                await updateUser(this.token, user_diffy)
-                await tagUploadRes
-                let user_response = await getMyUser(this.token)
-                this.user = user_response.data.data
-                this.$swal("Successfully updated your profile.")
+                let update_res = await updateUser(this.token, user_diffy)
+                if (update_res.data.code == 'SUCCESS') {
+                    let user_response = await getMyUser(this.token)
+                    this.user = user_response.data.data
+                    this.$swal("Successfully updated your profile.")
+                    return
+                }
+                
+                if (update_res.data.code == 'MAIL_TAKEN') {
+                    this.mail_taken = true
+                }
+
+                if (update_res.data.code == 'ER_DATA_TOO_LONG') {
+                    this.data_too_long = true
+                }
+                this.$swal("Unsuccessful profile update.")
             }
             catch (e) {
                 this.$swal("Unsuccessful profile update.")
@@ -436,6 +453,11 @@ export default {
 
 @import url("../assets/profile.css");
 
+.login_error {
+	color : red;
+	font-size: 80%;
+	margin-left: 5px;
+}
 
 .popularity {
     color: rgb(56, 56, 56);

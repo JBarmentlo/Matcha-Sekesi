@@ -98,7 +98,8 @@ async function get_long_lat(post_code) {
 }
 
 
-const tolerated_keys = ['username', 'firstName', 'lastName', 'bio', 'mail', 'gender', 'sekesualOri', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
+const tolerated_keys = ['firstName', 'lastName', 'bio', 'mail', 'gender', 'sekesualOri', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
+
 exports.update_user = async (req, res) => {
 	let update = req.body.update
 	Object.keys(update).forEach(key => {
@@ -113,6 +114,7 @@ exports.update_user = async (req, res) => {
 			update.longitude = location.longitude
 			update.latitude  = location.latitude
 		}
+		console.log("not improving GPS cuz: ", location)
 	}
 	catch (e) {
 		console.log("not improving GPS", e)
@@ -141,6 +143,16 @@ exports.update_user = async (req, res) => {
 	}
 	catch (e) {
 		console.log("update", e)
+		if (e.code == "ER_DUP_ENTRY") {
+			console.log("ER_DUP_ENTRY: ",e)
+			return res.status(200).send({code: "MAIL_TAKEN", message: e.sqlMessage})
+		}
+
+		if (e.code == "ER_DATA_TOO_LONG") {
+			console.log("ER_DATA_TOO_LONG: ",e)
+			return res.status(200).send({code: "ER_DATA_TOO_LONG", message: e.sqlMessage})
+		}
+		
 		res.status(403).send({code: "INVALID FORM"})
 		throw(e)
 	}
