@@ -152,7 +152,7 @@ exports.get_matches = async (req, res) => {
 
 			FROM MATCHES
 				LEFT JOIN BLOCKED
-					ON MATCHES.matcher = BLOCKED.did_i_block_him
+					ON MATCHES.matcher = BLOCKED.blocked
 				LEFT JOIN USERS
 					ON MATCHES.matcher = USERS.username
 			WHERE
