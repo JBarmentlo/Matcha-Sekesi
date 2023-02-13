@@ -1,3 +1,4 @@
+const { existsSync } = require("fs");
 const db = require("../db/sql.conn");
 
 
@@ -18,7 +19,7 @@ MATCHES AS (
 BLOCKED as (
     SELECT
         blocked,
-        SUM(blocker=@searcher) > 0 as did_i_block_him
+        SUM(blocker='${req.username}') > 0 as did_i_block_him
     FROM
         BLOCKS
     GROUP BY
@@ -37,13 +38,13 @@ INNER JOIN MSG
 	ON (MSG.receiver IN ('${req.username}', matchee)
 	AND MSG.sender IN ('${req.username}', matchee))
 LEFT JOIN BLOCKED
-	ON BLOCKED.blocked = MSG.receiver
+	ON BLOCKED.blocked = MSG.sender
 HAVING
 	blocked_source=0
 `
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
-		// console.log("got : ", message_keri)
+		// console.log("msg", req.username,  message_keri)
 		return res.status(200).send({message: 'Successfully queried your messages.', data: message_keri, code:'SUCCESS'})
 	}
 	catch (e) {
