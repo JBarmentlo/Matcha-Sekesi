@@ -93,20 +93,32 @@ export default {
         },
 
         startPollingMsg(freq) {
+            this.last_message_time = null
+            let first_poll = true
             this.polling = setInterval(async () => {
                 try {
                     if (this.messages == null) {
                         this.messages = (await getMyMessages(this.token, 0, 100)).data.data
                     }
                     else {
-                        let old_ids = this.messages.map(n => n.id)
                         this.messages = (await getMyMessages(this.token, 0, 100)).data.data.reverse()
-                        let new_notifs = this.messages.filter(n => !old_ids.includes(n.id) && !(n.sender == this.user.username))
-                        this.notifyUser(new_notifs)
+                        let new_messages = this.messages.filter(n => !(n.sender == this.user.username))
+                        new_messages = new_messages.filter(n => Date.parse(n.last_updated) > this.last_message_time)
+
+                        if (this.last_message_time == null && new_messages.length > 0) {
+                            this.last_message_time = Date.parse(new_messages[0].last_updated)
+                            console.log("Updated time first", this.last_message_time, new_messages[0])
+                        }
+                        if (!first_poll && new_messages.length > 0) {
+                            this.notifyUser(new_messages)
+                            this.last_message_time = Date.parse(new_messages[0].last_updated)
+                            console.log("new time", Date.parse(new_messages[0].last_updated))
+                        }
+                        first_poll = false
                     }
                 }
                 catch(e) {
-                    console.log("Interrrupted Msg polling")
+                    console.log("Interrrupted Msg polling", e)
                     clearInterval(this.polling)
                 }
 
@@ -116,7 +128,7 @@ export default {
 
         notifyUser(notif_list) {
             if (notif_list.length != 0) {
-                console.log("notify: ", notif_list)
+                // console.log("notify: ", notif_list)
                 for (const notif of notif_list) {
                     this.$notify({
                         text: notif.sender + " sent you a message!"

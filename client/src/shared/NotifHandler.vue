@@ -26,7 +26,9 @@ data () {
     polling: null,
     notifs: [],
     offset: 0,
-    limit: 100
+    limit: 100,
+    last_notif_time: null,
+    first_query: true
   }
 },
 
@@ -39,14 +41,6 @@ computed: {
     return this.notifs.length
   },
 
-  notifText() {
-    if (this.unreadNotifs == 0) {
-      return 'Nootifs'
-    }
-    else {
-      return 'Nootifs (' + this.unreadNotifs + ')'
-    }
-  },
 
   token: {
     get: function() {
@@ -65,7 +59,12 @@ methods: {
         let old_notif_ids = this.notifs.map(n => n.id)
         this.notifs = (await getMyNotifs(this.token, this.offset, this.limit)).data.data
         let new_notifs = this.notifs.filter(n => !old_notif_ids.includes(n.id))
-        this.notifyUser(new_notifs)
+        new_notifs = new_notifs.filter(n => !n.seen)
+        if (!this.first_query) {
+          // console.log("NOOTI", new_notifs)
+          this.notifyUser(new_notifs)
+          this.first_query = false
+        }
       }
       catch (e) {
         this.stop_polling()
@@ -76,7 +75,7 @@ methods: {
 
   notifyUser(notif_list) {
     if (notif_list.length != 0) {
-      console.log("notify: ", notif_list)
+      console.log("notify handler: ", notif_list)
       for (const notif of notif_list) {
         this.$notify({
           text: this.notifCardText(notif)
