@@ -102,6 +102,7 @@ function InitialiseTok() {
 
 export var store = {
   debug: true,
+  initialized: false,
   state: {
     token            : InitialiseTok(),
     user             : null,
@@ -213,7 +214,10 @@ export const updateUserStore = async () => {
 
 router.beforeResolve(async (to, from, next) => {
   console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)
-  // await updateUserStore()
+  if (store.initialized == false) {
+    await updateUserStore()
+    store.initialized = true
+  }
   console.log("logged_in: ", store.state.logged_in, "user: ", store.state.user != null, "token: ", store.state.token != null)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     console.log("Requires auth")

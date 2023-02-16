@@ -17,6 +17,20 @@ export const getMyNotifs = async (access_token, offset, limit) => {
 	return response;
 }
 
+export const getCurrentTime = async (access_token) => {
+	let request = {
+		url: "/api/notif/gettime",
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+		}
+	};
+	const response = await api_axios(request);
+	console.log("TIME res: ", response)
+	return response;
+}
+
 export const setSeenNotifs = async (access_token, notif_ids) => {
 	// console.log("setting see: ", notif_ids)
 	let request = {

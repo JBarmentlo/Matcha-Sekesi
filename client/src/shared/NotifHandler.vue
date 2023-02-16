@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { getMyNotifs, setSeenNotifs, deleteNotifs }from '../services/notif'
+import { getMyNotifs, setSeenNotifs, deleteNotifs, getCurrentTime }from '../services/notif'
 
 export default {
 
@@ -113,6 +113,8 @@ methods: {
 
 async mounted() {
   try {
+    let time = await getCurrentTime(this.token)
+    console.log("TIMEEEEEE: ", time)
     let nooti = await getMyNotifs(this.token, this.offset, this.limit)
     this.notifs = nooti.data.data
     this.pollData()

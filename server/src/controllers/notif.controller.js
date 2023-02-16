@@ -52,6 +52,27 @@ exports.create_notif = async (type, source, target) => {
 	}
 } 
 
+exports.get_current_time = async (req, res) => {
+	try {
+		current_time = await db.query(
+			`
+			SELECT
+				last_connected
+			FROM
+				USERS
+			WHERE
+				username=?
+			`,
+			[req.username],)
+		return res.status(200).send({message: "succesfull time request", data: current_time[0].last_connected, code: "SUCCESS"})
+	}
+	catch (e) {
+		console.log(e)
+		return res.status(201).send({message: "failed time query", data: '2023-02-16T18:34:44.000Z', code: "FAILURE"})
+		throw (e)
+	}
+}
+
 exports.get_my_notifs = async (req, res) => {
 	try {
 		notif_query = await db.query(
