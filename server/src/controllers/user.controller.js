@@ -114,15 +114,14 @@ exports.update_user = async (req, res) => {
 			update.longitude = location.longitude
 			update.latitude  = location.latitude
 		}
-		console.log("not improving GPS cuz: ", location)
+		// console.log("not improving GPS cuz: ", location)
 	}
 	catch (e) {
-		console.log("not improving GPS", e)
+		
+		// console.log("not improving GPS", e)
 	}
 	
 
-	console.log("Update")
-	console.log(update)
 	try {
 		let update_res = await db.query(`
 		UPDATE USERS

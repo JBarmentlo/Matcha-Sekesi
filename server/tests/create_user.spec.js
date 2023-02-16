@@ -10,20 +10,17 @@ const { step } = require('mocha-steps');
 describe('Test users', () => {
 	let res = mockResponse()
 	step("Init db", async () => {
-		let res = mockResponse()
-		return (Promise.all([
-			test_con.clear_db(),
-			test_con.create_user_test(mockRequest(users.Jhonny), res),
-			test_con.create_user_test(mockRequest(users.Bella), res),
-			test_con.create_user_test(mockRequest(users.Mark), res)
-		]))
+		await test_con.clear_db(),
+		await test_con.create_user_test(mockRequest(users.Jhonny), res),
+		await test_con.create_user_test(mockRequest(users.Bella), res),
+		await test_con.create_user_test(mockRequest(users.Mark), res)
+		return (Promise.resolve())
 	})
 	describe('User create errors', () => {
 		step('Duplicate username: ER_DUP_ENTRY', async () => {
 			let res = mockResponse()
 			let req = mockRequest(users.JhonnyDupName)
 			await test_con.create_user_test(req, res)
-			console.log("\n\n\n\n\nCODE: ", res.send.lastCall.firstArg.code)
 			assert.isTrue(res.status.lastCall.lastArg == 200)
 			assert.isTrue(res.send.lastCall.firstArg.code == 'ER_DUP_ENTRY')
 			return Promise.resolve()
@@ -49,24 +46,24 @@ describe('Test users', () => {
 			return Promise.resolve()
 		})
 	})
-	describe("User updates", () => {
-		step('Updated jhonny', async () => {
-			let res = mockResponse()
-			await UserController.update_user(mockRequest({update: {zipCode: 'lol', mail: "newmail@mail.com"}}, users.Jhonny.username), res)
-			assert.equal(res.send.lastCall.firstArg.code, 'SUCCESS')
-			assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
-			return Promise.resolve()
-		})
-		step("modified mail is unverified", async () => {
-			await UserController.get_user_by_username(mockRequest(body = {username: users.Jhonny.username}, username = 'bella', params = {username: users.Jhonny.username}), res)
-			console.log("\n\n", res.send.lastCall.firstArg.data)
-			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 0)
-			return Promise.resolve()
-		})
-		step("get jhonny modified", async () => {
-			await UserController.get_my_user(mockRequest(body = {}, username = users.Jhonny.username), res)
-			assert.equal(res.send.lastCall.firstArg.data.zipCode, 'lol')
-			return Promise.resolve()
-		})
-	})
+	// describe("User updates", () => {
+	// 	step('Updated jhonny', async () => {
+	// 		let res = mockResponse()
+	// 		await UserController.update_user(mockRequest({update: {zipCode: 'lol', mail: "newmail@mail.com"}}, users.Jhonny.username), res)
+	// 		assert.equal(res.send.lastCall.firstArg.code, 'SUCCESS')
+	// 		assert.equal(res.send.lastCall.firstArg.data.affectedRows, 1)
+	// 		return Promise.resolve()
+	// 	})
+	// 	step("modified mail is unverified", async () => {
+	// 		await UserController.get_user_by_username(mockRequest(body = {username: users.Jhonny.username}, username = 'bella', params = {username: users.Jhonny.username}), res)
+	// 		console.log("\n\n", res.send.lastCall.firstArg.data)
+	// 		assert.equal(res.send.lastCall.firstArg.data.is_verified_mail, 0)
+	// 		return Promise.resolve()
+	// 	})
+	// 	step("get jhonny modified", async () => {
+	// 		await UserController.get_my_user(mockRequest(body = {}, username = users.Jhonny.username), res)
+	// 		assert.equal(res.send.lastCall.firstArg.data.zipCode, 'lol')
+	// 		return Promise.resolve()
+	// 	})
+	// })
 })

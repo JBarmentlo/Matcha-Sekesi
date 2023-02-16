@@ -16,13 +16,11 @@ function sleep(ms) {
 describe('Test likes', () => {
 	let res = mockResponse()
 	step("Init db", async () => {
-		let res = mockResponse()
-		return (Promise.all([
-			test_con.clear_db(),
-			test_con.create_user_test(mockRequest(users.Jhonny), res),
-			test_con.create_user_test(mockRequest(users.Bella), res),
-			test_con.create_user_test(mockRequest(users.Mark), res)
-		]))
+		await test_con.clear_db(),
+		await test_con.create_user_test(mockRequest(users.Jhonny), res),
+		await test_con.create_user_test(mockRequest(users.Bella), res),
+		await test_con.create_user_test(mockRequest(users.Mark), res)
+		return (Promise.resolve())
 	})
 	describe("Create Lonely Mark", () => {
 		step('mark   => jhonny Code SUCCESS', async () => {
@@ -81,9 +79,9 @@ describe('Test likes', () => {
 	describe("Get Matches", () => {
 		step("Bella's matches: jhonny", async () => {
 			await LikeController.get_matches(mockRequest({}, users.Bella.username), res)
-			assert.isTrue(res.send.lastCall.firstArg.data.map(o => o.matchee).includes(users.Jhonny.username))
+			assert.isTrue(res.send.lastCall.firstArg.data.map(o => o.liker).includes(users.Jhonny.username))
 			await LikeController.get_matches(mockRequest({}, users.Jhonny.username), res)
-			assert.isTrue(res.send.lastCall.firstArg.data.map(o => o.matchee).includes(users.Bella.username))
+			assert.isTrue(res.send.lastCall.firstArg.data.map(o => o.liker).includes(users.Bella.username))
 		})
 		step("Marks's matches: All Alone HAHA", async () => {
 			await LikeController.get_matches(mockRequest({}, users.Mark.username), res)

@@ -25,13 +25,11 @@ const jhonnyBody = {
 describe('Test signup', () => {
 	let res = mockResponse()
 	step("Init db", async () => {
-		let res = mockResponse()
-		return (Promise.all([
-			test_con.clear_db(),
-			test_con.create_user_test(mockRequest(users.Jhonny), res),
-			test_con.create_user_test(mockRequest(users.Bella), res),
-			test_con.create_user_test(mockRequest(users.Mark), res)
-		]))
+		await test_con.clear_db(),
+		await test_con.create_user_test(mockRequest(users.Jhonny), res),
+		await test_con.create_user_test(mockRequest(users.Bella), res),
+		await test_con.create_user_test(mockRequest(users.Mark), res)
+		return (Promise.resolve())
 	})
 	describe('Create Jhonny user', () => {
 		it('should status 200', async () => {
@@ -58,13 +56,13 @@ describe('Test signup', () => {
 			await AuthController.signup(mockRequest(users.Joep), res)
 			hash = res.send.lastCall.firstArg.hash
 			await UserController.get_user_by_username(mockRequest(body = {}, username = users.Joep.username, params = {username: users.Joep.username}), res)
-			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 0)
+			assert.equal(res.send.lastCall.firstArg.data.is_verified_mail, 0)
 			return Promise.resolve()
 		})
 		step("verify", async () => {
 			await AuthController.verifyMail({params:{hash: hash}}, res)
 			await UserController.get_user_by_username(mockRequest(body = {}, username = users.Joep.username, params = {username: users.Joep.username}), res)
-			assert.equal(res.send.lastCall.firstArg.data.mailVerified, 1)
+			assert.equal(res.send.lastCall.firstArg.data.is_verified_mail, 1)
 			return Promise.resolve()
 		})
 	})

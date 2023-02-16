@@ -10,12 +10,11 @@ const { step } = require('mocha-steps');
 describe('Test blocks', () => {
 	let res = mockResponse()
 	step("Init db", async () => {
-		return (Promise.all([
-			test_con.clear_db(),
-			testController.create_user_test(mockRequest(users.Jhonny), res),
-			testController.create_user_test(mockRequest(users.Bella), res),
-			testController.create_user_test(mockRequest(users.Mark), res)
-		]))
+		await test_con.clear_db(),
+		await test_con.create_user_test(mockRequest(users.Jhonny), res),
+		await test_con.create_user_test(mockRequest(users.Bella), res),
+		await test_con.create_user_test(mockRequest(users.Mark), res)
+		return (Promise.resolve())
 	})
 	describe("Create blocks", () => {
 		step('jhonny   => mark Code SUCCESS', async () => {

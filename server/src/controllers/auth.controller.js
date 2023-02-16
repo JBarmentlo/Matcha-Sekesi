@@ -9,7 +9,7 @@ const hostname = require('../fixtures/hostname.js').hostname
 const { nanoid } = require("nanoid");
 
 exports.signup = async (req, res) => {
-    console.log('Signup for users: ', req.body.username)
+    console.log('Signup for user: ', req.body.username)
     let username  = req.body.username;
     let firstName = req.body.firstName;
     let lastName  = req.body.lastName;
@@ -38,7 +38,6 @@ exports.signup = async (req, res) => {
         return res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
-        console.log(e)
         if (e.code == 'ER_DUP_ENTRY') {
             return res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
         }
@@ -196,7 +195,13 @@ exports.verifyToken = (req, res, next) => {
         
         jwt.verify(token, process.env.SIGNATURE, (err, decoded) => {
             if (err) {
-                console.log("error in decode: ", err)
+                if (err instanceof jwt.JsonWebTokenError) {
+                    console.log("WEBTOK", err.msg)
+                }
+                else {
+                    console.log("error in decode: ", err)
+
+                }
                 return res.status(401).send({ message: "Unauthenticated!" });
             }
             req.username = decoded.username;

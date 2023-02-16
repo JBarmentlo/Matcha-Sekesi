@@ -123,45 +123,46 @@ exports.get_users_that_liked_me = async (req, res) => {
 
 exports.get_matches = async (req, res) => {
 	try {
-		let rows = await db.query(
-			`
-			WITH
-			MATCHES AS (
-				SELECT l1.liker as matcher, l1.liked as matchee
-					FROM LIKES l1 INNER JOIN LIKES l2
-						ON l1.liked = l2.liker
-						AND l1.liker = l2.liked
-						AND l1.liker != l1.liked
-			),
+		let keri_string = 
+		`
+		WITH
+		MATCHES AS (
+			SELECT l1.liker as matcher, l1.liked as matchee
+				FROM LIKES l1 INNER JOIN LIKES l2
+					ON l1.liked = l2.liker
+					AND l1.liker = l2.liked
+					AND l1.liker != l1.liked
+		),
 
-			BLOCKED as (
-				SELECT
-					blocked,
-					SUM(blocker='${req.username}') > 0 as did_i_block_him
-				FROM
-					BLOCKS
-				GROUP BY
-					blocked
-			)
-
+		BLOCKED as (
 			SELECT
-				matcher as liker,
-				matchee,
-				profilePic,
-				IFNULL(did_i_block_him, 0) as blocked_source
+				blocked,
+				SUM(blocker='${req.username}') > 0 as did_i_block_him
+			FROM
+				BLOCKS
+			GROUP BY
+				blocked
+		)
 
-			FROM MATCHES
-				LEFT JOIN BLOCKED
-					ON MATCHES.matcher = BLOCKED.blocked
-				LEFT JOIN USERS
-					ON MATCHES.matcher = USERS.username
-			WHERE
-				matchee='${req.username}'
-			HAVING
-				blocked_source=0;
-			`
-			, req.username)
-		console.log("matches: ", req.username, rows)
+		SELECT
+			matcher as liker,
+			matchee,
+			profilePic,
+			IFNULL(did_i_block_him, 0) as blocked_source
+
+		FROM MATCHES
+			LEFT JOIN BLOCKED
+				ON MATCHES.matcher = BLOCKED.blocked
+			LEFT JOIN USERS
+				ON MATCHES.matcher = USERS.username
+		WHERE
+			matchee='${req.username}'
+		HAVING
+			blocked_source=0;
+		`
+		// console.log(keri_string)
+		let rows = await db.query(keri_string)
+		// console.log("matches: ", req.username, rows)
 		return res.status(200).send({message: 'Successfully queried matches users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {

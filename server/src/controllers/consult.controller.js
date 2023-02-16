@@ -135,33 +135,3 @@ exports.get_users_that_consulted_me = async (req, res) => {
 		}
 	}	
 }
-
-exports.get_consult_matches = async (req, res) => {
-	try {
-		let rows = await db.query(
-			"SELECT r1.consulter, r1.consulted, \
-				IF(( SELECT COUNT(*)  \
-					FROM   CONSULTS r2  \
-					WHERE  r2.consulter = r1.consulted AND r2.consulted = r1.consulter \
-				) > 0, 1, 0) AS reciprocal \
-			FROM   CONSULTS r1 \
-			WHERE  r1.consulter = ?;",
-			req.username)
-		// console.log("ROOOS:", rows)
-		matches = rows.filter(a =>  a.reciprocal == 1)
-		matches = matches.map(function(a) {return a.consulted})
-		// console.log("ROOOS:", matches)
-		res.status(200).send({message: 'Successfully queried consulted you users.', data: matches, code:'SUCCESS'})
-	}
-	catch (e) {
-		if (e.code == 'ER_NO_REFERENCED_ROW') {
-			console.log("NO CONSULTS", e)
-			res.status(200).send({message: "nobody CONSULTS you mark", data:[], code: e.code})
-		}
-		else {
-			console.log("get user by id error:\n", e, "\nend error")
-			res.status(500).send({message: 'error in get user by id', error: e})
-			// throw(e)
-		}
-	}	
-}

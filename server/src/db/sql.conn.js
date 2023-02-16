@@ -14,9 +14,6 @@ database: process.env.MATCHA_DB,
 password: 'password',
 waitForConnections: true,
 connectionLimit: 10,
-maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
-idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
-queueLimit: 0
 });
 
 // const test_connection = mysql.createConnection({
@@ -33,9 +30,6 @@ const test_connection_pool = mysql.createPool({
 	password: 'password',
 	waitForConnections: true,
 	connectionLimit: 10,
-	maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
-	idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
-	queueLimit: 0
 	});
 
 async function connect() {

@@ -24,14 +24,13 @@ const mockRequest = (body, username) => {
 };
 
 
-exports.clear_db = () => {
-	let promise_BLOCKS   = db.query('DELETE FROM BLOCKS;')
-	let promise_CONSULTS = db.query('DELETE FROM CONSULTS;')
-	let promise_LIKES    = db.query('DELETE FROM LIKES;')
-	let promise_TAGS     = db.query('DELETE FROM TAGS;')
-	let promise_USERS    = db.query('DELETE FROM USERS;')
-	let promise_VERIFY   = db.query('DELETE FROM VERIFY;')
-	return Promise.all([promise_BLOCKS ,promise_CONSULTS ,promise_LIKES ,promise_TAGS ,promise_USERS ,promise_VERIFY])
+exports.clear_db = async () => {
+	await db.query('DELETE FROM BLOCKS;')
+	await db.query('DELETE FROM CONSULTS;')
+	await db.query('DELETE FROM LIKES;')
+	await db.query('DELETE FROM TAGS;')
+	await db.query('DELETE FROM USERS;')
+	await db.query('DELETE FROM VERIFY;')
 }
 
 
@@ -155,7 +154,7 @@ exports.create_user_test = async (req, res) => {
 			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
-			console.log("create user test error:\n", e, "\n\nend signup error")
+			console.log("create user test errorr:\n", e, "\n\nend signup error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
 		}
 	}	
