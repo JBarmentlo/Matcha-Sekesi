@@ -24,21 +24,23 @@ export default {
 data () {
   return {
     polling: null,
-    notifs: [],
+    notifs: {},
     offset: 0,
     limit: 100,
     last_notif_time: null,
-    first_query: true
+    first_query: true,
+    time: null
   }
 },
 
 computed: {
   unreadNotifs() {
-    return this.notifs.filter(n => n.seen == 0).length
+    return 0
+    // return this.notifs.filter(n => n.seen == 0).length
   },
 
   numberNotifs() {
-    return this.notifs.length
+    return Object.keys(this.notifs).length
   },
 
 
@@ -108,16 +110,32 @@ methods: {
   stop_polling() {
     console.log("stop polling notifs")
     clearInterval(this.polling)
-  }
+  },
+
+  addNotifsToSelf(notif_list)
+  {
+    for (const notif of notif_list) {
+      let notif_obj = {}
+      notif_obj[notif.id] = notif
+      this.notifs = Object.assign({}, this.notifs, notif_obj)
+      this.notifs[notif.id] = notif
+    }
+    console.log(this.notifs)
+  },
 },
 
 async mounted() {
   try {
-    let time = await getCurrentTime(this.token)
-    console.log("TIMEEEEEE: ", time)
-    let nooti = await getMyNotifs(this.token, this.offset, this.limit)
-    this.notifs = nooti.data.data
-    this.pollData()
+    let notif_list = (await getMyNotifs(this.token, this.offset, this.limit)).data.data
+    console.log("NOTIIS", notif_list)
+    if (notif_list.length != 0) {
+      this.time = notif_list[0].last_updated
+      this.addNotifsToSelf(notif_list)
+    }
+    else {
+      this.time = (await getCurrentTime(this.token)).data.server_time
+    }
+    // this.pollData()
   }
   catch (e) {
     console.log("no notifs")

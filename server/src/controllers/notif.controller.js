@@ -64,7 +64,7 @@ exports.get_current_time = async (req, res) => {
 				username=?
 			`,
 			[req.username],)
-		return res.status(200).send({message: "succesfull time request", data: current_time[0].last_connected, code: "SUCCESS"})
+		return res.status(200).send({message: "succesfull time request", server_time: current_time[0].last_connected, code: "SUCCESS"})
 	}
 	catch (e) {
 		console.log(e)
