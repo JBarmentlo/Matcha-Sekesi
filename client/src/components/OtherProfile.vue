@@ -181,7 +181,7 @@ export default {
 
   methods: {
     like(username) {
-			if (this.user.profilePic == null) {
+			if (this.$root.store.state.user.is_complete_profile == null) {
 				this.$swal('Please complete your profile with a profile picture to be able to like users.')
 				return
 			}

@@ -149,12 +149,12 @@ export default {
 			let short
 			let long
 
-			if (match.liker.length <= match.matchee.length) {
+			if (match.liker.length <= match.liker.length) {
 				short = match.liker
-				long = match.matchee
+				long = match.liker
 			}
 			else {
-				short = match.matchee
+				short = match.liker
 				long = match.liker
 			}
 			return {

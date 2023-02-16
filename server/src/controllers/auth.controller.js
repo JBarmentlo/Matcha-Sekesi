@@ -172,6 +172,7 @@ exports.signin = async (req, res) => {
             expiresIn: 86400 // 24 hours
         });
         // console.log("signed in: ", user)
+        delete user.password
         res.status(200).send({
             user       : user,
             accessToken: token,

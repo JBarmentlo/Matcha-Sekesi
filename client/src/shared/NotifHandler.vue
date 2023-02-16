@@ -69,7 +69,6 @@ methods: {
       catch (e) {
         this.stop_polling()
       }
-
     }, 1000)
   },
 
