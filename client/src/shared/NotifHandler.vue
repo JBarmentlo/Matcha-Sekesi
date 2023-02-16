@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { getMyNotifs, setSeenNotifs, deleteNotifs, getCurrentTime }from '../services/notif'
+import { getMyNotifs, setSeenNotifs, deleteNotifs, getCurrentTime, getMyNewNotifs }from '../services/notif'
 
 export default {
 
@@ -35,14 +35,16 @@ data () {
 
 computed: {
   unreadNotifs() {
-    return 0
-    // return this.notifs.filter(n => n.seen == 0).length
+    let num = 0
+    Object.keys(this.notifs).forEach(key => {
+      num = num + 1 - this.notifs[key].seen
+    });
+    return num
   },
 
   numberNotifs() {
     return Object.keys(this.notifs).length
   },
-
 
   token: {
     get: function() {
@@ -58,20 +60,21 @@ methods: {
   pollData () {
     this.polling = setInterval(async () => {
       try {
-        let old_notif_ids = this.notifs.map(n => n.id)
-        this.notifs = (await getMyNotifs(this.token, this.offset, this.limit)).data.data
-        let new_notifs = this.notifs.filter(n => !old_notif_ids.includes(n.id))
-        new_notifs = new_notifs.filter(n => !n.seen)
-        if (!this.first_query) {
-          // console.log("NOOTI", new_notifs)
+        let new_notifs = (await getMyNewNotifs(this.token, this.time, this.offset, this.limit)).data.data
+        new_notifs = new_notifs.filter(n => n.last_updated != this.time)
+        if (new_notifs.length != 0) {
+          console.log(new_notifs.map(n => n.last_updated))
+          this.time = new_notifs[0].last_updated
+          this.addNotifsToSelf(new_notifs)
           this.notifyUser(new_notifs)
-          this.first_query = false
+          console.log("new time: ", this.time , new_notifs.length)
         }
       }
       catch (e) {
-        this.stop_polling()
+        console.log(e)
+        // this.stop_polling()
       }
-    }, 1000)
+    }, 2000)
   },
 
   notifyUser(notif_list) {
@@ -120,14 +123,12 @@ methods: {
       this.notifs = Object.assign({}, this.notifs, notif_obj)
       this.notifs[notif.id] = notif
     }
-    console.log(this.notifs)
   },
 },
 
 async mounted() {
   try {
     let notif_list = (await getMyNotifs(this.token, this.offset, this.limit)).data.data
-    console.log("NOTIIS", notif_list)
     if (notif_list.length != 0) {
       this.time = notif_list[0].last_updated
       this.addNotifsToSelf(notif_list)
@@ -135,7 +136,7 @@ async mounted() {
     else {
       this.time = (await getCurrentTime(this.token)).data.server_time
     }
-    // this.pollData()
+    this.pollData()
   }
   catch (e) {
     console.log("no notifs")

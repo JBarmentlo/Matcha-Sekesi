@@ -69,7 +69,7 @@ export default {
         logged_in: function (val) {
             if (val) {
                 console.log("Start Polling notifs / messages")
-                this.startPollingMsg(1000)
+                // this.startPollingMsg(1000)
                 console.log("PUSHING editprofile")
                 if (this.$route.requiresNotAuth) this.$route.push("/editprofile")
                 

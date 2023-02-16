@@ -14,6 +14,7 @@ database: process.env.MATCHA_DB,
 password: 'password',
 waitForConnections: true,
 connectionLimit: 10,
+timezone: '+00:00'
 });
 
 // const test_connection = mysql.createConnection({
@@ -30,6 +31,7 @@ const test_connection_pool = mysql.createPool({
 	password: 'password',
 	waitForConnections: true,
 	connectionLimit: 10,
+	timezone: '+00:00'
 	});
 
 async function connect() {

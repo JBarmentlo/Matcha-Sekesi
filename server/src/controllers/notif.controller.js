@@ -120,6 +120,9 @@ exports.get_my_notifs = async (req, res) => {
 
 exports.get_my_new_notifs = async (req, res) => {
 	try {
+		if (req.body.last_time == null) {
+			req.body.last_time = '2023-02-16T18:34:44.000Z'
+		}
 		notif_query = await db.query(
 			`
 			WITH
@@ -146,16 +149,15 @@ exports.get_my_new_notifs = async (req, res) => {
 					ON BLOCKED.blocked=NOTIFS.source_user
 			WHERE 
 				target_user=?
-			AND
-				last_updated >= ?
+				AND last_updated > ?
 			HAVING
 				blocked_source=0
 			ORDER BY last_updated DESC LIMIT ? OFFSET ?;
 			`
 			,
-			[req.username, req.username, req.body.after_said_time, req.body.limit, req.body.offset],)
+			[req.username, req.username, req.body.last_time, req.body.limit, req.body.offset],)
 		
-		// console.log("get notif: ", req.username, notif_query.length)
+		console.log("new notif: ", notif_query.map(n => n.last_updated), req.username, req.body.last_time)
 		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
 	}
 	catch (e) {
