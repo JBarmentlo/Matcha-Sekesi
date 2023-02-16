@@ -46,42 +46,6 @@ TAG_LIST as (
 		user
 ),
 
-CONVO_START AS (
-	SELECT
-		m1.sender as convo_starter,
-		m1.receiver as convo_reciever
-	FROM
-		MSG AS m1
-	WHERE
-		m1.last_updated =
-			(SELECT
-				MIN(m2.last_updated)
-			FROM
-				MSG m2
-			WHERE
-				m1.ConvoId = m2.ConvoId)
-),
-
-CONVO_START_INFO AS (
-	SELECT USERS.username,
-			SUM(convo_starter=USERS.username) as converstations_initiated,
-			SUM(convo_reciever=USERS.username) as converstations_recieved
-	FROM USERS
-		CROSS JOIN CONVO_START
-	GROUP BY
-		USERS.username
-),
-
-LIKES_INFO as (
-	SELECT USERS.username,
-			SUM(liker=?) > 0 as did_i_like_him,
-			SUM(liker=USERS.username) as number_of_likes_given,
-			SUM(liked=USERS.username) as number_of_likes_received
-	FROM USERS
-		CROSS JOIN LIKES
-	GROUP BY USERS.username
-),
-
 COMPLETEPROFILE AS (
 	SELECT
 		USERS.username,
@@ -92,17 +56,6 @@ COMPLETEPROFILE AS (
 		ON USERS.username = VALIDMAIL.username
 	LEFT JOIN TAG_LIST
 		ON USERS.username = TAG_LIST.user
-),
-
-POPSCORE as (
-    SELECT USERS.username,
-           IFNULL((number_of_likes_received / (number_of_likes_received + number_of_likes_given + 1)), 0) * 2.5
-               + IFNULL((converstations_initiated / (converstations_recieved + converstations_initiated + 1)), 0) * 2.5 as pop_score
-    FROM USERS
-        LEFT JOIN LIKES_INFO
-            ON USERS.username=LIKES_INFO.username
-        LEFT JOIN CONVO_START_INFO
-            ON USERS.username = CONVO_START_INFO.username
 )
 
 SELECT
@@ -129,7 +82,6 @@ SELECT
 	profilePic,
 	gif,
 	last_connected,
-	pop_score,
 	TIMESTAMPDIFF(SECOND, last_connected, NOW()) <= 3 as connected,
 	IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
 	IFNULL(tag_list,       cast('[]' as json)) as tag_list,
@@ -141,8 +93,6 @@ LEFT JOIN VALIDMAIL
 	ON USERS.username = VALIDMAIL.username
 LEFT JOIN COMPLETEPROFILE
 	ON USERS.username = COMPLETEPROFILE.username
-LEFT JOIN POPSCORE
-	ON USERS.username = POPSCORE.username
 LEFT JOIN TAG_LIST
 	ON USERS.username = TAG_LIST.user
 LEFT JOIN LIKER_LIST
@@ -166,6 +116,17 @@ exports.get_user = async (searcher_username, searched_username) => {
 	let keri_string = 
 `
 WITH
+VALIDMAIL as (
+	SELECT
+		username,
+		COUNT(VERIFIEDMAIL.mail) as is_verified_mail
+	FROM
+		USERS
+			LEFT JOIN VERIFIEDMAIL
+				ON USERS.username = VERIFIEDMAIL.user
+	GROUP BY USERS.username
+),
+
 TAG_LIST as (
     SELECT
         user,
@@ -208,7 +169,7 @@ LIKES_INFO as (
            SUM(liker=USERS.username) as number_of_likes_given,
            SUM(liked=USERS.username) as number_of_likes_received
     FROM USERS
-        CROSS JOIN LIKES
+        LEFT JOIN LIKES on USERS.username = LIKES.liker OR USERS.username = LIKES.liked
     GROUP BY USERS.username
 ),
 
@@ -241,7 +202,6 @@ LIKED as (
     GROUP BY liked
 )
 
-
 SELECT
     USERS.username,
     firstName,
@@ -264,11 +224,11 @@ SELECT
     gif,
     last_connected,
     pop_score,
+    is_verified_mail,
     IFNULL(did_i_like_him, 0) as did_i_like_him,
     IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
     IFNULL(tag_list, cast('[]' as json)) as tag_list,
-    IFNULL(did_i_block_him, 0) as did_i_block_him,
-    NOT ISNULL(VERIFIEDMAIL.mail) as mailVerified
+    IFNULL(did_i_block_him, 0) as did_i_block_him
 FROM
     USERS
 LEFT JOIN POPSCORE
@@ -279,8 +239,8 @@ LEFT JOIN BLOCKED
     ON USERS.username = BLOCKED.blocked
 LEFT JOIN TAG_LIST
     ON USERS.username = TAG_LIST.user
-LEFT JOIN VERIFIEDMAIL
-    ON USERS.username = VERIFIEDMAIL.user
+LEFT JOIN VALIDMAIL
+	ON USERS.username = VALIDMAIL.username
 WHERE
     USERS.username='${searched_username}'
 GROUP BY USERS.username, firstName, lastName, bio, DOB, USERS.mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
@@ -355,9 +315,10 @@ LIKES_INFO as (
            SUM(liker=USERS.username) as number_of_likes_given,
            SUM(liked=USERS.username) as number_of_likes_received
     FROM USERS
-        CROSS JOIN LIKES
+        LEFT JOIN LIKES on USERS.username = LIKES.liker OR USERS.username = LIKES.liked
     GROUP BY USERS.username
 ),
+
 
 POPSCORE as (
     SELECT USERS.username,
@@ -476,7 +437,8 @@ LEFT JOIN TAG_INFO
 LEFT JOIN SIMILARITY
     ON USERS.username = SIMILARITY.username
 WHERE
-    COMPATIBLE.compatible
+    COMPATIBLE.compatible AND
+    USERS.username!='${searcher_username}'
 GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 HAVING
     did_i_block_him=0
@@ -556,7 +518,7 @@ LIKES_INFO as (
            SUM(liker=USERS.username) as number_of_likes_given,
            SUM(liked=USERS.username) as number_of_likes_received
     FROM USERS
-        CROSS JOIN LIKES
+        LEFT JOIN LIKES on USERS.username = LIKES.liker OR USERS.username = LIKES.liked
     GROUP BY USERS.username
 ),
 
@@ -587,6 +549,14 @@ LIKED as (
            COUNT(liker) as number_of_likes_received
     FROM LIKES
     GROUP BY liked
+),
+
+DISTANCE as (
+    select USERS.username,
+           SQRT(POWER(USERS.longitude - searcher.longitude, 2) + POWER(USERS.latitude - searcher.latitude, 2)) as distance
+        from USERS
+            CROSS JOIN USERS searcher
+                ON searcher.username='${searcher_username}'
 )
 
 
@@ -612,8 +582,9 @@ SELECT
     gif,
     last_connected,
     pop_score as popScore,
+    distance,
     IFNULL(did_i_like_him, 0) as did_i_like_him,
-    IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
+    IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 18) as age,
     IFNULL(tag_list, cast('[]' as json)) as tag_list,
     IFNULL(did_i_block_him, 0) as did_i_block_him,
     IFNULL(number_of_common_tags, 0) as number_of_common_tags,
@@ -628,10 +599,14 @@ LEFT JOIN BLOCKED
     ON USERS.username = BLOCKED.blocked
 LEFT JOIN TAG_INFO
     ON USERS.username = TAG_INFO.user
+LEFT JOIN DISTANCE
+    ON USERS.username = DISTANCE.username
 WHERE
     zipCode LIKE('${zipcode}') AND
     pop_score >= ${min_rating} AND
-    pop_score <= ${max_rating}
+    pop_score <= ${max_rating} AND
+    USERS.username!='${searcher_username}'
+
 GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 HAVING
     age <= ${max_age} AND
@@ -641,8 +616,6 @@ HAVING
 ORDER BY ${orderby} ${asc_or_desc}
 LIMIT ${limit} OFFSET ${offset}
 `
-	console.log(keri_string)
 	let search_results = await db.query(keri_string)
-	console.log("FOUND search users: ", search_results)
 	return search_results
 }

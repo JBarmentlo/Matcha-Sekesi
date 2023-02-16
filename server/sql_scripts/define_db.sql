@@ -182,3 +182,11 @@ create table if not exists VERIFY
             on delete cascade
 );
 
+
+create table if not exists VILLEPOSTAL
+(
+    nom_commune    varchar(300)                 null,
+    code_postal    varchar(20)                  null,
+    longitude      float                        null,
+    latitude       float                        null
+);

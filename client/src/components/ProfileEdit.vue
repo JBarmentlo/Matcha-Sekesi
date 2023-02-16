@@ -17,10 +17,6 @@
                         </div>
                         <div class = "popularity">
                             <div class = "d-flex justify-content-center align-items-center text-center">
-                                <div id="popscore" class = "pop p-3">
-                                    <b-icon-heart />  {{ pop_score }}
-                                </div>
-                                <b-tooltip target="popscore" placement="top" triggers="hover">popularity score</b-tooltip>
                                 <div id="views" class = "views p-3">
                                     <b-icon-eye />  {{ user.consult_list.length }}
                                 </div>
@@ -38,10 +34,10 @@
                                     <template #button-content>
                                         <span class="caret_down"><b-icon-caret-down-fill class="caret"/></span>
                                     </template>
-                                        <b-dropdown-item v-for="liker in user.like_list" :key="liker">
+                                        <b-dropdown-item v-for="liker in user.like_list" :key="liker + 'liker'">
                                             <router-link :to="{ name: 'profile', params: { userName: liker }}">{{liker}}</router-link> liked you.
                                         </b-dropdown-item>
-                                        <b-dropdown-item v-for="consulter in user.consult_list" :key="consulter">
+                                        <b-dropdown-item v-for="consulter in user.consult_list" :key="consulter + 'consulter'">
                                             <router-link :to="{ name: 'profile', params: { userName: consulter }}">{{consulter}}</router-link> consulted your profile
                                         </b-dropdown-item>
                                 </b-dropdown>
@@ -72,6 +68,7 @@
                             v-model="user.firstName"
                             class="form-control"
                             placeholder="Enter first name"
+                            maxlength="50"
                             value=""
                         />
                     </div>
@@ -85,6 +82,7 @@
                             class="form-control"
                             value=""
                             placeholder="Enter last name"
+                            maxlength="50"
                         />
                     </div>
                 </div>
@@ -96,8 +94,10 @@
                             v-model="user.mail"
                             class="form-control"
                             placeholder="Enter email adress"
+                            maxlength="255"
                             value=""
                         />
+                        <span v-if="mail_taken" class="login_error">Mail already in use</span>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -108,6 +108,7 @@
                         v-model="user.zipCode"
                         class="form-control"
                         placeholder="zip"
+                        maxlength="100"
                         value=""
                     />
                 </div>
@@ -267,6 +268,7 @@ export default {
             searchTerm : "",
             gifs: [],
             search_on : false,
+            mail_taken: false
         };
     },
 
@@ -307,10 +309,6 @@ export default {
                 return this.user.profilePic
             }
             return require("../assets/empty_profile.png")
-        },
-
-        pop_score: function () {
-            return Math.round(this.user.pop_score * 100) / 100;
         },
 
         isCompleteProfile: function() {
@@ -391,16 +389,28 @@ export default {
             delete user_diffy.last_connected
             delete user_diffy.connected
             try {
-                let tagUploadRes = this.$refs.tagHandler.uploadTags()
+                await this.$refs.tagHandler.uploadTags()
                 delete user_diffy.tag_list
                 console.log("sending updato: ", user_diffy)
-                await updateUser(this.token, user_diffy)
-                await tagUploadRes
-                let user_response = await getMyUser(this.token)
-                // console.log("GOT NEW USEr", user_response.data.data)
-                this.user = user_response.data.data
+                let update_res = await updateUser(this.token, user_diffy)
+                if (update_res.data.code == 'SUCCESS') {
+                    let user_response = await getMyUser(this.token)
+                    this.user = user_response.data.data
+                    this.$swal("Successfully updated your profile.")
+                    return
+                }
+                
+                if (update_res.data.code == 'MAIL_TAKEN') {
+                    this.mail_taken = true
+                }
+
+                if (update_res.data.code == 'ER_DATA_TOO_LONG') {
+                    this.data_too_long = true
+                }
+                this.$swal("Unsuccessful profile update.")
             }
             catch (e) {
+                this.$swal("Unsuccessful profile update.")
                 console.log("error in update User or get response:\n", e)
             }
         },
@@ -443,6 +453,11 @@ export default {
 
 @import url("../assets/profile.css");
 
+.login_error {
+	color : red;
+	font-size: 80%;
+	margin-left: 5px;
+}
 
 .popularity {
     color: rgb(56, 56, 56);

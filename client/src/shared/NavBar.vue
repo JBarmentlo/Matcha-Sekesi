@@ -14,7 +14,8 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ms-auto" v-else>
-        <b-nav-item><router-link to="/getallusers" class="nav-link">Search <b-icon-search/></router-link></b-nav-item>
+        <b-nav-item v-if="profile_complete"><router-link to="/getallusers" class="nav-link">Search <b-icon-search/></router-link></b-nav-item>
+        <b-nav-item v-else><span @click="complete_profile_popup()" class="nav-link">Search <b-icon-search/></span ></b-nav-item>
         <b-nav-item><router-link to="/editprofile" class="nav-link">Profile <b-icon-person-circle/></router-link></b-nav-item>
         <b-nav-item><router-link to="/cat" class="nav-link">Chat <b-icon-chat-text-fill /></router-link></b-nav-item>
         <NotifHandler />
@@ -56,7 +57,7 @@ export default {
     };
   },
 
-    computed: {
+  computed: {
     token: {
       get: function() {
         return this.$root.store.state.token;
@@ -82,6 +83,10 @@ export default {
         set: function(logged_in) {
             this.$root.store.setLoggedInAction(logged_in);
         }
+    },
+
+    profile_complete: function() {
+      return this.$root.store.getProfileComplete();
     }
   },
 
@@ -91,6 +96,7 @@ export default {
       this.$emit('change-mode', this.isActive )
       console.log('emit child')
     },
+
     logout() {
       console.log("LOGGING OUT");
       this.user = null;
@@ -102,6 +108,10 @@ export default {
         router.push("/signin");
       }
     },
+
+    complete_profile_popup() {
+      this.$swal("Please complete your profile with an image, a bio and some tags.\nAnd validate your email.")
+    }
   },
 };
 </script>

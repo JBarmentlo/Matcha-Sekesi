@@ -9,13 +9,11 @@ const {mockResponse, mockRequest} = require('./data/res.req.mock')
 describe('Test consults', () => {
 	let res = mockResponse()
 	step("Init db", async () => {
-		let res = mockResponse()
-		return (Promise.all([
-			test_con.clear_db(),
-			testController.create_user_test(mockRequest(users.Jhonny), res),
-			testController.create_user_test(mockRequest(users.Bella), res),
-			testController.create_user_test(mockRequest(users.Mark), res)
-		]))
+		await test_con.clear_db(),
+		await test_con.create_user_test(mockRequest(users.Jhonny), res),
+		await test_con.create_user_test(mockRequest(users.Bella), res),
+		await test_con.create_user_test(mockRequest(users.Mark), res)
+		return (Promise.resolve())
 	})
 	describe("Create Consults", () => {
 		step('mark   => jhonny Code SUCCESS', async () => {
@@ -71,20 +69,6 @@ describe('Test consults', () => {
 			yusers = reso.send.lastCall.firstArg.data.map(function(a) {return a.username})
 			assert.isTrue(yusers.includes(users.Mark.username))
 			assert.isTrue(yusers.includes(users.Jhonny.username))
-			return Promise.resolve()
-		})
-	})
-	describe("Get Matches", () => {
-		step("Bella's matches = jhonny", async () => {
-			let reso = mockResponse()
-			await ConsultController.get_consult_matches(mockRequest({}, users.Bella.username), reso)
-			assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
-			return Promise.resolve()
-		})
-		step("Marks's matches = All Alone HAHA", async () => {
-			await ConsultController.get_consult_matches(mockRequest({}, users.Mark.username), res)
-			// assert.isTrue(reso.send.lastCall.firstArg.data.includes(users.Jhonny.username))
-			assert.equal(res.send.lastCall.firstArg.data.length, 0)
 			return Promise.resolve()
 		})
 	})

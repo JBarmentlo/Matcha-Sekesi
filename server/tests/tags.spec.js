@@ -9,13 +9,11 @@ const {mockResponse, mockRequest} = require('./data/res.req.mock')
 describe("Tags", () => {
 	let res = mockResponse()
 	step("Init db", async () => {
-		let res = mockResponse()
-		return (Promise.all([
-			test_con.clear_db(),
-			test_con.create_user_test(mockRequest(users.Jhonny), res),
-			test_con.create_user_test(mockRequest(users.Bella), res),
-			test_con.create_user_test(mockRequest(users.Mark), res)
-		]))
+		await test_con.clear_db(),
+		await test_con.create_user_test(mockRequest(users.Jhonny), res),
+		await test_con.create_user_test(mockRequest(users.Bella), res),
+		await test_con.create_user_test(mockRequest(users.Mark), res)
+		return (Promise.resolve())
 	})
 	describe("Adding tags", () => {
 		it("Returns success", async () => {

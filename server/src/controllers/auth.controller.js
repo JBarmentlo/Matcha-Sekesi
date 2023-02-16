@@ -6,10 +6,10 @@ const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
 const new_searches = require("./user.request.js")
 const hostname = require('../fixtures/hostname.js').hostname
-
+const { nanoid } = require("nanoid");
 
 exports.signup = async (req, res) => {
-    console.log('Signup for users: ', req.body.username)
+    console.log('Signup for user: ', req.body.username)
     let username  = req.body.username;
     let firstName = req.body.firstName;
     let lastName  = req.body.lastName;
@@ -25,20 +25,19 @@ exports.signup = async (req, res) => {
             `INSERT INTO USERS (username, mail, firstName, lastName, password, zipCode, longitude, latitude, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [username, mail, firstName, lastName, password, zipCode, longitude, latitude, city]
             )
-
-        let hash = bcrypt.hashSync(query_result.insertId.toString(), 8).replace('.','').replace('/', '')
+        let hash = nanoid(48);
         await db.query(
             "INSERT INTO VERIFY \
             (user, id_hash, mail) \
             VALUES (?, ?, ?);",
             [username, hash, mail]
         )
-        sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)}`)
-        console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${hostname}/verify/${encodeURIComponent(hash)}`)
+        
+        sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)} `)
+        console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${hostname}/verify/${encodeURIComponent(hash)} `)
         return res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
-        console.log(e)
         if (e.code == 'ER_DUP_ENTRY') {
             return res.status(200).send({message: e.sqlMessage, code: e.code, sqlMessage: e.sqlMessage})
         }
@@ -62,11 +61,12 @@ exports.signup = async (req, res) => {
 
 exports.verifyMail = async (req, res) => {
     try {
-        console.log("verifying mail")
+        console.log("verifying mail. hash: ", req.params.hash)
         let verify_mail_result = await db.query(
             `SELECT * FROM VERIFY
             where id_hash=?`,
             req.params.hash)
+        
     
         if (verify_mail_result.length == 0) {
             return res.status(200).send({message: "No user for the mail verif", code: "MISSING_VERIFY"})
@@ -104,7 +104,7 @@ exports.requestresetPass = async (req, res) => {
         }
 
         let user = user_request[0]
-        let hash = bcrypt.hashSync(user.id.toString(), 8).replace('.','').replace('/', '')
+        let hash = nanoid(48);
         await db.query(
             "INSERT INTO RESET \
             (user, id_hash) \
@@ -195,8 +195,14 @@ exports.verifyToken = (req, res, next) => {
         
         jwt.verify(token, process.env.SIGNATURE, (err, decoded) => {
             if (err) {
-                console.log("error in decode: ", err)
-                return res.status(401).send({ message: "Unauthorized!" });
+                if (err instanceof jwt.JsonWebTokenError) {
+                    console.log("WEBTOK", err.msg)
+                }
+                else {
+                    console.log("error in decode: ", err)
+
+                }
+                return res.status(401).send({ message: "Unauthenticated!" });
             }
             req.username = decoded.username;
             return next();

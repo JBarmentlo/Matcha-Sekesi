@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import { register } from 'vue-advanced-chat'
+import { register }                         from 'vue-advanced-chat'
 import { getMyMessages, getConvo, sendMsg } from '../services/chat'
-import { getMatches } from '../services/user'
+import { getMatches }                       from '../services/user'
 register()
 export default {
 	data() {
@@ -126,6 +126,7 @@ export default {
 				}
 			]
 			console.log(message.content.replace(new RegExp("'", "g"), "''"))
+			console.log("romid", message.roomId)
 			sendMsg(this.token, message.roomId , message.content.replace(new RegExp("'", "g"), "''"), this.usersToConvoId(this.currentUserId, message.roomId))
 		},
 
@@ -158,8 +159,8 @@ export default {
 			}
 			return {
 				// roomId: `${short}${long.length}${long}`,
-				roomId: match.matchee,
-				roomName: match.matchee,
+				roomId: match.liker,
+				roomName: match.liker,
 				avatar: this.profilePicNull(match.profilePic),
 				users: [
 						{ _id: short, username: short },
@@ -179,7 +180,7 @@ export default {
 
 		notifyUser(notif_list) {
 			if (notif_list.length != 0) {
-				console.log("notify: ", notif_list)
+				// console.log("notify: ", notif_list)
 				for (const notif of notif_list) {
 					this.$notify({
 						text: notif.senderId + " sent you a message!"

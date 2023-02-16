@@ -6,6 +6,7 @@ const bar1              = new cliProgress.SingleBar({}, cliProgress.Presets.shad
 const likeController    = require("../controllers/like.controller")
 const consultController = require("../controllers/consult.controller")
 const blockController   = require("../controllers/block.controller")
+const {accentsTidy}     = require('../services/name_cleaner')
 
 const mockResponse = () => {
 	const res = {};
@@ -23,14 +24,13 @@ const mockRequest = (body, username) => {
 };
 
 
-exports.clear_db = () => {
-	let promise_BLOCKS   = db.query('DELETE FROM BLOCKS;')
-	let promise_CONSULTS = db.query('DELETE FROM CONSULTS;')
-	let promise_LIKES    = db.query('DELETE FROM LIKES;')
-	let promise_TAGS     = db.query('DELETE FROM TAGS;')
-	let promise_USERS    = db.query('DELETE FROM USERS;')
-	let promise_VERIFY   = db.query('DELETE FROM VERIFY;')
-	return Promise.all([promise_BLOCKS ,promise_CONSULTS ,promise_LIKES ,promise_TAGS ,promise_USERS ,promise_VERIFY])
+exports.clear_db = async () => {
+	await db.query('DELETE FROM BLOCKS;')
+	await db.query('DELETE FROM CONSULTS;')
+	await db.query('DELETE FROM LIKES;')
+	await db.query('DELETE FROM TAGS;')
+	await db.query('DELETE FROM USERS;')
+	await db.query('DELETE FROM VERIFY;')
 }
 
 
@@ -60,6 +60,26 @@ function removeDuplicates(arr) {
 	return unique;
 }
 
+async function get_long_lat(city, postal_code) {
+	try {
+		let res = await db.query(
+			`
+			SELECT * from VILLEPOSTAL
+			WHERE nom_commune=?
+			`,
+			[accentsTidy(city)]
+		)
+		if (res.length != 0) {
+			return {longitude:res[0].longitude, latitude:res[0].latitude, code_postal:res[0].code_postal}
+		}
+		return null
+	}
+	catch (e) {
+		console.log(e, city, postal_code)
+		return null
+	}
+}
+
 exports.create_user_test = async (req, res) => {
 
 	username          = req.body.username
@@ -80,13 +100,17 @@ exports.create_user_test = async (req, res) => {
 	profilePic        = req.body.profilePic
 	tag_list          = req.body.tag_list
 
+	let location = await get_long_lat(city, zipCode)
+	if (location != null && location.longitude != null) {
+		longitude = location.longitude
+		latitude = location.latitude
+		zipCode = location.code_postal
+	}
 	if (tag_list == undefined || tag_list == null) {
 		tag_list = []
 	}
 
-	console.log(longitude)
 	try {
-		console.log(username, tag_list)
 		let user_create_res = await db.query(
 			'INSERT INTO USERS \
 			(username, firstName, lastName, bio, mail, password, gender, sekesualOri, zipCode, city, longitude, latitude, image0, profilePic, DOB, gif) \
@@ -94,7 +118,6 @@ exports.create_user_test = async (req, res) => {
 			[username, firstName, lastName, bio, mail, password, gender, sekesualOri, zipCode, city, longitude, latitude, image0, profilePic, DOB, gif]
 			)
 		let keri_string ="INSERT INTO TAGS (tag, user) VALUES "
-		// console.log(removeDuplicates(tag_list))
 		for (const tag of removeDuplicates(tag_list)) {
 			keri_string += ` ('${tag}', '${username}'),`
 		}
@@ -131,7 +154,7 @@ exports.create_user_test = async (req, res) => {
 			return res.status(200).send({message: "data columns cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
-			console.log("create user test error:\n", e, "\n\nend signup error")
+			console.log("create user test errorr:\n", e, "\n\nend signup error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
 		}
 	}	

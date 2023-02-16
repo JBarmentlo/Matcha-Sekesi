@@ -1,26 +1,43 @@
 const mysql = require('mysql2/promise')
 
-const connection = mysql.createConnection({
-	host: 'localhost',
-	user: 'sammy',
-	database: process.env.MATCHA_DB,
-	password: 'password'
-  });
+// const connection = mysql.createConnection({
+// 	host: 'localhost',
+// 	user: 'sammy',
+// 	database: process.env.MATCHA_DB,
+// 	password: 'password'
+//   });
 
+const connection_pool = mysql.createPool({
+host: 'localhost',
+user: 'sammy',
+database: process.env.MATCHA_DB,
+password: 'password',
+waitForConnections: true,
+connectionLimit: 10,
+});
 
-const test_connection = mysql.createConnection({
+// const test_connection = mysql.createConnection({
+// 	host: 'localhost',
+// 	user: 'sammy',
+// 	database: process.env.MATCHA_TEST_DB,
+// 	password: 'password'
+// 	});
+
+const test_connection_pool = mysql.createPool({
 	host: 'localhost',
 	user: 'sammy',
 	database: process.env.MATCHA_TEST_DB,
-	password: 'password'
+	password: 'password',
+	waitForConnections: true,
+	connectionLimit: 10,
 	});
 
 async function connect() {
 	if (process.env.TEST == 'true') {
-		return test_connection
+		return test_connection_pool
 	}
 	else {
-		return connection
+		return connection_pool
 	}
 }
 
@@ -37,10 +54,10 @@ async function connect() {
 async function query(sql, params) {
 	let used_connection
 	if (process.env.TEST == 'true') {
-		used_connection = await test_connection
+		used_connection = await test_connection_pool
 	}
 	else {
-		used_connection = await connection
+		used_connection = await connection_pool
 	}
 	// console.log(sql)
 	// console.log("daba: ",used_connection.config.database)
@@ -54,10 +71,10 @@ async function query(sql, params) {
 async function drop_all() {
 	let used_connection
 	if (process.env.TEST == 'true') {
-		used_connection = await test_connection
+		used_connection = await test_connection_pool
 	}
 	else {
-		used_connection = await connection
+		used_connection = await connection_pool
 	}
 	console.log("DROP ALL FROM TABLE")
 	used_connection.execute('DELETE FROM BLOCKS;')

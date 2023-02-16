@@ -3,6 +3,7 @@ const db       = require("../db/sql.conn");
 const bcrypt   = require("bcryptjs");
 const crypto   = require('crypto');
 const jwt      = require("jsonwebtoken");
+const { nanoid } = require("nanoid");
 
 const sendMail = require('../services/mailgun');
 const new_searches = require("./user.request.js")
@@ -66,7 +67,7 @@ async function create_user(user_info) {
                                [login   , email, first_name, last_name, 75018  , long     , lat     , 'Paris', image]
             )
 
-        let hash = bcrypt.hashSync(query_result.insertId.toString(), 8)
+        let hash = nanoid(48);
 
         let insert_mail_result = await db.query(
             "INSERT INTO VERIFY \

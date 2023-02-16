@@ -9,13 +9,12 @@ const { step }                    = require('mocha-steps');
 
 describe('Test blocking behaviour', () => {
 	let res = mockResponse()
-	step("Init db", () => {
-		return (Promise.all([
-			test_con.clear_db(),
-			test_con.create_user_test(mockRequest(users.Jhonny), res),
-			test_con.create_user_test(mockRequest(users.Bella), res),
-			test_con.create_user_test(mockRequest(users.Mark), res)
-		]))
+	step("Init db", async () => {
+		await test_con.clear_db(),
+		await test_con.create_user_test(mockRequest(users.Jhonny), res),
+		await test_con.create_user_test(mockRequest(users.Bella), res),
+		await test_con.create_user_test(mockRequest(users.Mark), res)
+		return (Promise.resolve())
 	})
 	describe("Create blocks", () => {
 		step('jhonny blocks mark Code SUCCESS', async () => {

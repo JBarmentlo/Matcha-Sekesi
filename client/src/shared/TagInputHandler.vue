@@ -123,7 +123,9 @@ export default {
   },
 
   mounted() {
-    this.getTags()
+    if (this.token) {
+      this.getTags()
+    }
   }
 }
 </script>

@@ -3,10 +3,11 @@ var bcrypt     = require("bcryptjs");
 const sendMail = require('../services/mailgun');
 const new_searches = require("./user.request.js")
 const hostname = require('../fixtures/hostname.js').hostname
+const { nanoid } = require("nanoid");
 
 
 async function handle_new_mail_for_user(username, id, mail) {
-	let hash = bcrypt.hashSync(id.toString(), 8)
+	let hash = nanoid(48);
 	let insert_mail_result = await db.query(
 		"INSERT INTO VERIFY \
 		(user, id_hash) \
@@ -15,6 +16,23 @@ async function handle_new_mail_for_user(username, id, mail) {
 	)
 	// return Promise.resolve()
 	return await sendMail(mail, "Verify your email", "Please validate your email here: " + `${hostname}/verify/${encodeURIComponent(hash)}`)
+}
+
+
+async function get_long_lat(city, postal_code) {
+	try {
+		let res = db.query(
+			`
+			SELECT * from VILLEDPOSTAL
+			WHERE code_postal=?
+			`,
+			[postal_code]
+		)		
+		console.log(res)
+	}
+	catch (e) {
+		console.log(e, city, postal_code)
+	}
 }
 
 
@@ -59,8 +77,29 @@ exports.create_user = async (req, res) => {
 	}	
 };
 
+async function get_long_lat(post_code) {
+	try {
+		let res = await db.query(
+			`
+			SELECT * from VILLEPOSTAL
+			WHERE code_postal=?
+			`,
+			[post_code]
+		)
+		if (res.length != 0) {
+			return {longitude:res[0].longitude, latitude:res[0].latitude, code_postal:res[0].code_postal, nom_comunne:res[0].nom_commune}
+		}
+		return null
+	}
+	catch (e) {
+		console.log(e, post_code)
+		return null
+	}
+}
 
-const tolerated_keys = ['username', 'firstName', 'lastName', 'bio', 'mail', 'gender', 'sekesualOri', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
+
+const tolerated_keys = ['firstName', 'lastName', 'bio', 'mail', 'gender', 'sekesualOri', 'zipCode', 'city', 'image1', 'image2', 'image3', 'image0', 'profilePic', 'gif', 'DOB']
+
 exports.update_user = async (req, res) => {
 	let update = req.body.update
 	Object.keys(update).forEach(key => {
@@ -68,8 +107,21 @@ exports.update_user = async (req, res) => {
 			delete update[key]
 		}
 	});
-	console.log("Update")
-	console.log(update)
+	try {
+		let location = await get_long_lat(req.body.update.zipCode)
+		if (location != null && location.longitude != null) {
+			console.log("Improved GPS loc: ", location)
+			update.longitude = location.longitude
+			update.latitude  = location.latitude
+		}
+		// console.log("not improving GPS cuz: ", location)
+	}
+	catch (e) {
+		
+		// console.log("not improving GPS", e)
+	}
+	
+
 	try {
 		let update_res = await db.query(`
 		UPDATE USERS
@@ -90,6 +142,16 @@ exports.update_user = async (req, res) => {
 	}
 	catch (e) {
 		console.log("update", e)
+		if (e.code == "ER_DUP_ENTRY") {
+			console.log("ER_DUP_ENTRY: ",e)
+			return res.status(200).send({code: "MAIL_TAKEN", message: e.sqlMessage})
+		}
+
+		if (e.code == "ER_DATA_TOO_LONG") {
+			console.log("ER_DATA_TOO_LONG: ",e)
+			return res.status(200).send({code: "ER_DATA_TOO_LONG", message: e.sqlMessage})
+		}
+		
 		res.status(403).send({code: "INVALID FORM"})
 		throw(e)
 	}
