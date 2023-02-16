@@ -102,6 +102,10 @@ methods: {
 
   async deleteNoot(id) {
     await deleteNotifs(this.token, id)
+    let tmp = {...this.notifs}
+    delete tmp[id]
+    this.notifs = tmp
+    console.log('dekeke')
   },
 
   async deleteAndRedirect(id, username)
