@@ -157,7 +157,7 @@ exports.get_my_new_notifs = async (req, res) => {
 			,
 			[req.username, req.username, req.body.last_time, req.body.limit, req.body.offset],)
 		
-		console.log("new notif: ", notif_query.map(n => n.last_updated), req.username, req.body.last_time)
+		// console.log("new notif: ", notif_query.map(n => n.last_updated), req.username, req.body.last_time)
 		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
 	}
 	catch (e) {

@@ -94,8 +94,10 @@ methods: {
   },
 
   async setSeen() {
-    await setSeenNotifs(this.token ,this.notifs.map(n => n.id))
-    this.notifs = this.notifs.map(n => {return {...n, seen:1}})
+    await setSeenNotifs(this.token, Object.keys(this.notifs))
+    for (const id of Object.keys(this.notifs)) {
+      this.notifs[id].seen = 1
+    }
   },
 
   async deleteNoot(id) {
@@ -118,6 +120,7 @@ methods: {
   addNotifsToSelf(notif_list)
   {
     for (const notif of notif_list) {
+      console.log("added:", notif)
       let notif_obj = {}
       notif_obj[notif.id] = notif
       this.notifs = Object.assign({}, this.notifs, notif_obj)
