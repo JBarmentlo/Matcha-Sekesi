@@ -136,7 +136,7 @@ export default {
     },
 
     pop_score: function () {
-      return this.user.pop_score
+      return Math.round(this.user.pop_score * 10) / 10
     },
 
     last_connected: function () {
