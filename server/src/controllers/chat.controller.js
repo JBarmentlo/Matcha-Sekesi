@@ -52,6 +52,61 @@ HAVING
 		return res.status(400).send({message: 'Failed in querying your messages.', data: [], code:'FAILURE'})
 		// throw(e)
 	}
+}
+
+
+exports.get_all_new_messages = async (req, res) => {
+	// console.log("gettin messages")
+	try {
+		let keri_string =
+`
+WITH
+MATCHES AS (
+    SELECT l1.liker as matcher, l1.liked as matchee
+        FROM LIKES l1 INNER JOIN LIKES l2
+            ON l1.liked = l2.liker
+            AND l1.liker = l2.liked
+            AND l1.liker != l1.liked
+),
+
+BLOCKED as (
+    SELECT
+        blocked,
+        SUM(blocker='${req.username}') > 0 as did_i_block_him
+    FROM
+        BLOCKS
+    GROUP BY
+        blocked
+)
+
+SELECT
+	MSG.id,
+	sender,
+	receiver,
+	msg,
+	last_updated,
+	IFNULL(did_i_block_him, 0) as blocked_source
+FROM MATCHES
+INNER JOIN MSG
+	ON (MSG.receiver IN ('${req.username}', matchee)
+	AND MSG.sender IN ('${req.username}', matchee))
+LEFT JOIN BLOCKED
+	ON BLOCKED.blocked = MSG.sender
+WHERE
+	last_updated > '${req.body.last_time}'
+HAVING
+	blocked_source=0
+`
+		// console.log(keri_string)
+		let message_keri = await db.query(keri_string)
+		// console.log("msg", req.username,  message_keri)
+		return res.status(200).send({message: 'Successfully queried your messages.', data: message_keri, code:'SUCCESS'})
+	}
+	catch (e) {
+		console.log("get messages error:\n", e, "\nend error")
+		return res.status(400).send({message: 'Failed in querying your messages.', data: [], code:'FAILURE'})
+		// throw(e)
+	}
 }	
 
 exports.get_conversation = async (req, res) => {
