@@ -190,7 +190,7 @@ export var store = {
 
   setSeenNotification(id) {
     if (this.debug) console.log('setting seen notif triggered', id)
-    let index = this.state.notifications.find(elem => elem.id == id)
+    let index = this.state.notifications.findIndex(elem => elem.id == id)
     if (index != undefined) {
       this.state.notifications[index].seen = true
       this.state.notifications = [...this.state.notifications]
@@ -199,7 +199,7 @@ export var store = {
 
   deleteNotification(id) {
     if (this.debug) console.log('setting seen notif triggered', id)
-    let index = this.state.notifications.find(elem => elem.id == id)
+    let index = this.state.notifications.findIndex(elem => elem.id == id)
     if (index != undefined) {
       delete this.state.notifications[index]
       this.state.notifications = [...this.state.notifications]

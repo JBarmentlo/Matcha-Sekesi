@@ -2,7 +2,7 @@ import {api_axios} from './axios_setup';
 
 
 export const getMyNotifs = async (access_token, offset, limit) => {
-	// console.log("get notifs ", offset, limit)
+	console.log("get notifs ", offset, limit)
 	let request = {
 		url: "/api/notif/getall", // should be replaced after going to production with domain url
 		method: "post",

@@ -9,7 +9,7 @@
           <b-dropdown-item  v-if="notif.seen == 1" variant="secondary" @click="deleteAndRedirect(notif.id, notif.source_user)">
             {{notifCardText(notif)}}<b-icon-x/>
           </b-dropdown-item>
-          <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.index)">
+          <b-dropdown-item v-else variant="primary" @click="deleteNoot(notif.id)">
             {{notifCardText(notif)}}<b-icon-x/>
           </b-dropdown-item>
       </div>
@@ -35,25 +35,24 @@ computed: {
     return num
   },
 
+  notifs() {
+    return this.$root.store.state.notifications
+  },
+
   numberNotifs() {
     return Object.keys(this.notifs).length
   },
 
-  token: {
-    get: function() {
+  token() {
       return this.$root.store.state.token;
-    },
-    set: function(sekes_token) {
-      this.$root.store.setTokenAction(sekes_token);
     }
-  }
-},
+  },
 
 methods: {
   async setSeen() {
     await setSeenNotifs(this.token, Object.keys(this.notifs))
-    for (const id of Object.keys(this.notifs)) {
-      this.$root.store.setSeenNotif(id)    
+    for (const notif of this.notifs) {
+      this.$root.store.setSeenNotification(notif.id)    
     }
   },
 
@@ -68,6 +67,11 @@ methods: {
     if (this.$route.path != "/profile/"+ username) {
       this.$router.push("/profile/"+ username)
     }
+  },
+
+  notifCardText(notif) {
+      const dic = {'LIKE': 'liked you.', "CONSULT": 'consulted your profile', "MATCH": 'matched you!', "UNMATCH": 'unmatched you.'}
+      return notif.source_user + " " + dic[notif.type]
   },
 },
 
