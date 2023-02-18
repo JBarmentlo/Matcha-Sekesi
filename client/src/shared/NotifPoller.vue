@@ -42,16 +42,6 @@ export default {
 				this.$root.store.setLoggedInAction(logged_in);
 			}
 		},
-
-        messages: {
-			get: function() {
-				return this.$root.store.state.messages;
-			},
-			set: function(messages) {
-				this.$root.store.setMessagesAction(messages);
-			}
-		},
-
         notifications: {
 			get: function() {
 				return this.$root.store.state.notifications;
@@ -66,11 +56,11 @@ export default {
     watch: {
         logged_in: function (val) {
             if (val) {
-                console.log("Start Polling notifs WATCH")
+                // console.log("Start Polling notifs WATCH")
                 this.StartPollingNotifications()
             }
             else {
-                console.log("Stop Polling notifs / messagesWATCH")
+                // console.log("Stop Polling notifs WATCH")
                 this.stopPollingNotifs()
             }
         },
@@ -78,18 +68,8 @@ export default {
 
 
 	methods: {
-		addMessage(message) {
-			this.$root.store.addMessageAction(message)
-		},
-
         addNotification(notification) {
 			this.$root.store.addNotificationAction(notification)
-		},
-
-        notifyUserOfMessage(message) {
-            this.$notify({
-                text: message.senderId + " sent you a message!"
-            });
 		},
 
         notifCardText(notif) {
@@ -104,7 +84,10 @@ export default {
         },
 
         addNotifsToSelf(notif_list) {
+            let old_ids = this.notifications.map(n => n.id)
             for (const notif of notif_list) {
+                if (old_ids.includes(notif.id)) continue
+
                 this.addNotification(notif)
                 this.notifyUserOfNotif(notif)
             }
@@ -112,7 +95,7 @@ export default {
 
         async StartPollingNotifications() {
             if (this.notifPolling != null) {
-                console.log("double poll")
+                // console.log("double poll")
                 this.stopPollingNotifs()
             }
             this.notifPolling = setInterval(async () => {
@@ -161,12 +144,12 @@ export default {
             // console.log("NOTIF GET")
             try {
                 let new_notifs = (await getMyNewNotifs(this.token, this.last_notif_time, 0, 20)).data.data
-                new_notifs = new_notifs.filter(n => n.last_updated != this.time)
+                new_notifs = new_notifs.filter(n => n.last_updated != this.last_notif_time)
                 if (new_notifs.length != 0) {
-                    console.log("new notifs time:", new_notifs.map(n => n.last_updated))
+                    // console.log("new notifs time:", new_notifs.map(n => n.last_updated))
                     this.last_notif_time = new_notifs[0].last_updated
                     this.addNotifsToSelf(new_notifs)
-                    console.log("new notif time: ", this.last_notif_time , new_notifs.length)
+                    // console.log("new notif time: ", this.last_notif_time , new_notifs.length)
                 }
             }
             catch (e) {
@@ -182,8 +165,6 @@ export default {
     },
 
 	async mounted() {
-        // console.log("Mounted notif poller")
-        this.StartPollingNotifications()
 	},
     
 };

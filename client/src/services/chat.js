@@ -18,7 +18,7 @@ export const getMyMessages = async (access_token) => {
 export const getMyNewMessages = async (access_token, start_time) => {
 	// console.log("get messages ")
 	let request = {
-		url: "/api/chat/getall", // should be replaced after going to production with domain url
+		url: "/api/chat/getallnew", // should be replaced after going to production with domain url
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",

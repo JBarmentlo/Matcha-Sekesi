@@ -41,6 +41,7 @@ LEFT JOIN BLOCKED
 	ON BLOCKED.blocked = MSG.sender
 HAVING
 	blocked_source=0
+ORDER BY last_updated DESC LIMIT 1000 OFFSET 0;
 `
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
@@ -96,6 +97,7 @@ WHERE
 	last_updated > '${req.body.last_time}'
 HAVING
 	blocked_source=0
+ORDER BY last_updated DESC LIMIT 1000 OFFSET 0;
 `
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)

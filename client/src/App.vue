@@ -5,6 +5,7 @@
         <notifications/>
         <router-view @setLoggedIn="setLoggedIn"/>
         <NotifPoller/>
+        <MsgPoller/>
     </div>
 </template>
 
@@ -15,20 +16,23 @@
 import { getMyMessages } from './services/chat'
 import NavBar from "./shared/NavBar.vue"
 import NotifPoller from "./shared/NotifPoller.vue"
+import MsgPoller from "./shared/MsgPoller.vue"
 
 export default {
     name: 'App',
 
     components: {
         NavBar,
-        NotifPoller
+        NotifPoller,
+        MsgPoller,
     },
 
     data() {
         return {
             messages        : null,
             polling         : null,
-            store_loaded    : false
+            store_loaded    : false,
+            chat_disabled   : true
         }
     },
 
@@ -98,6 +102,7 @@ export default {
         },
 
         startPollingMsg(freq) {
+            if (this.chat_disabled) return
             this.last_message_time = null
             let first_poll = true
             this.polling = setInterval(async () => {
