@@ -50,9 +50,9 @@ computed: {
 
 methods: {
   async setSeen() {
-    await setSeenNotifs(this.token, Object.keys(this.notifs))
+    await setSeenNotifs(this.token, this.notifs.map(n => n.id))
     for (const notif of this.notifs) {
-      this.$root.store.setSeenNotification(notif.id)    
+      this.$root.store.setSeenNotification(notif.id)
     }
   },
 

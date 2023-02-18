@@ -97,7 +97,7 @@ create table if not exists NOTIFS
     source_user  varchar(300)                         not null,
     target_user  varchar(300)                         not null,
     seen         tinyint(1) default 0                 null,
-    last_updated timestamp  default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    last_updated timestamp  default CURRENT_TIMESTAMP null,
     constraint source_user_notif_fk
         foreign key (source_user) references USERS (username)
             on delete cascade,

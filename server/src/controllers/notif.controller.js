@@ -186,10 +186,13 @@ exports.set_seen_notifs = async (req, res) => {
 		}
 		id_list_str += ')'
 		notif_query = await db.query(
-			"UPDATE NOTIFS\
-			set seen=1 \
-			WHERE id IN id_list and target_user=?;".replace('id_list',  id_list_str),
-			[req.username],)
+			`
+			UPDATE NOTIFS
+				SET seen=1 
+			WHERE 
+				id IN ${id_list_str} 
+				and target_user='${req.username}';
+			`)
 		return res.status(200).send({message: "succesfull notif set seen", data: notif_query, code: "SUCCESS"})
 	}
 	catch (e) {
