@@ -7,6 +7,12 @@
 			:room_id="JSON.stringify('2')"
 			:messages="JSON.stringify(messages)"
 			:messages-loaded="messagesLoaded"
+			show-files=false
+			show-audio=false
+			show-reaction-emojis=false
+			show-add-room=false
+			message-actions=[]
+			:theme="this.chat_light_or_dark"
 			@send-message="sendMessage($event.detail[0])"
 			@fetch-messages="fetchMessages($event.detail[0])"
 			ref="gato"
@@ -57,6 +63,17 @@ export default {
             set: function(logged_in) {
                 this.$root.store.setLoggedInAction(logged_in);
             }
+        },
+
+		chat_light_or_dark: {
+            get: function() {
+				if (this.$root.store.state.dark_mode_on) {
+					return 'dark'
+				}
+				else {
+					return 'light'
+				}
+            },
         }
     },
 

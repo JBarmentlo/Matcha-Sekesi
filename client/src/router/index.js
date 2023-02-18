@@ -107,6 +107,7 @@ export var store = {
     token            : InitialiseTok(),
     user             : null,
     logged_in        : false,
+    dark_mode_on     : false
   },
 
 
