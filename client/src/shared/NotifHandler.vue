@@ -29,7 +29,8 @@ data () {
     limit: 100,
     last_notif_time: null,
     first_query: true,
-    time: null
+    time: null,
+    disabled: true
   }
 },
 
@@ -134,6 +135,8 @@ methods: {
 },
 
 async mounted() {
+  if (this.disabled) return
+
   try {
     let notif_list = (await getMyNotifs(this.token, this.offset, this.limit)).data.data
     if (notif_list.length != 0) {

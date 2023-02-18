@@ -4,6 +4,7 @@
         <NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in" @change-mode="enableDarkMode"/>
         <notifications/>
         <router-view @setLoggedIn="setLoggedIn"/>
+        <ServerPoller/>
     </div>
 </template>
 
@@ -13,12 +14,14 @@
 <script>
 import { getMyMessages } from './services/chat'
 import NavBar from "./shared/NavBar.vue"
+import ServerPoller from "./shared/ServerPoller.vue"
 
 export default {
     name: 'App',
 
     components: {
-        NavBar
+        NavBar,
+        ServerPoller
     },
 
     data() {

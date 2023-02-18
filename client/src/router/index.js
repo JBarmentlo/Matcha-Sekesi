@@ -107,7 +107,9 @@ export var store = {
     token            : InitialiseTok(),
     user             : null,
     logged_in        : false,
-    dark_mode_on     : false
+    dark_mode_on     : false,
+    messages         : [],
+    notifications    : []
   },
 
 
@@ -159,6 +161,42 @@ export var store = {
     sessionStorage.removeItem('user')
   },
 
+
+  setMessagesAction (newValue) {
+    if (this.debug) console.log('setMessagesAction triggered', newValue != null)
+
+    this.state.messages = newValue
+  },
+
+  addMessageAction (addedValue) {
+    if (this.debug) console.log('Add Message triggered', addedValue != null)
+    this.state.messages.push(addedValue)
+    this.state.messages = [...this.state.messages]
+  },
+
+  clearMessagesAction () {
+    if (this.debug) console.log('clearMessagesAction triggered')
+    this.state.messages = []
+  },
+
+
+  setNotificationsAction (newValue) {
+    if (this.debug) console.log('setNotificationsAction triggered', newValue != null)
+    this.state.notifications = newValue
+  },
+
+  addNotificationAction (addedValue) {
+    if (this.debug) console.log('Add Notif triggered', addedValue != null)
+    this.state.notifications.push(addedValue)
+    this.state.notifications = [...this.state.notifications]
+  },
+
+  clearNotificationsAction () {
+    if (this.debug) console.log('clearNotificationsAction triggered')
+    this.state.notifications = []
+  },
+
+
   setLoggedInAction(newValue) {
     if (this.debug) console.log('setLoggedInAction triggered')
     this.state.logged_in = newValue
@@ -178,10 +216,13 @@ export var store = {
     return this.state.user.is_complete_profile
   },
 
+
   clearStore() {
     this.clearTokenAction()
     this.clearUserAction()
     this.setLoggedInAction(false)
+    this.clearNotificationsAction()
+    this.clearMessagesAction()
   },
 }
 
