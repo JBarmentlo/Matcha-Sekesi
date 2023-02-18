@@ -62,6 +62,21 @@ export default {
 		},
 	},
 
+
+    watch: {
+        logged_in: function (val) {
+            if (val) {
+                console.log("Start Polling notifs WATCH")
+                this.StartPollingNotifications()
+            }
+            else {
+                console.log("Stop Polling notifs / messagesWATCH")
+                this.stopPollingNotifs()
+            }
+        },
+    },
+
+
 	methods: {
 		addMessage(message) {
 			this.$root.store.addMessageAction(message)
@@ -95,9 +110,13 @@ export default {
             }
         },
 
-        async pollNotifications() {
+        async StartPollingNotifications() {
+            if (this.notifPolling != null) {
+                console.log("double poll")
+                this.stopPollingNotifs()
+            }
             this.notifPolling = setInterval(async () => {
-                console.log("NOTIF POLL")
+                // console.log("NOTIF POLL")
                 if (!this.logged_in) {
                     return
                 }
@@ -122,7 +141,7 @@ export default {
         },
 
         async initializeNotifs() {
-            console.log("NOTIF INIT")
+            // console.log("NOTIF INIT")
             try {
                 let notif_list = (await getMyNotifs(this.token, 0, 20)).data.data
                 if (notif_list.length != 0) {
@@ -139,7 +158,7 @@ export default {
         },
 
         async getNotifs() {
-            console.log("NOTIF GET")
+            // console.log("NOTIF GET")
             try {
                 let new_notifs = (await getMyNewNotifs(this.token, this.last_notif_time, 0, 20)).data.data
                 new_notifs = new_notifs.filter(n => n.last_updated != this.time)
@@ -158,12 +177,15 @@ export default {
         stopPollingNotifs() {
             console.log("stop polling notifs")
             clearInterval(this.notifPolling)
+            this.notifPolling = null
         },
     },
 
 	async mounted() {
-        this.pollNotifications()
-	}
+        // console.log("Mounted notif poller")
+        this.StartPollingNotifications()
+	},
+    
 };
 </script>
 

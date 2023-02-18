@@ -162,6 +162,7 @@ export var store = {
   },
 
 
+
   setMessagesAction (newValue) {
     if (this.debug) console.log('setMessagesAction triggered', newValue != null)
 
@@ -172,6 +173,7 @@ export var store = {
     if (this.debug) console.log('Add Message triggered', addedValue != null)
     this.state.messages.push(addedValue)
     this.state.messages = [...this.state.messages]
+    // this.state.messages = this.state.messages.slice(-10)
   },
 
   clearMessagesAction () {
@@ -180,21 +182,42 @@ export var store = {
   },
 
 
+
   setNotificationsAction (newValue) {
     if (this.debug) console.log('setNotificationsAction triggered', newValue != null)
     this.state.notifications = newValue
+  },
+
+  setSeenNotification(id) {
+    if (this.debug) console.log('setting seen notif triggered', id)
+    let index = this.state.notifications.find(elem => elem.id == id)
+    if (index != undefined) {
+      this.state.notifications[index].seen = true
+      this.state.notifications = [...this.state.notifications]
+    }
+  },
+
+  deleteNotification(id) {
+    if (this.debug) console.log('setting seen notif triggered', id)
+    let index = this.state.notifications.find(elem => elem.id == id)
+    if (index != undefined) {
+      delete this.state.notifications[index]
+      this.state.notifications = [...this.state.notifications]
+    }
   },
 
   addNotificationAction (addedValue) {
     if (this.debug) console.log('Add Notif triggered', addedValue != null)
     this.state.notifications.push(addedValue)
     this.state.notifications = [...this.state.notifications]
+    // this.state.notifications = this.state.notifications.slice(-10)
   },
 
   clearNotificationsAction () {
     if (this.debug) console.log('clearNotificationsAction triggered')
     this.state.notifications = []
   },
+
 
 
   setLoggedInAction(newValue) {
