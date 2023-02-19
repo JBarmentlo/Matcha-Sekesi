@@ -120,36 +120,60 @@ export default {
             return require("../assets/empty_profile.png")
         },
 
-        like(index, username) {
-            if (this.user.profilePic == null) {
-                this.$swal('Please complete your profile with a profile picture to be able to like users.')
+        async like(index, username) {
+            if (this.user.is_complete_profile == 0) {
+                this.$swal('Please complete your profile with a profile picture, tags and a bio to be able to like users.')
                 return
             }
-            likeUser(this.token, username)
-            let new_users = this.users
-            new_users.splice(index, 1, {...this.users[index], did_i_like_him: 1})
-            this.$emit('users_change', new_users)
+            try {
+                await likeUser(this.token, username)
+                let new_users = this.users
+                new_users.splice(index, 1, {...this.users[index], did_i_like_him: 1})
+                this.$emit('users_change', new_users)
+            }
+            catch (e) {
+                console.log("HIHI like", e)
+                this.$swal("Outdated token please login again")
+            }
         },
 
-        unlike(index, username) {
-            unlikeUser(this.token, username)
-            let new_users = this.users
-            new_users.splice(index, 1, {...this.users[index], did_i_like_him: 0})
-            this.$emit('users_change', new_users)
+        async unlike(index, username) {
+            try {
+                unlikeUser(this.token, username)
+                let new_users = this.users
+                new_users.splice(index, 1, {...this.users[index], did_i_like_him: 0})
+                this.$emit('users_change', new_users)
+            }
+            catch (e) {
+                console.log("HIHI unlike", e)
+                this.$swal("Outdated token please login again")
+            }
         },
 
-        block(index, username) {
-            blockUser(this.token, username)
-            let new_users = this.users
-            new_users.splice(index, 1)
-            this.$emit('users_change', new_users)
+        async block(index, username) {
+            try {
+                blockUser(this.token, username)
+                let new_users = this.users
+                new_users.splice(index, 1)
+                this.$emit('users_change', new_users)
+            }
+            catch (e) {
+                console.log("HIHI block", e)
+                this.$swal("Outdated token please login again")
+            }
         },
 
-        unblock(index, username) {
-            unblockUser(this.token, username)
-            let new_users = this.users
-            new_users.splice(index, 1)
-            this.$emit('users_change', new_users)
+        async unblock(index, username) {
+            try {
+                unblockUser(this.token, username)
+                let new_users = this.users
+                new_users.splice(index, 1)
+                this.$emit('users_change', new_users)
+            }
+            catch (e) {
+                console.log("HIHI unblock", e)
+                this.$swal("Outdated token please login again")
+            }
         },
     },
 
