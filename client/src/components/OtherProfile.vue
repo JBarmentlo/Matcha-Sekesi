@@ -180,44 +180,74 @@ export default {
   },
 
   methods: {
-    like(username) {
-			if (this.$root.store.state.user.is_complete_profile == null) {
-				this.$swal('Please complete your profile with a profile picture to be able to like users.')
-				return
-			}
-			likeUser(this.token, username)
-      this.user.did_i_like_him = 1;
-		},
-
-    unlike(username) {
-      unlikeUser(this.token, username);
-      this.user.did_i_like_him = 0;
+    async like(username) {
+      try {
+        if (this.$root.store.state.user.is_complete_profile == null) {
+          this.$swal('Please complete your profile with a profile picture to be able to like users.')
+          return
+        }
+        await likeUser(this.token, username)
+        this.user.did_i_like_him = 1;
+      }
+      catch (e) {
+        console.log("HEHE like", e)
+        this.$swal("Outdated token please log out and log back in.")
+      }
     },
 
-    block(username) {
-      blockUser(this.token, username);
-      this.user.did_i_block_him = 1;
+    async unlike(username) {
+      try {
+        await unlikeUser(this.token, username);
+        this.user.did_i_like_him = 0;
+      }
+      catch (e) {
+        console.log("HEHE unlike", e)
+        this.$swal("Outdated token please log out and log back in.")
+      }
     },
 
-    unblock(username) {
-      unblockUser(this.token, username);
-      this.user.did_i_block_him = 0;
+    async block(username) {
+      try {
+        await blockUser(this.token, username);
+        this.user.did_i_block_him = 1;
+      }
+      catch (e) {
+        console.log("HEHE block", e)
+        this.$swal("Outdated token please log out and log back in.")
+      }
     },
 
-    report(username) {
-      reportUser(this.token, username);
-      this.reported = true;
+    async unblock(username) {
+      try {
+        await unblockUser(this.token, username);
+        this.user.did_i_block_him = 0;
+      }
+      catch (e) {
+        console.log("HEHE unblock", e)
+        this.$swal("Outdated token please log out and log back in.")
+      }
+    },
+
+    async report(username) {
+      try {
+        await reportUser(this.token, username);
+        this.reported = true;
+      }
+      catch (e) {
+        console.log("HEHE report", e)
+        this.$swal("Outdated token please log out and log back in.")
+      }
     },
   },
-
   async mounted() {
-    let res = await getUserProfile(
-      this.token,
-      this.userName
-    );
-    console.log(res);
-    this.user = res.data.data;
+
     try {
+      let res = await getUserProfile(
+        this.token,
+        this.userName
+      );
+      console.log(res);
+      this.user = res.data.data;
       await consultUserProfile(this.token, this.userName)
     }
     catch {
@@ -263,7 +293,7 @@ export default {
 }
 
 #app.darkmode .infos {
-	color: #f6c0ba;
+  color: #f6c0ba;
 }
 
 .orientation {
