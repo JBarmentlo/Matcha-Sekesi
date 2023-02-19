@@ -182,8 +182,8 @@ httpServer.listen(process.env.MATCHA_HTTP_PORT, () => {
 
 if (process.env.MATCHA_USE_HTTPS == 'TRUE') {
   const privateKey  = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/privkey.pem', 'utf8');
-  const certificate = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/cert.pem', 'utf8');
-  const ca          = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/chain.pem', 'utf8');
+  const certificate = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/cert.pem'   , 'utf8');
+  const ca          = fs.readFileSync('/etc/letsencrypt/live/matcha.yoopster.com/chain.pem'  , 'utf8');
   
   const credentials = {
     key  : privateKey,

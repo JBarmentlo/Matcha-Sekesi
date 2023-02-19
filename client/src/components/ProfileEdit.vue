@@ -468,10 +468,21 @@ export default {
 
         DOBSelected(e) {
             this.user.DOB = e
-            // this.user.age = this.calculateAge(new Date(e.replace(/-/g,'/')))
-            // console.log(this.user.age)
         }
     },
+    async mounted() {
+        try {
+            let user_response = await getMyUser(this.token)
+            if (user_response.data.code == 'SUCCESS') {
+                console.log("User upadataded")
+                this.user = user_response.data.data
+            }
+        }
+        catch {
+            console.log("User nay upadataded")
+        }
+        
+    }
 };
 </script>
 
