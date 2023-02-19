@@ -56,6 +56,7 @@
     <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
     <div class="card h-100">
         <div class="card-body">
+    <ValidationObserver ref="EditProfObserver">
             <div class="row pt-2">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <h6 class="mb-2 section">Account Details</h6>
@@ -63,40 +64,49 @@
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label class="labels">Name</label>
-                        <input
-                            type="text"
-                            v-model="user.firstName"
-                            class="form-control"
-                            placeholder="Enter first name"
-                            maxlength="50"
-                            value=""
-                        />
+						<ValidationProvider rules="required|alpha|length:1" v-slot="{ errors }">
+                            <input
+                                type="text"
+                                v-model="user.firstName"
+                                class="form-control"
+                                placeholder="Enter first name"
+                                maxlength="50"
+                                value=""
+                            />
+                            <span class="login_error">{{ errors[0] }}</span>
+						</ValidationProvider>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label class="labels">Last Name</label>
-                        <input
-                            type="text"
-                            v-model="user.lastName"
-                            class="form-control"
-                            value=""
-                            placeholder="Enter last name"
-                            maxlength="50"
-                        />
+						<ValidationProvider rules="required|alpha|length:1" v-slot="{ errors }">
+                            <input
+                                type="text"
+                                v-model="user.lastName"
+                                class="form-control"
+                                value=""
+                                placeholder="Enter last name"
+                                maxlength="50"
+                            />
+                            <span class="login_error">{{ errors[0] }}</span>
+						</ValidationProvider>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label class="labels">Email</label>
-                        <input
-                            type="text"
-                            v-model="user.mail"
-                            class="form-control"
-                            placeholder="Enter email adress"
-                            maxlength="255"
-                            value=""
-                        />
+						<ValidationProvider rules="required|email" v-slot="{ errors }">
+                            <input
+                                type="email"
+                                v-model="user.mail"
+                                class="form-control"
+                                placeholder="Enter email adress"
+                                maxlength="255"
+                                value=""
+                            />
+                            <span class="login_error">{{ errors[0] }}</span>
+						</ValidationProvider>
                         <span v-if="mail_taken" class="login_error">Mail already in use</span>
                     </div>
                 </div>
@@ -220,12 +230,11 @@
                             <b-tooltip  target="gif-image" placement="rigth" triggers="hover">select this gif</b-tooltip>
                         </div>
                 </div>
-                </div>
+            </div>
             <div class="row">
                 <div class="col">
                     <div class="text-right">
                         <button class = "update_button" type="button" id="submit" name="submit"  @click="updateProfile"><b-icon-check-square/>  Update</button>
-                        <button class = "cancel_button" type="button" id="submit" name="submit" ><b-icon-x-circle/>  Cancel</button>
                     </div>
                 </div>
                 <div v-if="user.is_complete_profile" class="col-md-auto profile_complete">
@@ -236,6 +245,7 @@
                 </div>
             </div>
         </div>
+    </ValidationObserver>
     </div>
     </div>
     </div>
@@ -249,10 +259,11 @@ import { BIconEye, BIconHandThumbsUp } from 'bootstrap-vue'
 
 import {updateUser, getMyUser} from '../services/user'
 // import { diff } from '../services/utils'
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 
 import ProfileImageCarousel from '../shared/ProfileImageCarousel.vue'
-import TagInputHandler from '../shared/TagInputHandler.vue'
-import ProfilePicUpload from '../shared/ProfilePicUpload.vue'
+import TagInputHandler      from '../shared/TagInputHandler.vue'
+import ProfilePicUpload     from '../shared/ProfilePicUpload.vue'
 
 export default {
     components: {
@@ -261,6 +272,8 @@ export default {
         BIconHandThumbsUp,
         TagInputHandler,
         ProfilePicUpload,
+        ValidationProvider,
+		ValidationObserver,
     },
 
     data() {
@@ -300,6 +313,14 @@ export default {
 			}
 		},
 
+        form_valid: function() {
+            if (this.$refs.EditProfObserver != undefined) {
+                return this.$refs.EditProfObserver.flags.valid            
+            }
+            console.log("no ref", this.$refs.EditProfObserver)
+            return false
+        },
+
 		user_images: function() {
 				return [this.user.image0, this.user.image1, this.user.image2, this.user.image3]
         },
@@ -312,7 +333,7 @@ export default {
         },
 
         isCompleteProfile: function() {
-            return (this.user.profilePic != null)
+            return (this.user.is_complete_profile == 1)
         }
     },
 
@@ -384,7 +405,9 @@ export default {
 
 
         async updateProfile() {
-            // # TODO: this diffy will be empty
+            if (! this.form_valid) {
+                return this.$swal("Invalid information.")
+            }
             let user_diffy = {...this.user}
             delete user_diffy.last_connected
             delete user_diffy.connected
