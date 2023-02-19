@@ -72,8 +72,18 @@ export default {
       }
       else {
         try {
+          console.log("uploading", file)
           let upload_res = await uploadImage(this.$root.store.state.token, file)
-          this.$emit("upload_profile_pic", upload_res.data.url)
+          console.log("res", upload_res)
+          if (upload_res.data.code == "SUCCESS") {
+            return this.$emit("upload_profile_pic", upload_res.data.url)
+          }
+          if (upload_res.data.code == "LIMIT_FILE_SIZE") {
+            this.$swal("File too large!\nThe limit is 9Mb.")
+          }
+          if (upload_res.data.code == "FILE_TYPE_ERROR") {
+            this.$swal("Wrong file type!\n.jpeg, .png or .webp accepted.")
+          }
         }
         catch (e) {
           console.log("ERR in upload prof", e)

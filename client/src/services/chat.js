@@ -15,6 +15,24 @@ export const getMyMessages = async (access_token) => {
 	return response;
 }
 
+export const getMyNewMessages = async (access_token, start_time) => {
+	// console.log("get messages ")
+	let request = {
+		url: "/api/chat/getallnew", // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+		},
+		data: JSON.stringify({
+			last_time: start_time
+		})
+	};
+	const response = await api_axios(request);
+	// console.log("MSG res: ", response)
+	return response;
+}
+
 
 export const getConvo = async (access_token, username, offset, limit) => {
 	let request = {

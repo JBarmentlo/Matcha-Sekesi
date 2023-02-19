@@ -102,10 +102,14 @@ function InitialiseTok() {
 
 export var store = {
   debug: true,
+  initialized: false,
   state: {
     token            : InitialiseTok(),
     user             : null,
     logged_in        : false,
+    dark_mode_on     : false,
+    messages         : [],
+    notifications    : []
   },
 
 
@@ -157,6 +161,65 @@ export var store = {
     sessionStorage.removeItem('user')
   },
 
+
+
+  setMessagesAction (newValue) {
+    if (this.debug) console.log('setMessagesAction triggered', newValue != null)
+
+    this.state.messages = newValue
+  },
+
+  addMessageAction (addedValue) {
+    if (this.debug) console.log('Add Message triggered', addedValue != null)
+    this.state.messages.push(addedValue)
+    this.state.messages = [...this.state.messages]
+    // this.state.messages = this.state.messages.slice(-10)
+  },
+
+  clearMessagesAction () {
+    if (this.debug) console.log('clearMessagesAction triggered')
+    this.state.messages = []
+  },
+
+
+
+  setNotificationsAction (newValue) {
+    if (this.debug) console.log('setNotificationsAction triggered', newValue != null)
+    this.state.notifications = newValue
+  },
+
+  setSeenNotification(id) {
+    if (this.debug) console.log('setting seen notif triggered', id)
+    let index = this.state.notifications.findIndex(elem => elem.id == id)
+    if (index != undefined) {
+      this.state.notifications[index].seen = true
+      this.state.notifications = [...this.state.notifications]
+    }
+  },
+
+  deleteNotification(id) {
+    if (this.debug) console.log('setting seen notif triggered', id)
+    let index = this.state.notifications.findIndex(elem => elem.id == id)
+    if (index != undefined) {
+      delete this.state.notifications[index]
+      this.state.notifications = [...this.state.notifications]
+    }
+  },
+
+  addNotificationAction (addedValue) {
+    if (this.debug) console.log('Add Notif triggered', addedValue != null)
+    this.state.notifications.push(addedValue)
+    this.state.notifications = [...this.state.notifications]
+    // this.state.notifications = this.state.notifications.slice(-10)
+  },
+
+  clearNotificationsAction () {
+    if (this.debug) console.log('clearNotificationsAction triggered')
+    this.state.notifications = []
+  },
+
+
+
   setLoggedInAction(newValue) {
     if (this.debug) console.log('setLoggedInAction triggered')
     this.state.logged_in = newValue
@@ -176,10 +239,13 @@ export var store = {
     return this.state.user.is_complete_profile
   },
 
+
   clearStore() {
     this.clearTokenAction()
     this.clearUserAction()
     this.setLoggedInAction(false)
+    this.clearNotificationsAction()
+    this.clearMessagesAction()
   },
 }
 
@@ -213,7 +279,10 @@ export const updateUserStore = async () => {
 
 router.beforeResolve(async (to, from, next) => {
   console.log("Navigation Guard from ", from.fullPath, "to ", to.fullPath)
-  await updateUserStore()
+  if (store.initialized == false) {
+    await updateUserStore()
+    store.initialized = true
+  }
   console.log("logged_in: ", store.state.logged_in, "user: ", store.state.user != null, "token: ", store.state.token != null)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     console.log("Requires auth")

@@ -52,40 +52,61 @@ exports.create_notif = async (type, source, target) => {
 	}
 } 
 
+exports.get_current_time = async (req, res) => {
+	try {
+		current_time = await db.query(
+			`
+			SELECT
+				last_connected
+			FROM
+				USERS
+			WHERE
+				username=?
+			`,
+			[req.username],)
+		return res.status(200).send({message: "succesfull time request", server_time: current_time[0].last_connected, code: "SUCCESS"})
+	}
+	catch (e) {
+		console.log(e)
+		return res.status(201).send({message: "failed time query", data: '2023-02-16T18:34:44.000Z', code: "FAILURE"})
+		throw (e)
+	}
+}
+
 exports.get_my_notifs = async (req, res) => {
 	try {
 		notif_query = await db.query(
-			`
-			WITH
-			BLOCKED as (
-				SELECT
-					blocked,
-					SUM(blocker=?) > 0 as did_i_block_him
-				FROM
-					BLOCKS
-				GROUP BY
-					blocked
-			)
+`
+WITH
+BLOCKED as (
+	SELECT
+		blocked,
+		SUM(blocker=?) > 0 as did_i_block_him
+	FROM
+		BLOCKS
+	GROUP BY
+		blocked
+)
 
-			SELECT 
-				id,
-				type,
-				source_user,
-				target_user,
-				seen,
-				last_updated,
-				IFNULL(did_i_block_him, 0) as blocked_source
-			FROM NOTIFS
-				LEFT JOIN BLOCKED
-					ON BLOCKED.blocked=NOTIFS.source_user
-			WHERE 
-				target_user=?
-			HAVING
-				blocked_source=0
-			ORDER BY last_updated DESC LIMIT ? OFFSET ?;
-			`
+SELECT 
+	id,
+	type,
+	source_user,
+	target_user,
+	seen,
+	last_updated,
+	IFNULL(did_i_block_him, 0) as blocked_source
+FROM NOTIFS
+	LEFT JOIN BLOCKED
+		ON BLOCKED.blocked=NOTIFS.source_user
+WHERE 
+	target_user=?
+HAVING
+	blocked_source=0
+ORDER BY last_updated DESC LIMIT ? OFFSET ?;
+`
 			,
-			[req.username, req.username, req.body.limit, req.body.offset],)
+			[req.username, req.username, 20, 0],)
 		
 		// console.log("get notif: ", req.username, notif_query.length)
 		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
@@ -99,42 +120,44 @@ exports.get_my_notifs = async (req, res) => {
 
 exports.get_my_new_notifs = async (req, res) => {
 	try {
+		if (req.body.last_time == null) {
+			req.body.last_time = '2023-02-16T18:34:44.000Z'
+		}
 		notif_query = await db.query(
-			`
-			WITH
-			BLOCKED as (
-				SELECT
-					blocked,
-					SUM(blocker=?) > 0 as did_i_block_him
-				FROM
-					BLOCKS
-				GROUP BY
-					blocked
-			)
+`
+WITH
+BLOCKED as (
+	SELECT
+		blocked,
+		SUM(blocker=?) > 0 as did_i_block_him
+	FROM
+		BLOCKS
+	GROUP BY
+		blocked
+)
 
-			SELECT 
-				id,
-				type,
-				source_user,
-				target_user,
-				seen,
-				last_updated,
-				IFNULL(did_i_block_him, 0) as blocked_source
-			FROM NOTIFS
-				LEFT JOIN BLOCKED
-					ON BLOCKED.blocked=NOTIFS.source_user
-			WHERE 
-				target_user=?
-			AND
-				last_updated >= ?
-			HAVING
-				blocked_source=0
-			ORDER BY last_updated DESC LIMIT ? OFFSET ?;
-			`
+SELECT 
+	id,
+	type,
+	source_user,
+	target_user,
+	seen,
+	last_updated,
+	IFNULL(did_i_block_him, 0) as blocked_source
+FROM NOTIFS
+	LEFT JOIN BLOCKED
+		ON BLOCKED.blocked=NOTIFS.source_user
+WHERE 
+	target_user=?
+	AND last_updated > ?
+HAVING
+	blocked_source=0
+ORDER BY last_updated DESC LIMIT ? OFFSET ?;
+`
 			,
-			[req.username, req.username, req.body.after_said_time, req.body.limit, req.body.offset],)
+			[req.username, req.username, req.body.last_time, 20, 0],)
 		
-		// console.log("get notif: ", req.username, notif_query.length)
+		// console.log("new notif: ", notif_query.map(n => n.last_updated), req.username, req.body.last_time)
 		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
 	}
 	catch (e) {
@@ -163,10 +186,13 @@ exports.set_seen_notifs = async (req, res) => {
 		}
 		id_list_str += ')'
 		notif_query = await db.query(
-			"UPDATE NOTIFS\
-			set seen=1 \
-			WHERE id IN id_list and target_user=?;".replace('id_list',  id_list_str),
-			[req.username],)
+			`
+			UPDATE NOTIFS
+				SET seen=1 
+			WHERE 
+				id IN ${id_list_str} 
+				and target_user='${req.username}';
+			`)
 		return res.status(200).send({message: "succesfull notif set seen", data: notif_query, code: "SUCCESS"})
 	}
 	catch (e) {

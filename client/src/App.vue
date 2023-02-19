@@ -1,9 +1,11 @@
 <template>
     <div v-if="store_loaded" id="app"
-        :class="[isActive ? 'darkmode' : '']">
+        :class="[dark_mode_on ? 'darkmode' : '']">
         <NavBar @setLoggedIn="setLoggedIn" v-bind:logged_in="logged_in" @change-mode="enableDarkMode"/>
         <notifications/>
         <router-view @setLoggedIn="setLoggedIn"/>
+        <NotifPoller/>
+        <MsgPoller/>
     </div>
 </template>
 
@@ -12,27 +14,25 @@
 
 <script>
 import { getMyMessages } from './services/chat'
-// import { updateUserStore } from './router'
-
 import NavBar from "./shared/NavBar.vue"
-
-// process.env.USER_ID; // "239482"
-// process.env.USER_KEY; // "foobar"
-// process.env.NODE_ENV; // "development"
+import NotifPoller from "./shared/NotifPoller.vue"
+import MsgPoller from "./shared/MsgPoller.vue"
 
 export default {
     name: 'App',
 
     components: {
-        NavBar
+        NavBar,
+        NotifPoller,
+        MsgPoller,
     },
 
     data() {
         return {
             messages        : null,
             polling         : null,
-            isActive        : false,
-            store_loaded    : false
+            store_loaded    : false,
+            chat_disabled   : true
         }
     },
 
@@ -62,21 +62,30 @@ export default {
             set: function(logged_in) {
                 this.$root.store.setLoggedInAction(logged_in);
             }
+        },
+
+        dark_mode_on: {
+            get: function() {
+                return this.$root.store.state.dark_mode_on;
+            },
+            set: function(dark_mode_on) {
+                this.$root.store.state.dark_mode_on = dark_mode_on;
+            }
         }
     },
 
     watch: {
         logged_in: function (val) {
             if (val) {
-                console.log("Start Polling notifs / messages")
-                this.startPollingMsg(1000)
+                // console.log("Start Polling notifs / messages")
+                // this.startPollingMsg(1000)
                 console.log("PUSHING editprofile")
                 if (this.$route.requiresNotAuth) this.$route.push("/editprofile")
                 
             }
             else {
-                console.log("Stop Polling notifs / messages")
-                clearInterval(this.polling)
+                // console.log("Stop Polling notifs / messages")
+                // clearInterval(this.polling)
                 console.log("PUSHING signin")
                 if (this.$route.requiresAuth) this.$route.push("/signin")
             }
@@ -84,8 +93,8 @@ export default {
       },
 
     methods: {
-        enableDarkMode(isActive) {
-            this.isActive = isActive;
+        enableDarkMode(dark_mode_on) {
+            this.dark_mode_on = dark_mode_on
         },
         
         async setLoggedIn(val) {
@@ -93,6 +102,7 @@ export default {
         },
 
         startPollingMsg(freq) {
+            if (this.chat_disabled) return
             this.last_message_time = null
             let first_poll = true
             this.polling = setInterval(async () => {

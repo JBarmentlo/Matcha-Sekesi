@@ -8,11 +8,11 @@ exports.upload_image = async (req, res) => {
 	try {
 		let filename = req.file.filename
 		console.log('filename: ', req.file.filename, 'User: ', req.username)
-		res.status(200).send({'filename': filename, url: `${hostname}/api/image/get/${filename}`})
+		res.status(200).send({'filename': filename, url: `${hostname}/api/image/get/${filename}`, code: "SUCCESS"})
 	}
 	catch (e){
 		console.log("Error upload image: " + e);
-		res.status(500).send({error: e})
+		res.status(500).send({error: e, code: "FAILURE"})
 	}
 }
 

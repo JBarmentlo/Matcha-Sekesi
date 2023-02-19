@@ -31,6 +31,7 @@ export default {
 			rooms: [
 			],
 			messages: [],
+			allMessages: []
 			messagesLoaded: false,
 			rawMessages: [],
 			polling: null
@@ -89,7 +90,7 @@ export default {
 				}
 				else {
 					if (this.polling != null) {
-						// console.log("stop poll: ", this.polling)
+						console.log("stop poll: ", this.polling)
 						clearInterval(this.polling)
 					}
 					this.messages = (await getConvo(this.token, room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
@@ -98,6 +99,21 @@ export default {
 					return
 				}
 			})
+		},
+		
+		addMessages(reset, room_id) {
+			const messages = []
+			for (let i = 0; i < 30; i++) {
+				messages.push({
+					_id: reset ? i : this.messages.length + i,
+					content: `${reset ? '' : 'paginated'} message ${room_id} ${i + 1}`,
+					senderId: '4321',
+					username: 'John Doe',
+					date: '13 November',
+					timestamp: '10:20'
+				})
+			}
+			return messages
 		},
 
 		usersToConvoId(one, two) {
@@ -120,11 +136,11 @@ export default {
 			this.messages = [
 				...this.messages,
 				{
-					_id      : -1,
-					content  : message.content,
-					senderId : this.currentUserId,
+					_id: -1,
+					content: message.content,
+					senderId: this.currentUserId,
 					timestamp: new Date().toString().substring(16, 21),
-					date     : new Date().toDateString()
+					date: new Date().toDateString()
 				}
 			]
 			console.log(message.content.replace(new RegExp("'", "g"), "''"))
@@ -132,18 +148,44 @@ export default {
 			sendMsg(this.token, message.roomId , message.content.replace(new RegExp("'", "g"), "''"), this.usersToConvoId(this.currentUserId, message.roomId))
 		},
 
+		addNewMessage() {
+			setTimeout(() => {
+				this.messages = [
+					...this.messages,
+					{
+						_id: this.messages.length,
+						content: 'NEW MESSAGE',
+						senderId: '1234',
+						timestamp: new Date().toString().substring(16, 21),
+						date: new Date().toDateString()
+					}
+				]
+			}, 2000)
+		},
+
 		matchToRoom(match) {
+			let short
+			let long
+
+			if (match.liker.length <= match.liker.length) {
+				short = match.liker
+				long = match.liker
+			}
+			else {
+				short = match.liker
+				long = match.liker
+			}
 			return {
+				// roomId: `${short}${long.length}${long}`,
 				roomId: match.liker,
 				roomName: match.liker,
 				avatar: this.profilePicNull(match.profilePic),
 				users: [
-						{ _id: match.liker, username: match.liker },
-						{ _id: match.matchee, username: match.matchee }
+						{ _id: short, username: short },
+						{ _id: long, username: long }
 				]
 			}
 		},
-
 		pollRoom (room) {
 			this.polling = setInterval(async () => {
 				let new_mesg = (await getConvo(this.token, room.roomName, 0, 100)).data.data.reverse().map(this.formatMsg)
@@ -154,6 +196,17 @@ export default {
 		},
 
 
+		notifyUser(notif_list) {
+			if (notif_list.length != 0) {
+				// console.log("notify: ", notif_list)
+				for (const notif of notif_list) {
+					this.$notify({
+						text: notif.senderId + " sent you a message!"
+					});
+				}
+			}
+		},
+
 		profilePicNull(url) {
 			if (url != null) {
 				return url;
@@ -163,21 +216,20 @@ export default {
 
 		formatMsg(msg) {
 			return {
-					_id      : msg.id,
-					content  : msg.msg,
-					senderId : msg.sender,
-					username : msg.sender,
-					date     : msg.last_updated.slice(0, 10),
+					_id: msg.id,
+					content: msg.msg,
+					senderId: msg.sender,
+					username: msg.sender,
+					date: msg.last_updated.slice(0, 10),
 					timestamp: msg.last_updated.slice(11, 16)
 			}
 		}
 	},
 	async mounted() {
-			this.rawMessages   = (await getMyMessages(this.token)).data.data.reverse()
-			let matches        = (await getMatches(this.token)).data.data
-			let new_rooms      = matches.map(m => this.matchToRoom(m))
-            console.log(matches, new_rooms)
-			this.rooms         = new_rooms
+			this.rawMessages = (await getMyMessages(this.token)).data.data.reverse()
+			let matches = (await getMatches(this.token)).data.data
+			let new_rooms = matches.map(m => this.matchToRoom(m))
+			this.rooms = new_rooms
 			this.currentUserId = this.user.username
 	},
 
