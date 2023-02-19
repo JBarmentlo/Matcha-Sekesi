@@ -11,15 +11,10 @@ A basic tinderlike web app built on a Vue2 / express / mysql stack.
 #### **`client/.env`**
 
 ```bash
-VUE_APP_MATCHA_DB="sekesidb"
-VUE_APP_MATCHA_TEST_DB='sekesitest'
-VUE_APP_TEST='false'
-VUE_APP_ENVIRONMENT='TEST'
-VUE_APP_MATCHA_USE_HTTPS='FALSE'
-VUE_APP_MATCHA_HTTPS_PORT=443
-VUE_APP_MATCHA_HTTP_PORT=8081
-VUE_APP_MATCHA_DEFAULT_PORT=8081
-VUE_APP_MATCHA_HOST='http://localhost'
+VUE_APP_MATCHA_HTTPS_PORT=9443
+VUE_APP_MATCHA_HTTP_PORT =9080
+VUE_APP_MATCHA_DEFAULT_PORT=9080
+VUE_APP_MATCHA_SERVER_HOST='http://localhost:9080'
 ```
 
 <br><br/>
@@ -27,13 +22,8 @@ VUE_APP_MATCHA_HOST='http://localhost'
 
 ```bash
 sudo su
-export MATCHA_DB='sekesidb'
-export MATCHA_TEST_DB='sekesitest'
-export TEST='false'
-export ENVIRONMENT='TEST'
 export PATH=$PATH:/home/ubuntu/.nvm/versions/node/v16.13.2/bin/
 ```
-
 
 <br><br/>
 ## Build the client
@@ -53,7 +43,12 @@ Define the schema for the databases.
 Create the Mysql user Sammy.
 
 ```bash
-cd server/sql_scripts
+cd server
+node node commune_data_loader.js
+```
+
+```bash
+cd sql_scripts
 sudo bash here_create_user_table.sh
 ```
 
