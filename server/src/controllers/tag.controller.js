@@ -32,12 +32,10 @@ exports.add_tag_to_user = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE', sqlMessage: e.sqlMessage})
-			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
 			res.status(500).send({message: "Error in like user ", error: e})
-			// throw(e)
 		}
 	}
 }
@@ -52,26 +50,24 @@ exports.remove_tag_from_user = async (req, res) => {
 			"DELETE FROM TAGS \
 			WHERE user = ? and tag = ?",
 			[username, tag])
-		res.status(200).send({message: 'Succesfully removed tag from user', data: untag_query_result, code: "SUCCESS"})
+return 		res.status(200).send({message: 'Succesfully removed tag from user', data: untag_query_result, code: "SUCCESS"})
 	}
 	catch (e) {
 		if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
-			throw (e)
+			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
-			res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_NO_REFERENCED_ROW') {
-			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_BAD_NULL_ERROR') {
-			res.status(200).send({message: "User cant be null", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "User cant be null", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in like user ", error: e})
-			// throw(e)
+			return res.status(500).send({message: "Error in like user ", error: e})
 		}
 	}
 }
@@ -90,7 +86,6 @@ exports.get_tags_from_user = async (req, res) => {
 	catch (e) {
 		console.log("get user tags errorr:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get yuser tags', error: e})
-		// throw(e)
 	}	
 }
 
@@ -104,7 +99,6 @@ exports.get_all_tags = async (req, res) => {
 	catch (e) {
 		console.log("get user tags errorr:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get yuser tags', error: e})
-		// throw(e)
 	}	
 }
 
@@ -136,28 +130,26 @@ exports.update_user_tags = async (req, res) => {
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: "Duplicate tag", code: e.code, sqlMessage: e.sqlMessage})
+return 			res.status(200).send({message: "Duplicate tag", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
-			res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_NO_REFERENCED_ROW') {
-			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_NO_REFERENCED_ROW_2') {
-			res.status(200).send({message: "User name not existing", code: e.code})
+			return res.status(200).send({message: "User name not existing", code: e.code})
 		}
 		else if (e.code == 'ER_BAD_NULL_ERROR') {
-			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE', sqlMessage: e.sqlMessage})
-			throw (e)
+			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE', sqlMessage: e.sqlMessage})
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in like user ", error: e})
-			// throw(e)
+			return res.status(500).send({message: "Error in like user ", error: e})
 		}
 	}
 }

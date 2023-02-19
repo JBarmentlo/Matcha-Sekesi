@@ -8,8 +8,8 @@ const middlewares = require("../controllers/middlewares");
 
 var router = require("express").Router();
 
-router.get ("/getmyuser"           , auth.verifyToken , userController.get_my_user );
-router.post("/updateuser"          , auth.verifyToken ,                                         userController.update_user            );
+router.get ("/getmyuser"           , auth.verifyToken                                         , userController.get_my_user );
+router.post("/updateuser"          , auth.verifyToken , middlewares.validate_update_form      , userController.update_user            );
 router.post("/search_users"        , auth.verifyToken , middlewares.check_profile_complete    , searchController.search_users);
 router.post("/search_users_init"   , auth.verifyToken , middlewares.check_profile_complete    , searchController.search_users_initial );
 router.get ("/getprofile/:username", auth.verifyToken , middlewares.check_profile_complete    , userController.get_user_by_username   );

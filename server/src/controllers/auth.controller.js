@@ -43,7 +43,6 @@ exports.signup = async (req, res) => {
         }
         else if (e.code == 'ER_PARSE_ERROR') {
             return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-            // // throw(e)
         }
         else if (e.code == 'ER_DATA_TOO_LONG') {
             return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -54,7 +53,6 @@ exports.signup = async (req, res) => {
         else {
             console.log("signup error:\n", e, "\nend signup error")
             return res.status(403).send({message: 'error in create test user', error: e, code: 'FAILURE'})
-            // throw(e)
         }
     }	
 };
@@ -86,7 +84,6 @@ exports.verifyMail = async (req, res) => {
     }
     catch (e) {
         return res.status(200).send({message: "Error in verify mail", code: "Failure"})
-        throw (e)
     }
 };
 
@@ -117,7 +114,6 @@ exports.requestresetPass = async (req, res) => {
     catch (e) {
         console.log("error in request reset")
         return res.status(400).send({message: "Error in requested reset", code: "FAILURE"})
-        throw (e)
     }
 };
 
@@ -151,7 +147,6 @@ exports.resetPass = async (req, res) => {
     catch (e) {
         console.log("error in reset Pass: ",e)
         return res.status(200).send({message: "Error in reset pass", code: "Failure"})
-        throw (e)
     }
 };
 
@@ -183,7 +178,6 @@ exports.signin = async (req, res) => {
     catch (e) {
         console.error("ERROR in signin", e)
         return res.status(400).send({message: "Error in signin", code: "Failure"})
-        throw (e)
     }
 };
 
@@ -228,8 +222,7 @@ exports.updateLastConnected = async (req, res, next) => {
     }
     catch (e) {
         console.log('error in update co')
-        // console.log(e)
-        // throw(e)
+        return next();
     }
 
 };

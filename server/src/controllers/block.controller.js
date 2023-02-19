@@ -31,13 +31,11 @@ exports.block_user_by_id = async (req, res) => {
 			res.status(200).send({message: "Already blocked", code: e.code})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
-			throw (e)
+			res.status(400).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
 		}
 		else {
 			console.log("EROOR block: ", e)
 			res.status(400).send({message: "Error in block user ", code: "FAILURE", error: e})
-			// throw(e)
 		}
 	}
 }
@@ -64,12 +62,10 @@ exports.block_user = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			res.status(403).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
-			throw (e)
 		}
 		else {
 			console.log("error block: ", e)
 			res.status(400).send({message: "Error in block user ", code: "FAILURE", error: e})
-			// throw(e)
 		}
 	}
 }
@@ -97,12 +93,10 @@ exports.report_user = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			res.status(403).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
-			throw (e)
 		}
 		else {
 			console.log("EROOR report: ", e)
 			res.status(400).send({message: "Error in report user ", code: "FAILURE", error: e})
-			// throw(e)
 		}
 	}
 }
@@ -120,12 +114,10 @@ exports.un_block_user = async (req, res) => {
 	catch (e) {
 		if (e.code == 'ER_PARSE_ERROR') {
 			res.status(403).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
-			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
 			res.status(400).send({message: "Error in unblock user ", code: "FAILURE", error: e})
-			// throw(e)
 		}
 	}
 }
@@ -154,7 +146,6 @@ exports.get_users_that_i_blocked = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			res.status(500).send({message: 'error in get user by id', error: e})
-			// throw(e)
 		}
 	}	
 }
@@ -182,37 +173,6 @@ exports.get_users_that_blocked_me = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			res.status(500).send({message: 'error in get user by id', error: e})
-			// throw(e)
 		}
 	}	
 }
-
-// exports.get_block_matches = async (req, res) => {
-// 	try {
-// 		let rows = await db.query(
-// 			"SELECT r1.blocker, r1.blocked, \
-// 				IF(( SELECT COUNT(*)  \
-// 					FROM   BLOCKS r2  \
-// 					WHERE  r2.blocker = r1.blocked AND r2.blocked = r1.blocker \
-// 				) > 0, 1, 0) AS reciprocal \
-// 			FROM   BLOCKS r1 \
-// 			WHERE  r1.blocker = ?;",
-// 			req.body.username)
-// 		// console.log("ROOOS:", rows)
-// 		matches = rows.filter(a =>  a.reciprocal == 1)
-// 		matches = matches.map(function(a) {return a.blocked})
-// 		// console.log("ROOOS:", matches)
-// 		res.status(200).send({message: 'Successfully queried blocked you users.', data: matches, code:'SUCCESS'})
-// 	}
-// 	catch (e) {
-// 		if (e.code == 'ER_NO_REFERENCED_ROW') {
-// 			console.log("NO BLOCKS", e)
-// 			res.status(200).send({message: "nobody BLOCKS you mark", data:[], code: e.code})
-// 		}
-// 		else {
-// 			console.log("get user by id error:\n", e, "\nend error")
-// 			res.status(500).send({message: 'error in get user by id', error: e})
-// 			// throw(e)
-// 		}
-// 	}	
-// }

@@ -145,7 +145,6 @@ exports.create_user_test = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-			// // throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
 			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -166,32 +165,30 @@ exports.get_user_list = async (req, res) => {
 		let user_list = await db.query(
 			"SELECT username from USERS;"
 		)
-		res.status(200).send({message: 'Succesfully added tag to user', code: "SUCCESS", data: user_list})
+		return res.status(200).send({message: 'Succesfully added tag to user', code: "SUCCESS", data: user_list})
 	}
 	catch (e) {
 		if (e.code == 'ER_DUP_ENTRY') {
-			res.status(200).send({message: "Duplicate tag", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "Duplicate tag", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
-			res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_NO_REFERENCED_ROW') {
-			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_NO_REFERENCED_ROW_2') {
-			res.status(200).send({message: "User name not existing", code: e.code})
+			return res.status(200).send({message: "User name not existing", code: e.code})
 		}
 		else if (e.code == 'ER_BAD_NULL_ERROR') {
-			res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
+			return res.status(200).send({message: "User doesnt exist", code: e.code, sqlMessage: e.sqlMessage})
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
-			res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE', sqlMessage: e.sqlMessage})
-			throw (e)
+			return res.status(500).send({message: "Parsing error when liking.", error: e, code: 'FAILURE', sqlMessage: e.sqlMessage})
 		}
 		else {
 			console.log("EROOL: ", e)
-			res.status(500).send({message: "Error in like user ", error: e})
-			// throw(e)
+			return res.status(500).send({message: "Error in like user ", error: e})
 		}
 	}
 };
@@ -221,7 +218,6 @@ exports.create_likes = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-			// // throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
 			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -232,7 +228,6 @@ exports.create_likes = async (req, res) => {
 		else {
 			// console.log("create user likes test error:\n", e, "\n\nend error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
-			// throw(e)
 		}
 	}	
 };
@@ -262,7 +257,6 @@ exports.create_consults = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-			// // throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
 			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -273,7 +267,6 @@ exports.create_consults = async (req, res) => {
 		else {
 			// console.log("create user consults test error:\n", e, "\n\nend error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
-			// throw(e)
 		}
 	}	
 };
@@ -303,7 +296,6 @@ exports.create_blocks = async (req, res) => {
 		}
 		else if (e.code == 'ER_PARSE_ERROR') {
 			return res.status(400).send({message: 'There was an error parsing your request', code: e.code, sqlMessage: e.sqlMessage})
-			// // throw(e)
 		}
 		else if (e.code == 'ER_DATA_TOO_LONG') {
 			return res.status(200).send({message: "Data too long", code: e.code, sqlMessage: e.sqlMessage})
@@ -314,7 +306,6 @@ exports.create_blocks = async (req, res) => {
 		else {
 			// console.log("create user blocks test error:\n", e, "\n\nend error")
 			return res.status(200).send({message: "Error in populate", code: 'FAIL_OK'})
-			// throw(e)
 		}
 	}	
 };

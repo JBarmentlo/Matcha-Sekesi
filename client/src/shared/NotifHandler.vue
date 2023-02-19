@@ -29,9 +29,9 @@ data () {
 computed: {
   unreadNotifs() {
     let num = 0
-    Object.keys(this.notifs).forEach(key => {
-      num = num + 1 - this.notifs[key].seen
-    });
+    for (const notif of this.notifs) {
+      num = num + 1 - notif.seen
+    }
     return num
   },
 
