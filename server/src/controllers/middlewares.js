@@ -146,3 +146,23 @@ exports.validate_signup_form = async (req, res, next) => {
         res.status(202).send({message: "invalid signup formm", code: "INVALID_FORM"})
     }
 }
+
+exports.validate_update_form = async (req, res, next) => {
+    try {
+        let firstName = req.body.update.firstName;
+        let lastName  = req.body.update.lastName;
+        let mail      = req.body.update.mail;
+
+        console.log(!isEmail(mail), !isString(firstName))
+
+        if (!isEmail(mail) || !isString(firstName) || !isString(lastName)) {
+            return res.status(202).send({message: "invalid update form", code: "INVALID_FORM"})
+        }
+        return next()
+    }
+    catch (e) {
+        console.log("error in validate update")
+        throw(e)
+        res.status(202).send({message: "invalid signup formm", code: "INVALID_FORM"})
+    }
+}
