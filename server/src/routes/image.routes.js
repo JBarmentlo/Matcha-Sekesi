@@ -26,17 +26,16 @@ const upload = multer({
 function upload_func(req, res, next) {
 	upload(req, res, function (err) {
 		if (err instanceof multer.MulterError) {
-			console.log("Multer err: ", err)
+			console.log("Multer err: ", err.code)
 			return res.send(err)
 		}
-		else if (err.message == "Only .png, .jpg, .jpeg and .webp format allowed!") {
+		else if (err && err.message == "Only .png, .jpg, .jpeg and .webp format allowed!") {
 			return res.send({code: "FILE_TYPE_ERROR", message: err.message})
 		}
 		else if (err) {
 			console.log("upload err: ", err.message)
 			return res.send(err) 
 		}
-		// console.log("hehe", req.file)
 		next()
 	})
 }
