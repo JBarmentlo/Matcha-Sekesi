@@ -57,7 +57,6 @@ methods: {
   },
 
   async deleteNoot(id) {
-    console.log("deleteNoot", id)
     await deleteNotifs(this.token, id)
     this.$root.store.deleteNotification(id)
   },
@@ -65,7 +64,6 @@ methods: {
   async deleteAndRedirect(id, username)
   {
     this.deleteNoot(id)
-    console.log("redir noot", id)
     if (this.$route.path != "/profile/"+ username) {
       this.$router.push("/profile/"+ username)
     }
