@@ -43,7 +43,6 @@ export const getCurrentTime = async (access_token) => {
 		}
 	};
 	const response = await api_axios(request);
-	console.log("TIME res: ", response)
 	return response;
 }
 

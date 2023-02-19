@@ -146,7 +146,7 @@ export default {
                 let new_notifs = (await getMyNewNotifs(this.token, this.last_notif_time, 0, 20)).data.data
                 new_notifs = new_notifs.filter(n => n.last_updated != this.last_notif_time)
                 if (new_notifs.length != 0) {
-                    // console.log("new notifs time:", new_notifs.map(n => n.last_updated))
+                    console.log("new notifs:", new_notifs.map(n => n.id))
                     this.last_notif_time = new_notifs[0].last_updated
                     this.addNotifsToSelf(new_notifs)
                     // console.log("new notif time: ", this.last_notif_time , new_notifs.length)

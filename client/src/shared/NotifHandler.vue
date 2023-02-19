@@ -29,9 +29,9 @@ data () {
 computed: {
   unreadNotifs() {
     let num = 0
-    Object.keys(this.notifs).forEach(key => {
-      num = num + 1 - this.notifs[key].seen
-    });
+    for (const notif of this.notifs) {
+      num = num + 1 - notif.seen
+    }
     return num
   },
 
@@ -57,6 +57,7 @@ methods: {
   },
 
   async deleteNoot(id) {
+    console.log("deleteNoot", id)
     await deleteNotifs(this.token, id)
     this.$root.store.deleteNotification(id)
   },
@@ -64,6 +65,7 @@ methods: {
   async deleteAndRedirect(id, username)
   {
     this.deleteNoot(id)
+    console.log("redir noot", id)
     if (this.$route.path != "/profile/"+ username) {
       this.$router.push("/profile/"+ username)
     }

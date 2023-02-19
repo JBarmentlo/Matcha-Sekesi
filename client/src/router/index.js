@@ -201,7 +201,7 @@ export var store = {
     if (this.debug) console.log('setting seen notif triggered', id)
     let index = this.state.notifications.findIndex(elem => elem.id == id)
     if (index != undefined) {
-      delete this.state.notifications[index]
+      this.state.notifications.splice(index, 1)
       this.state.notifications = [...this.state.notifications]
     }
   },

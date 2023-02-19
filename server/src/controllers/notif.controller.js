@@ -123,13 +123,13 @@ exports.get_my_new_notifs = async (req, res) => {
 		if (req.body.last_time == null) {
 			req.body.last_time = '2023-02-16T18:34:44.000Z'
 		}
-		notif_query = await db.query(
+		let keri_string = 
 `
 WITH
 BLOCKED as (
 	SELECT
 		blocked,
-		SUM(blocker=?) > 0 as did_i_block_him
+		SUM(blocker='${req.username}') > 0 as did_i_block_him
 	FROM
 		BLOCKS
 	GROUP BY
@@ -148,15 +148,14 @@ FROM NOTIFS
 	LEFT JOIN BLOCKED
 		ON BLOCKED.blocked=NOTIFS.source_user
 WHERE 
-	target_user=?
-	AND last_updated > ?
+	target_user='${req.username}'
+	AND last_updated > '${req.body.last_time}'
 HAVING
 	blocked_source=0
-ORDER BY last_updated DESC LIMIT ? OFFSET ?;
+ORDER BY last_updated DESC LIMIT 20 OFFSET 0;
 `
-			,
-			[req.username, req.username, req.body.last_time, 20, 0],)
-		
+		// console.log(keri_string)
+		let notif_query = await db.query(keri_string)		
 		// console.log("new notif: ", notif_query.map(n => n.last_updated), req.username, req.body.last_time)
 		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
 	}
