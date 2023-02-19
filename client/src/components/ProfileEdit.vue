@@ -430,6 +430,9 @@ export default {
                 if (update_res.data.code == 'ER_DATA_TOO_LONG') {
                     this.data_too_long = true
                 }
+                if (update_res.data.code == 'ER_TRUNCATED_WRONG_VALUE') {
+                    this.user.DOB = null
+                }
                 this.$swal("Unsuccessful profile update.")
             }
             catch (e) {

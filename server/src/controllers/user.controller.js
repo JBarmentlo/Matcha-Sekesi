@@ -151,6 +151,11 @@ exports.update_user = async (req, res) => {
 			console.log("ER_DATA_TOO_LONG: ",e)
 			return res.status(200).send({code: "ER_DATA_TOO_LONG", message: e.sqlMessage})
 		}
+
+		if (e.code == "ER_TRUNCATED_WRONG_VALUE") {
+			console.log("ER_TRUNCATED_WRONG_VALUE: ",e)
+			return res.status(200).send({code: "ER_TRUNCATED_WRONG_VALUE", message: e.sqlMessage})
+		}
 		
 		res.status(403).send({code: "INVALID FORM"})
 		throw(e)
