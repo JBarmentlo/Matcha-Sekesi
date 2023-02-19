@@ -1,9 +1,9 @@
-const db       = require("../db/sql.conn");
-var bcrypt     = require("bcryptjs");
-const sendMail = require('../services/mailgun');
+const db           = require("../db/sql.conn");
+var bcrypt         = require("bcryptjs");
+const sendMail     = require('../services/mailgun');
 const new_searches = require("./user.request.js")
-const hostname = require('../fixtures/hostname.js').hostname
-const { nanoid } = require("nanoid");
+const front_hostname     = require('../fixtures/hostname.js').front_hostname
+const { nanoid }   = require("nanoid");
 
 
 async function handle_new_mail_for_user(username, id, mail) {
@@ -15,7 +15,7 @@ async function handle_new_mail_for_user(username, id, mail) {
 		[username, hash]
 	)
 	// return Promise.resolve()
-	return await sendMail(mail, "Verify your email", "Please validate your email here: " + `${hostname}/verify/${encodeURIComponent(hash)}`)
+	return await sendMail(mail, "Verify your email", "Please validate your email here: " + `${front_hostname}/verify/${encodeURIComponent(hash)}`)
 }
 
 

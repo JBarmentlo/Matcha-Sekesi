@@ -135,7 +135,6 @@ export default {
 		},
 
 		async signupFormSubmit(e) {
-			console.log("OIUSDF", process.env.VUE_APP_MATCHA_DB)
 			e.preventDefault();
 			if (this.$refs.formObserver.flags.invalid) {
 				console.log("invalid form")

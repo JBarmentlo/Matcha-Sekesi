@@ -241,7 +241,7 @@
                     Profile complete!
                 </div>
                 <div v-else class="col-md-auto red">
-                    Incomplete profile, please add a profile picture.
+                    Incomplete profile, add a profile pic, tags and a Bio.
                 </div>
             </div>
         </div>

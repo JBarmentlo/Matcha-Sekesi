@@ -197,4 +197,4 @@ if (process.env.MATCHA_USE_HTTPS == 'TRUE') {
   });
 }
 
-console.log(`Hostname: ${require('./src/fixtures/hostname.js').hostname}`)
+console.log(`Hostname: ${require('./src/fixtures/hostname.js').back_hostname}`)

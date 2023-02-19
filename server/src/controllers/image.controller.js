@@ -1,6 +1,6 @@
 const db = require("../db/sql.conn");
 
-const hostname = require('../fixtures/hostname.js').hostname
+const back_hostname = require('../fixtures/hostname.js').back_hostname
 
 
 exports.upload_image = async (req, res) => {
@@ -8,7 +8,7 @@ exports.upload_image = async (req, res) => {
 	try {
 		let filename = req.file.filename
 		console.log('filename: ', req.file.filename, 'User: ', req.username)
-		res.status(200).send({'filename': filename, url: `${hostname}/api/image/get/${filename}`, code: "SUCCESS"})
+		res.status(200).send({'filename': filename, url: `${back_hostname}/api/image/get/${filename}`, code: "SUCCESS"})
 	}
 	catch (e){
 		console.log("Error upload image: " + e);
@@ -24,9 +24,9 @@ exports.insert_fake_picture_test = async (filename, username) => {
 				(url, user) \
 				VALUES (?, ?);",
 
-			[`${hostname}/api/image/get/${filename}`, req.username])
+			[`${back_hostname}/api/image/get/${filename}`, req.username])
 
-		return (`${hostname}/api/image/get/${filename}`)
+		return (`${back_hostname}/api/image/get/${filename}`)
 	}
 	catch (e){
 		return 'lol'

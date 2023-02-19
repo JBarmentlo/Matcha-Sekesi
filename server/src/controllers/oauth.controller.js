@@ -44,7 +44,7 @@ async function get_42_user_token(code) {
 	return response;
 }
 
-const hostname = require('../fixtures/hostname.js').hostname
+const front_hostname = require('../fixtures/hostname.js').front_hostname
 
 async function create_user(user_info) {
     // TODO FIX THIS BULLSHIT
@@ -75,7 +75,7 @@ async function create_user(user_info) {
             VALUES (?, ?);",
             [login, hash]
         )
-        sendMail(email, "Verify your email", `Please validate your email here: ${hostname}/verify/${encodeURIComponent(hash)}`)
+        sendMail(email, "Verify your email", `Please validate your email here: ${front_hostname}/verify/${encodeURIComponent(hash)}`)
 
         let insert_42_result = await db.query(
             "INSERT INTO Oauth42 \

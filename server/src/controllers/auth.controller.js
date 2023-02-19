@@ -5,7 +5,8 @@ const jwt      = require("jsonwebtoken");
 const sendMail = require('../services/mailgun');
 const db       = require("../db/sql.conn");
 const new_searches = require("./user.request.js")
-const hostname = require('../fixtures/hostname.js').hostname
+const back_hostname = require('../fixtures/hostname.js').back_hostname
+const front_hostname = require('../fixtures/hostname.js').front_hostname
 const { nanoid } = require("nanoid");
 
 exports.signup = async (req, res) => {
@@ -33,8 +34,8 @@ exports.signup = async (req, res) => {
             [username, hash, mail]
         )
         
-        sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${hostname}/verify/${encodeURIComponent(hash)} `)
-        console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${hostname}/verify/${encodeURIComponent(hash)} `)
+        sendMail(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: ${front_hostname}/verify/${encodeURIComponent(hash)} `)
+        console.log(mail, "Verify your email", `Dear ${username},\n\nPlease validate your email here: \n${front_hostname}/verify/${encodeURIComponent(hash)} `)
         return res.status(200).send({message: 'Succesfully created user', id: query_result.insertId, code: "SUCCESS", hash: hash})
     }
     catch (e) {
@@ -108,7 +109,7 @@ exports.requestresetPass = async (req, res) => {
             VALUES (?,?);",
             [user.username, hash]
         )
-        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + `${hostname}/reset/${encodeURIComponent(hash)}`)
+        sendMail(req.body.mail, "Sekesi Password Reset",  "Click here to reset password: " + `${front_hostname}/reset/${encodeURIComponent(hash)}`)
         return res.status(200).send({message: "Sucessfully requested reset", code: "SUCCESS", hash: hash})
     }
     catch (e) {
