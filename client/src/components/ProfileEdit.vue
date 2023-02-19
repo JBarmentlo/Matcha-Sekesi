@@ -228,7 +228,7 @@
                         <button class = "cancel_button" type="button" id="submit" name="submit" ><b-icon-x-circle/>  Cancel</button>
                     </div>
                 </div>
-                <div v-if="isCompleteProfile" class="col-md-auto profile_complete">
+                <div v-if="user.is_complete_profile" class="col-md-auto profile_complete">
                     Profile complete!
                 </div>
                 <div v-else class="col-md-auto red">

@@ -45,7 +45,7 @@ ORDER BY last_updated DESC LIMIT 1000 OFFSET 0;
 `
 		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
-		// console.log("msg", req.username,  message_keri)
+		// console.log("all msg", req.username,  message_keri.map(m => m.id))
 		return res.status(200).send({message: 'Successfully queried your messages.', data: message_keri, code:'SUCCESS'})
 	}
 	catch (e) {
@@ -62,10 +62,11 @@ exports.get_all_new_messages = async (req, res) => {
 		let keri_string =
 `
 WITH
-MATCHES AS (
+MYMATCHES AS (
     SELECT l1.liker as matcher, l1.liked as matchee
         FROM LIKES l1 INNER JOIN LIKES l2
-            ON l1.liked = l2.liker
+            ON  l1.liked = '${req.username}'
+            AND l1.liked = l2.liker
             AND l1.liker = l2.liked
             AND l1.liker != l1.liked
 ),
@@ -87,21 +88,20 @@ SELECT
 	msg,
 	last_updated,
 	IFNULL(did_i_block_him, 0) as blocked_source
-FROM MATCHES
+FROM MYMATCHES
 INNER JOIN MSG
-	ON (MSG.receiver IN ('${req.username}', matchee)
-	AND MSG.sender IN ('${req.username}', matchee))
+	ON (MSG.receiver IN ('${req.username}', matcher)
+	AND MSG.sender IN ('${req.username}', matcher))
 LEFT JOIN BLOCKED
 	ON BLOCKED.blocked = MSG.sender
 WHERE
 	last_updated > '${req.body.last_time}'
 HAVING
 	blocked_source=0
-ORDER BY last_updated DESC LIMIT 1000 OFFSET 0;
+ORDER BY last_updated DESC LIMIT 100 OFFSET 0;
 `
-		// console.log(keri_string)
 		let message_keri = await db.query(keri_string)
-		// console.log("msg", req.username,  message_keri)
+		// console.log("new msg", req.username, req.body.last_time, message_keri.map(m => m.id))
 		return res.status(200).send({message: 'Successfully queried your messages.', data: message_keri, code:'SUCCESS'})
 	}
 	catch (e) {

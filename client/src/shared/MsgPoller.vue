@@ -75,9 +75,12 @@ export default {
 		},
 
         notifyUserOfMessage(message) {
-            this.$notify({
-                text: message.senderId + " sent you a message!"
-            });
+            console.log("msg notif", message.sender, "=>", message.receiver,":", message.msg)
+            if (message.receiver == this.user.username) {
+                this.$notify({
+                    text: message.sender + " sent you a message!"
+                });
+            }
 		},
 
         addMessagesToSelf(message_list) {
@@ -90,12 +93,13 @@ export default {
         },
 
         async StartPolling() {
+            console.log("start pollin msg")
             if (this.polling != null) {
                 console.log("double poll")
                 this.stopPolling()
             }
             this.polling = setInterval(async () => {
-                console.log("Chat POLL")
+                // console.log("Chat POLL")
                 if (!this.logged_in) {
                     return
                 }
@@ -116,7 +120,7 @@ export default {
                 }
                 this.busy = false
 
-            }, 2000)
+            }, 1000)
         },
 
         async initialize() {
@@ -138,15 +142,13 @@ export default {
         },
 
         async getMessages() {
-            console.log("CHAT GET")
+            // console.log("CHAT GET")
             try {
                 let new_messages = (await getMyNewMessages(this.token, this.last_time, 0, 20)).data.data
                 new_messages = new_messages.filter(n => n.last_updated != this.last_time)
                 if (new_messages.length != 0) {
-                    console.log("new notchatifs time:", new_messages.map(n => n.last_updated))
                     this.last_time = new_messages[0].last_updated
                     this.addMessagesToSelf(new_messages)
-                    console.log("new msg time: ", this.last_time , new_messages.length)
                 }
             }
             catch (e) {
@@ -162,10 +164,19 @@ export default {
     },
 
     beforeDestroy () {
+        console.log("stop polling msg destroy")
 		if (this.polling != null) {
 			clearInterval(this.polling)
+            this.polling = null
 		}
-	}
+	},
+
+    mounted() {
+        if (this.logged_in) {
+            console.log("staart polling mounter")
+            this.StartPolling()
+        }
+    }
 };
 </script>
 

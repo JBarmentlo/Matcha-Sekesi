@@ -77,15 +77,15 @@ export default {
     watch: {
         logged_in: function (val) {
             if (val) {
-                console.log("Start Polling notifs / messages")
+                // console.log("Start Polling notifs / messages")
                 // this.startPollingMsg(1000)
                 console.log("PUSHING editprofile")
                 if (this.$route.requiresNotAuth) this.$route.push("/editprofile")
                 
             }
             else {
-                console.log("Stop Polling notifs / messages")
-                clearInterval(this.polling)
+                // console.log("Stop Polling notifs / messages")
+                // clearInterval(this.polling)
                 console.log("PUSHING signin")
                 if (this.$route.requiresAuth) this.$route.push("/signin")
             }
