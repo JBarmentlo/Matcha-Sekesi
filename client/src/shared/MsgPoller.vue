@@ -125,7 +125,7 @@ export default {
                 let message_list = (await getMyMessages(this.token)).data.data
                 if (message_list.length != 0) {
                     this.last_time = message_list[0].last_updated
-                    this.messages   = message_list
+                    this.messages  = message_list
                 }
                 else {
                     this.last_time = (await getCurrentTime(this.token)).data.server_time
@@ -161,9 +161,11 @@ export default {
         },
     },
 
-	async mounted() {
-	},
-    
+    beforeDestroy () {
+		if (this.polling != null) {
+			clearInterval(this.polling)
+		}
+	}
 };
 </script>
 

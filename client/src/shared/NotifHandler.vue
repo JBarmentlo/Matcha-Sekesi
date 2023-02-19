@@ -99,3 +99,11 @@ beforeDestroy () {
 }
 
 </style>
+
+
+			// show-files=false
+			// show-audio=false
+			// show-reaction-emojis=false
+			// show-add-room=false
+			// message-actions=[]
+			// :theme="this.chat_light_or_dark"
