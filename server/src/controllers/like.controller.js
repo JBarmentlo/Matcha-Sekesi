@@ -28,12 +28,10 @@ exports.like_user = async (req, res) => {
 		else if (e.code == 'ER_PARSE_ERROR') {
 			console.log("EROOR in like: ", e)
 			return res.status(403).send({message: "Parsing error when liking.", error: e, code: 'FAILURE'})
-			throw (e)
 		}
 		else {
 			console.log("EROOL: ", e)
 			return res.status(500).send({message: "Error in like user ", error: e})
-			// throw(e)
 		}
 	}
 }
@@ -50,12 +48,10 @@ exports.un_like_user = async (req, res) => {
 	catch (e) {
 		if (e.code == 'ER_PARSE_ERROR') {
 			return res.status(403).send({message: "Parsing error when unliking.", error: e, code: 'FAILURE'})
-			throw (e)
 		}
 		else {
 			console.log("EROR unlike: ", e)
 			return res.status(500).send({message: "Error in unlike user ", error: e})
-			// throw(e)
 		}
 	}
 }
@@ -73,8 +69,6 @@ exports.get_users_that_i_liked = async (req, res) => {
 				WHERE LIKES.liker = BLOCKS.blocked AND LIKES.liked = BLOCKS.blocker OR \
 				LIKES.liker = BLOCKS.blocker AND LIKES.liked = BLOCKS.blocked);" 
 			,req.username,)
-		// console.log("ROOOS:", rows)
-		// console.log("Liker: ", req.body.liker_username)
 		return res.status(200).send({message: 'Successfully queried liked users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
@@ -85,7 +79,6 @@ exports.get_users_that_i_liked = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			return res.status(500).send({message: 'error in get user by id', error: e})
-			// throw(e)
 		}
 	}	
 }
@@ -105,7 +98,6 @@ exports.get_users_that_liked_me = async (req, res) => {
 
 		
 			,[req.username],)
-		// console.log("Liker: ", req.body.liker_username)
 		return res.status(200).send({message: 'Successfully queried liked you users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
@@ -116,7 +108,6 @@ exports.get_users_that_liked_me = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			return res.status(500).send({message: 'error in get user by id', error: e})
-			// throw(e)
 		}
 	}	
 }
@@ -160,9 +151,7 @@ exports.get_matches = async (req, res) => {
 		HAVING
 			blocked_source=0;
 		`
-		// console.log(keri_string)
 		let rows = await db.query(keri_string)
-		// console.log("matches: ", req.username, rows)
 		return res.status(200).send({message: 'Successfully queried matches users.', data: rows, code:'SUCCESS'})
 	}
 	catch (e) {
@@ -173,7 +162,6 @@ exports.get_matches = async (req, res) => {
 		else {
 			console.log("get user by id error:\n", e, "\nend error")
 			return res.status(500).send({message: 'error in get user by id', error: e})
-			// throw(e)
 		}
 	}	
 }

@@ -97,7 +97,6 @@ async function create_user(user_info) {
                 return create_user(user_info)
             }
         }
-        // throw(e)
         return false
     }	
 };
@@ -119,9 +118,9 @@ async function create_signin_data(username) {
     try {
         console.log("oauth signing in %s", username)
         let user = await new_searches.get_my_user(username)
-        if (user == null) {
-            throw("undefined user wtf")
-        }
+        // if (user == null) {
+        //     throw("undefined user wtf")
+        // }
 
         var token = jwt.sign({ username: user.username }, process.env.SIGNATURE, {
             expiresIn: 86400 // 24 hours
@@ -135,7 +134,6 @@ async function create_signin_data(username) {
     }
     catch (e) {
         console.error("ERROR in OAUTH signin")
-        throw (e)
     }
  
 };

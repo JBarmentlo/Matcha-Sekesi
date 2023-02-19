@@ -41,12 +41,10 @@ exports.create_notif = async (type, source, target) => {
 	}
 	catch (e) {
 		if (e.code == 'ER_BAD_NULL_ERROR') {
-			// // throw(e)	
 			return "FAILURE"
 		}
 		else {
 			console.log("error in create notif:", e)
-			// // throw(e)	
 			return "FAILURE"
 		}
 	}
@@ -69,7 +67,6 @@ exports.get_current_time = async (req, res) => {
 	catch (e) {
 		console.log(e)
 		return res.status(201).send({message: "failed time query", data: '2023-02-16T18:34:44.000Z', code: "FAILURE"})
-		throw (e)
 	}
 }
 
@@ -113,7 +110,6 @@ ORDER BY last_updated DESC LIMIT ? OFFSET ?;
 	}
 	catch (e) {
 		console.log(e)
-		throw (e)
 		return res.status(201).send({message: "failed notif query", data: [], code: "FAILURE"})
 	}
 }
@@ -161,7 +157,6 @@ ORDER BY last_updated DESC LIMIT 20 OFFSET 0;
 	}
 	catch (e) {
 		console.log(e)
-		throw (e)
 		return res.status(201).send({message: "failed notif query", data: [], code: "FAILURE"})
 	}
 }
@@ -196,7 +191,6 @@ exports.set_seen_notifs = async (req, res) => {
 	}
 	catch (e) {
 		console.log(e)
-		throw (e)
 		return res.status(201).send({message: "failed notif set seen", data: [], code: "FAILURE"})
 	}
 }
@@ -212,7 +206,6 @@ exports.set_seen_notif = async (req, res) => {
 	}
 	catch (e) {
 		console.log(e)
-		throw (e)
 		return res.status(201).send({message: "failed notif set seen", data: [], code: "FAILURE"})
 	}
 }
@@ -227,7 +220,6 @@ exports.delete_notif = async (req, res) => {
 	}
 	catch (e) {
 		console.log(e)
-		throw (e)
 		return res.status(201).send({message: "failed notif delete", data: [], code: "FAILURE"})
 	}
 }

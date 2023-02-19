@@ -135,7 +135,6 @@ export default {
 			}
 			catch (e) {
 				console.log("error in signin form submit: ", e)
-				// throw(e)
 			}
 
 		},

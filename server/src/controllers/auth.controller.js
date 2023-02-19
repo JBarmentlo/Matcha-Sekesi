@@ -84,7 +84,6 @@ exports.verifyMail = async (req, res) => {
     }
     catch (e) {
         return res.status(200).send({message: "Error in verify mail", code: "Failure"})
-        throw (e)
     }
 };
 
@@ -148,7 +147,6 @@ exports.resetPass = async (req, res) => {
     catch (e) {
         console.log("error in reset Pass: ",e)
         return res.status(200).send({message: "Error in reset pass", code: "Failure"})
-        throw (e)
     }
 };
 
@@ -224,8 +222,7 @@ exports.updateLastConnected = async (req, res, next) => {
     }
     catch (e) {
         console.log('error in update co')
-        // console.log(e)
-        // throw(e)
+        return next();
     }
 
 };

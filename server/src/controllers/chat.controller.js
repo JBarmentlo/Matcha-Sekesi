@@ -51,7 +51,6 @@ ORDER BY last_updated DESC LIMIT 1000 OFFSET 0;
 	catch (e) {
 		console.log("get messages error:\n", e, "\nend error")
 		return res.status(400).send({message: 'Failed in querying your messages.', data: [], code:'FAILURE'})
-		// throw(e)
 	}
 }
 
@@ -107,7 +106,6 @@ ORDER BY last_updated DESC LIMIT 100 OFFSET 0;
 	catch (e) {
 		console.log("get messages error:\n", e, "\nend error")
 		return res.status(400).send({message: 'Failed in querying your messages.', data: [], code:'FAILURE'})
-		// throw(e)
 	}
 }	
 
@@ -131,8 +129,6 @@ exports.get_conversation = async (req, res) => {
 	}
 	catch (e) {
 		return res.status(400).send({message: 'Failed in querying your conversation.', data: [], code:'FAILURE'})
-		console.log("get convo error:\n", e, "\nend error")
-		// throw(e)
 	}
 }
 
@@ -154,6 +150,5 @@ exports.send_message = async (req, res) => {
 	catch (e) {
 		return res.status(400).send({message: 'Failed in sending your data.', data: [], code:'FAILURE'})
 		console.log("send message error:\n", e, "\nend error")
-		// throw(e)
 	}
 }	

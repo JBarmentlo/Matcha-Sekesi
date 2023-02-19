@@ -29,6 +29,6 @@ exports.insert_fake_picture_test = async (filename, username) => {
 		return (`${hostname}/api/image/get/${filename}`)
 	}
 	catch (e){
-		// throw(e)
+		return 'lol'
 	}
 }
