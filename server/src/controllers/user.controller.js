@@ -9,10 +9,9 @@ const { nanoid }   = require("nanoid");
 async function handle_new_mail_for_user(username, id, mail) {
 	let hash = nanoid(48);
 	let insert_mail_result = await db.query(
-		"INSERT INTO VERIFY \
-		(user, id_hash) \
-		VALUES (?, ?)",
-		[username, hash]
+		`INSERT INTO VERIFY
+		(user, id_hash, mail)
+		VALUES ('${username}', '${hash}', '${mail}')`
 	)
 	// return Promise.resolve()
 	return await sendMail(mail, "Verify your email", "Please validate your email here: " + `${front_hostname}/verify/${encodeURIComponent(hash)}`)
@@ -27,7 +26,7 @@ async function get_long_lat(city, postal_code) {
 			WHERE code_postal=?
 			`,
 			[postal_code]
-		)		
+		)
 		console.log(res)
 	}
 	catch (e) {
@@ -72,7 +71,7 @@ exports.create_user = async (req, res) => {
 			console.log("signup error:\n", e, "\nend signup error")
 			res.status(500).send({message: 'error in create test user', error: e, code: 'FAILURE'})
 		}
-	}	
+	}
 };
 
 async function get_long_lat(post_code) {
@@ -115,11 +114,11 @@ exports.update_user = async (req, res) => {
 		// console.log("not improving GPS cuz: ", location)
 	}
 	catch (e) {
-		
+
 		// console.log("not improving GPS", e)
 	}
-	
 
+	console.log("update ", update)
 	try {
 		let update_res = await db.query(`
 		UPDATE USERS
@@ -130,11 +129,17 @@ exports.update_user = async (req, res) => {
 
 		let del_mail = await db.query(`DELETE FROM VERIFIEDMAIL WHERE user=? AND mail != ?`,
 		[req.username, update.mail])
-		
-		if (del_mail.affectedRows) {
+
+		let del_verify = await db.query(`DELETE FROM VERIFY WHERE user=? AND mail != ?`,
+		[req.username, update.mail])
+
+		if (del_mail.affectedRows + del_verify.affectedRows) {
+			console.log("Email modified")
 			await handle_new_mail_for_user(req.username, update_res.insertId, update.mail)
 		}
-		// console.log(`\n\n\n${"SUCCESS", update_res.affectedRows}\n\n\n`)
+		else {
+			console.log("Mail not modified")
+		}
 
 		res.status(200).send({code: "SUCCESS", data: update_res, mail_changed: del_mail.affectedRows})
 	}
@@ -154,7 +159,7 @@ exports.update_user = async (req, res) => {
 			console.log("ER_TRUNCATED_WRONG_VALUE: ",e)
 			return res.status(200).send({code: "ER_TRUNCATED_WRONG_VALUE", message: e.sqlMessage})
 		}
-		
+
 		res.status(403).send({code: "INVALID FORM"})
 	}
 }
@@ -170,7 +175,7 @@ exports.get_user_by_username = async (req, res) => {
 	catch (e) {
 		console.log("get user by name error:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get user by username', error: e})
-	}	
+	}
 }
 
 
@@ -178,7 +183,7 @@ exports.get_my_user = async (req, res) => {
 	try {
 		console.log("getting user:", req.username)
 		let user_query = await new_searches.get_my_user(req.username)
-		
+
 		if (user_query == null) {
 			return res.status(204).send({message: "No user found", code: 'FAILURE'})
 		}

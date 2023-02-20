@@ -1,0 +1,3 @@
+- email qui s'envoit pas
+- si quelqu'un me like je ne vois pas la notif
+- si je bloque quelqu'un, il peut encore m'ecirer des messages. IL faudrait que je disparaisse aussi de son profile

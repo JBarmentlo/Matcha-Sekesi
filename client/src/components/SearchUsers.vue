@@ -66,8 +66,9 @@
             </div>
         </form>
         <div class="row">
-            <LoadingSpinner v-if="users.length==0"  class="container">Find the perfect Partner</LoadingSpinner >
-            <span v-if="users.length==0"  class="text-center">Finding the perfect partner for you</span>
+            <LoadingSpinner v-if="users.length==0 && search_done==false"  class="container">Find the perfect Partner</LoadingSpinner >
+            <span v-if="users.length==0 && search_done==false" class="text-center">Finding the perfect partner for you</span>
+            <span v-if="users.length==0 && search_done==true" class="text-center mt-5">Humm sorry, the world is a sad place and there is no one out there for you</span>
             <profile-list :users="users"  @ChangeUserListPage="change_page" :current_page="current_page"></profile-list>
         </div>
     </div>
@@ -97,6 +98,7 @@ export default {
             offset       : 0,
             limit        : 200,
             current_page : 1,
+            search_done  : false,
         }
     },
 
@@ -144,8 +146,10 @@ export default {
             }
             this.zipcode = this.zipcode == "" ? null : this.zipcode
             this.users = []
+            this.search_done = false
             let rese = await searchUsers(this.token ,this.age[0], this.age[1], this.required_tags, this.rating[0], this.rating[1], this.zipcode, this.offset, this.limit, this.order_by, this.asc_or_desc)
             this.users = rese.data.data
+            this.search_done = true
             this.current_page = 1
         },
 
@@ -178,6 +182,7 @@ export default {
         // let rese = await searchUsers(this.token , this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, 5, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
         let rese = await searchUsersInitial(this.token, this.offset, this.limit)
         this.users = rese.data.data
+        this.search_done = true
         this.current_page = 1
     }
 

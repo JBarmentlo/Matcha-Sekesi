@@ -112,7 +112,7 @@ export default {
         change_page(current_page) {
               this.$emit("ChangeUserListPage", current_page);
         },
-        
+
         profile_pic_url(url) {
             if (url != null) {
                 return url
@@ -260,6 +260,7 @@ img {
 .media-body {
     padding: 20px;
     margin-bottom: 0;
+    width: 100%;
 }
 
 .bio {

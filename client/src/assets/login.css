@@ -77,3 +77,8 @@ input {
 .form-group{
 	padding: 10px;
 }
+
+
+.login_error {
+	color: rgb(255, 42, 42);
+}

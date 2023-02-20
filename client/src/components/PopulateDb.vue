@@ -15,7 +15,7 @@
 			<label>Tags to pick from</label>
 			<TagInputHandler ref="tagger" v-model="tags"/>
 		</div>
-		
+
 			<div class="form-group pt-5">
 				<label>Number of likes per user to generate</label>
 				<input
@@ -42,10 +42,18 @@
 					class="form-control form-control-lg"
 				/>
 			</div>
-
-			<button type="submit" class="btn btn-dark btn-lg btn-block">
-				Genesiiis
-			</button>
+			<div v-if="creating_users == true">
+				<button type="submit" class="btn btn-dark btn-lg btn-block" disabled>
+					Genesiiis
+				</button>
+				<div class="mt-2 mb-3"><div class="spinner-border" role="status"></div> Creating users.... Please do not leave this page</div>
+			</div>
+			<div v-if="creating_users == false">
+				<button type="submit" class="btn btn-dark btn-lg btn-block">
+					Genesiiis
+				</button>
+				<div v-if="already_clicked == true" class="mt-2 mb-3">Done !</div>
+			</div>
 		</form>
 	</div>
 </div>
@@ -68,12 +76,16 @@ export default {
 			n_likes_per_user: 10,
 			n_blocks_per_user: 2,
 			n_consults_per_user: 3,
+			creating_users : false,
+			already_clicked : false,
 		};
 	},
 	methods: {
 		async generateUsers() {
 			console.log("generating users")
 			try {
+				this.creating_users = true
+				this.already_clicked = true
 				let returns = await createRandomUsers(this.n_user, this.tags)
 				console.log("Users Created: ", returns)
 				let rets = await createRandomlikes(1, this.n_likes_per_user)
@@ -81,6 +93,7 @@ export default {
 				await createRandomConsults(1, this.n_consults_per_user)
 				console.log("Consults created")
 				await createRandomblocks(1, this.n_blocks_per_user)
+				this.creating_users = false
 				console.log("Blocks created: ", rets)
 			}
 			catch(err) {
@@ -89,7 +102,12 @@ export default {
 		},
 	},
 	mounted() {
-		this.$refs.tagger.addExistingTags(["Music","Sekes","Travel","Web Dev","Alcoolic","Laughing","Gourmet","Cofee","Sunshine"])
+		try {
+			this.$refs.tagger.addExistingTags(["Music","Sekes","Travel","Web Dev","Alcoolic","Laughing","Gourmet","Cofee","Sunshine"])
+		}
+		catch {
+			console.log("ahha")
+		}
 	},
 };
 </script>

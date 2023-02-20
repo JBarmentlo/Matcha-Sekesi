@@ -41,18 +41,23 @@ npm run build
 Create the production and test databases (sekesidb and sekesitest)
 Define the schema for the databases.
 Create the Mysql user Sammy.
-
 ```bash
-cd server
-node node commune_data_loader.js
+service mysql start
 ```
-
 ```bash
 cd sql_scripts
 sudo bash here_create_user_table.sh
 ```
 
-To monitor the db using DataGrips (or similar tool) connect to `ubuntu@matcha.yoopster.com:22`.  
+```bash
+cd server
+export MATCHA_DB='sekesidb'
+export MATCHA_TEST_DB='sekesitest'
+export TEST='true'
+node commune_data_loader.js
+```
+
+To monitor the db using DataGrips (or similar tool) connect to `ubuntu@matcha.yoopster.com:22`.
 The Mysql service listens to `port 3306` the user is sammy and the password is `XXXXXX`.
 
 
@@ -97,7 +102,7 @@ pm2 start server.js
 <br><br/>
 ## Kill the server
 
-As root, with the path exports from above:  
+As root, with the path exports from above:
 If you used PM2 to start it.
 
 ```bash
@@ -142,7 +147,7 @@ npm run test
 <br><br/>
 ## Setup for yourself
 
-This project runs on a `t2.medium` AWS ec2 instance.  
+This project runs on a `t2.medium` AWS ec2 instance.
 It uses the mailgun service.
 It uses the 42 Oauth2 service.
 

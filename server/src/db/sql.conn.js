@@ -85,7 +85,7 @@ async function drop_all() {
 	used_connection.execute('DELETE FROM PICTURES;')
 	used_connection.execute('DELETE FROM TAGS;')
 	used_connection.execute('DELETE FROM USERS;')
-	used_connection.execute('DELETE FROM VERIFY;')										
+	used_connection.execute('DELETE FROM VERIFY;')
 }
 
 // connection = connect()
