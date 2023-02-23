@@ -105,10 +105,20 @@ WHERE
 GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, is_verified_mail, gender, sekesualOri, zipCode, city, is_complete_profile, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 `
 	let my_user = await db.query(keri_string, [username, username])
-	// console.log("found", my_user[0])
 	if (my_user.length == 0) {
 		return null
 	}
+    try {
+        if (my_user[0].DOB != null && my_user[0].DOB.toISOString().includes('T')) {
+            my_user[0].DOB = my_user[0].DOB.toISOString().split('T')[0]
+        }
+    }
+    catch (e) {
+        console.log("WTD DATE SPLIT", e)
+        my_user[0].DOB = '1994-03-16'
+    }
+	// console.log("found", my_user[0])
+
 	return my_user[0]
 }
 
@@ -399,7 +409,7 @@ SELECT
     lastName,
     IFNULL(bio, '') as bio,
     DOB,
-    mail,
+    USERS.mail,
     gender,
     sekesualOri,
     zipCode,
@@ -436,6 +446,8 @@ LEFT JOIN TAG_INFO
     ON USERS.username = TAG_INFO.user
 LEFT JOIN SIMILARITY
     ON USERS.username = SIMILARITY.username
+INNER JOIN VERIFIEDMAIL
+    ON VERIFIEDMAIL.mail = USERS.mail
 WHERE
     COMPATIBLE.compatible AND
     USERS.username!='${searcher_username}'
@@ -601,6 +613,8 @@ LEFT JOIN TAG_INFO
     ON USERS.username = TAG_INFO.user
 LEFT JOIN DISTANCE
     ON USERS.username = DISTANCE.username
+INNER JOIN VERIFIEDMAIL
+    ON VERIFIEDMAIL.mail = USERS.mail
 WHERE
     zipCode LIKE('${zipcode}') AND
     pop_score >= ${min_rating} AND
