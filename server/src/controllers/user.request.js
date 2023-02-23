@@ -457,6 +457,7 @@ HAVING
 ORDER BY similarity_score DESC
 LIMIT ${limit} OFFSET ${offset}
 `
+    console.log(keri_string)
 	let search_results = await db.query(keri_string)
 	return search_results
 }
@@ -578,7 +579,7 @@ SELECT
     lastName,
     IFNULL(bio, '') as bio,
     DOB,
-    mail,
+    USERS.mail,
     gender,
     sekesualOri,
     zipCode,
