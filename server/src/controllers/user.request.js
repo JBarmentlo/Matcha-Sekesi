@@ -392,7 +392,7 @@ DISTANCE as (
 SIMILARITY as (
     SELECT
         USERS.username,
-        (POPSCORE.pop_score * 40 + number_of_common_tags * 30 - distance + 60) as similarity_score
+        (POPSCORE.pop_score * 40 + number_of_common_tags * 30 - (10 * distance) + 60) as similarity_score
     FROM
         USERS
     LEFT JOIN DISTANCE ON
@@ -401,6 +401,39 @@ SIMILARITY as (
         USERS.username = POPSCORE.username
     LEFT JOIN TAG_INFO ON
         USERS.username = TAG_INFO.user
+),
+
+VALIDMAIL as (
+	SELECT
+		username,
+		COUNT(VERIFIEDMAIL.mail) as is_verified_mail
+	FROM
+		USERS
+			LEFT JOIN VERIFIEDMAIL
+				ON USERS.username = VERIFIEDMAIL.user
+	GROUP BY USERS.username
+),
+
+TAG_LIST as (
+	SELECT
+		user,
+		JSON_ARRAYAGG(tag) as tag_list
+	FROM
+		TAGS
+	GROUP BY
+		user
+),
+
+COMPLETEPROFILE AS (
+	SELECT
+		USERS.username,
+		not (ISNULL(profilePic) OR is_verified_mail = 0 OR JSON_LENGTH(tag_list) = 0 OR LENGTH(bio) = 0) as is_complete_profile
+	FROM
+		USERS
+	LEFT JOIN VALIDMAIL
+		ON USERS.username = VALIDMAIL.username
+	LEFT JOIN TAG_LIST
+		ON USERS.username = TAG_LIST.user
 )
 
 SELECT
@@ -446,19 +479,21 @@ LEFT JOIN TAG_INFO
     ON USERS.username = TAG_INFO.user
 LEFT JOIN SIMILARITY
     ON USERS.username = SIMILARITY.username
-INNER JOIN VERIFIEDMAIL
-    ON VERIFIEDMAIL.mail = USERS.mail
+INNER JOIN COMPLETEPROFILE
+    ON COMPLETEPROFILE.username = USERS.username
 WHERE
     COMPATIBLE.compatible AND
-    USERS.username!='${searcher_username}'
+    USERS.username!='${searcher_username}' AND
+    COMPLETEPROFILE.is_complete_profile = 1
 GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 HAVING
     did_i_block_him=0
 ORDER BY similarity_score DESC
 LIMIT ${limit} OFFSET ${offset}
 `
-    console.log(keri_string)
+    // console.log(keri_string)
 	let search_results = await db.query(keri_string)
+    // console.log(search_results.map(u => u.similarity_score))
 	return search_results
 }
 
@@ -592,7 +627,41 @@ COMPATIBLE as (
         as compatible
     FROM USERS
         LEFT JOIN USERS searcher ON searcher.username = 'jhonny'
+),
+
+VALIDMAIL as (
+	SELECT
+		username,
+		COUNT(VERIFIEDMAIL.mail) as is_verified_mail
+	FROM
+		USERS
+			LEFT JOIN VERIFIEDMAIL
+				ON USERS.username = VERIFIEDMAIL.user
+	GROUP BY USERS.username
+),
+
+TAG_LIST as (
+	SELECT
+		user,
+		JSON_ARRAYAGG(tag) as tag_list
+	FROM
+		TAGS
+	GROUP BY
+		user
+),
+
+COMPLETEPROFILE AS (
+	SELECT
+		USERS.username,
+		not (ISNULL(profilePic) OR is_verified_mail = 0 OR JSON_LENGTH(tag_list) = 0 OR LENGTH(bio) = 0) as is_complete_profile
+	FROM
+		USERS
+	LEFT JOIN VALIDMAIL
+		ON USERS.username = VALIDMAIL.username
+	LEFT JOIN TAG_LIST
+		ON USERS.username = TAG_LIST.user
 )
+
 
 SELECT
     USERS.username,
@@ -640,12 +709,16 @@ INNER JOIN VERIFIEDMAIL
     ON VERIFIEDMAIL.mail = USERS.mail
 LEFT JOIN COMPATIBLE
     ON USERS.username = COMPATIBLE.username
+INNER JOIN COMPLETEPROFILE
+    ON COMPLETEPROFILE.username = USERS.username
 WHERE
     zipCode LIKE('${zipcode}') AND
     pop_score >= ${min_rating} AND
     pop_score <= ${max_rating} AND
     USERS.username!='${searcher_username}' AND
-    compatible=1
+    compatible=1 AND
+    COMPLETEPROFILE.is_complete_profile = 1
+
 
 GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 HAVING
