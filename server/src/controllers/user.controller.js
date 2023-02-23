@@ -99,8 +99,10 @@ const tolerated_keys = ['firstName', 'lastName', 'bio', 'mail', 'gender', 'sekes
 
 exports.update_user = async (req, res) => {
 	let update = req.body.update
+	console.log("update ", update)
+
 	Object.keys(update).forEach(key => {
-		if (!tolerated_keys.includes(key) || update[key] == null || update[key] == undefined) {
+		if (!tolerated_keys.includes(key)) {
 			delete update[key]
 		}
 	});
