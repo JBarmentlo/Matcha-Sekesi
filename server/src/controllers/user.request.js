@@ -570,8 +570,29 @@ DISTANCE as (
         from USERS
             CROSS JOIN USERS searcher
                 ON searcher.username='${searcher_username}'
-)
+),
 
+COMPATIBLE as (
+    SELECT
+        USERS.username,
+        (
+            (searcher.gender = USERS.gender)
+                AND
+            (searcher.sekesualOri IN ('Gay', 'Bi'))
+                AND
+            (USERS.sekesualOri IN ('Gay', 'Bi'))
+        )
+            OR
+        (
+            (searcher.gender != USERS.gender)
+                AND
+            (searcher.sekesualOri IN ('Hetero', 'Bi'))
+                AND
+            (USERS.sekesualOri IN ('Hetero', 'Bi')))
+        as compatible
+    FROM USERS
+        LEFT JOIN USERS searcher ON searcher.username = 'jhonny'
+)
 
 SELECT
     USERS.username,
@@ -601,7 +622,8 @@ SELECT
     IFNULL(tag_list, cast('[]' as json)) as tag_list,
     IFNULL(did_i_block_him, 0) as did_i_block_him,
     IFNULL(number_of_common_tags, 0) as number_of_common_tags,
-    IFNULL(number_of_required_tags, 0) as number_of_required_tags
+    IFNULL(number_of_required_tags, 0) as number_of_required_tags,
+    compatible
 FROM
     USERS
 LEFT JOIN POPSCORE
@@ -616,11 +638,14 @@ LEFT JOIN DISTANCE
     ON USERS.username = DISTANCE.username
 INNER JOIN VERIFIEDMAIL
     ON VERIFIEDMAIL.mail = USERS.mail
+LEFT JOIN COMPATIBLE
+    ON USERS.username = COMPATIBLE.username
 WHERE
     zipCode LIKE('${zipcode}') AND
     pop_score >= ${min_rating} AND
     pop_score <= ${max_rating} AND
-    USERS.username!='${searcher_username}'
+    USERS.username!='${searcher_username}' AND
+    compatible=1
 
 GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, gender, sekesualOri, zipCode, city, longitude, latitude, id, image0, image1, image2, image3, profilePic, gif, last_connected
 HAVING
