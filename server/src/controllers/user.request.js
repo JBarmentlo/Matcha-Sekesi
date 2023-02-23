@@ -238,7 +238,8 @@ SELECT
     IFNULL(did_i_like_him, 0) as did_i_like_him,
     IFNULL(TIMESTAMPDIFF(YEAR, DOB, CURDATE()), 1) as age,
     IFNULL(tag_list, cast('[]' as json)) as tag_list,
-    IFNULL(did_i_block_him, 0) as did_i_block_him
+    IFNULL(did_i_block_him, 0) as did_i_block_him,
+    TIMESTAMPDIFF(SECOND, last_connected, NOW()) < 5 as connected
 FROM
     USERS
 LEFT JOIN POPSCORE
