@@ -199,7 +199,7 @@
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
                 <div class="form-group">
                     <label class="labels">Date of Birth</label>
-                    <b-datepicker v-bind:value="user.DOB" @input="DOBSelected"/>
+                    <b-datepicker v-bind:value="user.DOB" @input="DOBSelected" initial-date="2000-01-01" max="2005-01-01"/>
                 </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
@@ -241,7 +241,7 @@
                     Profile complete!
                 </div>
                 <div v-else class="col-md-auto red">
-                    Incomplete profile, add a profile pic, tags and a Bio.
+                    Incomplete profile: make sure you have verified your email and added a bio, tags & profile pic
                 </div>
             </div>
         </div>
@@ -315,7 +315,7 @@ export default {
 
         form_valid: function() {
             if (this.$refs.EditProfObserver != undefined) {
-                return this.$refs.EditProfObserver.flags.valid            
+                return this.$refs.EditProfObserver.flags.valid
             }
             console.log("no ref", this.$refs.EditProfObserver)
             return false
@@ -422,7 +422,7 @@ export default {
                     this.$swal("Successfully updated your profile.")
                     return
                 }
-                
+
                 if (update_res.data.code == 'MAIL_TAKEN') {
                     this.mail_taken = true
                 }
@@ -481,7 +481,7 @@ export default {
         catch {
             console.log("User nay upadataded")
         }
-        
+
     }
 };
 </script>

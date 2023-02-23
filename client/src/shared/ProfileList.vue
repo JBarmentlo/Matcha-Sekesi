@@ -16,6 +16,7 @@
             </div>
             <div class="media-right text-right d-none d-md-block">
                 <p class="fs-14 text-fade mb-30"><i class="fa fa-map-marker pr-1"></i>{{user.city}}<br/> {{user.zipCode}}</p>
+                <p class="text-fade">Pop score: {{pop_score(user)}}</p>
                 <span class="text-fade">
                     <i class="fa  pr-1"> {{user.age}}, {{user.gender}},  {{user.sekesualOri}}
                     </i>
@@ -65,7 +66,6 @@ export default {
         total_pages() {
             return Math.ceil(this.users.length / this.user_per_page)
         },
-
         token: {
             get: function() {
                 return this.$root.store.state.token;
@@ -112,7 +112,19 @@ export default {
         change_page(current_page) {
               this.$emit("ChangeUserListPage", current_page);
         },
-
+        pop_score: function (user) {
+            let pop_score = 0
+            if (user.pop_score != undefined) {
+                pop_score = user.pop_score
+            }
+            else if (user.pop_score == undefined && user.popScore != undefined) {
+                pop_score = user.popScore
+            }
+            if (pop_score == 0) {
+                return (0)
+            }
+            return Math.round(pop_score * 10) / 10
+        },
         profile_pic_url(url) {
             if (url != null) {
                 return url
