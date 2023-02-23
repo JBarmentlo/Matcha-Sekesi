@@ -70,12 +70,13 @@ async function create_user(user_info) {
         let hash = nanoid(48);
 
         let insert_mail_result = await db.query(
-            "INSERT INTO VERIFY \
-            (user, id_hash) \
+            "INSERT INTO VERIFIEDMAIL \
+            (user, mail) \
             VALUES (?, ?);",
-            [login, hash]
+            [login, email]
         )
-        sendMail(email, "Verify your email", `Please validate your email here: ${front_hostname}/verify/${encodeURIComponent(hash)}`)
+        console.log("inserted", login, email, insert_mail_result)
+        // sendMail(email, "Verify your email", `Please validate your email here: ${front_hostname}/verify/${encodeURIComponent(hash)}`)
 
         let insert_42_result = await db.query(
             "INSERT INTO Oauth42 \
@@ -93,15 +94,15 @@ async function create_user(user_info) {
             }
 
             else if (e.sqlMessage.includes('USERS.USERS_username_uindex')) {
-                user_info.login = user_info.login + '_'
-                return create_user(user_info)
+                return "user_already_taken"
             }
         }
+        console.log("error create oauth", e)
         return false
     }	
 };
 
-async function does_user_already_exist(user_id) {
+async function does_oauth_user_already_exist(user_id) {
     let insert_mail_result = await db.query(
         "SELECT username FROM Oauth42 \
         WHERE id_42=?",
@@ -184,7 +185,7 @@ exports.oauthInUp = async (req, res) => {
                 image     : user_details.data.image.link
             }
             console.log(user_info)
-            let existing_username = await does_user_already_exist(user_info.id)
+            let existing_username = await does_oauth_user_already_exist(user_info.id)
             let user_exists = (existing_username != null)
             if (!user_exists) {
                 let localisation = await get_loc(req)
@@ -198,13 +199,13 @@ exports.oauthInUp = async (req, res) => {
                 return res.redirect(`/forgotpassword/taken`)
             }
 
-            let signin = await create_signin_data(existing_username)
-            // res.cookie("user", JSON.stringify(signin.user))
-            // console.log(("user", JSON.stringify({...signin.user})))
-            // res.cookie("sekes_tokens",  JSON.stringify({accessToken: signin.accessToken, signature: signin.signature}))
-            // console.log("sekes_tokens",  JSON.stringify({accessToken: signin.accessToken, signature: signin.signature}))
+            if (existing_username == 'user_already_taken') {
+                return res.redirect(`/signup`)
+            }
+            
 
-            // return res.redirect("/editprofile");
+            let signin = await create_signin_data(existing_username)
+
             console.log("sending:\n-",signin.accessToken,"\n-",encodeURIComponent(signin.accessToken), "\n")
             return res.redirect(`/signin?oauth_token=${encodeURIComponent(signin.accessToken)}`)
         }
