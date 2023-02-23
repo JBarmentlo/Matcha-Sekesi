@@ -3,13 +3,13 @@
     </div>
 </template>
 <script>
-import { getMyNotifs, getCurrentTime, getMyNewNotifs }from '../services/notif'
+import { getMyNotifs, getCurrentId, getMyNewNotifsId }from '../services/notif'
 
 export default {
 	data() {
 		return {
             initializedNotifs : false,
-            last_notif_time   : null,
+            last_id           : null,
             notifPolling      : null,
             notifBusy         : false
 		};
@@ -128,11 +128,11 @@ export default {
             try {
                 let notif_list = (await getMyNotifs(this.token, 0, 20)).data.data
                 if (notif_list.length != 0) {
-                    this.last_notif_time = notif_list[0].last_updated
+                    this.last_id       = notif_list[0].id
                     this.notifications   = notif_list
                 }
                 else {
-                    this.last_notif_time = (await getCurrentTime(this.token)).data.server_time
+                    this.last_id       = (await getCurrentId(this.token)).data.last_id
                 }
             }
             catch (e) {
@@ -143,13 +143,15 @@ export default {
         async getNotifs() {
             // console.log("NOTIF GET")
             try {
-                let new_notifs = (await getMyNewNotifs(this.token, this.last_notif_time, 0, 20)).data.data
-                new_notifs = new_notifs.filter(n => n.last_updated != this.last_notif_time)
+                let new_notifs = (await getMyNewNotifsId(this.token, this.last_id, 0, 20)).data.data
+                // console.log("new notifs ker:", this.last_id, new_notifs.map(n => n.id))
+                new_notifs = new_notifs.filter(n => n.id > this.last_id)
+                // console.log("new notifs filtered:", new_notifs.map(n => n.id))
                 if (new_notifs.length != 0) {
-                    console.log("new notifs:", new_notifs.map(n => n.id))
-                    this.last_notif_time = new_notifs[0].last_updated
+                    // console.log("new notifs:", new_notifs.map(n => n.id))
+                    this.last_id = new_notifs[0].id
+                    // console.log("new notif id: ", this.last_id , new_notifs.length)
                     this.addNotifsToSelf(new_notifs)
-                    // console.log("new notif time: ", this.last_notif_time , new_notifs.length)
                 }
             }
             catch (e) {
@@ -164,8 +166,12 @@ export default {
         },
     },
 
-	async mounted() {
-	},
+    mounted() {
+        if (this.logged_in) {
+            console.log("staart polling mounter")
+            this.StartPollingNotifications()
+        }
+    }
     
 };
 </script>

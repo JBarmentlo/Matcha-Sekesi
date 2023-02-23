@@ -33,9 +33,38 @@ export const getMyNewNotifs = async (access_token, last_time, offset, limit) => 
 	return response;
 }
 
+export const getMyNewNotifsId = async (access_token, last_id, offset, limit) => {
+	// console.log("get notifs ", offset, limit)
+	let request = {
+		url: "/api/notif/getnew", // should be replaced after going to production with domain url
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+		},
+		data: JSON.stringify({limit: limit, offset: offset, last_id: last_id})
+	};
+	const response = await api_axios(request);
+	// console.log("Notifs res: ", response)
+	return response;
+}
+
 export const getCurrentTime = async (access_token) => {
 	let request = {
 		url: "/api/notif/gettime",
+		method: "post",
+		headers: {
+			"Content-type"       : "application/json",
+			"x-access-token"     : access_token.accessToken,
+		}
+	};
+	const response = await api_axios(request);
+	return response;
+}
+
+export const getCurrentId = async (access_token) => {
+	let request = {
+		url: "/api/notif/getlastid",
 		method: "post",
 		headers: {
 			"Content-type"       : "application/json",

@@ -70,6 +70,20 @@ exports.get_current_time = async (req, res) => {
 	}
 }
 
+exports.get_current_id = async (req, res) => {
+	try {
+		current_id = await db.query(
+			`SELECT IFNULL(MAX(id), -1) as last_id from NOTIFS;`)
+		console.log(current_id)
+		return res.status(200).send({message: "succesfull time request", last_id: current_id[0].last_id, code: "SUCCESS"})
+	}
+	catch (e) {
+		console.log(e)
+		return res.status(201).send({message: "failed id", last_id: -1, code: "FAILURE"})
+	}
+}
+
+
 exports.get_my_notifs = async (req, res) => {
 	try {
 		notif_query = await db.query(
@@ -146,6 +160,54 @@ FROM NOTIFS
 WHERE 
 	target_user='${req.username}'
 	AND last_updated > '${req.body.last_time}'
+HAVING
+	blocked_source=0
+ORDER BY last_updated DESC LIMIT 20 OFFSET 0;
+`
+		// console.log(keri_string)
+		let notif_query = await db.query(keri_string)		
+		// console.log("new notif: ", notif_query.map(n => n.last_updated), req.username, req.body.last_time)
+		return res.status(200).send({message: "succesfull notif query", data: notif_query, code: "SUCCESS"})
+	}
+	catch (e) {
+		console.log(e)
+		return res.status(201).send({message: "failed notif query", data: [], code: "FAILURE"})
+	}
+}
+
+exports.get_my_new_notifs_id = async (req, res) => {
+	try {
+		if (req.body.last_id == null) {
+			req.body.last_id = -1
+			console.log("defaulting last ID notifs", req.username)
+		}
+		let keri_string = 
+`
+WITH
+BLOCKED as (
+	SELECT
+		blocked,
+		SUM(blocker='${req.username}') > 0 as did_i_block_him
+	FROM
+		BLOCKS
+	GROUP BY
+		blocked
+)
+
+SELECT 
+	id,
+	type,
+	source_user,
+	target_user,
+	seen,
+	last_updated,
+	IFNULL(did_i_block_him, 0) as blocked_source
+FROM NOTIFS
+	LEFT JOIN BLOCKED
+		ON BLOCKED.blocked=NOTIFS.source_user
+WHERE 
+	target_user='${req.username}'
+	AND NOTIFS.id > ${req.body.last_id}
 HAVING
 	blocked_source=0
 ORDER BY last_updated DESC LIMIT 20 OFFSET 0;
