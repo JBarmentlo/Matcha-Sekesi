@@ -93,15 +93,14 @@ async function create_user(user_info) {
             }
 
             else if (e.sqlMessage.includes('USERS.USERS_username_uindex')) {
-                user_info.login = user_info.login + '_'
-                return create_user(user_info)
+                return "user_already_taken"
             }
         }
         return false
     }	
 };
 
-async function does_user_already_exist(user_id) {
+async function does_oauth_user_already_exist(user_id) {
     let insert_mail_result = await db.query(
         "SELECT username FROM Oauth42 \
         WHERE id_42=?",
@@ -184,7 +183,7 @@ exports.oauthInUp = async (req, res) => {
                 image     : user_details.data.image.link
             }
             console.log(user_info)
-            let existing_username = await does_user_already_exist(user_info.id)
+            let existing_username = await does_oauth_user_already_exist(user_info.id)
             let user_exists = (existing_username != null)
             if (!user_exists) {
                 let localisation = await get_loc(req)
@@ -197,6 +196,11 @@ exports.oauthInUp = async (req, res) => {
             if (existing_username == 'mail_already_taken') {
                 return res.redirect(`/forgotpassword/taken`)
             }
+
+            if (existing_username == 'user_already_taken') {
+                return res.redirect(`/signup`)
+            }
+            
 
             let signin = await create_signin_data(existing_username)
             // res.cookie("user", JSON.stringify(signin.user))
