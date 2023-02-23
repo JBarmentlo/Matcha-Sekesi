@@ -3,14 +3,13 @@
     </div>
 </template>
 <script>
-import { getCurrentTime }from '../services/notif'
-import { getMyNewMessages, getMyMessages }from '../services/chat'
+import { getMyNewMessagesId, getMyMessages, getCurrentId }from '../services/chat'
 
 export default {
 	data() {
 		return {
             initialized : false,
-            last_time   : null,
+            last_id     : null,
             polling     : null,
             busy        : false
 		};
@@ -128,26 +127,26 @@ export default {
             try {
                 let message_list = (await getMyMessages(this.token)).data.data
                 if (message_list.length != 0) {
-                    this.last_time = message_list[0].last_updated
+                    this.last_id = message_list[0].id
                     this.messages  = message_list
                 }
                 else {
-                    this.last_time = (await getCurrentTime(this.token)).data.server_time
+                    this.last_id = (await getCurrentId(this.token)).data.last_id
                 }
-                console.log("Time", this.last_time)
+                console.log("chat id", this.last_id)
             }
             catch (e) {
-                console.log("no notifs")
+                console.log("no msg")
             }
         },
 
         async getMessages() {
             // console.log("CHAT GET")
             try {
-                let new_messages = (await getMyNewMessages(this.token, this.last_time, 0, 20)).data.data
-                new_messages = new_messages.filter(n => n.last_updated != this.last_time)
+                let new_messages = (await getMyNewMessagesId(this.token, this.last_id, 0, 20)).data.data
+                new_messages = new_messages.filter(n => n.id > this.last_id)
                 if (new_messages.length != 0) {
-                    this.last_time = new_messages[0].last_updated
+                    this.last_id = new_messages[0].id
                     this.addMessagesToSelf(new_messages)
                 }
             }

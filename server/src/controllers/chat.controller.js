@@ -109,6 +109,78 @@ ORDER BY last_updated DESC LIMIT 100 OFFSET 0;
 	}
 }	
 
+
+exports.get_all_new_messages_id = async (req, res) => {
+	// console.log("gettin messages")
+	try {
+		if (req.body.last_id == null) {
+			req.body.last_id = -1
+			console.log("defaulting last ID Chat", req.username)
+		}
+		let keri_string =
+`
+WITH
+MYMATCHES AS (
+    SELECT l1.liker as matcher, l1.liked as matchee
+        FROM LIKES l1 INNER JOIN LIKES l2
+            ON  l1.liked = '${req.username}'
+            AND l1.liked = l2.liker
+            AND l1.liker = l2.liked
+            AND l1.liker != l1.liked
+),
+
+BLOCKED as (
+    SELECT
+        blocked,
+        SUM(blocker='${req.username}') > 0 as did_i_block_him
+    FROM
+        BLOCKS
+    GROUP BY
+        blocked
+)
+
+SELECT
+	MSG.id,
+	sender,
+	receiver,
+	msg,
+	last_updated,
+	IFNULL(did_i_block_him, 0) as blocked_source
+FROM MYMATCHES
+INNER JOIN MSG
+	ON (MSG.receiver IN ('${req.username}', matcher)
+	AND MSG.sender IN ('${req.username}', matcher))
+LEFT JOIN BLOCKED
+	ON BLOCKED.blocked = MSG.sender
+WHERE
+	MSG.id > '${req.body.last_id}'
+HAVING
+	blocked_source=0
+ORDER BY last_updated DESC LIMIT 100 OFFSET 0;
+`
+		let message_keri = await db.query(keri_string)
+		// console.log("new msg", req.username, req.body.last_time, message_keri.map(m => m.id))
+		return res.status(200).send({message: 'Successfully queried your messages.', data: message_keri, code:'SUCCESS'})
+	}
+	catch (e) {
+		console.log("get messages error:\n", e, "\nend error")
+		return res.status(400).send({message: 'Failed in querying your messages.', data: [], code:'FAILURE'})
+	}
+}	
+
+exports.get_current_id = async (req, res) => {
+	try {
+		current_id = await db.query(
+			`SELECT IFNULL(MAX(id), -1) as last_id from MSG;`)
+		console.log(current_id)
+		return res.status(200).send({message: "succesfull id request", last_id: current_id[0].last_id, code: "SUCCESS"})
+	}
+	catch (e) {
+		console.log(e)
+		return res.status(201).send({message: "failed id", last_id: -1, code: "FAILURE"})
+	}
+}
+
 exports.get_conversation = async (req, res) => {
 	// console.log("gettin convo ", 'username: ',  req.username,  'username: ', req.body.username,  'offset: ', req.body.offset,  'limi: ', req.body.limit)
 	try {

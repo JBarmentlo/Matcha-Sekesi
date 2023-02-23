@@ -132,7 +132,7 @@ export default {
                     this.notifications   = notif_list
                 }
                 else {
-                    this.last_id       = (await getCurrentId(this.token)).data.last_id
+                    this.last_id = (await getCurrentId(this.token)).data.last_id
                 }
             }
             catch (e) {
