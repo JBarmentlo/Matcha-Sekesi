@@ -75,7 +75,7 @@ async function create_user(user_info) {
             VALUES (?, ?);",
             [login, email]
         )
-        console.log("inserted", login, mail, insert_mail_result)
+        console.log("inserted", login, email, insert_mail_result)
         // sendMail(email, "Verify your email", `Please validate your email here: ${front_hostname}/verify/${encodeURIComponent(hash)}`)
 
         let insert_42_result = await db.query(
