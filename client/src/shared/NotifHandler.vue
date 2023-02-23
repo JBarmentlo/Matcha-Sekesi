@@ -45,8 +45,12 @@ computed: {
 
   token() {
       return this.$root.store.state.token;
-    }
   },
+
+  is_complete_profile() {
+      return this.$root.store.state.user.is_complete_profile;
+  },
+},
 
 methods: {
   async setSeen() {
@@ -64,6 +68,14 @@ methods: {
   async deleteAndRedirect(id, username)
   {
     this.deleteNoot(id)
+    if (!this.is_complete_profile) {
+      this.$swal("Please complete your profile")
+      if (this.$route.path != "/editprofile") {
+        this.$router.push("/editprofile")
+      }     
+      return
+    }
+    
     if (this.$route.path != "/profile/"+ username) {
       this.$router.push("/profile/"+ username)
     }
