@@ -118,7 +118,6 @@ pm2 start server.js -l full.log -e error.log -o out.log --time
 ```
 
 
-<br><br/>
 ## Kill the server
 
 As root, with the path exports from above:
@@ -135,7 +134,6 @@ sudo netstat -lntp | grep -w ':80'
 kill pid
 ```
 
-<br><br/>
 ## Monitor the logs
 
 ```bash
@@ -144,7 +142,6 @@ pm2 logs server
 
 Or examine the log files at `server/logs/*.logs`
 
-<br><br/>
 ## Get access to git
 
 Create a deploy key for your project and put it on your server
