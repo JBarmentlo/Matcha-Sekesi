@@ -1,5 +1,10 @@
 <template>
     <div class="container">
+        <div v-if="suggestion == true">
+            <h1 class="title text-center">Our suggestions:</h1>
+            <button @click="change_view">Make my own research</button>
+        </div>
+        <div v-else>
         <form @submit.prevent>
             <div class="row justify-content-md-center filter_categories">
             <div class="col filter_item">
@@ -65,7 +70,12 @@
             </div>
             </div>
         </form>
-        <div class="row">
+        <div class="mt-3">
+            <button @click="change_view" >See suggestions instead</button>
+        </div>
+        <div class="mt-2" v-if="(suggestion == false && research == true) || (suggestion == true)"><h1 class="title text-center">Results of your research:</h1></div>
+        </div>
+        <div class="row" v-if="(suggestion == false && research == true) || (suggestion == true)">
             <LoadingSpinner v-if="users.length==0 && search_done==false"  class="container">Find the perfect Partner</LoadingSpinner >
             <span v-if="users.length==0 && search_done==false" class="text-center">Finding the perfect partner for you</span>
             <span v-if="users.length==0 && search_done==true" class="text-center mt-5">Humm sorry, the world is a sad place and there is no one out there for you</span>
@@ -88,17 +98,20 @@ export default {
     components: { ProfileList, TagInputHandler, Slider, ValidationProvider, LoadingSpinner},
     data() {
         return {
-            users        : [],
-            age			 : [25, 40],
-            required_tags: [],
-            rating		 : [0, 5],
-            zipcode      : null,
-            order_by     : "pop_score",
-            asc_or_desc  : "DESC",
-            offset       : 0,
-            limit        : 200,
-            current_page : 1,
-            search_done  : false,
+            users           : [],
+            age             : [25, 40],
+            required_tags   : [],
+            rating          : [0, 5],
+            zipcode         : null,
+            order_by        : "pop_score",
+            asc_or_desc     : "DESC",
+            offset          : 0,
+            limit           : 200,
+            current_page    : 1,
+            search_done     : false,
+            research        : false,
+            suggestion      : true,
+            suggested_users : null
         }
     },
 
@@ -136,6 +149,18 @@ export default {
     },
 
     methods: {
+        async change_view() {
+            if (this.suggestion == true) {
+                this.suggestion = false
+                this.research = false
+            }
+            else {
+                this.suggestion = true
+                this.users = this.suggested_users
+                this.search_done = true
+                this.current_page = 1
+            }
+        },
         async search() {
             if (!this.profile_complete) {
                   this.$swal("Please complete your profile with an image, a bio and some tags.\nAnd validate your email.")
@@ -151,6 +176,8 @@ export default {
             this.users = rese.data.data
             this.search_done = true
             this.current_page = 1
+            this.suggestion = false
+            this.research = true
         },
 
         addScoreBlend(user) {
@@ -182,6 +209,7 @@ export default {
         // let rese = await searchUsers(this.token , this.user.age - 10, this.user.age + 40, this.user.tag_list, 0, 5, null, this.offset, this.limit, this.order_by, this.asc_or_desc, desires)
         let rese = await searchUsersInitial(this.token, this.offset, this.limit)
         this.users = rese.data.data
+        this.suggested_users = JSON.parse(JSON.stringify(this.users))
         this.search_done = true
         this.current_page = 1
     }

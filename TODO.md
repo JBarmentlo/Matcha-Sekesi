@@ -1,3 +1,4 @@
-- email qui s'envoit pas
-- si quelqu'un me like je ne vois pas la notif
-- si je bloque quelqu'un, il peut encore m'ecirer des messages. IL faudrait que je disparaisse aussi de son profile
+- je peux m'auto-bloquer et liker
+- quand je me bloque sur la page de recherche, je n'apparais pas bloquee sur la page de profil
+- je peux me parler dans le chat
+- user dont l'email n'est pas verif apparait dans les resultats de recherches

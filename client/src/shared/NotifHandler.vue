@@ -2,8 +2,8 @@
   <b-nav-item-dropdown right class="nav-link" :disabled="!numberNotifs" @hide="setSeen">
     <template slot="button-content">
         Notifs
-        <b-icon-bell-fill :class="unreadNotifs ? 'active_notif' : 'unactive_notif'"/>
-        <b-icon-circle-fill :class="unreadNotifs ? 'active_notif' : 'unactive_notif'" v-show="unreadNotifs" class = "active_notif"/>
+        <b-icon-bell-fill class='unactive_notif' v-show="!unreadNotifs"/>
+        <b-icon-circle-fill class="active_notif" v-show="unreadNotifs"/>
     </template>
     <div v-for="notif in notifs" :key="notif.id">
           <b-dropdown-item  v-if="notif.seen == 1" variant="secondary" @click="deleteAndRedirect(notif.id, notif.source_user)">
@@ -89,7 +89,7 @@ beforeDestroy () {
 
 .active_notif {
   color: red;
-  width: 5%;
+  width: 13%;
   margin-bottom: 3%;
   margin-right: 3%;
 }
@@ -99,11 +99,3 @@ beforeDestroy () {
 }
 
 </style>
-
-
-			// show-files=false
-			// show-audio=false
-			// show-reaction-emojis=false
-			// show-add-room=false
-			// message-actions=[]
-			// :theme="this.chat_light_or_dark"
