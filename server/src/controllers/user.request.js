@@ -731,7 +731,7 @@ ORDER BY ${orderby} ${asc_or_desc}
 LIMIT ${limit} OFFSET ${offset}
 `
     console.log("REQUESSST: *************")
-    console.log(keri_string)
+    // console.log(keri_string)
     // console.log({"searcher_username" : searcher_username, "required_tags" : required_tags, "zipcode": zipcode, "min_rating" : min_rating, "max_rating": max_rating, "max_age" : max_age, "min_age": min_age, "number_of_required_tags": number_of_required_tags, "limit" : limit, "offset" : offset})
 	let search_results = await db.query(keri_string)
 	return search_results

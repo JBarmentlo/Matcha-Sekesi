@@ -1,0 +1,398 @@
+-- MySQL dump 10.13  Distrib 8.0.32, for Linux (x86_64)
+--
+-- Host: localhost    Database: sekesitest
+-- ------------------------------------------------------
+-- Server version	8.0.32-0ubuntu0.20.04.2
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `BLOCKS`
+--
+
+DROP TABLE IF EXISTS `BLOCKS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BLOCKS` (
+  `blocker` varchar(300) NOT NULL,
+  `blocked` varchar(300) NOT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `no_duplicates_BLOCKS` (`blocker`,`blocked`),
+  KEY `blocked_fk` (`blocked`),
+  CONSTRAINT `blocked_fk` FOREIGN KEY (`blocked`) REFERENCES `USERS` (`username`) ON DELETE CASCADE,
+  CONSTRAINT `blocker_fk` FOREIGN KEY (`blocker`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `BLOCKS`
+--
+
+LOCK TABLES `BLOCKS` WRITE;
+/*!40000 ALTER TABLE `BLOCKS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `BLOCKS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CONSULTS`
+--
+
+DROP TABLE IF EXISTS `CONSULTS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `CONSULTS` (
+  `consulter` varchar(300) NOT NULL,
+  `consulted` varchar(300) NOT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `no_duplicates_CONSULTS` (`consulter`,`consulted`),
+  KEY `consulted_fk` (`consulted`),
+  CONSTRAINT `consulted_fk` FOREIGN KEY (`consulted`) REFERENCES `USERS` (`username`) ON DELETE CASCADE,
+  CONSTRAINT `consulter_fk` FOREIGN KEY (`consulter`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `CONSULTS`
+--
+
+LOCK TABLES `CONSULTS` WRITE;
+/*!40000 ALTER TABLE `CONSULTS` DISABLE KEYS */;
+INSERT INTO `CONSULTS` VALUES ('jhonny','smallzebra272','2023-02-24 16:11:38'),('smallzebra272','smallzebra272','2023-02-24 16:05:48');
+/*!40000 ALTER TABLE `CONSULTS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `LIKES`
+--
+
+DROP TABLE IF EXISTS `LIKES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `LIKES` (
+  `liker` varchar(300) NOT NULL,
+  `liked` varchar(300) NOT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `no_duplicates_LIKES` (`liker`,`liked`),
+  KEY `liked_username_fk` (`liked`),
+  CONSTRAINT `liked_username_fk` FOREIGN KEY (`liked`) REFERENCES `USERS` (`username`) ON DELETE CASCADE,
+  CONSTRAINT `liker_username_fk` FOREIGN KEY (`liker`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `LIKES`
+--
+
+LOCK TABLES `LIKES` WRITE;
+/*!40000 ALTER TABLE `LIKES` DISABLE KEYS */;
+INSERT INTO `LIKES` VALUES ('jhonny','jhonny','2023-02-24 16:05:48'),('jhonny','smallzebra272','2023-02-24 16:05:48'),('smallzebra272','jhonny','2023-02-24 16:05:48'),('smallzebra272','smallzebra272','2023-02-24 16:05:48');
+/*!40000 ALTER TABLE `LIKES` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `MSG`
+--
+
+DROP TABLE IF EXISTS `MSG`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MSG` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sender` varchar(300) NOT NULL,
+  `receiver` varchar(300) NOT NULL,
+  `msg` varchar(1000) DEFAULT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ConvoId` varchar(250) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `MSG_USERS_username_fk` (`sender`),
+  KEY `MSG_USERS_username_fk_2` (`receiver`),
+  CONSTRAINT `MSG_USERS_username_fk` FOREIGN KEY (`sender`) REFERENCES `USERS` (`username`) ON DELETE CASCADE,
+  CONSTRAINT `MSG_USERS_username_fk_2` FOREIGN KEY (`receiver`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MSG`
+--
+
+LOCK TABLES `MSG` WRITE;
+/*!40000 ALTER TABLE `MSG` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MSG` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `NOTIFS`
+--
+
+DROP TABLE IF EXISTS `NOTIFS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `NOTIFS` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `type` varchar(10) NOT NULL,
+  `source_user` varchar(300) NOT NULL,
+  `target_user` varchar(300) NOT NULL,
+  `seen` tinyint(1) DEFAULT '0',
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `source_user_notif_fk` (`source_user`),
+  KEY `target_user_notif_fk` (`target_user`),
+  CONSTRAINT `source_user_notif_fk` FOREIGN KEY (`source_user`) REFERENCES `USERS` (`username`) ON DELETE CASCADE,
+  CONSTRAINT `target_user_notif_fk` FOREIGN KEY (`target_user`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `NOTIFS`
+--
+
+LOCK TABLES `NOTIFS` WRITE;
+/*!40000 ALTER TABLE `NOTIFS` DISABLE KEYS */;
+INSERT INTO `NOTIFS` VALUES (1,'LIKE','jhonny','smallzebra272',0,'2023-02-24 16:05:48'),(4,'MATCH','smallzebra272','smallzebra272',0,'2023-02-24 16:05:48'),(5,'CONSULT','jhonny','smallzebra272',0,'2023-02-24 16:05:48'),(6,'CONSULT','smallzebra272','smallzebra272',0,'2023-02-24 16:05:48'),(7,'CONSULT','smallzebra272','smallzebra272',0,'2023-02-24 16:05:48'),(8,'CONSULT','jhonny','smallzebra272',0,'2023-02-24 16:11:38');
+/*!40000 ALTER TABLE `NOTIFS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Oauth42`
+--
+
+DROP TABLE IF EXISTS `Oauth42`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Oauth42` (
+  `id_42` int NOT NULL,
+  `username` varchar(300) NOT NULL,
+  PRIMARY KEY (`id_42`),
+  UNIQUE KEY `Oauth42_id_42_uindex` (`id_42`),
+  UNIQUE KEY `Oauth42_username_uindex` (`username`),
+  CONSTRAINT `Oauth42_USERS_username_fk` FOREIGN KEY (`username`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Oauth42`
+--
+
+LOCK TABLES `Oauth42` WRITE;
+/*!40000 ALTER TABLE `Oauth42` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Oauth42` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `REPORTS`
+--
+
+DROP TABLE IF EXISTS `REPORTS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `REPORTS` (
+  `reporter` varchar(300) NOT NULL,
+  `reported` varchar(300) NOT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `no_duplicates_REPORTS` (`reporter`,`reported`),
+  KEY `reported_username_fk` (`reported`),
+  CONSTRAINT `reported_username_fk` FOREIGN KEY (`reported`) REFERENCES `USERS` (`username`) ON DELETE CASCADE,
+  CONSTRAINT `reporter_username_fk` FOREIGN KEY (`reporter`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `REPORTS`
+--
+
+LOCK TABLES `REPORTS` WRITE;
+/*!40000 ALTER TABLE `REPORTS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `REPORTS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `RESET`
+--
+
+DROP TABLE IF EXISTS `RESET`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RESET` (
+  `user` varchar(300) DEFAULT NULL,
+  `id_hash` varchar(300) DEFAULT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY `user_reset___fk` (`user`),
+  CONSTRAINT `user_reset___fk` FOREIGN KEY (`user`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `RESET`
+--
+
+LOCK TABLES `RESET` WRITE;
+/*!40000 ALTER TABLE `RESET` DISABLE KEYS */;
+/*!40000 ALTER TABLE `RESET` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `TAGS`
+--
+
+DROP TABLE IF EXISTS `TAGS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TAGS` (
+  `tag` varchar(300) NOT NULL,
+  `user` varchar(300) NOT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `no_duplicate_tags` (`user`,`tag`),
+  CONSTRAINT `user___fk` FOREIGN KEY (`user`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `TAGS`
+--
+
+LOCK TABLES `TAGS` WRITE;
+/*!40000 ALTER TABLE `TAGS` DISABLE KEYS */;
+INSERT INTO `TAGS` VALUES ('lol','jhonny','2023-02-24 16:51:06'),('Music','smallzebra272','2023-02-24 16:05:48'),('Travel','smallzebra272','2023-02-24 16:05:48');
+/*!40000 ALTER TABLE `TAGS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `USERS`
+--
+
+DROP TABLE IF EXISTS `USERS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `USERS` (
+  `username` varchar(300) NOT NULL,
+  `firstName` varchar(300) DEFAULT NULL,
+  `lastName` varchar(300) DEFAULT NULL,
+  `bio` varchar(300) DEFAULT NULL,
+  `mail` varchar(300) NOT NULL,
+  `password` varchar(300) DEFAULT NULL,
+  `gender` varchar(40) DEFAULT 'NonBinary',
+  `sekesualOri` varchar(40) DEFAULT 'Bi',
+  `zipCode` varchar(100) DEFAULT NULL,
+  `city` varchar(300) DEFAULT NULL,
+  `longitude` float NOT NULL DEFAULT '0',
+  `latitude` float NOT NULL DEFAULT '0',
+  `id` mediumint NOT NULL AUTO_INCREMENT,
+  `image1` varchar(300) DEFAULT NULL,
+  `image2` varchar(300) DEFAULT NULL,
+  `image3` varchar(300) DEFAULT NULL,
+  `image0` varchar(300) DEFAULT NULL,
+  `profilePic` varchar(300) DEFAULT NULL,
+  `gif` varchar(300) DEFAULT NULL,
+  `DOB` date DEFAULT NULL,
+  `last_connected` timestamp NULL DEFAULT '2022-09-28 09:54:54',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `USERS_mail_uindex` (`mail`),
+  UNIQUE KEY `USERS_username_uindex` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `USERS`
+--
+
+LOCK TABLES `USERS` WRITE;
+/*!40000 ALTER TABLE `USERS` DISABLE KEYS */;
+INSERT INTO `USERS` VALUES ('jhonny','jojo','nini','lksjdf','joepbarmentlo@gmail.com','$2a$08$/4FXGPf/q.qfe93KGg3bIOJ6ROlOKubsTY2jUtlYQBVKcNeemGeU2','Female','Gay','75000','Paris',48.8534,2.3488,1,NULL,NULL,NULL,NULL,'http://localhost:9080/api/image/get/a9e62626bae30ce783fb13d78c575c2f',NULL,'2000-01-04','2023-02-24 17:00:39'),('smallzebra272','Erwan','Lemoine','At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia ','erwan.lemoine@example.com','$2a$08$nKbJZxp6QMgZ2p5LB2wEcuAry98VpyddV3PI9Pb/i/gofRfI3kOb6','Male','Hetero','14105','Rennes',-44.6947,-61.7817,2,NULL,NULL,NULL,'https://images.unsplash.com/photo-1580421828423-4b36a8ca65fb?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjEzNzYzNn0?utm_source=dictionnaire&utm_medium=referral','https://randomuser.me/api/portraits/med/men/11.jpg','https://media.giphy.com/media/dK0tjRx03fhlK/giphy.gif','1954-04-30','2022-09-28 09:54:54'),('ticklishlion224','Emmy','Lefevre','At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident,\n    similique sunt in culpa qui officia','emmy.lefevre@example.com','$2a$08$r.6PAISQbWN1Hb90bR3ej..s9zXv7wSq61OL7n5o.wv4Mio2PYC0C','Female','Gay','21006','Nîmes',112.405,-75.7352,3,NULL,NULL,NULL,'https://images.unsplash.com/photo-1580421828423-4b36a8ca65fb?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjEzNzYzNn0?utm_source=dictionnaire&utm_medium=referral','https://randomuser.me/api/portraits/med/women/87.jpg','https://media.giphy.com/media/dK0tjRx03fhlK/giphy.gif','1993-08-07','2022-09-28 09:54:54');
+/*!40000 ALTER TABLE `USERS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `VERIFIEDMAIL`
+--
+
+DROP TABLE IF EXISTS `VERIFIEDMAIL`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `VERIFIEDMAIL` (
+  `user` varchar(300) DEFAULT NULL,
+  `mail` varchar(300) DEFAULT NULL,
+  UNIQUE KEY `no_duplicates_MAILS` (`mail`),
+  UNIQUE KEY `no_duplicates_USERS` (`user`),
+  CONSTRAINT `user_mail___fk` FOREIGN KEY (`user`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `VERIFIEDMAIL`
+--
+
+LOCK TABLES `VERIFIEDMAIL` WRITE;
+/*!40000 ALTER TABLE `VERIFIEDMAIL` DISABLE KEYS */;
+INSERT INTO `VERIFIEDMAIL` VALUES ('jhonny','joepbarmentlo@gmail.com'),('smallzebra272','erwan.lemoine@example.com');
+/*!40000 ALTER TABLE `VERIFIEDMAIL` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `VERIFY`
+--
+
+DROP TABLE IF EXISTS `VERIFY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `VERIFY` (
+  `user` varchar(300) DEFAULT NULL,
+  `id_hash` varchar(300) DEFAULT NULL,
+  `mail` varchar(300) DEFAULT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY `user_verify___fk` (`user`),
+  CONSTRAINT `user_verify___fk` FOREIGN KEY (`user`) REFERENCES `USERS` (`username`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `VERIFY`
+--
+
+LOCK TABLES `VERIFY` WRITE;
+/*!40000 ALTER TABLE `VERIFY` DISABLE KEYS */;
+/*!40000 ALTER TABLE `VERIFY` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `VILLEPOSTAL`
+--
+
+DROP TABLE IF EXISTS `VILLEPOSTAL`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `VILLEPOSTAL` (
+  `nom_commune` varchar(300) DEFAULT NULL,
+  `code_postal` varchar(20) DEFAULT NULL,
+  `longitude` float DEFAULT NULL,
+  `latitude` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `VILLEPOSTAL`
+--
+
+LOCK TABLES `VILLEPOSTAL` WRITE;
+/*!40000 ALTER TABLE `VILLEPOSTAL` DISABLE KEYS */;
+/*!40000 ALTER TABLE `VILLEPOSTAL` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-02-24 18:00:39
