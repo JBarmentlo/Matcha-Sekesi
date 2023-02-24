@@ -12,7 +12,7 @@ exports.get_all_users = async (req, res) => {
 	catch (e) {
 		console.log("get user by name error:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get users', error: e})
-	}	
+	}
 }
 
 exports.search_users = async (req, res) => {
@@ -26,7 +26,7 @@ exports.search_users = async (req, res) => {
 	catch (e) {
 		console.log("get user by name error:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get users', error: e})
-	}	
+	}
 }
 
 exports.search_users_initial = async (req, res) => {
@@ -40,5 +40,5 @@ exports.search_users_initial = async (req, res) => {
 	catch (e) {
 		console.log("get user by name error:\n", e, "\nend error")
 		res.status(500).send({message: 'error in get users', error: e})
-	}	
+	}
 }

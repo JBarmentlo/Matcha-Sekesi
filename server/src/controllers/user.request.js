@@ -2,7 +2,7 @@ const db       = require("../db/sql.conn");
 
 exports.get_my_user = async (username) => {
 	console.log("Getting my user profile: %s", username)
-	let keri_string = 
+	let keri_string =
 	`
 WITH
 VALIDMAIL as (
@@ -123,7 +123,7 @@ GROUP BY USERS.username, firstName, lastName, bio, DOB, mail, is_verified_mail, 
 }
 
 exports.get_user = async (searcher_username, searched_username) => {
-	let keri_string = 
+	let keri_string =
 `
 WITH
 VALIDMAIL as (
@@ -275,7 +275,7 @@ exports.search_users_initial = async (searcher_username,
 	})
 
 	let required_tags = ''
-	let keri_string = 
+	let keri_string =
 `
 WITH
 TAG_INFO as (
@@ -498,7 +498,7 @@ LIMIT ${limit} OFFSET ${offset}
 	return search_results
 }
 
-exports.search_users = async (searcher_username, 
+exports.search_users = async (searcher_username,
 							  min_age,
 							  max_age,
 							  required_tags,
@@ -516,7 +516,7 @@ exports.search_users = async (searcher_username,
 	let number_of_required_tags = required_tags.length
 	required_tags = required_tags.join(',')
 
-	let keri_string = 
+	let keri_string =
 `
 WITH
 TAG_INFO as (
@@ -730,6 +730,9 @@ HAVING
 ORDER BY ${orderby} ${asc_or_desc}
 LIMIT ${limit} OFFSET ${offset}
 `
+    console.log("REQUESSST: *************")
+    console.log(keri_string)
+    // console.log({"searcher_username" : searcher_username, "required_tags" : required_tags, "zipcode": zipcode, "min_rating" : min_rating, "max_rating": max_rating, "max_age" : max_age, "min_age": min_age, "number_of_required_tags": number_of_required_tags, "limit" : limit, "offset" : offset})
 	let search_results = await db.query(keri_string)
 	return search_results
 }

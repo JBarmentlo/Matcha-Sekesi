@@ -2,3 +2,5 @@
 - quand je me bloque sur la page de recherche, je n'apparais pas bloquee sur la page de profil
 - je peux me parler dans le chat
 - user dont l'email n'est pas verif apparait dans les resultats de recherches
+- Images qui ne se suppriment pas!!!!!!
+- User connected n'apparait plus

@@ -99,7 +99,7 @@ export default {
     data() {
         return {
             users           : [],
-            age             : [25, 60],
+            age             : [18, 99],
             required_tags   : [],
             rating          : [0, 5],
             zipcode         : null,
