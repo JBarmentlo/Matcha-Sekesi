@@ -492,7 +492,7 @@ HAVING
 ORDER BY similarity_score DESC
 LIMIT ${limit} OFFSET ${offset}
 `
-    // console.log(keri_string)
+    console.log(keri_string)
 	let search_results = await db.query(keri_string)
     // console.log(search_results.map(u => u.similarity_score))
 	return search_results
@@ -627,7 +627,7 @@ COMPATIBLE as (
             (USERS.sekesualOri IN ('Hetero', 'Bi')))
         as compatible
     FROM USERS
-        LEFT JOIN USERS searcher ON searcher.username = 'jhonny'
+        LEFT JOIN USERS searcher ON searcher.username = '${searcher_username}'
 ),
 
 VALIDMAIL as (
